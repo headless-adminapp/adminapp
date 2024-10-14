@@ -7,6 +7,14 @@
   "publishConfig": {
     "access": "public"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/headless-adminapp/adminapp.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/headless-adminapp/adminapp/issues"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
