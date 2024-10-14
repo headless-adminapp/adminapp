@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.ts",
   "types": "index.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
