@@ -1,0 +1,17 @@
+{
+  "name": "@react-adminapp/core",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "tabler-icons-react": "^1.56.0",
+    "@fluentui/react-icons": "^2.0.247"
+  }
+}

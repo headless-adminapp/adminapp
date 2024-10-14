@@ -1,0 +1,31 @@
+{
+  "extends": [
+    "plugin:eslint-plugin-import/recommended",
+    "plugin:eslint-plugin-import/typescript",
+    "plugin:deprecation/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "simple-import-sort/imports": "error",
+    "unused-imports/no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "deprecation/deprecation": "warn"
+  },
+  "plugins": [
+    "unused-imports",
+    "simple-import-sort",
+    "@typescript-eslint/eslint-plugin"
+  ]
+}
