@@ -1,5 +1,5 @@
 import type { Id } from '../../attributes/IdAttribute';
-import { Data } from '../../transport/operations/Data';
+import { Data } from './Data';
 
 export interface RetriveRecordParams<T = unknown, U extends Id = Id> {
   logicalName: string;

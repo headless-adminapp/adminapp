@@ -1,5 +1,5 @@
-import { CommandContextBase } from '../../experience/command';
-import { ColumnCondition } from '../../experience/view/types';
+import { CommandContextBase } from '../command';
+import { ColumnCondition } from './types';
 import { InferredSchemaType, Schema, SchemaAttributes } from '../../schema';
 import { Data, Filter, RetriveRecordsResult } from '../../transport';
 import { CommandItemExperience } from '../command/CommandItemExperience';

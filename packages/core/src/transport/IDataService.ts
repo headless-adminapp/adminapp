@@ -1,4 +1,4 @@
-import { Id } from '../../core/attributes/IdAttribute';
+import { Id } from '../attributes/IdAttribute';
 import {
   AggregateAttribute,
   AggregateQuery,

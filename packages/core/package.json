@@ -2,8 +2,18 @@
   "name": "@headless-adminapp/core",
   "version": "0.0.4-alpha.0",
   "description": "",
-  "main": "index.ts",
-  "types": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./*": {
+      "import": "./dist/*.js",
+      "types": "./dist/*.d.ts"
+    }
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -16,6 +26,8 @@
     "url": "https://github.com/headless-adminapp/adminapp/issues"
   },
   "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "pnpm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "peerDependencies": {
