@@ -1,0 +1,27 @@
+{
+  "name": "@headless-adminapp/icons",
+  "version": "0.0.3-alpha.0",
+  "description": "",
+  "main": "index.ts",
+  "types": "index.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/headless-adminapp/adminapp.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/headless-adminapp/adminapp/issues"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "clsx": "2.1.1"
+  }
+}

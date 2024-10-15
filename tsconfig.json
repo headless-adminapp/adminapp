@@ -30,14 +30,14 @@
     // "moduleResolution": "node10",                     /* Specify how TypeScript looks up a file from a given module specifier. */
     // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
     "paths": {
-      "@react-adminapp/icons": ["./packages/icons/src"],
-      "@react-adminapp/icons/*": ["./packages/icons/src/*"]
+      "@headless-adminapp/icons": ["./packages/icons"],
+      "@headless-adminapp/icons/*": ["./packages/icons/*"]
     } /* Specify a set of entries that re-map imports to additional lookup locations. */,
     // "rootDirs": ["node"],                                   /* Allow multiple folders to be treated as one when resolving modules. */
-    "typeRoots": [
-      "./typings",
-      "./node_modules/@types"
-    ] /* Specify multiple folders that act like './node_modules/@types'. */,
+    // "typeRoots": [
+    //   "./typings",
+    //   "./node_modules/@types"
+    // ] /* Specify multiple folders that act like './node_modules/@types'. */,
     // "types": [],                                      /* Specify type package names to be included without being referenced in a source file. */
     // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
     // "moduleSuffixes": [],                             /* List of file name suffixes to search when resolving a module. */
