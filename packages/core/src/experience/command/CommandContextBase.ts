@@ -1,4 +1,4 @@
-import { QueryClient } from '@tanstack/react-query';
+import type { QueryClient } from '@tanstack/react-query';
 
 import { InferredSchemaType, SchemaAttributes } from '../../schema';
 import {
@@ -58,7 +58,7 @@ interface Store {
 export interface CommandContextBase {
   dataService: IDataService;
   // navigation: Navigation; // todo: add navigation
-  queryClient: QueryClient;
+  queryClient: Pick<QueryClient, 'clear'>;
   utility: Utiltity;
   stores: Store;
   locale: Locale;

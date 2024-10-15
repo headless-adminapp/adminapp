@@ -1,10 +1,10 @@
-import { CommandContextBase } from '../command';
-import { ColumnCondition } from './types';
 import { InferredSchemaType, Schema, SchemaAttributes } from '../../schema';
 import { Data, Filter, RetriveRecordsResult } from '../../transport';
+import { CommandContextBase } from '../command';
 import { CommandItemExperience } from '../command/CommandItemExperience';
 import { Form } from '../form';
 import { SaveMode } from '../form/types';
+import { ColumnCondition } from './types';
 import { View } from './View';
 
 export interface EntityMainGridCommandContext extends CommandContextBase {
