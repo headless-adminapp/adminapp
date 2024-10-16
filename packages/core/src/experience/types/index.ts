@@ -1,4 +1,4 @@
-import { Localized } from '../types';
+import { Localized } from '../../types';
 
 export interface Metadata {
   id: string;

@@ -8,7 +8,7 @@ interface BasePageItem {
   icon?: Icon;
 }
 
-export const enum PageType {
+export enum PageType {
   EntityView = 'entityview',
   EntityForm = 'entityform',
   External = 'external',

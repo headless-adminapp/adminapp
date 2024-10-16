@@ -5,3 +5,4 @@ export * from './CommandContextBase';
 export * from './IconButtonCommandExperience';
 export * from './LabelCommandExperience';
 export * from './MenuItemCommandExperience';
+export * from './CommandItemExperience';

@@ -4,6 +4,7 @@ export type { RetriveRecordParams, RetriveRecordResult } from './RetriveRecord';
 export type {
   RetriveRecordsParams,
   RetriveRecordsResult,
+  RetriveRecordsFnOptions,
 } from './RetriveRecords';
 export type { UpdateRecordParams, UpdateRecordResult } from './UpdateRecord';
 export type { Data } from './Data';

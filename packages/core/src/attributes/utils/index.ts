@@ -1,14 +1,14 @@
-import { AttachmentAttribute } from './AttachmentAttribute';
-import { Attribute } from './Attribute';
-import { BooleanAttribute } from './BooleanAttribute';
-import { ChoiceAttribute, ChoicesAttribute } from './ChoiceAttribute';
-import { DateAttribute } from './DateAttribute';
-import { Id, IdAttribute } from './IdAttribute';
-import { LookupAttribute } from './LookupAttribute';
-import { MixedAttribute } from './MixedAttribute';
-import { MoneyAttribute } from './MoneyAttribute';
-import { NumberAttribute } from './NumberAttribute';
-import { StringAttribute } from './StringAttribute';
+import { AttachmentAttribute } from '../AttachmentAttribute';
+import { Attribute } from '../Attribute';
+import { BooleanAttribute } from '../BooleanAttribute';
+import { ChoiceAttribute, ChoicesAttribute } from '../ChoiceAttribute';
+import { DateAttribute } from '../DateAttribute';
+import { Id, IdAttribute } from '../IdAttribute';
+import { LookupAttribute } from '../LookupAttribute';
+import { MixedAttribute } from '../MixedAttribute';
+import { MoneyAttribute } from '../MoneyAttribute';
+import { NumberAttribute } from '../NumberAttribute';
+import { StringAttribute } from '../StringAttribute';
 
 export function isStringAttribute(
   attribute: Attribute

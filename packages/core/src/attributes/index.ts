@@ -1,3 +1,11 @@
 export type { Attribute, AttributeType } from './Attribute';
-export type { Id } from './IdAttribute';
+export type { Id, IdAttribute } from './IdAttribute';
 export type { InferredAttributeType } from './inferred';
+export type { LookupAttribute, LookupBehavior } from './LookupAttribute';
+export type { StringAttribute } from './StringAttribute';
+export type { BooleanAttribute } from './BooleanAttribute';
+export type { NumberAttribute } from './NumberAttribute';
+export type { DateAttribute } from './DateAttribute';
+export type { AttachmentAttribute } from './AttachmentAttribute';
+export type { ChoiceAttribute } from './ChoiceAttribute';
+export type { DataLookup, LocalizedDataLookup } from './DataLookup';

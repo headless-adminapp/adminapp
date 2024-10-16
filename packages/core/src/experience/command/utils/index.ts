@@ -1,5 +1,5 @@
-import { AllowArray } from '../../types';
-import { BooleanOrFunction } from './types';
+import { AllowArray } from '../../../types';
+import { BooleanOrFunction } from '../types';
 
 export function checkCommandCondition<T>(
   context: T,
