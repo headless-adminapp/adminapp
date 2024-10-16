@@ -8,6 +8,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "build": "lerna run build",
+    "publish": "lerna publish",
     "lint": "eslint . --ext .ts,.tsx",
     "lint.fix": "eslint .  --fix --ext .ts,.tsx",
     "ts-check": "tsc --noEmit",
