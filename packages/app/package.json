@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/app",
-  "version": "0.0.13-alpha.0",
+  "version": "0.0.14-alpha.0",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
@@ -19,7 +19,7 @@
   "scripts": {
     "build": "tsc",
     "copy-files": "cp package.json dist",
-    "prepublishOnly": "pnpm run build && copy-files",
+    "prepublishOnly": "pnpm run build && pnpm run copy-files",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "peerDependencies": {
@@ -32,5 +32,6 @@
   "dependencies": {
     "clsx": "2.1.1",
     "react-custom-scrollbars-2": "^4.5.0"
-  }
+  },
+  "gitHead": "d73b2bdf5cb802fbb4ab820242ec43106e5a90ee"
 }
