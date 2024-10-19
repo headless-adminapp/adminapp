@@ -81,6 +81,7 @@ importers:
       react-hook-form:
         specifier: ^7
         version: 7.53.1(react@18.3.1)
+    publishDirectory: dist
 
   packages/core:
     dependencies:
