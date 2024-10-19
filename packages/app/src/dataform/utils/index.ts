@@ -11,7 +11,8 @@ import {
 import { IDataService } from '@headless-adminapp/core/transport';
 import { Nullable } from '@headless-adminapp/core/types';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { memoize } from 'lodash';
+import { memoize, MemoizedFunction } from 'lodash';
+import { ResolverResult } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { localizedLabel } from '../../builders/CommandBuilder';
@@ -317,7 +318,26 @@ export function getInitialValues({
   }, {} as Nullable<InferredSchemaType<SchemaAttributes>>);
 }
 
-export const formValidator = memoize(
+interface FormValidatorOptions<A extends SchemaAttributes = SchemaAttributes> {
+  schema: Schema<A>;
+  form: Form<A>;
+  language: string;
+  formReadOnly?: boolean;
+  readonlyAttributes?: string[];
+  strings: FormValidationStringSet;
+  getSchema: (logicalName: string) => Schema;
+}
+
+type FormValidator = (<A extends SchemaAttributes = SchemaAttributes>(
+  options: FormValidatorOptions<A>
+) => (
+  values: Record<string, any>,
+  context: any,
+  options: any
+) => Promise<ResolverResult<{}>>) &
+  MemoizedFunction;
+
+export const formValidator: FormValidator = memoize(
   function formValidator<A extends SchemaAttributes = SchemaAttributes>({
     form,
     schema,
@@ -326,15 +346,7 @@ export const formValidator = memoize(
     getSchema,
     language,
     strings,
-  }: {
-    schema: Schema<A>;
-    form: Form<A>;
-    language: string;
-    formReadOnly?: boolean;
-    readonlyAttributes?: string[];
-    strings: FormValidationStringSet;
-    getSchema: (logicalName: string) => Schema;
-  }) {
+  }: FormValidatorOptions<A>) {
     return async (values: Record<string, any>, context: any, options: any) => {
       // console.log('formValidator', values);
       let validator = yup.object().shape({});
