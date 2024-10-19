@@ -88,12 +88,14 @@ importers:
       '@tanstack/react-query':
         specifier: ^5
         version: 5.59.14(react@18.3.1)
+    publishDirectory: dist
 
   packages/icons:
     dependencies:
       clsx:
         specifier: 2.1.1
         version: 2.1.1
+    publishDirectory: dist
 
 packages:
 

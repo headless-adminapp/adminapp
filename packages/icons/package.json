@@ -1,21 +1,12 @@
 {
   "name": "@headless-adminapp/icons",
-  "version": "0.0.5-alpha.0",
+  "version": "0.0.15-alpha.0",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./*": {
-      "import": "./dist/*.js",
-      "types": "./dist/*.d.ts"
-    }
-  },
+  "main": "index.js",
+  "types": "index.d.ts",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "dist"
   },
   "repository": {
     "type": "git",
@@ -27,7 +18,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "pnpm run build",
+    "copy-files": "cp package.json dist",
+    "prepublishOnly": "pnpm run build && pnpm run copy-files",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
