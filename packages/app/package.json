@@ -1,0 +1,44 @@
+{
+  "name": "@headless-adminapp/app",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./*": {
+      "import": "./dist/*/index.js",
+      "types": "./dist/*/index.d.ts"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/headless-adminapp/adminapp.git",
+    "directory": "packages/app"
+  },
+  "bugs": {
+    "url": "https://github.com/headless-adminapp/adminapp/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "pnpm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5",
+    "react-hook-form": "^7"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "clsx": "2.1.1",
+    "react-custom-scrollbars-2": "^4.5.0"
+  }
+}
