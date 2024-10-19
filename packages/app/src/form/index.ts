@@ -1,6 +1,6 @@
 export {
   FormValidationStringContext,
-  FormValidationStringSet,
+  type FormValidationStringSet,
   defaultFormValidationStrings,
   useFormValidationStrings,
 } from './FormValidationStringContext';

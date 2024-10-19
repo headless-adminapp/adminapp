@@ -6,5 +6,9 @@ export {
   useContextValueSetter,
   type ContextValue,
 } from './context';
-export { useMutableState, useMutableStateSelector } from './state';
+export {
+  useMutableState,
+  useMutableStateSelector,
+  type MutableState,
+} from './state';
 export * from './type';
