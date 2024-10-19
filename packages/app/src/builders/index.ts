@@ -1,2 +1,5 @@
-export { SchemaExperienceBuilder } from './SchemaExperienceBuilder';
-export { CommandBuilder } from './CommandBuilder';
+export {
+  SchemaExperienceBuilder,
+  type SchemaExperienceBuilderDefaults,
+} from './SchemaExperienceBuilder';
+export { CommandBuilder, localizedLabel } from './CommandBuilder';

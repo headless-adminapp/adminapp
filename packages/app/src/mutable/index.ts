@@ -3,6 +3,7 @@ export {
   useContextSelector,
   useContextSetValue,
   useCreateContextStore,
+  useContextValueSetter,
   type ContextValue,
 } from './context';
 export { useMutableState, useMutableStateSelector } from './state';

@@ -17,3 +17,4 @@ export * from './useMaxRecords';
 export * from './useSearchText';
 export * from './useSelectedView';
 export * from './useSubGridCommands';
+export * from './useLoadMainGridPage';
