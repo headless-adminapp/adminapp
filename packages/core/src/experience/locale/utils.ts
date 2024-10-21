@@ -30,9 +30,9 @@ export function getLocale(
     },
     numberFormats: {},
     currency: {
-      currency: 'USD',
-      currencySign: 'standard',
-      currencyDisplay: 'symbol',
+      currency: options?.currency?.currency ?? 'USD',
+      currencySign: options?.currency?.currencySign ?? 'standard',
+      currencyDisplay: options?.currency?.currencyDisplay ?? 'symbol',
     },
   };
 }

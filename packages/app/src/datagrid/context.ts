@@ -37,7 +37,7 @@ export interface GridContextState<
   schema: Schema<S>;
   view: View<S>;
   viewLookup: LocalizedDataLookup[];
-  onChangeView: (viewId: string) => void;
+  onChangeView?: (viewId: string) => void;
   extraFilter?: Filter;
   commands: CommandItemExperience<CommandContext>[][];
   maxRecords?: number;

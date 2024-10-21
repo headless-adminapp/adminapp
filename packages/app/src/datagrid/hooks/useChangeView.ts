@@ -11,7 +11,7 @@ export function useChangeView() {
 
   return useCallback(
     (viewId: string) => {
-      onChangeView(viewId);
+      onChangeView?.(viewId);
     },
     [onChangeView]
   );

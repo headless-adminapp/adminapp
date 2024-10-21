@@ -3,7 +3,7 @@ import { FC, PropsWithChildren, useMemo } from 'react';
 
 import { LocaleContext } from './context';
 
-interface LocaleProviderProps {
+export interface LocaleProviderProps {
   locale: string;
   options?: {
     direction?: Locale['direction'];
@@ -16,9 +16,10 @@ interface LocaleProviderProps {
 export const LocaleProvider: FC<PropsWithChildren<LocaleProviderProps>> = ({
   children,
   locale,
+  options,
 }) => {
   const localeState = useMemo(() => {
-    return getLocale(locale);
+    return getLocale(locale, options);
   }, [locale]);
   return (
     <LocaleContext.Provider value={localeState}>

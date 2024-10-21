@@ -13,7 +13,7 @@ interface PageEntityViewProviderProps<S extends SchemaAttributes> {
   view: View<S>;
   commands: EntityMainGridCommandItemExperience[][];
   availableViews: LocalizedDataLookup[];
-  onChangeView: (viewId: string) => void;
+  onChangeView?: (viewId: string) => void;
 }
 
 export function PageEntityViewProvider<S extends SchemaAttributes>({
