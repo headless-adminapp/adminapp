@@ -5,5 +5,8 @@
     "rootDir": "src",
     "outDir": "dist"
   },
-  "references": [{ "path": "../core/tsconfig.json" }]
+  "references": [
+    { "path": "../core/tsconfig.json" },
+    { "path": "../icons/tsconfig.json" }
+  ]
 }
