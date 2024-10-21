@@ -27,7 +27,7 @@ export interface DataGridProviderProps<
   view: View<S>;
   extraFilter?: Filter;
   commands: CommandItemExperience<CommandContext>[][];
-  onChangeView: (viewId: string) => void;
+  onChangeView?: (viewId: string) => void;
   isSubGrid?: boolean;
   allowViewSelection?: boolean;
   maxRecords?: number;
@@ -42,10 +42,10 @@ export function DataGridProvider<
   const onChangeViewRef = useRef(props.onChangeView);
   onChangeViewRef.current = props.onChangeView;
   const { schemaStore } = useMetadata();
-  const [{ language }] = useLocale();
+  const { language } = useLocale();
 
   const handleViewChange = useCallback((viewId: string) => {
-    onChangeViewRef.current(viewId);
+    onChangeViewRef.current?.(viewId);
   }, []);
 
   const contextValue = useCreateContextStore<

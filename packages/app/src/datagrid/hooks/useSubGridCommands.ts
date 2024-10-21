@@ -49,7 +49,7 @@ export function useSubGridCommandHandlerContext(): EntitySubGridCommandContext {
 
   const refresh = useGridRefresh();
   const utility = useUtility();
-  const [locale] = useLocale();
+  const locale = useLocale();
 
   const mainFormHandlerContext = useMainFormCommandHandlerContext();
 

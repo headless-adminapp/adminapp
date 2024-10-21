@@ -8,7 +8,7 @@ import { FC, PropsWithChildren } from 'react';
 import { useCreateContextStore } from '../mutable/context';
 import { MetadataContext, MetadataContextState } from './context';
 
-interface MetadataProviderProps {
+export interface MetadataProviderProps {
   schemaStore: ISchemaStore;
   experienceStore: ISchemaExperienceStore;
   appStore: IClientAppStore;

@@ -1,7 +1,4 @@
-import { createContext, Dispatch, SetStateAction } from 'react';
+import { Locale } from '@headless-adminapp/core/experience/locale';
+import { createContext } from 'react';
 
-import { LocaleContextState } from './types';
-
-export const LocaleContext = createContext<
-  [LocaleContextState, Dispatch<SetStateAction<LocaleContextState>>] | null
->(null);
+export const LocaleContext = createContext<Locale | null>(null);

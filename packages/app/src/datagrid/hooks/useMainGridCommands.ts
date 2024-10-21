@@ -94,7 +94,7 @@ export function useMainGridCommandHandlerContext(): EntityMainGridCommandContext
   const { appStore, experienceStore, schemaStore } = useMetadata();
 
   const utility = useUtility();
-  const [locale] = useLocale();
+  const locale = useLocale();
 
   const primaryControl = useGridControlContext();
 

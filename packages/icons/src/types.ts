@@ -10,31 +10,7 @@ export type IconProps = {
 
 export type Icon = (props: IconProps) => JSX.Element | null;
 
-export interface IconSet {
-  Add: Icon;
-  Edit: Icon;
-  Delete: Icon;
-  Refresh: Icon;
-  Save: Icon;
-  Print: Icon;
-  Download: Icon;
-  Export: Icon;
-  Column: Icon;
-  Search: Icon;
-  Phone: Icon;
-  Mail: Icon;
-  Calendar: Icon;
-  Close: Icon;
-  Eye: Icon;
-  EyeOff: Icon;
-  List: Icon;
-  ArrowLeft: Icon;
-  ArrowRight: Icon;
-  Dashboard: Icon;
-  Settings: Icon;
-  SignOut: Icon;
-  MoreVertical: Icon;
-}
+export interface IconSet {}
 
 export type IconResolver = <T extends boolean | Icon>(
   name: keyof IconSet | (string & {}),

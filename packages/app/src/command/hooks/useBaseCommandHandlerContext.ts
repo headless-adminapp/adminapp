@@ -39,7 +39,7 @@ export function useBaseCommandHandlerContext(): CommandContextBase {
   const queryClient = useQueryClient();
   const stores = useMetadata();
   const utility = useUtility();
-  const [locale] = useLocale();
+  const locale = useLocale();
 
   return {
     dataService,

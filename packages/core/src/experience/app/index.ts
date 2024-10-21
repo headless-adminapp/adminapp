@@ -126,10 +126,3 @@ export interface AppExperience {
   accountMenuItems?: AccountMenuItem[];
   quickActionItems?: QuickActionItem[];
 }
-
-export type Locale = {
-  direction: 'ltr' | 'rtl';
-  language: string;
-  shortDate: string;
-  longDate: string;
-};

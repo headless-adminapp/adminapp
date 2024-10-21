@@ -7,12 +7,12 @@ import {
   ISchemaStore,
 } from '../../store';
 import { IDataService } from '../../transport';
-import { Locale } from '../app';
 import {
   ConfirmDialogOptions,
   ConfirmResult,
   PromptDialogOptions,
 } from '../dialog';
+import { Locale } from '../locale';
 
 // interface Navigation {}
 
