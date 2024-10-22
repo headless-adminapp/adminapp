@@ -18,14 +18,12 @@
   },
   "scripts": {
     "build": "tsc",
-    "copy-files": "cp package.json dist",
+    "ts-check": "tsc --noEmit",
+    "copy-files": "cp package.json dist && cp src/index.css dist",
     "prepublishOnly": "pnpm run build && pnpm run copy-files",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "peerDependencies": {
-    "@tanstack/react-query": "^5",
-    "react-hook-form": "^7"
-  },
+  "peerDependencies": {},
   "keywords": [],
   "author": "",
   "license": "ISC",

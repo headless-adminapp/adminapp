@@ -18,6 +18,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "ts-check": "tsc --noEmit",
     "copy-files": "cp package.json dist",
     "prepublishOnly": "pnpm run build && pnpm run copy-files",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -11,7 +11,7 @@
     "publish": "lerna publish",
     "lint": "eslint . --ext .ts,.tsx",
     "lint.fix": "eslint .  --fix --ext .ts,.tsx",
-    "ts-check": "tsc --noEmit",
+    "ts-check": "lerna run ts-check",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
@@ -24,6 +24,15 @@
     "lodash": "^4.17.21",
     "react": "18.3.1",
     "react-hook-form": "7.52.2",
+    "@fluentui/react-components": "9.54.4",
+    "@fluentui/react-datepicker-compat": "^0.4.43",
+    "@fluentui/react-nav-preview": "^0.5.1",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "dnd-core": "^16.0.1",
+    "immutability-helper": "^3.1.1",
+    "@tanstack/react-table": "^8.20.1",
+    "@tanstack/react-virtual": "^3.8.6",
     "yup": "^1.4.0"
   },
   "devDependencies": {

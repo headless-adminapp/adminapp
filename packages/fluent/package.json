@@ -1,0 +1,31 @@
+{
+  "name": "@headless-adminapp/fluent",
+  "version": "0.0.17-alpha.0",
+  "description": "",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/headless-adminapp/adminapp.git",
+    "directory": "packages/fluent"
+  },
+  "bugs": {
+    "url": "https://github.com/headless-adminapp/adminapp/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "ts-check": "tsc --noEmit",
+    "copy-files": "cp package.json dist",
+    "prepublishOnly": "pnpm run build && pnpm run copy-files",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "peerDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {}
+}
