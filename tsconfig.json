@@ -35,7 +35,9 @@
       "@headless-adminapp/core": ["./packages/core/src"],
       "@headless-adminapp/core/*": ["./packages/core/src/*"],
       "@headless-adminapp/app": ["./packages/app/src"],
-      "@headless-adminapp/app/*": ["./packages/app/src/*"]
+      "@headless-adminapp/app/*": ["./packages/app/src/*"],
+      "@headless-adminapp/server-sdk": ["./packages/server-sdk/src"],
+      "@headless-adminapp/server-sdk/*": ["./packages/server-sdk/src/*"]
     } /* Specify a set of entries that re-map imports to additional lookup locations. */,
     // "rootDirs": ["node"],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [

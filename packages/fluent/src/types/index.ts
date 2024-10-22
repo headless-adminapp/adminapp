@@ -2,31 +2,38 @@ import { Icon } from '@headless-adminapp/icons/types';
 
 declare module '@headless-adminapp/icons/types' {
   export interface IconSet {
-    SignOut: Icon;
+    // controls
+    Mail: Icon;
+    Phone: Icon;
+    Search: Icon;
+    Eye: Icon;
+    EyeOff: Icon;
+    Calendar: Icon;
+
+    // arrows
+    ArrowLeft: Icon;
+    ArrowRight: Icon;
+    ArrowDown: Icon;
+    ArrowUp: Icon;
+    ChevronDown: Icon;
+    ChevronUp: Icon;
+
+    // general actions
     Close: Icon;
     Add: Icon;
     Edit: Icon;
     Delete: Icon;
     Refresh: Icon;
-    ArrowLeft: Icon;
-    ArrowRight: Icon;
     MoreVertical: Icon;
     MoreHorizontal: Icon;
-    Search: Icon;
-    Mail: Icon;
-    Phone: Icon;
-    Eye: Icon;
-    EyeOff: Icon;
+
+    // others
     Error: Icon;
     Settings: Icon;
-    Calendar: Icon;
+    SignOut: Icon;
     EditColumns: Icon;
-    ArrowDown: Icon;
-    ArrowUp: Icon;
     Filter: Icon;
     FilterDismiss: Icon;
-    ChevronDown: Icon;
-    ChevronUp: Icon;
     ListLtr: Icon;
     ListRtl: Icon;
   }

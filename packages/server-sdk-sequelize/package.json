@@ -1,0 +1,29 @@
+{
+  "name": "@headless-adminapp/server-sdk-sequelize",
+  "version": "0.0.17-alpha.1",
+  "description": "",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/headless-adminapp/adminapp.git",
+    "directory": "packages/server-sdk-sequelize"
+  },
+  "bugs": {
+    "url": "https://github.com/headless-adminapp/adminapp/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "ts-check": "tsc --noEmit",
+    "copy-files": "cp package.json dist",
+    "prepublishOnly": "pnpm run build && pnpm run copy-files",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
