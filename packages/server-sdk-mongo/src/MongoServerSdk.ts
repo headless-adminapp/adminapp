@@ -101,7 +101,7 @@ export class MongoServerSdk<
     };
 
     const orgFilter = transformFilter(
-      this.options.dataFilter.getOrganizationFilter({
+      this.options.dataFilter?.getOrganizationFilter({
         logicalName: params.logicalName,
         dbContext: {
           session: this.session,
@@ -119,7 +119,7 @@ export class MongoServerSdk<
     }
 
     const permissionFilter = transformFilter(
-      this.options.dataFilter.getPermissionFilter({
+      this.options.dataFilter?.getPermissionFilter({
         logicalName: params.logicalName,
         dbContext: {
           session: this.session,
@@ -202,7 +202,7 @@ export class MongoServerSdk<
     const basePipelines: PipelineStage[] = [];
 
     const orgFilter = transformFilter(
-      this.options.dataFilter.getOrganizationFilter({
+      this.options.dataFilter?.getOrganizationFilter({
         logicalName,
         dbContext: {
           session: this.session,
@@ -222,7 +222,7 @@ export class MongoServerSdk<
     }
 
     const permissionFilter = transformFilter(
-      this.options.dataFilter.getPermissionFilter({
+      this.options.dataFilter?.getPermissionFilter({
         logicalName,
         dbContext: {
           session: this.session,
@@ -547,7 +547,7 @@ export class MongoServerSdk<
       return acc;
     }, {} as Record<string, any>);
 
-    const defaultValues = this.options.defaultValueProvider.getDefaultValues({
+    const defaultValues = this.options.defaultValueProvider?.getDefaultValues({
       data,
       schema,
     });
@@ -566,21 +566,23 @@ export class MongoServerSdk<
           continue;
         }
 
-        data[key] = this.options.autoNumberProvider.resolveAutoNumber({
-          logicalName: params.logicalName,
-          attributeName: key,
-          dbContext: {
-            session: this.session,
-          },
-          sdkContext: this.options.context,
-          markAsUsed: true,
-        });
+        if (this.options.autoNumberProvider) {
+          data[key] = this.options.autoNumberProvider.resolveAutoNumber({
+            logicalName: params.logicalName,
+            attributeName: key,
+            dbContext: {
+              session: this.session,
+            },
+            sdkContext: this.options.context,
+            markAsUsed: true,
+          });
+        }
       }
     }
 
     let changedValues = this.getChangedValues({}, data);
 
-    await this.options.pluginStore.execute({
+    await this.options.pluginStore?.execute({
       logicalName: params.logicalName,
       messageName: MessageName.Create,
       stage: ExecutionStage.PreOperation,
@@ -597,7 +599,7 @@ export class MongoServerSdk<
 
     changedValues = this.getChangedValues({}, data);
 
-    await this.options.pluginStore.execute({
+    await this.options.pluginStore?.execute({
       logicalName: params.logicalName,
       messageName: MessageName.Create,
       stage: ExecutionStage.PostOperation,
@@ -670,7 +672,7 @@ export class MongoServerSdk<
 
     let changedValues = this.getChangedValues(existingRecord.toJSON(), data);
 
-    await this.options.pluginStore.execute({
+    await this.options.pluginStore?.execute({
       logicalName: params.logicalName,
       messageName: MessageName.Update,
       stage: ExecutionStage.PreOperation,
@@ -693,7 +695,7 @@ export class MongoServerSdk<
 
     changedValues = this.getChangedValues(existingRecord.toJSON(), data);
 
-    await this.options.pluginStore.execute({
+    await this.options.pluginStore?.execute({
       logicalName: schema.logicalName,
       messageName: MessageName.Update,
       stage: ExecutionStage.PostOperation,
@@ -836,7 +838,7 @@ export class MongoServerSdk<
     const basePipelines: PipelineStage[] = [];
 
     const orgFilter = transformFilter(
-      this.options.dataFilter.getOrganizationFilter({
+      this.options.dataFilter?.getOrganizationFilter({
         logicalName: query.logicalName,
         dbContext: {
           session: this.session,
@@ -856,7 +858,7 @@ export class MongoServerSdk<
     }
 
     const permissionFilter = transformFilter(
-      this.options.dataFilter.getPermissionFilter({
+      this.options.dataFilter?.getPermissionFilter({
         logicalName,
         dbContext: {
           session: this.session,

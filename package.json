@@ -17,9 +17,6 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "dependencies": {
     "@hookform/resolvers": "3.9.0",
     "@tanstack/react-query": "5.51.1",

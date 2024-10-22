@@ -1,8 +1,7 @@
 import { IDataService } from '@headless-adminapp/core/transport';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Dispatch, FC, PropsWithChildren, SetStateAction } from 'react';
+import { FC, PropsWithChildren } from 'react';
 
-import { AppearanceContext, AppearanceContextState } from '../appearance';
 import {
   AuthProvider,
   AuthProviderPlaceholderProps,
@@ -23,10 +22,6 @@ import { AuthWrapper } from './AuthWrapper';
 export interface LayoutProviderProps {
   routeProps: RouteProviderProps;
   queryClient: QueryClient;
-  appearanceState: [
-    AppearanceContextState,
-    Dispatch<SetStateAction<AppearanceContextState>>
-  ];
   localeProps: LocaleProviderProps;
   dataService: IDataService;
   authProps: AuthProviderProps;
@@ -39,9 +34,7 @@ export interface LayoutProviderProps {
   };
 }
 
-/** @todo: move to app */
 export const LayoutProvider: FC<PropsWithChildren<LayoutProviderProps>> = ({
-  appearanceState,
   authPlaceholder,
   authProps,
   dataService,
@@ -59,28 +52,26 @@ export const LayoutProvider: FC<PropsWithChildren<LayoutProviderProps>> = ({
   return (
     <RouteProvider {...routeProps}>
       <QueryClientProvider client={queryClient}>
-        <AppearanceContext.Provider value={appearanceState}>
-          <LocaleProvider {...localeProps}>
-            <MetadataProvider {...metadataProps}>
-              <DataServiceContext.Provider value={dataService}>
-                <DialogProvider>
-                  <ProgressIndicatorProvider>
-                    <ToastNotificationProvider>
-                      <DialogContainer />
-                      <ProgressIndicatorContainer />
-                      <ToastNotificationContainer />
-                      <AuthProvider {...authProps}>
-                        <AuthWrapper Placeholder={authPlaceholder}>
-                          <RecordSetProvider>{children}</RecordSetProvider>
-                        </AuthWrapper>
-                      </AuthProvider>
-                    </ToastNotificationProvider>
-                  </ProgressIndicatorProvider>
-                </DialogProvider>
-              </DataServiceContext.Provider>
-            </MetadataProvider>
-          </LocaleProvider>
-        </AppearanceContext.Provider>
+        <LocaleProvider {...localeProps}>
+          <MetadataProvider {...metadataProps}>
+            <DataServiceContext.Provider value={dataService}>
+              <DialogProvider>
+                <ProgressIndicatorProvider>
+                  <ToastNotificationProvider>
+                    <DialogContainer />
+                    <ProgressIndicatorContainer />
+                    <ToastNotificationContainer />
+                    <AuthProvider {...authProps}>
+                      <AuthWrapper Placeholder={authPlaceholder}>
+                        <RecordSetProvider>{children}</RecordSetProvider>
+                      </AuthWrapper>
+                    </AuthProvider>
+                  </ToastNotificationProvider>
+                </ProgressIndicatorProvider>
+              </DialogProvider>
+            </DataServiceContext.Provider>
+          </MetadataProvider>
+        </LocaleProvider>
       </QueryClientProvider>
     </RouteProvider>
   );

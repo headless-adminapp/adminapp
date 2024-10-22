@@ -1,6 +1,10 @@
 import { Attribute } from '@headless-adminapp/core/attributes';
 import { Schema } from '@headless-adminapp/core/schema';
-import { Condition , Filter , OperatorKey } from '@headless-adminapp/core/transport';
+import {
+  Condition,
+  Filter,
+  OperatorKey,
+} from '@headless-adminapp/core/transport';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
@@ -498,7 +502,7 @@ export function transformCondition(
 }
 
 export function transformFilter<SA extends MongoRequiredSchemaAttributes>(
-  filter: Filter | null,
+  filter: Filter | null | undefined,
   schema: Schema<SA>,
   options: ConditionTransformerOptions
 ): FilterQuery<any> | null {

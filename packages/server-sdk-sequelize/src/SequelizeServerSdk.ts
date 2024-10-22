@@ -102,7 +102,7 @@ export class SequelizeServerSdk<
     const whereClause: any[] = [];
 
     const orgFilter = transformFilter(
-      this.options.dataFilter.getOrganizationFilter({
+      this.options.dataFilter?.getOrganizationFilter({
         logicalName: schema.logicalName,
         dbContext: {
           session: this.session,
@@ -121,7 +121,7 @@ export class SequelizeServerSdk<
     }
 
     const permissionFilter = transformFilter(
-      this.options.dataFilter.getPermissionFilter({
+      this.options.dataFilter?.getPermissionFilter({
         logicalName: schema.logicalName,
         dbContext: {
           session: this.session,
@@ -449,7 +449,7 @@ export class SequelizeServerSdk<
         const schema = this.options.schemaStore.getSchema(logicalName);
         const model = this.options.schemaStore.getModel(logicalName);
 
-        await this.options.pluginStore.execute({
+        await this.options.pluginStore?.execute({
           logicalName,
           messageName: MessageName.Delete,
           stage: ExecutionStage.PreOperation,
@@ -469,7 +469,7 @@ export class SequelizeServerSdk<
           transaction: this.session,
         });
 
-        await this.options.pluginStore.execute({
+        await this.options.pluginStore?.execute({
           logicalName,
           messageName: MessageName.Delete,
           stage: ExecutionStage.PostOperation,
@@ -484,7 +484,7 @@ export class SequelizeServerSdk<
       }
     }
 
-    await this.options.pluginStore.execute({
+    await this.options.pluginStore?.execute({
       logicalName: schema.logicalName,
       messageName: MessageName.Delete,
       stage: ExecutionStage.PreOperation,
@@ -504,7 +504,7 @@ export class SequelizeServerSdk<
       transaction: this.session,
     });
 
-    await this.options.pluginStore.execute({
+    await this.options.pluginStore?.execute({
       logicalName: schema.logicalName,
       messageName: MessageName.Delete,
       stage: ExecutionStage.PostOperation,
@@ -568,13 +568,15 @@ export class SequelizeServerSdk<
       return acc;
     }, {} as Record<string, any>);
 
-    const [defaultValues, overrideValues] =
-      this.options.defaultValueProvider.getDefaultValues({
-        data,
-        schema,
-      });
+    if (this.options.defaultValueProvider) {
+      const [defaultValues, overrideValues] =
+        this.options.defaultValueProvider.getDefaultValues({
+          data,
+          schema,
+        });
 
-    data = { ...defaultValues, ...data, ...overrideValues };
+      data = { ...defaultValues, ...data, ...overrideValues };
+    }
 
     const autoNumberAttributes = Object.entries(schema.attributes).filter(
       ([, attribute]) => {
@@ -588,21 +590,23 @@ export class SequelizeServerSdk<
           continue;
         }
 
-        data[key] = this.options.autoNumberProvider.resolveAutoNumber({
-          logicalName: params.logicalName,
-          attributeName: key,
-          dbContext: {
-            session: this.session,
-          },
-          sdkContext: this.options.context,
-          markAsUsed: true,
-        });
+        if (this.options.autoNumberProvider) {
+          data[key] = this.options.autoNumberProvider.resolveAutoNumber({
+            logicalName: params.logicalName,
+            attributeName: key,
+            dbContext: {
+              session: this.session,
+            },
+            sdkContext: this.options.context,
+            markAsUsed: true,
+          });
+        }
       }
     }
 
     let changedValues = this.getChangedValues({}, data);
 
-    await this.options.pluginStore.execute({
+    await this.options.pluginStore?.execute({
       logicalName: params.logicalName,
       messageName: MessageName.Create,
       stage: ExecutionStage.PreOperation,
@@ -619,7 +623,7 @@ export class SequelizeServerSdk<
 
     changedValues = this.getChangedValues({}, data);
 
-    await this.options.pluginStore.execute({
+    await this.options.pluginStore?.execute({
       logicalName: params.logicalName,
       messageName: MessageName.Create,
       stage: ExecutionStage.PostOperation,
@@ -708,7 +712,7 @@ export class SequelizeServerSdk<
       data
     );
 
-    await this.options.pluginStore.execute({
+    await this.options.pluginStore?.execute({
       logicalName: params.logicalName,
       messageName: MessageName.Update,
       stage: ExecutionStage.PreOperation,
@@ -741,7 +745,7 @@ export class SequelizeServerSdk<
 
     changedValues = this.getChangedValues(existingRecords[0].toJSON(), data);
 
-    await this.options.pluginStore.execute({
+    await this.options.pluginStore?.execute({
       logicalName: schema.logicalName,
       messageName: MessageName.Update,
       stage: ExecutionStage.PostOperation,

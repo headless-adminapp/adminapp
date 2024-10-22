@@ -516,7 +516,7 @@ export function transformCondition<
 }
 
 export function transformFilter<SA extends SchemaAttributes>(
-  filter: Filter | null,
+  filter: Filter | null | undefined,
   schema: Schema<SA>,
   options: ConditionTransformerOptions<SA>
 ) {

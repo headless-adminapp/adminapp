@@ -34,12 +34,12 @@ export interface ServerSdkOptions<
   DbContext extends DatabaseContext = DatabaseContext,
   SA extends SchemaAttributes = SchemaAttributes
 > {
-  schemaStore: ISchemaStore<SA>;
-  pluginStore: IPluginStore<SdkContext, DbContext>;
-  defaultValueProvider: IDefaultValueProvider<SA>;
-  autoNumberProvider: IAutoNumberProvider;
-  dataFilter: IDataFilter<SdkContext, DbContext>;
   context: SdkContext;
+  schemaStore: ISchemaStore<SA>;
+  pluginStore?: IPluginStore<SdkContext, DbContext>;
+  defaultValueProvider?: IDefaultValueProvider<SA>;
+  autoNumberProvider?: IAutoNumberProvider;
+  dataFilter?: IDataFilter<SdkContext, DbContext>;
 }
 
 export abstract class ServerSdk<
