@@ -141,6 +141,10 @@ importers:
     publishDirectory: dist
 
   packages/server-sdk-mongo:
+    dependencies:
+      mongoose:
+        specifier: ^8.5.1
+        version: 8.7.2(socks@2.8.3)
     publishDirectory: dist
 
   packages/server-sdk-sequelize:
