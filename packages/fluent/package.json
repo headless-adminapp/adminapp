@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/fluent",
-  "version": "0.0.17-alpha.0",
+  "version": "0.0.17-alpha.1",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
@@ -23,9 +23,7 @@
     "prepublishOnly": "pnpm run build && pnpm run copy-files",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "peerDependencies": {},
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {}
+  "license": "ISC"
 }
