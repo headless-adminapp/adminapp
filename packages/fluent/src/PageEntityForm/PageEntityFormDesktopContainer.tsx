@@ -101,8 +101,6 @@ export const PageEntityFormDesktopContainer: FC = () => {
     );
   }
 
-  // console.log('render');
-
   return (
     <div
       style={{

@@ -226,7 +226,6 @@ const LookupControlMd: FC<LookupControlProps> = ({
           setSearchText(e.target.value);
         }}
         onOptionSelect={(e, item) => {
-          console.log('onOptionSelect', item);
           const _item = data?.records.find(
             (x) => String(x[schema.idAttribute]) === item.optionValue
           );

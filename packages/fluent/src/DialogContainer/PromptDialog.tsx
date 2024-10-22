@@ -144,8 +144,6 @@ export const formValidator = memoize(
 
       const result = await resolver(values, context, options);
 
-      // console.log(result);
-
       return result;
     };
   },

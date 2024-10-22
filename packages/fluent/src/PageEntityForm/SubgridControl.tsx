@@ -108,7 +108,7 @@ export function SubgridControl(props: SubgridControlProps) {
 
   if (view.logicalName !== schema.logicalName) {
     if (isLoadingView) {
-      console.log('missmatched view', view, schema);
+      console.warn('missmatched view', view, schema);
       return loadingContent;
     }
 

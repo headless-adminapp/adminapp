@@ -42,7 +42,6 @@ export function InitialValueResolver() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      // console.log('resetting form', initialValues);
       formInstanceRef.current.reset(initialValues);
     });
 

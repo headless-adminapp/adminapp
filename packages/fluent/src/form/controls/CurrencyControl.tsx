@@ -11,14 +11,13 @@ export function CurrencyControl({
   name,
   onBlur,
   onFocus,
-  error,
+  // error,
   disabled,
   placeholder,
   autoFocus,
-  borderOnFocusOnly,
+  // borderOnFocusOnly,
   readOnly,
 }: CurrencyControlProps) {
-  console.log('CurrencyControl', value);
   return (
     <Input
       placeholder={placeholder}

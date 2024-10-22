@@ -180,10 +180,6 @@ export async function saveRecord({
       };
     }
 
-    if (operations.length > 0) {
-      console.log('operations', operations);
-    }
-
     for (const operation of operations) {
       switch (operation.type) {
         case 'create':
@@ -348,7 +344,6 @@ export const formValidator: FormValidator = memoize(
     strings,
   }: FormValidatorOptions<A>) {
     return async (values: Record<string, any>, context: any, options: any) => {
-      // console.log('formValidator', values);
       let validator = yup.object().shape({});
 
       if (!formReadOnly) {
@@ -407,8 +402,6 @@ export const formValidator: FormValidator = memoize(
       const resolver = yupResolver(validator);
 
       const result = await resolver(values, context, options);
-
-      // console.log(result);
 
       return result;
     };

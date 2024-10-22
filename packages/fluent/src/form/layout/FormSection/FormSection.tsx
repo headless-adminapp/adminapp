@@ -101,8 +101,6 @@ export const FormSection: FC<PropsWithChildren<FormSectionProps>> & {
     spanTemplates['--section-item-spacer-2'] = 'none';
   }
 
-  // console.log('fsmm', divSize.width, minWidthRequired);
-
   return (
     <div
       ref={divRef}

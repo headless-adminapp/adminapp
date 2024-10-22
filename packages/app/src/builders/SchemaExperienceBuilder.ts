@@ -89,73 +89,11 @@ abstract class BaseSchemaExperienceBuilder<S extends SchemaAttributes> {
     };
   }
 
-  // public createView(view: Omit<View<S>, 'logicalName'>): View<S> {
-  //   return {
-  //     logicalName: this.logicalName,
-  //     ...view,
-  //   };
-  // }
-
   public defineFormExperience(
     formExperience: FormExperience<S>
   ): FormExperience<S> {
     return formExperience;
   }
-
-  // public defineForm(form: BaseForm<S>): Form<S> {
-  //   return {
-  //     logicalName: this.logicalName,
-  //     ...form,
-  //   };
-  // }
-
-  // public registerView(view: Omit<View<S>, 'logicalName'>): this {
-  //   this.views.push(this.createView(view));
-  //   return this;
-  // }
-
-  // public registerForm(form: BaseForm<S>): this {
-  //   console.log('registerForm', form);
-  //   if (this.forms.find((f) => f.id === form.id)) {
-  //     throw new Error(
-  //       `Form with id '${form.id}' already exists for entity '${this.logicalName}'`
-  //     );
-  //   }
-
-  //   this.forms.push({
-  //     logicalName: this.logicalName,
-  //     ...form,
-  //   });
-  //   return this;
-  // }
-
-  // public registerLookup(lookup: Omit<ViewLookup<S>, 'logicalName'>): this {
-  //   this.lookups.push({
-  //     logicalName: this.logicalName,
-  //     ...lookup,
-  //   });
-  //   return this;
-  // }
-
-  // public setDefaultViewId(defaultViewId: string): this {
-  //   this.defaultViewId = defaultViewId;
-  //   return this;
-  // }
-
-  // public setDefaultFormId(defaultFormId: string): this {
-  //   this.defaultFormId = defaultFormId;
-  //   return this;
-  // }
-
-  // public setDefaultLookupId(defaultLookupId: string): this {
-  //   this.defaultLookupId = defaultLookupId;
-  //   return this;
-  // }
-
-  // public setDefaultQuickCreateFormId(defaultQuickCreateFormId: string): this {
-  //   this.defaultQuickCreateFormId = defaultQuickCreateFormId;
-  //   return this;
-  // }
 }
 
 export interface SchemaExperienceBuilderDefaults {
@@ -365,12 +303,6 @@ export class SchemaExperienceBuilder<
       formCommands?: SchemaExperience<S>['formCommands'];
     }
   ): SchemaExperience<S> {
-    // if (!experience.defaultFormId) {
-    //   throw new Error('Default form is required');
-    // }
-
-    // console.log('experience', experience);
-
     let lookups = experience.lookups;
     let views = experience.views;
     let forms = experience.forms;

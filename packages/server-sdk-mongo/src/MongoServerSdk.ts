@@ -464,8 +464,6 @@ export class MongoServerSdk<
       });
     }
 
-    // console.log('listPipeline', JSON.stringify(listPipeline, null, 2));
-
     const records = await model
       .aggregate(listPipeline, {
         collation: { locale: 'en' },
@@ -992,8 +990,6 @@ export class MongoServerSdk<
     //   records.reverse();
     // }
 
-    console.log(basePipelines);
-
     const result = await model.aggregate([
       ...basePipelines,
       // {
@@ -1039,8 +1035,6 @@ export class MongoServerSdk<
         $limit: 10,
       },
     ]);
-
-    console.log('result', result);
 
     result.forEach((x) => {
       const _id = x._id;

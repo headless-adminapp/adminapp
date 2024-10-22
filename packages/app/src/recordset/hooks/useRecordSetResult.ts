@@ -43,13 +43,6 @@ export function useRecordSetResult() {
   const { isPending, data, error } = useQuery({
     queryKey: ['data', 'recordset', context.logicalName, context.ids, columns],
     queryFn: async () => {
-      console.log(
-        'fetching data',
-        context.ids,
-        !context.logicalName,
-        !context.ids.length,
-        !cardView
-      );
       if (!context.logicalName || !context.ids.length || !cardView) {
         return [];
       }

@@ -39,8 +39,6 @@ function getRelatedItems(
             return null;
           }
 
-          // console.log('temp.a ', attribute);
-
           if (attribute.entity !== currentSchema.logicalName) {
             return null;
           }

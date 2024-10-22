@@ -56,8 +56,6 @@ const FormTabInternal: FC<PropsWithChildren<FormTabProps>> = ({
 
   const divSize = useElementSize(divRef);
 
-  // console.log('dd', divSize.width);
-
   const padding = 0;
   // const columnCount = 2;
   const minSectionWidth = 392;

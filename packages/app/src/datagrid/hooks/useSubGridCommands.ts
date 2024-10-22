@@ -53,8 +53,6 @@ export function useSubGridCommandHandlerContext(): EntitySubGridCommandContext {
 
   const mainFormHandlerContext = useMainFormCommandHandlerContext();
 
-  // console.log('mainFormHandlerContext', mainFormHandlerContext);
-
   return {
     dataService,
     queryClient,
@@ -85,9 +83,6 @@ export function useSubGridCommandHandlerContext(): EntitySubGridCommandContext {
 export function useSubGridCommands(): CommandItemState[][] {
   const commands = useGridCommands<EntitySubGridCommandContext>();
   const handlerContext = useSubGridCommandHandlerContext();
-
-  console.log('temp. commands (s)', commands);
-  console.log('temp. handlerContext (s)', handlerContext);
 
   return useCommands<EntitySubGridCommandContext>(commands, handlerContext);
 }

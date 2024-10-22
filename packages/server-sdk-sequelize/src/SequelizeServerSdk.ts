@@ -207,8 +207,6 @@ export class SequelizeServerSdk<
       }
     }
 
-    console.log('whereClause', JSON.stringify(whereClause));
-
     return whereClause;
   }
 
