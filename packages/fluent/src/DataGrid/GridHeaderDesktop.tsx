@@ -42,7 +42,6 @@ export const GridHeaderDesktop: FC<GridHeaderDesktopProps> = (props) => {
         alignItems: 'center',
         paddingInline: 8,
         gap: 16,
-        width: '100%',
         display: 'flex',
       }}
     >

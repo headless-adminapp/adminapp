@@ -25,5 +25,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "sequelize": "^6.37.3",
+    "dayjs": "^1.11.13"
+  }
 }

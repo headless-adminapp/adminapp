@@ -28,7 +28,13 @@
   "license": "ISC",
   "dependencies": {
     "clsx": "2.1.1",
-    "react-custom-scrollbars-2": "^4.5.0"
+    "react-custom-scrollbars-2": "^4.5.0",
+    "@hookform/resolvers": "^3.9.0",
+    "@tanstack/react-query": "5.51.1",
+    "dayjs": "^1.11.13",
+    "lodash": "^4.17.21",
+    "react-hook-form": "7.52.2",
+    "yup": "^1.4.0"
   },
   "gitHead": "bea8c84558ec809811549a132f55e4fae29381b6"
 }

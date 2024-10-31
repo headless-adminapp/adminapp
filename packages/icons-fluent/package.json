@@ -23,10 +23,10 @@
     "prepublishOnly": "pnpm run build && pnpm run copy-files",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "peerDependencies": {
-    "@tanstack/react-query": "^5"
-  },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@fluentui/react-icons": "^2.0.247"
+  }
 }

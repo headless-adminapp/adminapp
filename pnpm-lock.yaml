@@ -8,63 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@fluentui/react-components':
-        specifier: 9.54.4
-        version: 9.54.4(@types/react-dom@18.3.1)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.23.2)
-      '@fluentui/react-datepicker-compat':
-        specifier: ^0.4.43
-        version: 0.4.53(@types/react-dom@18.3.1)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.23.2)
-      '@fluentui/react-icons':
-        specifier: ^2.0.247
-        version: 2.0.261(react@18.3.1)
-      '@fluentui/react-nav-preview':
-        specifier: ^0.5.1
-        version: 0.5.3(@types/react-dom@18.3.1)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.23.2)
-      '@hookform/resolvers':
-        specifier: 3.9.0
-        version: 3.9.0(react-hook-form@7.52.2(react@18.3.1))
-      '@tanstack/react-query':
-        specifier: 5.51.1
-        version: 5.51.1(react@18.3.1)
-      '@tanstack/react-table':
-        specifier: ^8.20.1
-        version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@tanstack/react-virtual':
-        specifier: ^3.8.6
-        version: 3.10.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      dayjs:
-        specifier: ^1.11.13
-        version: 1.11.13
-      dnd-core:
-        specifier: ^16.0.1
-        version: 16.0.1
-      immutability-helper:
-        specifier: ^3.1.1
-        version: 3.1.1
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
-      mongoose:
-        specifier: ^8.5.1
-        version: 8.7.2(socks@2.8.3)
       react:
         specifier: 18.3.1
         version: 18.3.1
-      react-dnd:
-        specifier: ^16.0.1
-        version: 16.0.1(@types/node@22.7.6)(@types/react@18.3.1)(react@18.3.1)
-      react-dnd-html5-backend:
-        specifier: ^16.0.1
-        version: 16.0.1
-      react-hook-form:
-        specifier: 7.52.2
-        version: 7.52.2(react@18.3.1)
-      sequelize:
-        specifier: 6.37.3
-        version: 6.37.3
-      yup:
-        specifier: ^1.4.0
-        version: 1.4.0
     devDependencies:
       '@types/lodash':
         specifier: ^4.17.11
@@ -105,22 +51,86 @@ importers:
 
   packages/app:
     dependencies:
+      '@hookform/resolvers':
+        specifier: ^3.9.0
+        version: 3.9.0(react-hook-form@7.52.2(react@18.3.1))
+      '@tanstack/react-query':
+        specifier: 5.51.1
+        version: 5.51.1(react@18.3.1)
       clsx:
         specifier: 2.1.1
         version: 2.1.1
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       react-custom-scrollbars-2:
         specifier: ^4.5.0
         version: 4.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-hook-form:
+        specifier: 7.52.2
+        version: 7.52.2(react@18.3.1)
+      yup:
+        specifier: ^1.4.0
+        version: 1.4.0
     publishDirectory: dist
 
   packages/core:
     dependencies:
       '@tanstack/react-query':
-        specifier: ^5
-        version: 5.59.14(react@18.3.1)
+        specifier: 5.51.1
+        version: 5.51.1(react@18.3.1)
     publishDirectory: dist
 
   packages/fluent:
+    dependencies:
+      '@fluentui/react-components':
+        specifier: 9.54.4
+        version: 9.54.4(@types/react-dom@18.3.1)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.23.2)
+      '@fluentui/react-datepicker-compat':
+        specifier: ^0.4.43
+        version: 0.4.53(@types/react-dom@18.3.1)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.23.2)
+      '@fluentui/react-nav-preview':
+        specifier: ^0.5.1
+        version: 0.5.3(@types/react-dom@18.3.1)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.23.2)
+      '@hookform/resolvers':
+        specifier: ^3.9.0
+        version: 3.9.0(react-hook-form@7.52.2(react@18.3.1))
+      '@tanstack/react-query':
+        specifier: 5.51.1
+        version: 5.51.1(react@18.3.1)
+      '@tanstack/react-table':
+        specifier: ^8.20.1
+        version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tanstack/react-virtual':
+        specifier: ^3.8.6
+        version: 3.10.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
+      dnd-core:
+        specifier: ^16.0.1
+        version: 16.0.1
+      immutability-helper:
+        specifier: ^3.1.1
+        version: 3.1.1
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+      react-dnd:
+        specifier: ^16.0.1
+        version: 16.0.1(@types/node@22.7.6)(@types/react@18.3.1)(react@18.3.1)
+      react-dnd-html5-backend:
+        specifier: ^16.0.1
+        version: 16.0.1
+      react-hook-form:
+        specifier: 7.52.2
+        version: 7.52.2(react@18.3.1)
+      yup:
+        specifier: ^1.4.0
+        version: 1.4.0
     publishDirectory: dist
 
   packages/icons:
@@ -132,9 +142,9 @@ importers:
 
   packages/icons-fluent:
     dependencies:
-      '@tanstack/react-query':
-        specifier: ^5
-        version: 5.51.1(react@18.3.1)
+      '@fluentui/react-icons':
+        specifier: ^2.0.247
+        version: 2.0.261(react@18.3.1)
     publishDirectory: dist
 
   packages/server-sdk:
@@ -142,12 +152,22 @@ importers:
 
   packages/server-sdk-mongo:
     dependencies:
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
       mongoose:
         specifier: ^8.5.1
         version: 8.7.2(socks@2.8.3)
     publishDirectory: dist
 
   packages/server-sdk-sequelize:
+    dependencies:
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
+      sequelize:
+        specifier: ^6.37.3
+        version: 6.37.3
     publishDirectory: dist
 
 packages:
@@ -1021,18 +1041,10 @@ packages:
   '@tanstack/query-core@5.51.1':
     resolution: {integrity: sha512-fJBMQMpo8/KSsWW5ratJR5+IFr7YNJ3K2kfP9l5XObYHsgfVy1w3FJUWU4FT2fj7+JMaEg33zOcNDBo0LMwHnw==}
 
-  '@tanstack/query-core@5.59.13':
-    resolution: {integrity: sha512-Oou0bBu/P8+oYjXsJQ11j+gcpLAMpqW42UlokQYEz4dE7+hOtVO9rVuolJKgEccqzvyFzqX4/zZWY+R/v1wVsQ==}
-
   '@tanstack/react-query@5.51.1':
     resolution: {integrity: sha512-s47HKFnQ4HOJAHoIiXcpna/roMMPZJPy6fJ6p4ZNVn8+/onlLBEDd1+xc8OnDuwgvecqkZD7Z2mnSRbcWefrKw==}
     peerDependencies:
       react: ^18.0.0
-
-  '@tanstack/react-query@5.59.14':
-    resolution: {integrity: sha512-2cM4x3Ka4Thl7/wnjf++EMGA2Is/RgPynn83D4kfGiJOGSjb5T2D3EEOlC8Nt6U2htLS3imOXjOSMEjC3K7JNg==}
-    peerDependencies:
-      react: ^18 || ^19
 
   '@tanstack/react-table@8.20.5':
     resolution: {integrity: sha512-WEHopKw3znbUZ61s9i0+i9g8drmDo6asTWbrQh8Us63DAk/M0FkmIqERew6P71HI75ksZ2Pxyuf4vvKh9rAkiA==}
@@ -5518,16 +5530,9 @@ snapshots:
 
   '@tanstack/query-core@5.51.1': {}
 
-  '@tanstack/query-core@5.59.13': {}
-
   '@tanstack/react-query@5.51.1(react@18.3.1)':
     dependencies:
       '@tanstack/query-core': 5.51.1
-      react: 18.3.1
-
-  '@tanstack/react-query@5.59.14(react@18.3.1)':
-    dependencies:
-      '@tanstack/query-core': 5.59.13
       react: 18.3.1
 
   '@tanstack/react-table@8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':

@@ -108,7 +108,7 @@ const FormTabInternal: FC<PropsWithChildren<FormTabProps>> = ({
         flexDirection: 'column',
         flex: 1,
         // marginTop: 12,
-        // padding: 12,
+        padding: 12,
       }}
     >
       <div

@@ -27,6 +27,7 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "mongoose": "^8.5.1"
+    "mongoose": "^8.5.1",
+    "dayjs": "^1.11.13"
   }
 }

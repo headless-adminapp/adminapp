@@ -111,8 +111,6 @@ export const PageEntityFormDesktopContainer: FC = () => {
         overflow: 'hidden',
       }}
     >
-      {/* <Test2 /> */}
-      {/* <button onClick={() => save()}>Save</button> */}
       <div
         style={{
           display: 'flex',
