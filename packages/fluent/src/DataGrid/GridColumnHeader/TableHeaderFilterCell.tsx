@@ -116,7 +116,7 @@ export const TableHeaderFilterCell: FC<
 }) => {
   const [visible, setVisible] = useState(false);
   const schema = useDataGridSchema();
-  const { getSchema } = useMetadata();
+  const { schemaStore } = useMetadata();
   const strings = usePageEntityViewStrings();
 
   const attribute = useMemo(() => {
@@ -129,9 +129,9 @@ export const TableHeaderFilterCell: FC<
       throw new Error('Invalid attribute type');
     }
 
-    const lookupSchema = getSchema(_attribute.entity);
+    const lookupSchema = schemaStore.getSchema(_attribute.entity);
     return lookupSchema.attributes[column.expandedKey];
-  }, [column.expandedKey, column.name, getSchema, schema.attributes]);
+  }, [column.expandedKey, column.name, schemaStore, schema.attributes]);
 
   const align = useMemo(() => {
     switch (attribute.type) {

@@ -4,8 +4,9 @@ import { CommandContextBase } from '../command';
 import { CommandItemExperience } from '../command/CommandItemExperience';
 import { Form } from '../form';
 import { SaveMode } from '../form/types';
-import { ColumnCondition } from './types';
+import { ColumnCondition, SortingState } from './types';
 import { View } from './View';
+import { TransformedViewColumn } from './ViewColumn';
 
 export interface EntityMainGridCommandContext extends CommandContextBase {
   primaryControl: {
@@ -15,11 +16,14 @@ export interface EntityMainGridCommandContext extends CommandContextBase {
     selectedRecords: Data<unknown>[];
     columnFilter?: Partial<Record<string, ColumnCondition>>;
     extraFilter?: Filter;
+    gridColumns: TransformedViewColumn<SchemaAttributes>[];
+    sorting: SortingState<SchemaAttributes>;
     refresh: () => void;
     searchText: string;
     view: View;
     viewId: string;
     data: RetriveRecordsResult<InferredSchemaType<SchemaAttributes>> | null;
+    openRecord: (id: string) => void;
   };
 }
 

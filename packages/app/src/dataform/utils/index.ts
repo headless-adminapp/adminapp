@@ -8,6 +8,7 @@ import {
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
+import { ISchemaStore } from '@headless-adminapp/core/store';
 import { IDataService } from '@headless-adminapp/core/transport';
 import { Nullable } from '@headless-adminapp/core/types';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -67,7 +68,7 @@ export async function saveRecord({
   dataService,
   initialValues,
   record,
-  getSchema,
+  schemaStore,
 }: {
   values: any;
   form: Form<SchemaAttributes>;
@@ -75,7 +76,7 @@ export async function saveRecord({
   initialValues: Nullable<InferredSchemaType<SchemaAttributes>>;
   schema: Schema<SchemaAttributes>;
   dataService: IDataService;
-  getSchema: (logicalName: string) => Schema<SchemaAttributes>;
+  schemaStore: ISchemaStore;
 }): Promise<SaveRecordResult> {
   const controls = getControls(form);
 
@@ -112,7 +113,7 @@ export async function saveRecord({
     }
 
     for (const control of editableGridControls) {
-      const gridSchema = getSchema(control.logicalName);
+      const gridSchema = schemaStore.getSchema(control.logicalName);
       const gridRows = values[control.attributeName] as any[];
       const initialGridRows = (initialValues as any)[
         control.attributeName
@@ -321,7 +322,7 @@ interface FormValidatorOptions<A extends SchemaAttributes = SchemaAttributes> {
   formReadOnly?: boolean;
   readonlyAttributes?: string[];
   strings: FormValidationStringSet;
-  getSchema: (logicalName: string) => Schema;
+  schemaStore: ISchemaStore;
 }
 
 type FormValidator = (<A extends SchemaAttributes = SchemaAttributes>(
@@ -339,7 +340,7 @@ export const formValidator: FormValidator = memoize(
     schema,
     readonlyAttributes,
     formReadOnly,
-    getSchema,
+    schemaStore,
     language,
     strings,
   }: FormValidatorOptions<A>) {
@@ -382,7 +383,7 @@ export const formValidator: FormValidator = memoize(
               throw new Error('Invalid control type');
             }
 
-            const schema = getSchema(control.logicalName);
+            const schema = schemaStore.getSchema(control.logicalName);
 
             return {
               columns: control.attributes,

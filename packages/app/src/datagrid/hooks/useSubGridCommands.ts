@@ -1,13 +1,9 @@
 import { EntitySubGridCommandContext } from '@headless-adminapp/core/experience/view';
-import { useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import { useCommands } from '../../command';
+import { useBaseCommandHandlerContext, useCommands } from '../../command';
 import { CommandItemState, MenuItemCommandState } from '../../command/types';
 import { useMainFormCommandHandlerContext } from '../../dataform/hooks/useMainFormCommands';
-import { useLocale } from '../../locale/useLocale';
-import { useMetadata } from '../../metadata/hooks/useMetadata';
-import { useDataService } from '../../transport';
 import { useGridColumnFilter } from './useGridColumnFilter';
 import { useGridCommands } from './useGridCommands';
 import { useGridData } from './useGridData';
@@ -15,14 +11,11 @@ import { useGridExtraFilter } from './useGridExtraFilter';
 import { useGridRefresh } from './useGridRefresh';
 import { useDataGridSchema } from './useGridSchema';
 import { useGridSelection } from './useGridSelection';
-import { useUtility } from './useMainGridCommands';
 import { useSearchText } from './useSearchText';
 import { useSelectedView } from './useSelectedView';
 
 export function useSubGridCommandHandlerContext(): EntitySubGridCommandContext {
-  const dataService = useDataService();
-  const queryClient = useQueryClient();
-  const { appStore, experienceStore, schemaStore } = useMetadata();
+  const baseHandlerContext = useBaseCommandHandlerContext();
 
   const data = useGridData();
   const schema = useDataGridSchema();
@@ -48,15 +41,11 @@ export function useSubGridCommandHandlerContext(): EntitySubGridCommandContext {
   const extraFilter = useGridExtraFilter();
 
   const refresh = useGridRefresh();
-  const utility = useUtility();
-  const locale = useLocale();
 
   const mainFormHandlerContext = useMainFormCommandHandlerContext();
 
   return {
-    dataService,
-    queryClient,
-    utility,
+    ...baseHandlerContext,
     primaryControl: mainFormHandlerContext.primaryControl,
     secondaryControl: {
       data,
@@ -71,12 +60,6 @@ export function useSubGridCommandHandlerContext(): EntitySubGridCommandContext {
       columnFilter,
       extraFilter,
     },
-    stores: {
-      appStore,
-      experienceStore,
-      schemaStore,
-    },
-    locale,
   };
 }
 

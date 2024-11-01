@@ -1,3 +1,4 @@
+import { useOpenForm } from '@headless-adminapp/app/navigation';
 import { CommandContextBase } from '@headless-adminapp/core/experience/command';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -34,12 +35,21 @@ export function useUtility(): UtilityContextState {
   };
 }
 
+function useNavigation() {
+  const openForm = useOpenForm();
+
+  return {
+    openForm,
+  };
+}
+
 export function useBaseCommandHandlerContext(): CommandContextBase {
   const dataService = useDataService();
   const queryClient = useQueryClient();
   const stores = useMetadata();
   const utility = useUtility();
   const locale = useLocale();
+  const navigation = useNavigation();
 
   return {
     dataService,
@@ -47,5 +57,6 @@ export function useBaseCommandHandlerContext(): CommandContextBase {
     utility,
     stores,
     locale,
+    navigation,
   };
 }

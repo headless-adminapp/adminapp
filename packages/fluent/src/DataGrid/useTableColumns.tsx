@@ -15,6 +15,7 @@ import {
   useMainGridContextCommands,
   useSubGridCommands,
 } from '@headless-adminapp/app/datagrid/hooks';
+import { useOpenRecord } from '@headless-adminapp/app/datagrid/hooks/useOpenRecord';
 import { useElementSize } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
@@ -44,7 +45,7 @@ import {
 } from '@headless-adminapp/core/schema';
 import { Data } from '@headless-adminapp/core/transport';
 import { createColumnHelper } from '@tanstack/react-table';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { TableHeaderFilterCell } from '../DataGrid/GridColumnHeader';
 import { TableCellText } from '../DataGrid/TableCell';
@@ -85,7 +86,7 @@ export function useTableColumns({
   const columns = useGridColumns();
   const [, setSorting] = useGridSorting();
   const schema = useDataGridSchema();
-  const { getSchema } = useMetadata();
+  const { schemaStore } = useMetadata();
   const [, setSelectedIds] = useGridSelection();
 
   const setSelectedIdsRef = useRef(setSelectedIds);
@@ -131,29 +132,7 @@ export function useTableColumns({
   const router = useRouter();
   const recordSetSetter = useRecordSetSetter();
 
-  const openRecord = useCallback(
-    (id: string) => {
-      const path = routeResolver({
-        logicalName: schema.logicalName,
-        type: PageType.EntityForm,
-        id,
-      });
-
-      recordSetSetter(
-        schema.logicalName,
-        dataRef.current?.records.map((x) => x[schema.idAttribute] as string) ??
-          []
-      );
-      router.push(path);
-    },
-    [
-      recordSetSetter,
-      routeResolver,
-      router,
-      schema.idAttribute,
-      schema.logicalName,
-    ]
-  );
+  const openRecord = useOpenRecord();
 
   const { currency, dateFormats } = useLocale();
 
@@ -254,7 +233,7 @@ export function useTableColumns({
               const field = column.expandedKey;
               const entity = (schema.attributes[lookup] as LookupAttribute)
                 .entity;
-              const lookupSchema = getSchema(entity);
+              const lookupSchema = schemaStore.getSchema(entity);
               attribute = lookupSchema.attributes[field];
               value = info.row.original.$expand?.[lookup]?.[field];
             } else {
@@ -398,7 +377,7 @@ export function useTableColumns({
     setSorting,
     currency.currency,
     dateFormats.short,
-    getSchema,
+    schemaStore,
     routeResolver,
     openRecord,
     recordSetSetter,

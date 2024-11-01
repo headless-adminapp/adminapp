@@ -33,7 +33,7 @@ export interface DataFormProviderProps<
 export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
   props: PropsWithChildren<DataFormProviderProps<S>>
 ) {
-  const { getSchema } = useMetadata();
+  const { schemaStore } = useMetadata();
   const { language } = useLocale();
   const formValidationStrings = useFormValidationStrings();
 
@@ -44,7 +44,7 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
     defaultValues: {},
     resolver: formValidator({
       form: props.form,
-      getSchema,
+      schemaStore,
       language,
       schema: props.schema,
       strings: formValidationStrings,
@@ -79,7 +79,7 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
     props.schema,
     props.recordId,
     contextValue,
-    getSchema,
+    schemaStore,
     props.commands,
   ]);
 

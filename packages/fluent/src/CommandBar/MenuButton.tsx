@@ -72,7 +72,7 @@ export const CommandMenuButton: ForwardRefComponent<CommandMenuButtonProps> =
             {(triggerProps: MenuButtonProps) => (
               <SplitButton
                 ref={ref}
-                icon={<Icon />}
+                icon={<Icon size={20} />}
                 appearance="subtle"
                 className={mergeClasses(
                   styles.splitButton,

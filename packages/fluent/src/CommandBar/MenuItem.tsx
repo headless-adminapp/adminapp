@@ -64,7 +64,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
       <InternalMenuItem
         disabled={disabled}
         onClick={onClick}
-        icon={<Icon />}
+        icon={<Icon size={20} />}
         className={mergeClasses(danger && styles.danger)}
       >
         {text}
@@ -77,7 +77,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
       {onClick ? (
         <MenuSplitGroup>
           <InternalMenuItem
-            icon={<Icon />}
+            icon={<Icon size={20} />}
             className={mergeClasses(danger && styles.danger)}
           >
             {text}
@@ -88,7 +88,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
         </MenuSplitGroup>
       ) : (
         <MenuTrigger disableButtonEnhancement>
-          <InternalMenuItem icon={<Icon />}>{text}</InternalMenuItem>
+          <InternalMenuItem icon={<Icon size={20} />}>{text}</InternalMenuItem>
         </MenuTrigger>
       )}
 

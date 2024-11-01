@@ -1,8 +1,7 @@
 import { EntityMainGridCommandContext } from '@headless-adminapp/core/experience/view';
-import { useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import { useCommands } from '../../command';
+import { useBaseCommandHandlerContext, useCommands } from '../../command';
 import {
   CommandItemState,
   MenuItemCommandState,
@@ -14,18 +13,18 @@ import {
   useOpenErrorDialog,
   useOpenPromptDialog,
 } from '../../dialog/hooks';
-import { useLocale } from '../../locale/useLocale';
-import { useMetadata } from '../../metadata/hooks/useMetadata';
 import { useProgressIndicator } from '../../progress-indicator/hooks/useProgressIndicator';
 import { useOpenToastNotification } from '../../toast-notification/hooks/useOpenToastNotification';
-import { useDataService } from '../../transport';
 import { useGridColumnFilter } from './useGridColumnFilter';
+import { useGridColumns } from './useGridColumns';
 import { useGridCommands } from './useGridCommands';
 import { useGridData } from './useGridData';
 import { useGridExtraFilter } from './useGridExtraFilter';
 import { useGridRefresh } from './useGridRefresh';
 import { useDataGridSchema } from './useGridSchema';
 import { useGridSelection } from './useGridSelection';
+import { useGridSorting } from './useGridSorting';
+import { useOpenRecord } from './useOpenRecord';
 import { useSearchText } from './useSearchText';
 import { useSelectedView } from './useSelectedView';
 
@@ -49,7 +48,7 @@ export function useUtility(): UtilityContextState {
   };
 }
 
-export function useGridControlContext() {
+export function useGridControlContext(): EntityMainGridCommandContext['primaryControl'] {
   const data = useGridData();
   const schema = useDataGridSchema();
   const view = useSelectedView();
@@ -58,6 +57,9 @@ export function useGridControlContext() {
   const [columnFilter] = useGridColumnFilter();
   const extraFilter = useGridExtraFilter();
   const refresh = useGridRefresh();
+  const openRecord = useOpenRecord();
+  const gridColumns = useGridColumns();
+  const [sorting] = useGridSorting();
 
   const selectedIdsObj = useMemo(() => {
     const obj: Record<string, boolean> = {};
@@ -85,30 +87,20 @@ export function useGridControlContext() {
     viewId: view.id,
     columnFilter,
     extraFilter,
+    openRecord,
+    gridColumns,
+    sorting,
   };
 }
 
 export function useMainGridCommandHandlerContext(): EntityMainGridCommandContext {
-  const dataService = useDataService();
-  const queryClient = useQueryClient();
-  const { appStore, experienceStore, schemaStore } = useMetadata();
-
-  const utility = useUtility();
-  const locale = useLocale();
+  const baseHandlerContext = useBaseCommandHandlerContext();
 
   const primaryControl = useGridControlContext();
 
   return {
-    dataService,
-    queryClient,
-    utility,
+    ...baseHandlerContext,
     primaryControl,
-    stores: {
-      appStore,
-      experienceStore,
-      schemaStore,
-    },
-    locale,
   };
 }
 

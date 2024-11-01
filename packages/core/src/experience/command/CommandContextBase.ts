@@ -14,7 +14,18 @@ import {
 } from '../dialog';
 import { Locale } from '../locale';
 
-// interface Navigation {}
+export interface OpenFormOptions {
+  logicalName: string;
+  id?: string;
+  formId?: string;
+  parameters?: Record<string, string>; // Used while creating a new record
+  useQuickCreateForm?: boolean; // Used while creating a new record and create create form should available
+  replace?: boolean; // Replace the current form
+}
+
+interface Navigation {
+  openForm: (options: OpenFormOptions) => void;
+}
 
 interface Utiltity {
   showProgressIndicator: (message?: string) => void;
@@ -57,7 +68,7 @@ interface Store {
 
 export interface CommandContextBase {
   dataService: IDataService;
-  // navigation: Navigation; // todo: add navigation
+  navigation: Navigation;
   queryClient: Pick<QueryClient, 'clear'>;
   utility: Utiltity;
   stores: Store;

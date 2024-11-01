@@ -4,6 +4,7 @@ import {
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
+import { ISchemaStore } from '@headless-adminapp/core/store';
 import { HttpError, IDataService } from '@headless-adminapp/core/transport';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
@@ -43,14 +44,14 @@ async function getRecord({
   form,
   schema,
   columns,
-  getSchema,
+  schemaStore,
 }: {
   recordId: string;
   dataService: IDataService;
   form: Form;
   schema: Schema;
   columns: string[];
-  getSchema: (logicalName: string) => Schema;
+  schemaStore: ISchemaStore;
 }) {
   let record = null;
 
@@ -83,7 +84,7 @@ async function getRecord({
       continue;
     }
 
-    const controlSchema = getSchema(control.logicalName);
+    const controlSchema = schemaStore.getSchema(control.logicalName);
 
     const records = await dataService.retriveRecords<
       InferredSchemaType<SchemaAttributes>
@@ -127,7 +128,7 @@ export function DataResolver() {
   const dataService = useDataService();
   const recordId = useRecordId();
 
-  const { getSchema } = useMetadata();
+  const { schemaStore } = useMetadata();
 
   const setState = useContextSetValue(DataFormContext);
 
@@ -151,7 +152,7 @@ export function DataResolver() {
         form,
         recordId,
         schema,
-        getSchema,
+        schemaStore,
       });
 
       return record;

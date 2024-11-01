@@ -20,12 +20,8 @@ import {
 } from '@headless-adminapp/app/datagrid/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
+import { useOpenForm } from '@headless-adminapp/app/navigation';
 import { useRecordSetSetter } from '@headless-adminapp/app/recordset/hooks';
-import {
-  useRouter,
-  useRouteResolver,
-} from '@headless-adminapp/app/route/hooks';
-import { PageType } from '@headless-adminapp/core/experience/app';
 import {
   InferredSchemaType,
   SchemaAttributes,
@@ -129,32 +125,24 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
 
   const tableWrapperRef = useRef<HTMLDivElement>(null);
 
-  const routeResolver = useRouteResolver();
-  const router = useRouter();
   const recordSetSetter = useRecordSetSetter();
+
+  const openFormInternal = useOpenForm();
 
   const openRecord = useCallback(
     (id: string) => {
-      const path = routeResolver({
-        logicalName: schema.logicalName,
-        type: PageType.EntityForm,
-        id,
-      });
-
       recordSetSetter(
         schema.logicalName,
         dataRef.current?.records.map((x) => x[schema.idAttribute] as string) ??
           []
       );
-      router.push(path);
+
+      openFormInternal({
+        logicalName: schema.logicalName,
+        id,
+      });
     },
-    [
-      recordSetSetter,
-      routeResolver,
-      router,
-      schema.idAttribute,
-      schema.logicalName,
-    ]
+    [openFormInternal, recordSetSetter, schema.idAttribute, schema.logicalName]
   );
 
   const { direction } = useLocale();

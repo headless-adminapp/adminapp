@@ -8,15 +8,11 @@ import {
 import { ScrollView } from '@headless-adminapp/app/components/ScrollView';
 import { useRecordId } from '@headless-adminapp/app/dataform/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
+import { useOpenForm } from '@headless-adminapp/app/navigation';
 import {
   useRecordSetResult,
   useRecordSetVisibility,
 } from '@headless-adminapp/app/recordset/hooks';
-import {
-  useRouter,
-  useRouteResolver,
-} from '@headless-adminapp/app/route/hooks';
-import { PageType } from '@headless-adminapp/core/experience/app';
 import { FC, Fragment } from 'react';
 
 import { RecordCard } from './RecordCard';
@@ -46,8 +42,7 @@ export const RecordSetNavigatorContainer: FC = () => {
 
   const styles = useStyles();
 
-  const routeResolver = useRouteResolver();
-  const router = useRouter();
+  const openForm = useOpenForm();
   const { language, direction } = useLocale();
 
   if (!schema) {
@@ -108,13 +103,11 @@ export const RecordSetNavigatorContainer: FC = () => {
                       styles.selected
                   )}
                   onClick={() => {
-                    const path = routeResolver({
-                      type: PageType.EntityForm,
+                    openForm({
                       logicalName: schema.logicalName,
                       id: (record as any)[schema.idAttribute] as string,
+                      replace: true,
                     });
-
-                    router.replace(path);
                   }}
                 >
                   <RecordCard

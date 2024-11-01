@@ -26,6 +26,7 @@ export function useMetadata() {
 
   const schemas = schemaStore.getAllSchema();
 
+  /*** @deprecated */
   const getSchema = useCallback(
     <S extends SchemaAttributes = SchemaAttributes>(logicalName: string) => {
       return schemaStore.getSchema<S>(logicalName);
@@ -36,6 +37,7 @@ export function useMetadata() {
   return {
     schemas,
     schemaLoading,
+    /*** @deprecated */
     getSchema,
     schemaStore,
     appStore,

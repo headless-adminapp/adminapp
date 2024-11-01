@@ -5,7 +5,7 @@ import { useMetadata } from './useMetadata';
 export function useSchema<S extends SchemaAttributes = SchemaAttributes>(
   logicalName: string
 ) {
-  const { getSchema } = useMetadata();
+  const { schemaStore } = useMetadata();
 
-  return getSchema<S>(logicalName);
+  return schemaStore.getSchema<S>(logicalName);
 }

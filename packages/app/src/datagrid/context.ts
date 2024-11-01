@@ -6,8 +6,8 @@ import {
   EntitySubGridCommandContext,
   SortingState,
   View,
-  ViewColumn,
 } from '@headless-adminapp/core/experience/view';
+import { type TransformedViewColumn } from '@headless-adminapp/core/experience/view/ViewColumn';
 import {
   InferredSchemaType,
   Schema,
@@ -20,12 +20,7 @@ import {
 
 import { createContext } from '../mutable/context';
 
-export interface TransformedViewColumn<
-  S extends SchemaAttributes = SchemaAttributes
-> extends ViewColumn<S> {
-  id: string;
-  label: string;
-}
+export { type TransformedViewColumn } from '@headless-adminapp/core/experience/view/ViewColumn';
 
 export interface GridContextState<
   S extends SchemaAttributes = SchemaAttributes,

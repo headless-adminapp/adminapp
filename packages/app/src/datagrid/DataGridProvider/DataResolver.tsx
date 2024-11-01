@@ -1,10 +1,7 @@
-import { ColumnCondition } from '@headless-adminapp/core/experience/view';
 import {
   InferredSchemaType,
-  Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { Filter } from '@headless-adminapp/core/transport';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 
@@ -23,65 +20,10 @@ import {
   useSearchText,
   useSelectedView,
 } from '../hooks';
-import { transformColumnFilter } from './utils';
+import { collectExpandedKeys, mergeConditions } from './utils';
 
 const ROWS_PER_PAGE = 100;
 const MAX_RECORDS = 10000;
-
-function mergeConditions(
-  schema: Schema,
-  filter: Filter | null | undefined,
-  extraFilter: Filter | null | undefined,
-  columnFilters: Partial<Record<string, ColumnCondition>> | undefined,
-  getSchema: (logicalName: string) => Schema
-): Filter | null {
-  const conditions: any[] = [];
-
-  if (filter) {
-    conditions.push(filter);
-  }
-
-  if (extraFilter) {
-    conditions.push(extraFilter);
-  }
-
-  if (columnFilters) {
-    const transformedColumnFilters = transformColumnFilter(
-      columnFilters,
-      schema,
-      getSchema
-    );
-
-    if (transformedColumnFilters) {
-      conditions.push({
-        type: 'and',
-        conditions: Object.entries(transformedColumnFilters).map(
-          ([field, condition]) => {
-            return {
-              field,
-              operator: condition!.operator,
-              value: condition!.value,
-              extendedKey: condition!.extendedKey,
-            };
-          }
-        ),
-      });
-    }
-  }
-
-  if (conditions.length === 0) {
-    return null;
-  }
-
-  if (conditions.length === 1) {
-    return conditions[0];
-  }
-
-  return {
-    type: 'and',
-    conditions,
-  };
-}
 
 export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
   const schema = useDataGridSchema();
@@ -95,7 +37,7 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
   const gridColumns = useGridColumns();
   const maxRecords = useMaxRecords() ?? MAX_RECORDS;
 
-  const { getSchema } = useMetadata();
+  const { schemaStore } = useMetadata();
 
   const setState = useContextSetValue(GridContext);
 
@@ -112,22 +54,7 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
     [gridColumns, schema.primaryAttribute]
   );
 
-  const expand = useMemo(
-    () =>
-      gridColumns
-        .filter((x) => x.expandedKey)
-        .reduce((acc, x) => {
-          if (!acc[x.name]) {
-            acc[x.name] = [];
-          }
-
-          if (!acc[x.name].includes(x.expandedKey!)) {
-            acc[x.name].push(x.expandedKey!);
-          }
-          return acc;
-        }, {} as Record<string, string[]>),
-    [gridColumns]
-  );
+  const expand = useMemo(() => collectExpandedKeys(gridColumns), [gridColumns]);
 
   const queryKey = useMemo(
     () => [
@@ -215,7 +142,7 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
             view.experience.filter,
             extraFilter,
             columnFilters,
-            getSchema
+            schemaStore
           ),
           skip,
           limit,

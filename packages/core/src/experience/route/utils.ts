@@ -21,11 +21,13 @@ export function createRouteResolver(routeInfo: RouteInfo): RouteResolver {
           return `${basePath}/${routeInfo.entity}/${item.logicalName}?viewId=${item.viewId}`;
         }
         return `${basePath}/${routeInfo.entity}/${item.logicalName}`;
-      case PageType.EntityForm:
+      case PageType.EntityForm: {
+        const id = item.id ?? 'new';
         if (item.formId) {
-          return `${basePath}/${routeInfo.entity}/${item.logicalName}/${item.id}?formId=${item.formId}`;
+          return `${basePath}/${routeInfo.entity}/${item.logicalName}/${id}?formId=${item.formId}`;
         }
-        return `${basePath}/${routeInfo.entity}/${item.logicalName}/${item.id}`;
+        return `${basePath}/${routeInfo.entity}/${item.logicalName}/${id}`;
+      }
       case PageType.Report:
         return `${basePath}/${routeInfo.report}/${item.reportId}`;
       case PageType.Custom:

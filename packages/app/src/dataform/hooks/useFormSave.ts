@@ -29,7 +29,7 @@ export function useFormSave() {
   const form = useSelectedForm();
   const formInstance = useFormContext();
   const record = useFormRecord();
-  const { getSchema } = useMetadata();
+  const { schemaStore } = useMetadata();
   const schema = useDataFormSchema();
   const initialValues = useContextSelector(
     DataFormContext,
@@ -79,7 +79,7 @@ export function useFormSave() {
           initialValues: initialValues,
           dataService,
           schema: schema,
-          getSchema,
+          schemaStore,
         });
 
         if (!result.success) {

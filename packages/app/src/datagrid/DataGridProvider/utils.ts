@@ -1,11 +1,17 @@
 import { ColumnCondition } from '@headless-adminapp/core/experience/view';
-import { Schema } from '@headless-adminapp/core/schema';
+import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import { ISchemaStore } from '@headless-adminapp/core/store';
+import { Filter } from '@headless-adminapp/core/transport';
 import dayjs from 'dayjs';
 
-export function transformColumnFilter(
+import { TransformedViewColumn } from '../context';
+
+export function transformColumnFilter<
+  S extends SchemaAttributes = SchemaAttributes
+>(
   filter: Partial<Record<string, ColumnCondition>>,
-  schema: Schema,
-  getSchema: (logicalName: string) => Schema
+  schema: Schema<S>,
+  schemaStore: ISchemaStore
 ) {
   const transformedResult = Object.entries(filter).reduce(
     (acc, [id, value]) => {
@@ -23,7 +29,7 @@ export function transformColumnFilter(
           );
         }
 
-        const lookupSchema = getSchema(attribute.entity);
+        const lookupSchema = schemaStore.getSchema(attribute.entity);
         attribute = lookupSchema.attributes[extendedKey];
       }
 
@@ -86,4 +92,76 @@ export function transformColumnFilter(
   }
 
   return transformedResult;
+}
+
+export function mergeConditions<S extends SchemaAttributes = SchemaAttributes>(
+  schema: Schema<S>,
+  filter: Filter | null | undefined,
+  extraFilter: Filter | null | undefined,
+  columnFilters: Partial<Record<string, ColumnCondition>> | undefined,
+  schemaStore: ISchemaStore
+): Filter | null {
+  const conditions: any[] = [];
+
+  if (filter) {
+    conditions.push(filter);
+  }
+
+  if (extraFilter) {
+    conditions.push(extraFilter);
+  }
+
+  if (columnFilters) {
+    const transformedColumnFilters = transformColumnFilter(
+      columnFilters,
+      schema,
+      schemaStore
+    );
+
+    if (transformedColumnFilters) {
+      conditions.push({
+        type: 'and',
+        conditions: Object.entries(transformedColumnFilters).map(
+          ([field, condition]) => {
+            return {
+              field,
+              operator: condition!.operator,
+              value: condition!.value,
+              extendedKey: condition!.extendedKey,
+            };
+          }
+        ),
+      });
+    }
+  }
+
+  if (conditions.length === 0) {
+    return null;
+  }
+
+  if (conditions.length === 1) {
+    return conditions[0];
+  }
+
+  return {
+    type: 'and',
+    conditions,
+  };
+}
+
+export function collectExpandedKeys(
+  columns: TransformedViewColumn<SchemaAttributes>[]
+) {
+  return columns
+    .filter((x) => x.expandedKey)
+    .reduce((acc, x) => {
+      if (!acc[x.name]) {
+        acc[x.name] = [];
+      }
+
+      if (!acc[x.name].includes(x.expandedKey!)) {
+        acc[x.name].push(x.expandedKey!);
+      }
+      return acc;
+    }, {} as Record<string, string[]>);
 }

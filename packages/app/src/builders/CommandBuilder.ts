@@ -3,11 +3,14 @@ import {
   EntityMainFormCommandItemExperience,
 } from '@headless-adminapp/core/experience/form';
 import {
+  EntityMainGridCommandContext,
   EntityMainGridCommandItemExperience,
   SubGridCommandItemExperience,
 } from '@headless-adminapp/core/experience/view';
 import { Localized } from '@headless-adminapp/core/types';
 import { Icon } from '@headless-adminapp/icons';
+
+import { exportRecordsCSV, exportRecordsXLS, retriveRecords } from './utils';
 
 export function localizedLabel<
   T extends { label: string; localizedLabels?: Localized<string> }
@@ -36,6 +39,38 @@ export function createLocalizedSelector<T>(
 
 export namespace CommandBuilder {
   export namespace View {
+    namespace EnabledRules {
+      export function HasCreatePermisssion(
+        context: EntityMainGridCommandContext
+      ) {
+        return !context.primaryControl.schema.restrictions?.disableCreate;
+      }
+
+      export function HasUpdatePermission(
+        context: EntityMainGridCommandContext
+      ) {
+        return !context.primaryControl.schema.restrictions?.disableUpdate;
+      }
+
+      export function HasDeletePermission(
+        context: EntityMainGridCommandContext
+      ) {
+        return !context.primaryControl.schema.restrictions?.disableDelete;
+      }
+
+      export function HasSingleRecordSelected(
+        context: EntityMainGridCommandContext
+      ) {
+        return context.primaryControl.selectedIds.length === 1;
+      }
+
+      export function HasAtLeastOneRecordSelected(
+        context: EntityMainGridCommandContext
+      ) {
+        return context.primaryControl.selectedIds.length > 0;
+      }
+    }
+
     export function createNewRecordCommand({
       Icon,
       text,
@@ -51,11 +86,15 @@ export namespace CommandBuilder {
         text,
         localizedText: localizedTexts,
         onClick: (context) => {
-          console.log('New record', context);
+          context.navigation.openForm({
+            logicalName: context.primaryControl.schema.logicalName,
+          });
         },
         hidden: (context) => {
-          console.log(context);
-          // TODO: Implement logic to hide the button
+          if (!EnabledRules.HasCreatePermisssion(context)) {
+            return true;
+          }
+
           return false;
         },
       };
@@ -77,9 +116,21 @@ export namespace CommandBuilder {
         localizedText: localizedTexts,
         isContextMenu: true,
         onClick: (context) => {
-          console.log('Edit record', context);
+          context.primaryControl.openRecord(
+            context.primaryControl.selectedIds[0]
+          );
         },
-        hidden: (context) => context.primaryControl.selectedIds.length !== 1, // TODO: check permissions
+        hidden: (context) => {
+          if (!EnabledRules.HasUpdatePermission(context)) {
+            return true;
+          }
+
+          if (!EnabledRules.HasSingleRecordSelected(context)) {
+            return true;
+          }
+
+          return false;
+        },
       };
     }
 
@@ -161,7 +212,6 @@ export namespace CommandBuilder {
         localizedText,
         danger: true,
         isContextMenu: true,
-        hidden: [(context) => context.primaryControl.selectedIds.length === 0], // TODO: check permissions
         onClick: async (context) => {
           const recordIds = context.primaryControl.selectedIds;
 
@@ -204,7 +254,12 @@ export namespace CommandBuilder {
               ) + '...'
             );
 
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+            for (const recordId of recordIds) {
+              await context.dataService.deleteRecord(
+                context.primaryControl.logicalName,
+                recordId
+              );
+            }
 
             context.utility.showNotification({
               title: plurialize(
@@ -229,6 +284,10 @@ export namespace CommandBuilder {
             context.utility.hideProgressIndicator();
           }
         },
+        hidden: [
+          (context) => !EnabledRules.HasAtLeastOneRecordSelected(context),
+          (context) => !EnabledRules.HasDeletePermission(context),
+        ],
       };
     }
 
@@ -284,16 +343,66 @@ export namespace CommandBuilder {
               Icon: excel.Icon,
               text: excel.text,
               localizedTexts: excel.localizedTexts,
-              onClick: (context) => {
-                console.log('Export to Excel', context);
+              onClick: async (context) => {
+                context.utility.showProgressIndicator('Exporting to Excel...');
+                try {
+                  const result = await retriveRecords({
+                    columnFilters: context.primaryControl.columnFilter,
+                    dataService: context.dataService,
+                    gridColumns: context.primaryControl.gridColumns,
+                    schema: context.primaryControl.schema,
+                    schemaStore: context.stores.schemaStore,
+                    view: context.primaryControl.view,
+                    search: context.primaryControl.searchText,
+                    extraFilter: context.primaryControl.extraFilter,
+                    sorting: context.primaryControl.sorting,
+                    skip: 0,
+                    limit: 5000,
+                  });
+
+                  await exportRecordsXLS({
+                    fileName: context.primaryControl.view.name + '.xlsx',
+                    gridColumns: context.primaryControl.gridColumns,
+                    records: result.records,
+                    schema: context.primaryControl.schema,
+                    schemaStore: context.stores.schemaStore,
+                  });
+                } finally {
+                  context.utility.hideProgressIndicator();
+                }
               },
             },
             {
               Icon: csv.Icon,
               text: csv.text,
               localizedTexts: csv.localizedTexts,
-              onClick: (context) => {
-                console.log('Export to CSV', context);
+              onClick: async (context) => {
+                context.utility.showProgressIndicator('Exporting to Excel...');
+                try {
+                  const result = await retriveRecords({
+                    columnFilters: context.primaryControl.columnFilter,
+                    dataService: context.dataService,
+                    gridColumns: context.primaryControl.gridColumns,
+                    schema: context.primaryControl.schema,
+                    schemaStore: context.stores.schemaStore,
+                    view: context.primaryControl.view,
+                    search: context.primaryControl.searchText,
+                    extraFilter: context.primaryControl.extraFilter,
+                    sorting: context.primaryControl.sorting,
+                    skip: 0,
+                    limit: 5000,
+                  });
+
+                  await exportRecordsCSV({
+                    fileName: context.primaryControl.view.name + '.csv',
+                    gridColumns: context.primaryControl.gridColumns,
+                    records: result.records,
+                    schema: context.primaryControl.schema,
+                    schemaStore: context.stores.schemaStore,
+                  });
+                } finally {
+                  context.utility.hideProgressIndicator();
+                }
               },
             },
           ],
