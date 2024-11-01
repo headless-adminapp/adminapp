@@ -16,12 +16,8 @@ export function DateTimeControl({
   name,
   onBlur,
   onFocus,
-  error,
   placeholder,
   disabled,
-  maxDate,
-  minDate,
-  borderOnFocusOnly,
   readOnly,
 }: DateTimeControlProps) {
   // const { shortDate: dateFormat } = useLocale();

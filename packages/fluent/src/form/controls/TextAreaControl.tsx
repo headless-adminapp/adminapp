@@ -15,7 +15,6 @@ export function TextAreaControl({
   placeholder,
   onBlur,
   onFocus,
-  error,
   disabled,
   rows = 5,
   textTransform,

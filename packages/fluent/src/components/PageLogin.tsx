@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { tokens } from '@fluentui/react-components';
 
 import { LoginForm } from './LoginForm';

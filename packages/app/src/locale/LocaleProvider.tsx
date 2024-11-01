@@ -20,7 +20,7 @@ export const LocaleProvider: FC<PropsWithChildren<LocaleProviderProps>> = ({
 }) => {
   const localeState = useMemo(() => {
     return getLocale(locale, options);
-  }, [locale]);
+  }, [locale, options]);
   return (
     <LocaleContext.Provider value={localeState}>
       {children}

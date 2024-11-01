@@ -1,7 +1,7 @@
 import { Divider, Input } from '@fluentui/react-components';
 import { useSearchText } from '@headless-adminapp/app/datagrid/hooks';
 import { Icons } from '@headless-adminapp/icons';
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import { useAppStrings } from '../App/AppStringContext';
 import { FormSubgridCommandContainer } from '../DataGrid/FormSubgridCommandContainer';

@@ -17,12 +17,8 @@ export function DateControl({
   name,
   onBlur,
   onFocus,
-  error,
   placeholder,
   disabled,
-  maxDate,
-  minDate,
-  borderOnFocusOnly,
   readOnly,
 }: DateControlProps) {
   const { dateFormats } = useLocale();

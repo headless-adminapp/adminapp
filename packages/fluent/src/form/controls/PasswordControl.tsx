@@ -15,7 +15,6 @@ export function PasswordControl({
   name,
   onBlur,
   onFocus,
-  error,
   placeholder,
   disabled,
   autoFocus,

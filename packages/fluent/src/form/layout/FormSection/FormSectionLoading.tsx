@@ -6,8 +6,6 @@ interface FormSectionLoadingProps {
   controlCount: number;
 }
 
-export const FormSectionLoading: FC<FormSectionLoadingProps> = ({
-  controlCount,
-}) => {
+export const FormSectionLoading: FC<FormSectionLoadingProps> = () => {
   return null;
 };

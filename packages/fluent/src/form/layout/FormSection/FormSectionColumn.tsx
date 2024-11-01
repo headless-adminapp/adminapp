@@ -6,7 +6,7 @@ interface FormSectionColumnProps {
 
 export const FormSectionColumn: FC<
   PropsWithChildren<FormSectionColumnProps>
-> = ({ children, span }) => {
+> = ({ children }) => {
   return (
     <div
       // md={span}

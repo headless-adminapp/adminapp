@@ -14,7 +14,6 @@ export function TelephoneControl({
   name,
   onBlur,
   onFocus,
-  error,
   placeholder,
   disabled,
   autoComplete,

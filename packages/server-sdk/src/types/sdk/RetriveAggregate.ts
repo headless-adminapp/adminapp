@@ -1,3 +1,5 @@
+/* eslint-disable unused-imports/no-unused-vars */
+
 // import { RetriveAggregateFnOptions } from '@react-adminapp/core/data/IDataService';
 import { AggregateType } from '@headless-adminapp/core/transport';
 import { Data } from '@headless-adminapp/core/transport/operations';

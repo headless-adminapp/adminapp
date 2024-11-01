@@ -49,7 +49,7 @@ const CardViewSetter: FC = () => {
         });
       })
       .catch(console.error);
-  }, [experienceStore, logicalName]);
+  }, [experienceStore, logicalName, setValue]);
 
   return null;
 };

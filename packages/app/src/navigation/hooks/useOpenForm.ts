@@ -1,7 +1,5 @@
-import {
-  PageEntiyForm,
-  PageType,
-} from '@headless-adminapp/core/experience/app';
+import { PageType } from '@headless-adminapp/core/experience/app';
+import { OpenFormOptions } from '@headless-adminapp/core/experience/command';
 import { useCallback } from 'react';
 
 import { useRouter } from '../../route/hooks/';
@@ -12,18 +10,14 @@ export function useOpenForm() {
   const router = useRouter();
 
   return useCallback(
-    (
-      formOptions: Omit<PageEntiyForm, 'type'>,
-      navigationOptions: {
-        replace?: boolean;
-      }
-    ) => {
+    (options: OpenFormOptions) => {
       const path = routeResolver({
+        logicalName: options.logicalName,
         type: PageType.EntityForm,
-        ...formOptions,
+        id: options.id,
       });
 
-      if (navigationOptions.replace) {
+      if (options.replace) {
         router.replace(path);
       } else {
         router.push(path);

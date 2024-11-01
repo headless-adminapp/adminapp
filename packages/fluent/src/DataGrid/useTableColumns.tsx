@@ -94,8 +94,10 @@ export function useTableColumns({
   const isSubgrid = useContextSelector(GridContext, (state) => state.isSubGrid);
 
   const contextCommands = isSubgrid
-    ? useSubGridCommands()
-    : useMainGridContextCommands();
+    ? // eslint-disable-next-line react-hooks/rules-of-hooks
+      useSubGridCommands()
+    : // eslint-disable-next-line react-hooks/rules-of-hooks
+      useMainGridContextCommands();
 
   const mutableContextCommandState = useMutableState(contextCommands, true);
 

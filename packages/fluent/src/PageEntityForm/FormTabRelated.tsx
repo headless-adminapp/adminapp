@@ -1,6 +1,8 @@
 import { tokens } from '@fluentui/react-components';
-import { useDataFormSchema } from '@headless-adminapp/app/dataform/hooks';
-import { useRecordId } from '@headless-adminapp/app/dataform/hooks';
+import {
+  useDataFormSchema,
+  useRecordId,
+} from '@headless-adminapp/app/dataform/hooks';
 
 import { FormTab } from '../form/layout/FormTab';
 import { RelatedItemInfo } from './RelatedViewSelector';

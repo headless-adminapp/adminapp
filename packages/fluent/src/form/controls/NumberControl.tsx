@@ -1,3 +1,4 @@
+/* eslint-disable unused-imports/no-unused-vars */
 import { Input } from '@fluentui/react-components';
 
 import { ControlProps } from './types';

@@ -15,12 +15,10 @@ export function EmailControl({
   name,
   onBlur,
   onFocus,
-  error,
   placeholder,
   disabled,
   autoComplete,
   textTransform,
-  borderOnFocusOnly,
   readOnly,
 }: EmailControlProps) {
   return (

@@ -20,7 +20,7 @@ export function useRecordSetResult() {
     }
 
     return schemaStore.getSchema(context.logicalName);
-  }, [context.logicalName]);
+  }, [context.logicalName, schemaStore]);
 
   const cardView = context.cardView;
 

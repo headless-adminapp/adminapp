@@ -51,7 +51,15 @@ export const CommandContainer: FC = () => {
         : []),
       ...gridCommands,
     ];
-  }, [gridCommands, recordSetContext, recordSetVisible, schema.logicalName]);
+  }, [
+    gridCommands,
+    recordSetContext.ids.length,
+    recordSetContext.logicalName,
+    recordSetVisible,
+    router,
+    schema.logicalName,
+    setRecordSetVisible,
+  ]);
 
   return <OverflowCommandBar commands={extendedCommands} />;
 };

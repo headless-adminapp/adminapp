@@ -1,5 +1,5 @@
 import { Label } from '@fluentui/react-components';
-import { useCallback, useMemo } from 'react';
+import { JSX, useCallback, useMemo } from 'react';
 
 // import { AttachmentControl } from './controls/AttachmentControl';
 import { CurrencyControl } from './controls/CurrencyControl';
@@ -115,7 +115,7 @@ function randomUUID() {
 }
 
 function FormControl<T>(props: FormControlProps<T>) {
-  const { label, id, onChange, error, helperText, required } = props;
+  const { label, id, onChange } = props;
   const _id = useMemo(() => id || randomUUID(), [id]);
 
   const noop = useCallback(() => {}, []);

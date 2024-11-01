@@ -27,15 +27,7 @@ interface FormSectionProps {
 export const FormSection: FC<PropsWithChildren<FormSectionProps>> & {
   Column: typeof FormSectionColumn;
   Loading: typeof FormSectionLoading;
-} = ({
-  title,
-  children,
-  columnCount,
-  fullHeight,
-  labelPosition,
-  noPadding,
-  hideLabel,
-}) => {
+} = ({ title, children, columnCount, labelPosition, noPadding, hideLabel }) => {
   // const columnCount = 2;
   const divRef = useRef<HTMLDivElement>(null);
 

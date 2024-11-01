@@ -15,7 +15,6 @@ export default function MultiSelectControl<T extends string | number>({
   id,
   name,
   disabled,
-  error,
   onBlur,
   onFocus,
   placeholder,

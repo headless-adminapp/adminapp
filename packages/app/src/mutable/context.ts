@@ -63,9 +63,12 @@ export function useContextValueSetter<T, U extends unknown[]>(
   const setterRef = useRef(setter);
   setterRef.current = setter;
 
-  const setterWrapper = useCallback((...args: U) => {
-    return setterRef.current(contextValue.setValue)(...args);
-  }, []);
+  const setterWrapper = useCallback(
+    (...args: U) => {
+      return setterRef.current(contextValue.setValue)(...args);
+    },
+    [contextValue.setValue]
+  );
 
   return setterWrapper;
 }

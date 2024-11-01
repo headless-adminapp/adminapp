@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from 'react';
+import { FC, Fragment } from 'react';
 
 import { CommandContainer } from '../DataGrid/CommandContainer';
 import { GridHeaderContainer } from '../DataGrid/GridHeaderContainer';

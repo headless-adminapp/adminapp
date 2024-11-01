@@ -2,6 +2,9 @@
   "extends": [
     "plugin:eslint-plugin-import/recommended",
     "plugin:eslint-plugin-import/typescript",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:react/jsx-runtime",
     "plugin:deprecation/recommended"
   ],
   "parser": "@typescript-eslint/parser",
@@ -10,6 +13,7 @@
   },
   "rules": {
     "no-unused-vars": "off",
+    "@typescript-eslint/no-floating-promises": "error",
     "unused-imports/no-unused-imports": "error",
     "simple-import-sort/imports": "error",
     "import/no-unresolved": "off",
@@ -22,7 +26,8 @@
         "argsIgnorePattern": "^_"
       }
     ],
-    "deprecation/deprecation": "warn"
+    "deprecation/deprecation": "warn",
+    "react/prop-types": "off"
   },
   "plugins": [
     "unused-imports",

@@ -19,11 +19,9 @@ export default function SelectControl<T extends string | number>({
   id,
   name,
   disabled,
-  error,
   onBlur,
   onFocus,
   placeholder,
-  readOnly,
 }: SelectControlProps<T>) {
   const transformedOptions = useMemo(
     () => options.map((x) => ({ label: x.label, value: String(x.value) })),

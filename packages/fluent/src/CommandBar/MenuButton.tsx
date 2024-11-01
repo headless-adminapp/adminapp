@@ -79,6 +79,7 @@ export const CommandMenuButton: ForwardRefComponent<CommandMenuButtonProps> =
                   danger && styles.splitButtonDanger
                 )}
                 menuButton={triggerProps}
+                disabled={disabled}
               >
                 {text}
               </SplitButton>
