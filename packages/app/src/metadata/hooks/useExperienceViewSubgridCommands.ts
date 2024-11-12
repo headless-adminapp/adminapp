@@ -19,7 +19,7 @@ export function useExperienceViewSubgridCommands(logicalName: string) {
         commands = subgridCommands;
       }
 
-      return [];
+      return commands ?? [];
     },
     initialData: [],
   });

@@ -19,7 +19,7 @@ export function useExperienceViewCommands(logicalName: string) {
         commands = viewCommands;
       }
 
-      return [];
+      return commands ?? [];
     },
     initialData: [],
   });

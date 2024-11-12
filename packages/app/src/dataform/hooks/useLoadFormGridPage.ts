@@ -54,7 +54,7 @@ export function useLoadFormGridPage(
         commands = formCommands;
       }
 
-      return [];
+      return commands ?? [];
     },
     initialData: [],
   });
