@@ -9,7 +9,6 @@ import {
   TabList,
   tokens,
 } from '@fluentui/react-components';
-import { localizedLabel } from '@headless-adminapp/app/builders';
 import { DataFormContext } from '@headless-adminapp/app/dataform';
 import {
   useDataFormSchema,
@@ -21,6 +20,7 @@ import {
   useSelectedForm,
 } from '@headless-adminapp/app/dataform/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
+import { localizedLabel } from '@headless-adminapp/app/locale/utils';
 import {
   useContextSelector,
   useContextValueSetter,

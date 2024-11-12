@@ -7,6 +7,9 @@ import {
 import { useContextSelector } from '../../mutable/context';
 import { GridContext } from '../context';
 
+/**
+ * @deprecated
+ */
 export function useGridCommands<
   CommandContext extends
     | EntityMainGridCommandContext

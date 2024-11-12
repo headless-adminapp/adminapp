@@ -1,6 +1,11 @@
 import type { Icon } from '@headless-adminapp/icons';
 
 import { Localized } from '../../types';
+import { EntityMainFormCommandItemExperience } from '../form';
+import {
+  EntityMainGridCommandItemExperience,
+  SubGridCommandItemExperience,
+} from '../view';
 
 interface BasePageItem {
   label?: string;
@@ -125,4 +130,8 @@ export interface AppExperience {
   defaultPage: NavPageItem;
   accountMenuItems?: AccountMenuItem[];
   quickActionItems?: QuickActionItem[];
+
+  viewCommands?: EntityMainGridCommandItemExperience[][];
+  subgridCommands?: SubGridCommandItemExperience[][];
+  formCommands?: EntityMainFormCommandItemExperience[][];
 }

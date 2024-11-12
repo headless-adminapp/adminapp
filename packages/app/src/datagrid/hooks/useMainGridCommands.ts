@@ -1,3 +1,6 @@
+import { useAppContext } from '@headless-adminapp/app/app';
+import { useContextSelector } from '@headless-adminapp/app/mutable';
+import { CommandItemExperience } from '@headless-adminapp/core/experience/command';
 import { EntityMainGridCommandContext } from '@headless-adminapp/core/experience/view';
 import { useMemo } from 'react';
 
@@ -15,9 +18,9 @@ import {
 } from '../../dialog/hooks';
 import { useProgressIndicator } from '../../progress-indicator/hooks/useProgressIndicator';
 import { useOpenToastNotification } from '../../toast-notification/hooks/useOpenToastNotification';
+import { GridContext } from '../context';
 import { useGridColumnFilter } from './useGridColumnFilter';
 import { useGridColumns } from './useGridColumns';
-import { useGridCommands } from './useGridCommands';
 import { useGridData } from './useGridData';
 import { useGridExtraFilter } from './useGridExtraFilter';
 import { useGridRefresh } from './useGridRefresh';
@@ -102,6 +105,24 @@ export function useMainGridCommandHandlerContext(): EntityMainGridCommandContext
     ...baseHandlerContext,
     primaryControl,
   };
+}
+
+const emptyCommands: CommandItemExperience<EntityMainGridCommandContext>[][] =
+  [];
+
+function useGridCommands() {
+  const commands = useContextSelector(
+    GridContext,
+    (state) =>
+      state.commands as
+        | CommandItemExperience<EntityMainGridCommandContext>[][]
+        | undefined
+  );
+  const {
+    app: { viewCommands: defaultCommands },
+  } = useAppContext();
+
+  return commands ?? defaultCommands ?? emptyCommands;
 }
 
 export function useMainGridCommands(): CommandItemState[][] {

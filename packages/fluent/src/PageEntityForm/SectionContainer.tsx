@@ -1,4 +1,3 @@
-import { localizedLabel } from '@headless-adminapp/app/builders';
 import {
   useDataFormSchema,
   useFormInstance,
@@ -6,6 +5,7 @@ import {
   useRecordId,
 } from '@headless-adminapp/app/dataform/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
+import { localizedLabel } from '@headless-adminapp/app/locale/utils';
 import { Section } from '@headless-adminapp/core/experience/form';
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { Controller } from 'react-hook-form';

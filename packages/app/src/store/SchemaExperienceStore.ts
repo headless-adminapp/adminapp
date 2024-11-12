@@ -328,7 +328,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
 
   async getViewCommands(
     logicalName: string
-  ): Promise<EntityMainGridCommandItemExperience[][]> {
+  ): Promise<EntityMainGridCommandItemExperience[][] | undefined> {
     const experience = await this.getExperience(logicalName);
 
     return experience.viewCommands;
@@ -336,7 +336,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
 
   async getFormCommands(
     logicalName: string
-  ): Promise<EntityMainFormCommandItemExperience[][]> {
+  ): Promise<EntityMainFormCommandItemExperience[][] | undefined> {
     const experience = await this.getExperience(logicalName);
 
     return experience.formCommands;
@@ -344,7 +344,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
 
   async getSubgridCommands(
     logicalName: string
-  ): Promise<SubGridCommandItemExperience[][]> {
+  ): Promise<SubGridCommandItemExperience[][] | undefined> {
     const experience = await this.getExperience(logicalName);
 
     return experience.subgridCommands;

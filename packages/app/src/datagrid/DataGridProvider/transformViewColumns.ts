@@ -2,7 +2,7 @@ import { ViewColumn } from '@headless-adminapp/core/experience/view';
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { ISchemaStore } from '@headless-adminapp/core/store';
 
-import { localizedLabel } from '../../builders/CommandBuilder';
+import { localizedLabel } from '../../locale/utils';
 import { TransformedViewColumn } from '../context';
 
 export function transformViewColumns<S extends SchemaAttributes>(
@@ -14,7 +14,7 @@ export function transformViewColumns<S extends SchemaAttributes>(
   const schema = schemaStore.getSchema(logicalName);
 
   return columns
-    .map((column) => {
+    .map(column => {
       const attribute = schema.attributes[column.name as string];
 
       if (!attribute) {

@@ -11,13 +11,13 @@ import {
   Option,
   tokens,
 } from '@fluentui/react-components';
-import { localizedLabel } from '@headless-adminapp/app/builders';
 import {
   TransformedViewColumn,
   transformViewColumns,
 } from '@headless-adminapp/app/datagrid';
 import { useDataGridSchema } from '@headless-adminapp/app/datagrid/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
+import { localizedLabel } from '@headless-adminapp/app/locale/utils';
 import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
 import { LookupAttribute } from '@headless-adminapp/core/attributes';
 import { Icons } from '@headless-adminapp/icons';

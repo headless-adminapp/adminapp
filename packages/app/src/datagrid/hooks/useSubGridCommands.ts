@@ -1,11 +1,14 @@
+import { useAppContext } from '@headless-adminapp/app/app';
+import { useContextSelector } from '@headless-adminapp/app/mutable';
+import { CommandItemExperience } from '@headless-adminapp/core/experience/command';
 import { EntitySubGridCommandContext } from '@headless-adminapp/core/experience/view';
 import { useMemo } from 'react';
 
 import { useBaseCommandHandlerContext, useCommands } from '../../command';
 import { CommandItemState, MenuItemCommandState } from '../../command/types';
 import { useMainFormCommandHandlerContext } from '../../dataform/hooks/useMainFormCommands';
+import { GridContext } from '../context';
 import { useGridColumnFilter } from './useGridColumnFilter';
-import { useGridCommands } from './useGridCommands';
 import { useGridData } from './useGridData';
 import { useGridExtraFilter } from './useGridExtraFilter';
 import { useGridRefresh } from './useGridRefresh';
@@ -63,15 +66,33 @@ export function useSubGridCommandHandlerContext(): EntitySubGridCommandContext {
   };
 }
 
+const emptyCommands: CommandItemExperience<EntitySubGridCommandContext>[][] =
+  [];
+
+function useGridCommands() {
+  const commands = useContextSelector(
+    GridContext,
+    (state) =>
+      state.commands as
+        | CommandItemExperience<EntitySubGridCommandContext>[][]
+        | undefined
+  );
+  const {
+    app: { subgridCommands: defaultCommands },
+  } = useAppContext();
+
+  return commands ?? defaultCommands ?? emptyCommands;
+}
+
 export function useSubGridCommands(): CommandItemState[][] {
-  const commands = useGridCommands<EntitySubGridCommandContext>();
+  const commands = useGridCommands();
   const handlerContext = useSubGridCommandHandlerContext();
 
   return useCommands<EntitySubGridCommandContext>(commands, handlerContext);
 }
 
 export function useSubGridContextCommands(): MenuItemCommandState[][] {
-  const commands = useGridCommands<EntitySubGridCommandContext>();
+  const commands = useGridCommands();
   const handlerContext = useSubGridCommandHandlerContext();
 
   return useCommands<EntitySubGridCommandContext>(

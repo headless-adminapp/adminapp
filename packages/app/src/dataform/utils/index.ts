@@ -16,12 +16,12 @@ import { memoize, MemoizedFunction } from 'lodash';
 import { ResolverResult } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { localizedLabel } from '../../builders/CommandBuilder';
 import {
   getColumns,
   getControls,
 } from '../../dataform/DataFormProvider/DataResolver';
 import { FormValidationStringSet } from '../../form/FormValidationStringContext';
+import { localizedLabel } from '../../locale/utils';
 
 export function getModifiedValues(
   initialValues: any,
@@ -81,13 +81,13 @@ export async function saveRecord({
   const controls = getControls(form);
 
   const editableGridControls = controls.filter(
-    (control) => control.type === 'editablegrid'
+    control => control.type === 'editablegrid'
   ) as SectionEditableGridControl[];
 
   const modifiedValues = getModifiedValues(
     initialValues,
     values,
-    editableGridControls.map((x) => x.attributeName)
+    editableGridControls.map(x => x.attributeName)
   );
 
   let recordId: string;
@@ -119,13 +119,11 @@ export async function saveRecord({
         control.attributeName
       ] as any[];
 
-      const newRows = gridRows.filter((x) => !x[gridSchema.idAttribute]);
-      const updatedRows = gridRows.filter((x) => x[gridSchema.idAttribute]);
+      const newRows = gridRows.filter(x => !x[gridSchema.idAttribute]);
+      const updatedRows = gridRows.filter(x => x[gridSchema.idAttribute]);
       const deletedIds = initialGridRows
-        ?.map((x) => x[gridSchema.idAttribute])
-        .filter(
-          (id) => !gridRows.find((x) => x[gridSchema.idAttribute] === id)
-        );
+        ?.map(x => x[gridSchema.idAttribute])
+        .filter(id => !gridRows.find(x => x[gridSchema.idAttribute] === id));
 
       for (const row of newRows) {
         operations.push({
@@ -142,7 +140,7 @@ export async function saveRecord({
 
       for (const row of updatedRows) {
         const initialRow = initialGridRows.find(
-          (x) => x[gridSchema.idAttribute] === row[gridSchema.idAttribute]
+          x => x[gridSchema.idAttribute] === row[gridSchema.idAttribute]
         );
 
         if (!initialRow) {
@@ -238,12 +236,12 @@ export function getInitialValues({
 }) {
   const formColumns = getColumns(form);
   const editableGridControls = getControls(form).filter(
-    (control) => control.type === 'editablegrid'
+    control => control.type === 'editablegrid'
   );
 
   const allColumns = [
     ...formColumns,
-    ...editableGridControls.map((x) => x.attributeName),
+    ...editableGridControls.map(x => x.attributeName),
   ];
 
   if (!recordId && !record && form.experience.cloneAttributes && cloneRecord) {
@@ -349,12 +347,12 @@ export const formValidator: FormValidator = memoize(
 
       if (!formReadOnly) {
         const activeControls = form.experience.tabs
-          .flatMap((tab) => tab.tabColumns)
-          .flatMap((tabColumn) => tabColumn.sections)
-          .flatMap((section) => {
+          .flatMap(tab => tab.tabColumns)
+          .flatMap(tabColumn => tabColumn.sections)
+          .flatMap(section => {
             return section.controls;
           })
-          .filter((control) => {
+          .filter(control => {
             if (control.type === 'standard') {
               const attribute = schema.attributes[control.attributeName];
               if (attribute.readonly) {
@@ -365,20 +363,20 @@ export const formValidator: FormValidator = memoize(
           });
 
         const editableGridControls = activeControls.filter(
-          (control) => control.type === 'editablegrid'
+          control => control.type === 'editablegrid'
         );
 
         const columns = Array.from(
           new Set([
             schema.primaryAttribute,
             ...activeControls
-              .filter((control) => control.type === 'standard')
-              .map((control) => control.attributeName),
+              .filter(control => control.type === 'standard')
+              .map(control => control.attributeName),
           ])
         );
 
         validator = generateValidationSchema({
-          editableGrids: editableGridControls.map((control) => {
+          editableGrids: editableGridControls.map(control => {
             if (control.type !== 'editablegrid') {
               throw new Error('Invalid control type');
             }
@@ -575,7 +573,7 @@ export const generateAttributeValidationSchema = memoize(
         break;
     }
 
-    validationSchema = validationSchema.transform((value) => {
+    validationSchema = validationSchema.transform(value => {
       if (value === '') {
         return null;
       }

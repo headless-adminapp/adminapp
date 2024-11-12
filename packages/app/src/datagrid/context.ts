@@ -34,7 +34,7 @@ export interface GridContextState<
   viewLookup: LocalizedDataLookup[];
   onChangeView?: (viewId: string) => void;
   extraFilter?: Filter;
-  commands: CommandItemExperience<CommandContext>[][];
+  commands?: CommandItemExperience<CommandContext>[][];
   maxRecords?: number;
 
   // internal state (visual and filters)

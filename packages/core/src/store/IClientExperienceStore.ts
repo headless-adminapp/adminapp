@@ -60,15 +60,15 @@ export interface ISchemaExperienceStore {
 
   getViewCommands(
     logicalName: string
-  ): Promise<EntityMainGridCommandItemExperience[][]>;
+  ): Promise<EntityMainGridCommandItemExperience[][] | undefined>;
 
   getFormCommands(
     logicalName: string
-  ): Promise<EntityMainFormCommandItemExperience[][]>;
+  ): Promise<EntityMainFormCommandItemExperience[][] | undefined>;
 
   getSubgridCommands(
     logicalName: string
-  ): Promise<SubGridCommandItemExperience[][]>;
+  ): Promise<SubGridCommandItemExperience[][] | undefined>;
 
   getExperienceSchemaMetadatList(): Promise<SchemaExperienceMetadata[]>;
 }

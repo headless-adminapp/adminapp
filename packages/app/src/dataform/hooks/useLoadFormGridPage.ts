@@ -1,3 +1,4 @@
+import { useAppContext } from '@headless-adminapp/app/app';
 import {
   EntityMainFormCommandItemExperience,
   Form,
@@ -40,10 +41,20 @@ export function useLoadFormGridPage(
     placeholderData: keepPreviousData,
   });
 
+  const {
+    app: { formCommands },
+  } = useAppContext();
+
   const { data: commands } = useQuery({
     queryKey: ['experience-schema-form-commands', logicalName],
     queryFn: async () => {
-      return experienceStore.getFormCommands(logicalName);
+      let commands = await experienceStore.getFormCommands(logicalName);
+
+      if (!commands) {
+        commands = formCommands;
+      }
+
+      return [];
     },
     initialData: [],
   });

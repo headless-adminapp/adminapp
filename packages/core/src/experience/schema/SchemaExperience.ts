@@ -29,7 +29,7 @@ export type SchemaExperience<S extends SchemaAttributes = SchemaAttributes> = {
   defaultAssociatedViewId: string;
 
   // commands
-  viewCommands: EntityMainGridCommandItemExperience[][];
-  subgridCommands: SubGridCommandItemExperience[][];
-  formCommands: EntityMainFormCommandItemExperience[][];
+  viewCommands?: EntityMainGridCommandItemExperience[][];
+  subgridCommands?: SubGridCommandItemExperience[][];
+  formCommands?: EntityMainFormCommandItemExperience[][];
 };

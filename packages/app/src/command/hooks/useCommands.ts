@@ -9,7 +9,7 @@ import { transformCommadnGroups } from '../utils';
  *              and apply the necessary conditions to the commands (disabled, hidden, etc.)
  */
 export function useCommands<HandlerContext>(
-  commands: CommandItemExperience<HandlerContext>[][],
+  commands: CommandItemExperience<HandlerContext>[][] | undefined,
   handlerContext: HandlerContext,
   selector?: CommandItemExperienceSelector<HandlerContext>
 ): CommandItemState[][] {
@@ -18,7 +18,7 @@ export function useCommands<HandlerContext>(
 
   return useMemo(() => {
     return transformCommadnGroups(
-      commands,
+      commands ?? [],
       handlerContext,
       selectorRef.current
     );
