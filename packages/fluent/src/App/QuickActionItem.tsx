@@ -1,4 +1,4 @@
-import { Button , makeStyles } from '@fluentui/react-components';
+import { Button, makeStyles } from '@fluentui/react-components';
 import { Icon } from '@headless-adminapp/icons';
 import { FC } from 'react';
 
@@ -39,7 +39,7 @@ export const QuickActionItem: FC<QuickActionItemProps> = ({
 
   return (
     <Button
-      icon={<Icon />}
+      icon={<Icon size="inherit" />}
       appearance="transparent"
       as="a"
       href={link}

@@ -90,7 +90,7 @@ export const CommandMenuButton: ForwardRefComponent<CommandMenuButtonProps> =
             <MenuButton
               ref={ref}
               appearance="subtle"
-              icon={<Icon />}
+              icon={<Icon size={20} />}
               className={mergeClasses(styles.menuButton)}
             >
               {text}

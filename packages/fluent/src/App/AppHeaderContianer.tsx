@@ -136,7 +136,7 @@ export const AppHeaderContainer: FC = () => {
                 return (
                   <MenuItem
                     key={index}
-                    icon={<Icon />}
+                    icon={<Icon size="inherit" />}
                     onClick={() => item.onClick?.()}
                   >
                     {item.localizedLabel?.[language] ?? item.label}

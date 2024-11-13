@@ -1,6 +1,14 @@
+import { bundleIcon } from '@headless-adminapp/icons/bundleIcon';
 import { defineIconSet } from '@headless-adminapp/icons/utils';
+import { lazy } from 'react';
 
+import { createIcon } from './createIcon';
 import { bundleLazyIcon } from './lazyIcon';
+
+const ExcelRegular = lazy(() => import('./ExcelRegular'));
+const ExcelFilled = lazy(() => import('./ExcelFilled'));
+const CsvRegular = lazy(() => import('./CsvRegular'));
+const CsvFilled = lazy(() => import('./CsvFilled'));
 
 export const iconSet = defineIconSet({
   // controls
@@ -54,5 +62,14 @@ export const iconSet = defineIconSet({
   ListRtl: bundleLazyIcon(
     'TextBulletListRtl24Regular',
     'TextBulletListRtl24Filled'
+  ),
+  Export: bundleLazyIcon('ArrowDownload24Regular', 'ArrowDownload24Filled'),
+  ExportCsv: bundleIcon(
+    createIcon(CsvRegular, true),
+    createIcon(CsvFilled, true)
+  ),
+  ExportExcel: bundleIcon(
+    createIcon(ExcelRegular, true),
+    createIcon(ExcelFilled, true)
   ),
 });

@@ -1,3 +1,8 @@
+import { EntityMainFormCommandItemExperience } from '@headless-adminapp/core/experience/form';
+import {
+  EntityMainGridCommandItemExperience,
+  SubGridCommandItemExperience,
+} from '@headless-adminapp/core/experience/view';
 import { Localized } from '@headless-adminapp/core/types';
 import { Icon } from '@headless-adminapp/icons';
 
@@ -62,30 +67,36 @@ export namespace DefaultCommandBuilder {
     icons,
     strings = defaultViewCommandStrings,
     localizedSrings,
-  }: CreateDefaultViewCommandOptions) {
+  }: CreateDefaultViewCommandOptions): EntityMainGridCommandItemExperience[][] {
     return [
       [
         ViewCommandBuilder.createNewRecordCommand({
           Icon: icons.New,
           text: strings.new,
-          localizedTexts: extractLocalizedStrings(localizedSrings, x => x.new),
+          localizedTexts: extractLocalizedStrings(
+            localizedSrings,
+            (x) => x.new
+          ),
         }),
         ViewCommandBuilder.createEditRecordCommand({
           Icon: icons.Edit,
           text: strings.edit,
-          localizedTexts: extractLocalizedStrings(localizedSrings, x => x.edit),
+          localizedTexts: extractLocalizedStrings(
+            localizedSrings,
+            (x) => x.edit
+          ),
         }),
         ViewCommandBuilder.createDeleteRecordCommand({
           Icon: icons.Delete,
           text: strings.delete,
           localizedText: extractLocalizedStrings(
             localizedSrings,
-            x => x.delete
+            (x) => x.delete
           ),
           stringSet: strings.deleteRecordCommandStringSet,
           localizedStringSet: extractLocalizedStrings(
             localizedSrings,
-            x => x.deleteRecordCommandStringSet
+            (x) => x.deleteRecordCommandStringSet
           ),
         }),
         ViewCommandBuilder.createRefreshCommand({
@@ -93,7 +104,7 @@ export namespace DefaultCommandBuilder {
           text: strings.refresh,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            x => x.refresh
+            (x) => x.refresh
           ),
         }),
       ],
@@ -104,7 +115,7 @@ export namespace DefaultCommandBuilder {
             text: strings.export,
             localizedTexts: extractLocalizedStrings(
               localizedSrings,
-              x => x.export
+              (x) => x.export
             ),
           },
           csv: {
@@ -112,15 +123,15 @@ export namespace DefaultCommandBuilder {
             text: strings.exportCsv,
             localizedTexts: extractLocalizedStrings(
               localizedSrings,
-              x => x.exportCsv
+              (x) => x.exportCsv
             ),
           },
           excel: {
             Icon: icons.ExportExcel,
-            text: strings.exportCsv,
+            text: strings.exportExcel,
             localizedTexts: extractLocalizedStrings(
               localizedSrings,
-              x => x.exportExcel
+              (x) => x.exportExcel
             ),
           },
         }),
@@ -154,20 +165,23 @@ export namespace DefaultCommandBuilder {
     icons,
     strings = defaultFormCommandStrings,
     localizedSrings,
-  }: CreateDefaultFormCommandOptions) {
+  }: CreateDefaultFormCommandOptions): EntityMainFormCommandItemExperience[][] {
     return [
       [
         FormCommandBuilder.createSaveCommand({
           Icon: icons.Save,
           text: strings.save,
-          localizedTexts: extractLocalizedStrings(localizedSrings, x => x.save),
+          localizedTexts: extractLocalizedStrings(
+            localizedSrings,
+            (x) => x.save
+          ),
         }),
         FormCommandBuilder.createSaveAndCloseCommand({
           Icon: icons.SaveAndClose,
           text: strings.saveAndClose,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            x => x.saveAndClose
+            (x) => x.saveAndClose
           ),
         }),
         FormCommandBuilder.createRefreshCommand({
@@ -175,7 +189,7 @@ export namespace DefaultCommandBuilder {
           text: strings.refresh,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            x => x.refresh
+            (x) => x.refresh
           ),
         }),
       ],
@@ -217,36 +231,42 @@ export namespace DefaultCommandBuilder {
     icons,
     strings = defaultSubgridCommandStrings,
     localizedSrings,
-  }: CreateDefaultSubgridCommandOptions) {
+  }: CreateDefaultSubgridCommandOptions): SubGridCommandItemExperience[][] {
     return [
       [
         SubgridCommandBuilder.createNewRecordCommand({
           Icon: icons.New,
           text: strings.new,
-          localizedTexts: extractLocalizedStrings(localizedSrings, x => x.new),
+          localizedTexts: extractLocalizedStrings(
+            localizedSrings,
+            (x) => x.new
+          ),
         }),
         SubgridCommandBuilder.createEditRecordCommand({
           Icon: icons.Edit,
           text: strings.edit,
-          localizedTexts: extractLocalizedStrings(localizedSrings, x => x.edit),
+          localizedTexts: extractLocalizedStrings(
+            localizedSrings,
+            (x) => x.edit
+          ),
         }),
         SubgridCommandBuilder.createRefreshCommand({
           Icon: icons.Refresh,
           text: strings.refresh,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            x => x.refresh
+            (x) => x.refresh
           ),
         }),
       ],
       [
-        ViewCommandBuilder.createExportCommand({
+        SubgridCommandBuilder.createExportCommand({
           button: {
             Icon: icons.Export,
             text: strings.export,
             localizedTexts: extractLocalizedStrings(
               localizedSrings,
-              x => x.export
+              (x) => x.export
             ),
           },
           csv: {
@@ -254,7 +274,7 @@ export namespace DefaultCommandBuilder {
             text: strings.exportCsv,
             localizedTexts: extractLocalizedStrings(
               localizedSrings,
-              x => x.exportCsv
+              (x) => x.exportCsv
             ),
           },
           excel: {
@@ -262,7 +282,7 @@ export namespace DefaultCommandBuilder {
             text: strings.exportExcel,
             localizedTexts: extractLocalizedStrings(
               localizedSrings,
-              x => x.exportExcel
+              (x) => x.exportExcel
             ),
           },
         }),

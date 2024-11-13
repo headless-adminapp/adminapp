@@ -36,5 +36,8 @@ declare module '@headless-adminapp/icons/types' {
     FilterDismiss: Icon;
     ListLtr: Icon;
     ListRtl: Icon;
+    Export: Icon;
+    ExportCsv: Icon;
+    ExportExcel: Icon;
   }
 }

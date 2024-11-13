@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
+    "clean": "lerna run clean",
     "build": "lerna run build",
     "publish": "lerna publish",
     "lint": "eslint . --ext .ts,.tsx",
