@@ -13,7 +13,7 @@ import {
   useRouter,
   useRouteResolver,
 } from '@headless-adminapp/app/route/hooks';
-import { IconPlaceholder } from '@headless-adminapp/icons';
+import { IconPlaceholder, Icons } from '@headless-adminapp/icons';
 import { Fragment, useState } from 'react';
 
 import { transformNavPageItem } from './utils';
@@ -77,7 +77,8 @@ export const NavigationContainer = () => {
                       routeResolver,
                     });
 
-                    const Icon = navItem.icon ?? IconPlaceholder;
+                    const Icon =
+                      navItem.icon ?? Icons.Entity ?? IconPlaceholder;
 
                     const isActive = isRouteActive(selectedPath, item);
 

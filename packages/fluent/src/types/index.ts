@@ -23,6 +23,7 @@ declare module '@headless-adminapp/icons/types' {
     Add: Icon;
     Edit: Icon;
     Delete: Icon;
+    Save: Icon;
     Refresh: Icon;
     MoreVertical: Icon;
     MoreHorizontal: Icon;
@@ -39,5 +40,6 @@ declare module '@headless-adminapp/icons/types' {
     Export: Icon;
     ExportCsv: Icon;
     ExportExcel: Icon;
+    Entity: Icon;
   }
 }

@@ -32,6 +32,7 @@ export const iconSet = defineIconSet({
   Add: bundleLazyIcon('Add24Regular', 'Add24Filled'),
   Edit: bundleLazyIcon('Edit24Regular', 'Edit24Filled'),
   Delete: bundleLazyIcon('Delete24Regular', 'Delete24Filled'),
+  Save: bundleLazyIcon('Save24Regular', 'Save24Filled'),
   Refresh: bundleLazyIcon(
     'ArrowCounterclockwise24Regular',
     'ArrowCounterclockwise24Regular'
@@ -72,4 +73,5 @@ export const iconSet = defineIconSet({
     createIcon(ExcelRegular, true),
     createIcon(ExcelFilled, true)
   ),
+  Entity: bundleLazyIcon('PuzzlePiece24Regular', 'PuzzlePiece24Filled'),
 });
