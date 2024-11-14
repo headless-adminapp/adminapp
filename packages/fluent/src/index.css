@@ -7,3 +7,15 @@
   flex-direction: column;
   padding: var(--spacingVerticalM);
 }
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.fui-MenuItem__icon > svg,
+.fui-Button__icon > svg {
+  width: inherit;
+  height: inherit;
+}

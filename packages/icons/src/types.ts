@@ -2,7 +2,7 @@ import { ComponentType, JSX } from 'react';
 
 export type IconProps = {
   color?: string;
-  size?: string | number;
+  size?: number | 'inherit' | (string & {});
   opacity?: number;
   filled?: boolean;
   className?: string;

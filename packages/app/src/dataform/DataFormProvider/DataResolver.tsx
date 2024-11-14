@@ -28,7 +28,7 @@ export function getColumns(form: Form) {
   const columns = Array.from(
     new Set([
       ...(form.experience.includeAttributes ?? []),
-      ...form.experience.headerControls,
+      ...(form.experience.headerControls ?? []),
       ...getControls(form)
         .filter((control) => control.type === 'standard')
         .map((control) => control.attributeName),

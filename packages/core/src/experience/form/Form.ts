@@ -15,7 +15,7 @@ export interface AsyncForm<S extends SchemaAttributes = SchemaAttributes>
 }
 
 export interface FormExperience<S extends SchemaAttributes = SchemaAttributes> {
-  headerControls: Array<keyof S>;
+  headerControls?: Array<keyof S>;
   tabs: Tab<S>[];
   cloneAttributes?: Array<
     (keyof S | (string & {})) | EditableGridCloneAttribute

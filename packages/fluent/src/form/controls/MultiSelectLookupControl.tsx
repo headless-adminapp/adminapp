@@ -256,7 +256,7 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
         }}
         onOptionSelect={(e, item) => {
           const _item = data?.records.find(
-            (x) => String(x[schema.idAttribute]) === item.optionValue
+            (x) => String(x[schema.idAttribute]) === String(item.optionValue)
           );
 
           if (!_item) return;

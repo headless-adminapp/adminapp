@@ -20,7 +20,7 @@
     "build": "tsc",
     "clean": "rm -rf dist && rm -f tsconfig.tsbuildinfo",
     "ts-check": "tsc --noEmit",
-    "copy-files": "cp package.json dist",
+    "copy-files": "cp package.json dist && cp src/index.css dist",
     "prepublishOnly": "pnpm run build && pnpm run copy-files",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

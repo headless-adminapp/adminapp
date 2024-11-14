@@ -1,4 +1,5 @@
 import { getLocalizedOperatorOptions } from '@headless-adminapp/app/datagrid/column-filter';
+import { useDataService } from '@headless-adminapp/app/transport';
 import type { Attribute } from '@headless-adminapp/core/attributes';
 import { OperatorKey } from '@headless-adminapp/core/transport';
 import { useMemo } from 'react';
@@ -18,13 +19,23 @@ export function OperatorSelect({
   onChange,
 }: OperatorSelectProps) {
   const { operatorStrings } = useAppStrings();
+  const dataService = useDataService();
   const operatorOptions = useMemo(() => {
     return getLocalizedOperatorOptions(operatorStrings);
   }, [operatorStrings]);
 
   const options = useMemo(() => {
-    return operatorOptions[attribute.type];
-  }, [attribute.type, operatorOptions]);
+    const supportedOperators = dataService.supportedOperators;
+    let operators = operatorOptions[attribute.type];
+
+    if (supportedOperators) {
+      operators = operators.filter((option) =>
+        supportedOperators[attribute.type].includes(option.value)
+      );
+    }
+
+    return operators;
+  }, [attribute.type, operatorOptions, dataService]);
 
   return (
     <SelectControl

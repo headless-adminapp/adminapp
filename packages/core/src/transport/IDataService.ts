@@ -1,3 +1,4 @@
+import { AttributeType } from '../attributes';
 import { Id } from '../attributes/IdAttribute';
 import {
   AggregateAttribute,
@@ -9,6 +10,7 @@ import {
   RetriveRecordsFnOptions,
   RetriveRecordsResult,
 } from './operations/RetriveRecords';
+import { OperatorKey } from './OperatorKey';
 
 /*** @deprecated Use RetriveRecordsResult instead */
 export interface GetListResult<T> {
@@ -53,4 +55,6 @@ export interface IDataService {
   ): Promise<InferredAggregateQueryResult<Q>[]>;
 
   customAction<T = unknown>(actionName: string, payload: unknown): Promise<T>;
+
+  supportedOperators?: Record<AttributeType, OperatorKey[]> | undefined;
 }

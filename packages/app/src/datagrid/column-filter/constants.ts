@@ -472,9 +472,44 @@ const booleanOperatorOptions: OperatorOptionConfig[] = [
   },
 ];
 
-const idOperatorOptions: OperatorOptionConfig[] = [];
+const idOperatorOptions: OperatorOptionConfig[] = [
+  {
+    value: 'not-null',
+    labelKey: 'containsData',
+    controls: [],
+  },
+  {
+    value: 'null',
+    labelKey: 'doesNotContainData',
+    controls: [],
+  },
+];
 
-const attachmentOperatorOptions: OperatorOptionConfig[] = [];
+const attachmentOperatorOptions: OperatorOptionConfig[] = [
+  {
+    value: 'not-null',
+    labelKey: 'containsData',
+    controls: [],
+  },
+  {
+    value: 'null',
+    labelKey: 'doesNotContainData',
+    controls: [],
+  },
+];
+
+const mixedOperatorOptions: OperatorOptionConfig[] = [
+  {
+    value: 'not-null',
+    labelKey: 'containsData',
+    controls: [],
+  },
+  {
+    value: 'null',
+    labelKey: 'doesNotContainData',
+    controls: [],
+  },
+];
 
 export const operatorOptions: Record<AttributeType, OperatorOptionConfig[]> = {
   id: idOperatorOptions,
@@ -487,7 +522,7 @@ export const operatorOptions: Record<AttributeType, OperatorOptionConfig[]> = {
   number: numberOperatorOptions,
   string: stringOperatorOptions,
   attachment: attachmentOperatorOptions,
-  mixed: [],
+  mixed: mixedOperatorOptions,
   daterange: [],
   lookups: [],
 };

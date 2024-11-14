@@ -145,7 +145,6 @@ export function AddColumns({
             gap: 8,
             marginBottom: tokens.spacingVerticalXS,
             paddingInline: tokens.spacingHorizontalS,
-            width: '100%',
           }}
         >
           <Input

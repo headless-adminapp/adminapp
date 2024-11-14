@@ -183,7 +183,7 @@ export const PageEntityFormDesktopContainer: FC = () => {
               </Body1>
             </div>
             <div style={{ display: 'flex', flexDirection: 'row' }}>
-              {formConfig.experience.headerControls.map(
+              {formConfig.experience.headerControls?.map(
                 (controlName, index) => {
                   const attribute = schema.attributes[controlName];
 

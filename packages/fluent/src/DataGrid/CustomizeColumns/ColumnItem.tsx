@@ -122,12 +122,14 @@ export const ColumnItem: FC<CardProps> = ({
       ref={ref}
       style={{
         background: tokens.colorNeutralBackground4,
-        padding: tokens.spacingHorizontalXS,
+        paddingBlock: tokens.spacingVerticalXS,
+        paddingLeft: tokens.spacingHorizontalS,
         cursor: 'move',
         opacity,
         borderRadius: tokens.borderRadiusMedium,
         display: 'flex',
         flexDirection: 'row',
+        alignItems: 'center',
       }}
       data-handler-id={handlerId}
     >
