@@ -4,12 +4,16 @@ import { AuthContext, AuthProviderPlaceholderProps } from '../auth';
 import { useContextSelector } from '../mutable';
 
 interface AuthWrapperProps {
-  Placeholder: FC<AuthProviderPlaceholderProps>;
+  Placeholder?: FC<AuthProviderPlaceholderProps>;
 }
+
+const DefaultPlaceHolder: FC<AuthProviderPlaceholderProps> = () => {
+  return null;
+};
 
 export const AuthWrapper: FC<PropsWithChildren<AuthWrapperProps>> = ({
   children,
-  Placeholder,
+  Placeholder = DefaultPlaceHolder,
 }) => {
   const state = useContextSelector(AuthContext, (state) => state);
 

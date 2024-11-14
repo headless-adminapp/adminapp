@@ -7,13 +7,21 @@ import {
 import { AuthContext, AuthState } from './context';
 import { SessionResolver, UnauthorizeReason } from './types';
 
+const defaultSessionResolver: SessionResolver = async () => {
+  return {
+    email: 'demo@example.com',
+    fullName: 'Demo User',
+    exp: Date.now() / 1000 + 60 * 60 * 24,
+  };
+};
+
 export interface AuthProviderProps {
   onUnauthenticated?: (reason: UnauthorizeReason) => void;
-  sessionResolver: SessionResolver;
+  sessionResolver?: SessionResolver;
 }
 
 export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({
-  sessionResolver,
+  sessionResolver = defaultSessionResolver,
   onUnauthenticated,
   children,
 }) => {

@@ -1,4 +1,7 @@
 import {
+  createIsRouteActive,
+  createRouteResolver,
+  defaultRouteInfo,
   IsRouteActive,
   RouteResolver,
 } from '@headless-adminapp/core/experience/route';
@@ -16,13 +19,16 @@ import {
 } from './context';
 import { ReadonlyURLSearchParams } from './types';
 
+const defaultRouteResolver = createRouteResolver(defaultRouteInfo);
+const defaultIsRouteActive = createIsRouteActive(defaultRouteInfo);
+
 export interface RouteProviderProps {
   router: RouterInstance;
   pathname: string;
   searchParams: ReadonlyURLSearchParams;
   basePath?: string;
-  routeResolver: RouteResolver;
-  isRouteActive: IsRouteActive;
+  routeResolver?: RouteResolver;
+  isRouteActive?: IsRouteActive;
 }
 
 export const RouteProvider: FC<PropsWithChildren<RouteProviderProps>> = ({
@@ -31,8 +37,8 @@ export const RouteProvider: FC<PropsWithChildren<RouteProviderProps>> = ({
   router,
   searchParams,
   basePath,
-  routeResolver,
-  isRouteActive,
+  routeResolver = defaultRouteResolver,
+  isRouteActive = defaultIsRouteActive,
 }) => {
   const basePathRef = useRef(basePath);
   basePathRef.current = basePath;
