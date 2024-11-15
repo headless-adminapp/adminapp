@@ -1,4 +1,5 @@
 import { Input } from '@fluentui/react-components';
+import { useCurrencySymbol } from '@headless-adminapp/app/locale';
 
 import { ControlProps } from './types';
 
@@ -18,6 +19,7 @@ export function CurrencyControl({
   // borderOnFocusOnly,
   readOnly,
 }: CurrencyControlProps) {
+  const symbol = useCurrencySymbol();
   return (
     <Input
       placeholder={placeholder}
@@ -34,7 +36,7 @@ export function CurrencyControl({
       // invalid={error}
       // icon={<div>₹</div>}
       // startDecorator={<div>₹</div>}
-      contentBefore={<div>₹</div>}
+      contentBefore={<div>{symbol}</div>}
       disabled={disabled}
       readOnly={readOnly}
       style={{

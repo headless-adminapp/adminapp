@@ -536,7 +536,7 @@ export class MongoServerSdk<
 
       if (schema.attributes[key]?.type === 'lookup') {
         if (typeof value === 'object') {
-          value = value._id;
+          value = value.id;
         }
 
         acc[key] = new Types.ObjectId(value as string);

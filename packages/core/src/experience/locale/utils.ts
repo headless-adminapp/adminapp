@@ -36,3 +36,16 @@ export function getLocale(
     },
   };
 }
+
+export function getCurrencySymbol(locale: string, currencyCode: string) {
+  const currency = new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currencyCode,
+    currencyDisplay: 'narrowSymbol',
+  });
+
+  return (
+    currency.formatToParts(1).find((part) => part.type === 'currency')?.value ??
+    currencyCode
+  );
+}

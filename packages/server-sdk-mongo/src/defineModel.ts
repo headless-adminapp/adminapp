@@ -62,6 +62,14 @@ export function defineModel<S extends MongoRequiredSchemaAttributes>(
           case 'mixed':
             acc[key] = { type: MongoSchema.Types.Mixed };
             break;
+          case 'money':
+          case 'number':
+            acc[key] = { type: MongoSchema.Types.Number };
+            break;
+          case 'daterange':
+          case 'lookups':
+            acc[key] = { type: MongoSchema.Types.Mixed };
+            break;
           default:
             return acc;
         }
