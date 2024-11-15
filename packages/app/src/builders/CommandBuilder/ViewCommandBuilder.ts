@@ -49,12 +49,12 @@ export namespace ViewCommandBuilder {
       Icon,
       text,
       localizedText: localizedTexts,
-      onClick: context => {
+      onClick: (context) => {
         context.navigation.openForm({
           logicalName: context.primaryControl.schema.logicalName,
         });
       },
-      hidden: context => {
+      hidden: (context) => {
         if (!EnabledRules.HasCreatePermisssion(context)) {
           return true;
         }
@@ -79,22 +79,12 @@ export namespace ViewCommandBuilder {
       text,
       localizedText: localizedTexts,
       isContextMenu: true,
-      onClick: context => {
+      onClick: (context) => {
         context.primaryControl.openRecord(
           context.primaryControl.selectedIds[0]
         );
       },
-      hidden: context => {
-        if (!EnabledRules.HasUpdatePermission(context)) {
-          return true;
-        }
-
-        if (!EnabledRules.HasSingleRecordSelected(context)) {
-          return true;
-        }
-
-        return false;
-      },
+      hidden: [(context) => !EnabledRules.HasSingleRecordSelected(context)],
     };
   }
 
@@ -159,7 +149,7 @@ export namespace ViewCommandBuilder {
       localizedText,
       danger: true,
       isContextMenu: true,
-      onClick: async context => {
+      onClick: async (context) => {
         const recordIds = context.primaryControl.selectedIds;
 
         if (!recordIds.length) {
@@ -176,17 +166,17 @@ export namespace ViewCommandBuilder {
           const confirmResult = await context.utility.openConfirmDialog({
             title: plurialize(
               recordIds.length,
-              localizeSelector(s => s.confirmation.title)
+              localizeSelector((s) => s.confirmation.title)
             ),
             text: plurialize(
               recordIds.length,
-              localizeSelector(s => s.confirmation.text)
+              localizeSelector((s) => s.confirmation.text)
             ),
             cancelButtonLabel: localizeSelector(
-              s => s.confirmation.buttonCancel
+              (s) => s.confirmation.buttonCancel
             ),
             confirmButtonLabel: localizeSelector(
-              s => s.confirmation.buttonConfirm
+              (s) => s.confirmation.buttonConfirm
             ),
           });
 
@@ -197,7 +187,7 @@ export namespace ViewCommandBuilder {
           context.utility.showProgressIndicator(
             plurialize(
               recordIds.length,
-              localizeSelector(s => s.status.deleting)
+              localizeSelector((s) => s.status.deleting)
             ) + '...'
           );
 
@@ -211,11 +201,11 @@ export namespace ViewCommandBuilder {
           context.utility.showNotification({
             title: plurialize(
               recordIds.length,
-              localizeSelector(s => s.successNotification.title)
+              localizeSelector((s) => s.successNotification.title)
             ),
             text: plurialize(
               recordIds.length,
-              localizeSelector(s => s.successNotification.text)
+              localizeSelector((s) => s.successNotification.text)
             ),
             type: 'success',
           });
@@ -223,7 +213,7 @@ export namespace ViewCommandBuilder {
           context.primaryControl.refresh();
         } catch (error) {
           context.utility.showNotification({
-            title: localizeSelector(s => s.errorNotification.title),
+            title: localizeSelector((s) => s.errorNotification.title),
             text: (error as Error).message,
             type: 'error',
           });
@@ -232,8 +222,8 @@ export namespace ViewCommandBuilder {
         }
       },
       hidden: [
-        context => !EnabledRules.HasAtLeastOneRecordSelected(context),
-        context => !EnabledRules.HasDeletePermission(context),
+        (context) => !EnabledRules.HasAtLeastOneRecordSelected(context),
+        (context) => !EnabledRules.HasDeletePermission(context),
       ],
     };
   }
@@ -252,7 +242,7 @@ export namespace ViewCommandBuilder {
       Icon,
       text,
       localizedText: localizedTexts,
-      onClick: context => {
+      onClick: (context) => {
         context.primaryControl.refresh();
       },
     };
@@ -290,7 +280,7 @@ export namespace ViewCommandBuilder {
             Icon: excel.Icon,
             text: excel.text,
             localizedTexts: excel.localizedTexts,
-            onClick: async context => {
+            onClick: async (context) => {
               context.utility.showProgressIndicator('Exporting to Excel...');
               try {
                 const result = await retriveRecords({
@@ -323,8 +313,8 @@ export namespace ViewCommandBuilder {
             Icon: csv.Icon,
             text: csv.text,
             localizedTexts: csv.localizedTexts,
-            onClick: async context => {
-              context.utility.showProgressIndicator('Exporting to Excel...');
+            onClick: async (context) => {
+              context.utility.showProgressIndicator('Exporting to CSV...');
               try {
                 const result = await retriveRecords({
                   columnFilters: context.primaryControl.columnFilter,

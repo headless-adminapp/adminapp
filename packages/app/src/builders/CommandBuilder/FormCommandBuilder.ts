@@ -2,7 +2,22 @@ import {
   EntityFormCommandContext,
   EntityMainFormCommandItemExperience,
 } from '@headless-adminapp/core/experience/form';
+import { Localized } from '@headless-adminapp/core/types';
 import { Icon } from '@headless-adminapp/icons';
+
+namespace EnabledRules {
+  export function HasCreatePermisssion(context: EntityFormCommandContext) {
+    return !context.primaryControl.schema.restrictions?.disableCreate;
+  }
+
+  export function HasUpdatePermission(context: EntityFormCommandContext) {
+    return !context.primaryControl.schema.restrictions?.disableUpdate;
+  }
+
+  export function HasDeletePermission(context: EntityFormCommandContext) {
+    return !context.primaryControl.schema.restrictions?.disableDelete;
+  }
+}
 
 export namespace FormCommandBuilder {
   export function createSaveCommand({
@@ -23,13 +38,19 @@ export namespace FormCommandBuilder {
       onClick: async (context) => {
         await context.primaryControl.save('save');
       },
-      hidden: (context) => {
-        if (context.primaryControl.readonly) {
-          return true;
-        }
+      hidden: [
+        (context) => {
+          if (context.primaryControl.readonly) {
+            return true;
+          }
 
-        return false;
-      },
+          if (context.primaryControl.recordId) {
+            return !EnabledRules.HasUpdatePermission(context);
+          } else {
+            return !EnabledRules.HasCreatePermisssion(context);
+          }
+        },
+      ],
     };
   }
 
@@ -50,17 +71,23 @@ export namespace FormCommandBuilder {
       onClick: async (context) => {
         await context.primaryControl.save('saveandclose');
       },
-      hidden: (context) => {
-        if (context.primaryControl.readonly) {
-          return true;
-        }
+      hidden: [
+        (context) => {
+          if (context.primaryControl.readonly) {
+            return true;
+          }
 
-        return false;
-      },
+          if (context.primaryControl.recordId) {
+            return !EnabledRules.HasUpdatePermission(context);
+          } else {
+            return !EnabledRules.HasCreatePermisssion(context);
+          }
+        },
+      ],
     };
   }
 
-  interface DeleteRecordCommandStringSet {
+  export interface DeleteRecordCommandStringSet {
     confirmation: {
       title: string;
       text: string;
@@ -110,6 +137,10 @@ export namespace FormCommandBuilder {
     stringSet:
       | DeleteRecordCommandStringSet
       | ((context: EntityFormCommandContext) => DeleteRecordCommandStringSet);
+    localizedStringSet?: Localized<
+      | DeleteRecordCommandStringSet
+      | ((context: EntityFormCommandContext) => DeleteRecordCommandStringSet)
+    >;
   }): EntityMainFormCommandItemExperience {
     return {
       Icon: Icon,
@@ -122,11 +153,7 @@ export namespace FormCommandBuilder {
           return true;
         }
 
-        if (context.primaryControl.schema.restrictions?.disableDelete) {
-          return true;
-        }
-
-        return false;
+        return !EnabledRules.HasDeletePermission(context);
       },
       onClick: async (context) => {
         const recordId = context.primaryControl.recordId;
@@ -155,11 +182,10 @@ export namespace FormCommandBuilder {
             stringSet.status.deleting + '...'
           );
 
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-          // await context.dataService.deleteRecord(
-          //   context.primaryControl.logicalName,
-          //   recordId
-          // );
+          await context.dataService.deleteRecord(
+            context.primaryControl.logicalName,
+            recordId
+          );
 
           context.utility.showNotification({
             title: stringSet.successNotification.title,
@@ -167,7 +193,7 @@ export namespace FormCommandBuilder {
             type: 'success',
           });
 
-          // context.primaryControl.close();
+          context.primaryControl.close();
         } catch (error) {
           context.utility.showNotification({
             title: stringSet.errorNotification.title,

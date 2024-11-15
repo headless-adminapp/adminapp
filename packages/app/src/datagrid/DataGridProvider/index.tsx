@@ -29,6 +29,13 @@ export interface DataGridProviderProps<
   commands: CommandItemExperience<CommandContext>[][];
   onChangeView?: (viewId: string) => void;
   isSubGrid?: boolean;
+  associated?:
+    | false
+    | {
+        logicalName: string;
+        id: string;
+        refAttributeName: string;
+      };
   allowViewSelection?: boolean;
   maxRecords?: number;
 }
@@ -81,6 +88,7 @@ export function DataGridProvider<
     isSubGrid: props.isSubGrid ?? false,
     allowViewSelection: props.allowViewSelection ?? false,
     maxRecords: props.maxRecords,
+    associated: props.associated,
   });
 
   useEffect(() => {
@@ -118,6 +126,13 @@ export function DataGridProvider<
       commands: props.commands,
     });
   }, [props.commands, contextValue]);
+
+  useEffect(() => {
+    contextValue.setValue({
+      isSubGrid: props.isSubGrid ?? false,
+      associated: props.associated,
+    });
+  }, [props.isSubGrid, props.associated, contextValue]);
 
   return (
     <GridContext.Provider

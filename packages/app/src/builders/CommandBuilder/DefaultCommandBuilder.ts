@@ -143,6 +143,8 @@ export namespace DefaultCommandBuilder {
     save: string;
     saveAndClose: string;
     refresh: string;
+    delete: string;
+    deleteRecordCommandStringSet: FormCommandBuilder.DeleteRecordCommandStringSet;
   }
 
   interface CreateDefaultFormCommandOptions {
@@ -150,6 +152,7 @@ export namespace DefaultCommandBuilder {
       Save: Icon;
       SaveAndClose: Icon;
       Refresh: Icon;
+      Delete: Icon;
     };
     strings?: CreateDefaultFormCommandStrings;
     localizedSrings?: Localized<CreateDefaultFormCommandStrings>;
@@ -159,6 +162,9 @@ export namespace DefaultCommandBuilder {
     save: 'Save',
     saveAndClose: 'Save & Close',
     refresh: 'Refresh',
+    delete: 'Delete',
+    deleteRecordCommandStringSet:
+      FormCommandBuilder.defaultDeleteRecordStringSet,
   };
 
   export function createDefaultFormCommands({
@@ -190,6 +196,19 @@ export namespace DefaultCommandBuilder {
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
             (x) => x.refresh
+          ),
+        }),
+        FormCommandBuilder.createDeleteCommand({
+          Icon: icons.Delete,
+          text: 'Delete',
+          localizedTexts: extractLocalizedStrings(
+            localizedSrings,
+            (x) => x.delete
+          ),
+          stringSet: strings.deleteRecordCommandStringSet,
+          localizedStringSet: extractLocalizedStrings(
+            localizedSrings,
+            (x) => x.deleteRecordCommandStringSet
           ),
         }),
       ],

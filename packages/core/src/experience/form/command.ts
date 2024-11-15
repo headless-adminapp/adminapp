@@ -17,6 +17,7 @@ export interface EntityFormCommandContext extends CommandContextBase {
     form: Form;
     formId: string;
     save: (mode: SaveMode) => Promise<void>;
+    close: () => void;
   };
 }
 

@@ -50,11 +50,22 @@ export interface EntitySubGridCommandContext extends CommandContextBase {
     selectedRecords: Data<unknown>[];
     columnFilter?: Partial<Record<string, ColumnCondition>>;
     extraFilter?: Filter;
+    gridColumns: TransformedViewColumn<SchemaAttributes>[];
+    sorting: SortingState<SchemaAttributes>;
     refresh: () => void;
     searchText: string;
     view: View;
     viewId: string;
     data: RetriveRecordsResult<InferredSchemaType<SchemaAttributes>> | null;
+    associated:
+      | false
+      | {
+          refAttributeName: string;
+          logicalName: string;
+          id: string;
+          name: string;
+        };
+    openRecord: (id: string) => void;
   };
 }
 

@@ -37,6 +37,14 @@ export interface GridContextState<
   commands?: CommandItemExperience<CommandContext>[][];
   maxRecords?: number;
 
+  associated?:
+    | false
+    | {
+        logicalName: string;
+        id: string;
+        refAttributeName: string;
+      };
+
   // internal state (visual and filters)
   columns: TransformedViewColumn<S>[];
   searchText: string;

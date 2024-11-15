@@ -1,8 +1,38 @@
-import { SubGridCommandItemExperience } from '@headless-adminapp/core/experience/view';
+import {
+  EntitySubGridCommandContext,
+  SubGridCommandItemExperience,
+} from '@headless-adminapp/core/experience/view';
 import { Localized } from '@headless-adminapp/core/types';
 import { Icon } from '@headless-adminapp/icons';
 
+import { exportRecordsCSV, exportRecordsXLS, retriveRecords } from '../utils';
 import { createLocalizedSelector } from './utils';
+
+namespace EnabledRules {
+  export function HasCreatePermisssion(context: EntitySubGridCommandContext) {
+    return !context.secondaryControl.schema.restrictions?.disableCreate;
+  }
+
+  export function HasUpdatePermission(context: EntitySubGridCommandContext) {
+    return !context.secondaryControl.schema.restrictions?.disableUpdate;
+  }
+
+  export function HasDeletePermission(context: EntitySubGridCommandContext) {
+    return !context.secondaryControl.schema.restrictions?.disableDelete;
+  }
+
+  export function HasSingleRecordSelected(
+    context: EntitySubGridCommandContext
+  ) {
+    return context.secondaryControl.selectedIds.length === 1;
+  }
+
+  export function HasAtLeastOneRecordSelected(
+    context: EntitySubGridCommandContext
+  ) {
+    return context.secondaryControl.selectedIds.length > 0;
+  }
+}
 
 export namespace SubgridCommandBuilder {
   export function createNewRecordCommand({
@@ -20,13 +50,24 @@ export namespace SubgridCommandBuilder {
       text,
       localizedText: localizedTexts,
       onClick: (context) => {
-        console.log('New record', context);
+        if (context.secondaryControl.associated) {
+          context.navigation.openForm({
+            logicalName: context.primaryControl.schema.logicalName,
+            parameters: {
+              [context.secondaryControl.associated.refAttributeName]: {
+                id: context.secondaryControl.associated.id,
+                logicalName: context.secondaryControl.associated.logicalName,
+                name: context.secondaryControl.associated.name,
+              },
+            },
+          });
+        } else {
+          context.navigation.openForm({
+            logicalName: context.primaryControl.schema.logicalName,
+          });
+        }
       },
-      hidden: (context) => {
-        console.log(context);
-        // TODO: Implement logic to hide the button
-        return false;
-      },
+      hidden: (context) => !EnabledRules.HasCreatePermisssion(context),
     };
   }
 
@@ -46,14 +87,11 @@ export namespace SubgridCommandBuilder {
       localizedText: localizedTexts,
       isContextMenu: true,
       onClick: (context) => {
-        console.log('Edit record', context);
+        context.secondaryControl.openRecord(
+          context.secondaryControl.selectedIds[0]
+        );
       },
-      // hidden: (context) => context.secondaryControl.selectedIds.length !== 1, // TODO: check permissions
-      hidden: (context) => {
-        console.log('temp.', context);
-
-        return context.secondaryControl.selectedIds.length !== 1;
-      },
+      hidden: [(context) => !EnabledRules.HasSingleRecordSelected(context)],
     };
   }
 
@@ -135,7 +173,6 @@ export namespace SubgridCommandBuilder {
       localizedText,
       danger: true,
       isContextMenu: true,
-      hidden: [(context) => context.secondaryControl.selectedIds.length === 0], // TODO: check permissions
       onClick: async (context) => {
         const recordIds = context.secondaryControl.selectedIds;
 
@@ -178,7 +215,12 @@ export namespace SubgridCommandBuilder {
             ) + '...'
           );
 
-          await new Promise((resolve) => setTimeout(resolve, 2000));
+          for (const recordId of recordIds) {
+            await context.dataService.deleteRecord(
+              context.primaryControl.logicalName,
+              recordId
+            );
+          }
 
           context.utility.showNotification({
             title: plurialize(
@@ -203,6 +245,10 @@ export namespace SubgridCommandBuilder {
           context.utility.hideProgressIndicator();
         }
       },
+      hidden: [
+        (context) => !EnabledRules.HasAtLeastOneRecordSelected(context),
+        (context) => !EnabledRules.HasDeletePermission(context),
+      ],
     };
   }
 
@@ -258,16 +304,66 @@ export namespace SubgridCommandBuilder {
             Icon: excel.Icon,
             text: excel.text,
             localizedTexts: excel.localizedTexts,
-            onClick: (context) => {
-              console.log('Export to Excel', context);
+            onClick: async (context) => {
+              context.utility.showProgressIndicator('Exporting to Excel...');
+              try {
+                const result = await retriveRecords({
+                  columnFilters: context.secondaryControl.columnFilter,
+                  dataService: context.dataService,
+                  gridColumns: context.secondaryControl.gridColumns,
+                  schema: context.secondaryControl.schema,
+                  schemaStore: context.stores.schemaStore,
+                  view: context.secondaryControl.view,
+                  search: context.secondaryControl.searchText,
+                  extraFilter: context.secondaryControl.extraFilter,
+                  sorting: context.secondaryControl.sorting,
+                  skip: 0,
+                  limit: 5000,
+                });
+
+                await exportRecordsXLS({
+                  fileName: context.secondaryControl.view.name + '.xlsx',
+                  gridColumns: context.secondaryControl.gridColumns,
+                  records: result.records,
+                  schema: context.secondaryControl.schema,
+                  schemaStore: context.stores.schemaStore,
+                });
+              } finally {
+                context.utility.hideProgressIndicator();
+              }
             },
           },
           {
             Icon: csv.Icon,
             text: csv.text,
             localizedTexts: csv.localizedTexts,
-            onClick: (context) => {
-              console.log('Export to CSV', context);
+            onClick: async (context) => {
+              context.utility.showProgressIndicator('Exporting to CSV...');
+              try {
+                const result = await retriveRecords({
+                  columnFilters: context.secondaryControl.columnFilter,
+                  dataService: context.dataService,
+                  gridColumns: context.secondaryControl.gridColumns,
+                  schema: context.secondaryControl.schema,
+                  schemaStore: context.stores.schemaStore,
+                  view: context.secondaryControl.view,
+                  search: context.secondaryControl.searchText,
+                  extraFilter: context.secondaryControl.extraFilter,
+                  sorting: context.secondaryControl.sorting,
+                  skip: 0,
+                  limit: 5000,
+                });
+
+                await exportRecordsCSV({
+                  fileName: context.secondaryControl.view.name + '.csv',
+                  gridColumns: context.secondaryControl.gridColumns,
+                  records: result.records,
+                  schema: context.secondaryControl.schema,
+                  schemaStore: context.stores.schemaStore,
+                });
+              } finally {
+                context.utility.hideProgressIndicator();
+              }
             },
           },
         ],

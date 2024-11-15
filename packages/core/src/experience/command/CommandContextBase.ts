@@ -18,7 +18,7 @@ export interface OpenFormOptions {
   logicalName: string;
   id?: string;
   formId?: string;
-  parameters?: Record<string, string>; // Used while creating a new record
+  parameters?: Record<string, unknown>; // Used while creating a new record
   useQuickCreateForm?: boolean; // Used while creating a new record and create create form should available
   replace?: boolean; // Replace the current form
 }
