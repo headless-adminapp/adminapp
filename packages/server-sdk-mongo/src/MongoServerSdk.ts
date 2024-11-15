@@ -601,6 +601,7 @@ export class MongoServerSdk<
 
     await this.options.pluginStore?.execute({
       logicalName: params.logicalName,
+      id: record[0]._id!.toString(),
       messageName: MessageName.Create,
       stage: ExecutionStage.PostOperation,
       data: record[0].toJSON(),
@@ -674,6 +675,7 @@ export class MongoServerSdk<
 
     await this.options.pluginStore?.execute({
       logicalName: params.logicalName,
+      id: params.id,
       messageName: MessageName.Update,
       stage: ExecutionStage.PreOperation,
       data,
@@ -697,6 +699,7 @@ export class MongoServerSdk<
 
     await this.options.pluginStore?.execute({
       logicalName: schema.logicalName,
+      id: params.id,
       messageName: MessageName.Update,
       stage: ExecutionStage.PostOperation,
       data: updatedRecord!.toJSON(),

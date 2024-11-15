@@ -7,6 +7,7 @@ import { PluginActionParams } from './PluginActionContext';
 
 export interface ExecutePluginParams extends PluginActionParams {
   logicalName: string;
+  id?: string | number;
   messageName: MessageName;
   stage: ExecutionStage;
   data: any;

@@ -8,6 +8,8 @@ export interface PluginActionParams<
   DbContext extends DatabaseContext = DatabaseContext
 > {
   data: Data;
+  logicalName: string;
+  id?: string | number;
   changedValues: ChangedValues<Data>;
   snapshot: Data;
   sdkContext: SdkContext;

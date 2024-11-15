@@ -12,7 +12,7 @@ export interface PluginStep<
   logicalName: string;
   messageName: MessageName;
   stage: ExecutionStage;
-  attributes: Array<keyof Data>;
+  attributes?: Array<keyof Data>;
   action: (
     context: PluginActionParams<Data, SdkContext, DbContext>
   ) => Promise<void>;

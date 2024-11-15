@@ -29,7 +29,7 @@ export class PluginStore<
   }: ExecutePluginParams) {
     const steps = this.plugins.filter(
       (step) =>
-        step.logicalName === logicalName &&
+        (!step.logicalName || step.logicalName === logicalName) &&
         step.messageName === messageName &&
         step.stage === stage
     );
@@ -37,7 +37,7 @@ export class PluginStore<
     for (const step of steps) {
       if (
         messageName !== MessageName.Delete &&
-        step.attributes.length &&
+        step.attributes?.length &&
         !Object.keys(changedValues).some((key) =>
           (step.attributes as unknown as string[]).includes(key)
         )
@@ -45,7 +45,13 @@ export class PluginStore<
         continue;
       }
 
-      await step.action({ data, changedValues, snapshot, ...rest });
+      await step.action({
+        data,
+        changedValues,
+        logicalName,
+        snapshot,
+        ...rest,
+      });
     }
   }
 }
