@@ -523,6 +523,11 @@ export const generateAttributeValidationSchema = memoize(
       case 'number':
         validationSchema = yup.number().nullable();
         break;
+      case 'attachments':
+      case 'choices':
+      case 'lookups':
+        validationSchema = yup.array().nullable();
+        break;
       default:
         validationSchema = yup.mixed().nullable();
         break;
