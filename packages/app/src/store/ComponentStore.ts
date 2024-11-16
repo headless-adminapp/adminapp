@@ -9,14 +9,10 @@ export class ComponentStore implements IComponentStore {
 
   public getComponent<T>(name: string): T | null {
     const self = this;
-    return function (props: any) {
-      if (!self.components[name]) {
-        return null;
-      }
+    if (!self.components[name]) {
+      return null;
+    }
 
-      const Component = self.components[name] as any;
-
-      return <Component {...props} />;
-    } as T;
+    return self.components[name] as T;
   }
 }
