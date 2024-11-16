@@ -23,8 +23,8 @@ export type Attribute =
   | LookupAttribute
   | MultiLookupAttribute
   | MoneyAttribute
-  | AttachmentAttribute<FileObject | string>
-  | AttachmentsAttribute<FileObject | string>
+  | AttachmentAttribute
+  | AttachmentsAttribute
   | MixedAttribute;
 
 export type AttributeType = Attribute['type'];

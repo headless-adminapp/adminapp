@@ -1,10 +1,9 @@
 import { FileObject } from './AttachmentAttribute';
 import { AttributeBase } from './AttributeBase';
 
-export type AttachmentsAttribute<T extends FileObject | string> = AttributeBase<
-  T[]
-> & {
+export type AttachmentsAttribute = AttributeBase<FileObject[]> & {
   type: 'attachments';
   format: 'image' | 'video' | 'audio' | 'document' | 'any';
   maxSize?: number; // in bytes
-} & ({ asObject: boolean } | { asBase64: boolean } | { asUrl: boolean });
+  location?: 'local' | 'cloud'; // default is local (local = base64 url, cloud = http url)
+};

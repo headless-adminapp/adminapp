@@ -30,13 +30,17 @@ export type InferredAttributeType<A extends Attribute> = A extends {
   : A extends { type: 'money' }
   ? number
   : A extends { type: 'attachment' }
-  ? A extends { asObject: true }
-    ? FileObject
-    : string
+  ? FileObject
   : A extends { type: 'attachments' }
-  ? A extends { asObject: true }
-    ? FileObject[]
-    : string[]
-  : A extends { type: 'mixed' }
+  ? FileObject[]
+  : // A extends { type: 'attachment' }
+  // ? A extends { asObject: true }
+  //   ? FileObject
+  //   : string
+  // : A extends { type: 'attachments' }
+  // ? A extends { asObject: true }
+  //   ? FileObject[]
+  //   : string[]
+  A extends { type: 'mixed' }
   ? unknown
   : never;

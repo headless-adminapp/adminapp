@@ -4,13 +4,12 @@ export interface FileObject {
   name: string;
   size: number;
   type: string;
-  data: string; // base64
+  url: string; // http url or base64 url
 }
 
-export type AttachmentAttribute<
-  T extends FileObject | string = FileObject | string
-> = AttributeBase<T> & {
+export type AttachmentAttribute = AttributeBase<FileObject> & {
   type: 'attachment';
   format: 'image' | 'video' | 'audio' | 'document' | 'any';
   maxSize?: number; // in bytes
-} & ({ asObject: boolean } | { asBase64: boolean } | { asUrl: boolean });
+  location?: 'local' | 'cloud'; // default is local (local = base64 url, cloud = http url)
+};

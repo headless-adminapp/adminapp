@@ -10,6 +10,11 @@ import {
   tokens,
 } from '@fluentui/react-components';
 import { generateAttributeValidationSchema } from '@headless-adminapp/app/dataform/utils';
+import {
+  FormValidationStringSet,
+  useFormValidationStrings,
+} from '@headless-adminapp/app/form';
+import { useLocale } from '@headless-adminapp/app/locale';
 import { PromptDialogOptions } from '@headless-adminapp/core/experience/dialog';
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -34,11 +39,14 @@ interface PromptDialogProps<SA extends SchemaAttributes = SchemaAttributes> {
 }
 
 export function PromptDialog(props: PromptDialogProps) {
+  const { language } = useLocale();
+  const formValidationStrings = useFormValidationStrings();
+
   const form = useForm({
     mode: 'all',
     defaultValues: props.defaultValues,
     shouldUnregister: false,
-    resolver: formValidator(props.attributes),
+    resolver: formValidator(props.attributes, language, formValidationStrings),
   });
 
   return (
@@ -135,10 +143,12 @@ export function PromptDialog(props: PromptDialogProps) {
 
 export const formValidator = memoize(
   function formValidator<A extends SchemaAttributes = SchemaAttributes>(
-    attributes: A
+    attributes: A,
+    language: string,
+    strings: FormValidationStringSet
   ) {
     return async (values: Record<string, any>, context: any, options: any) => {
-      const validator = generateValidationSchema(attributes);
+      const validator = generateValidationSchema(attributes, language, strings);
 
       const resolver = yupResolver(validator);
 
@@ -153,7 +163,7 @@ export const formValidator = memoize(
 export const generateValidationSchema = memoize(
   function generateValidationSchema<
     A extends SchemaAttributes = SchemaAttributes
-  >(attributes: A) {
+  >(attributes: A, language: string, strings: FormValidationStringSet) {
     const columns = Object.keys(attributes);
     return yup.object().shape({
       ...(columns.reduce((acc, column) => {
@@ -161,8 +171,8 @@ export const generateValidationSchema = memoize(
 
         const validationSchema = generateAttributeValidationSchema(
           attribute,
-          'en',
-          {} as any
+          language,
+          strings
         );
 
         return {

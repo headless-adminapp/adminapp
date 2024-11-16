@@ -4,6 +4,7 @@ import type { Attribute } from '@headless-adminapp/core/attributes';
 import { FC, Fragment } from 'react';
 
 import { componentStore } from '../componentStore';
+import { AttachmentsControl } from '../form/controls/AttachmentsControl';
 import { CurrencyControl } from '../form/controls/CurrencyControl';
 import { DateControl } from '../form/controls/DateControl';
 import { DateRangeControl } from '../form/controls/DateRangeControl';
@@ -321,6 +322,27 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           error={isError}
           disabled={isDisabled}
           options={attribute.options}
+          placeholder={placeholder}
+          borderOnFocusOnly={borderOnFocusOnly}
+          readOnly={readOnly}
+        />
+      );
+    }
+
+    case 'attachments': {
+      const Control =
+        componentStore.getComponent<typeof AttachmentsControl>(
+          'Form.AttachmentsControl'
+        ) ?? AttachmentsControl;
+
+      return (
+        <Control
+          name={name}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          error={isError}
+          disabled={isDisabled}
           placeholder={placeholder}
           borderOnFocusOnly={borderOnFocusOnly}
           readOnly={readOnly}

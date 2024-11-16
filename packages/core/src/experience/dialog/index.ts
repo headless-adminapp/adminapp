@@ -1,3 +1,5 @@
+import { Nullable } from '@headless-adminapp/core/types';
+
 import { InferredSchemaType, SchemaAttributes } from '../../schema';
 
 export interface BasicDialogProps {
@@ -48,7 +50,7 @@ export interface PromptDialogOptions<
   title?: string;
   text?: string;
   attributes: SA;
-  defaultValues: InferredSchemaType<SA>;
+  defaultValues: Partial<Nullable<InferredSchemaType<SA>>>;
   cancelButtonLabel?: string;
   confirmButtonLabel?: string;
   allowDismiss?: boolean;
