@@ -522,6 +522,7 @@ export const operatorOptions: Record<AttributeType, OperatorOptionConfig[]> = {
   number: numberOperatorOptions,
   string: stringOperatorOptions,
   attachment: attachmentOperatorOptions,
+  attachments: [],
   mixed: mixedOperatorOptions,
   daterange: [],
   lookups: [],

@@ -7,5 +7,6 @@ export type { BooleanAttribute } from './BooleanAttribute';
 export type { NumberAttribute } from './NumberAttribute';
 export type { DateAttribute } from './DateAttribute';
 export type { AttachmentAttribute } from './AttachmentAttribute';
+export type { AttachmentsAttribute } from './AttachmentsAttribute';
 export type { ChoiceAttribute } from './ChoiceAttribute';
 export type { DataLookup, LocalizedDataLookup } from './DataLookup';

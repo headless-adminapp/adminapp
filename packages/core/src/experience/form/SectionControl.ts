@@ -17,6 +17,7 @@ export interface SectionStatndardControl<
 > extends BaseSectionControl {
   type: 'standard';
   attributeName: keyof S;
+  component?: string; // unique name of component from registry to override default component
 }
 
 export interface SectionSpacerControl extends BaseSectionControl {

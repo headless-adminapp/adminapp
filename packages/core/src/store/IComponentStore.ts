@@ -1,4 +1,4 @@
 export interface IComponentStore {
   registerComponent: <T>(name: string, component: T) => void;
-  resolveComponent: <T>(name: string) => T;
+  getComponent: <T>(name: string) => T | null;
 }

@@ -7,11 +7,11 @@ export class ComponentStore implements IComponentStore {
     this.components[name] = component;
   }
 
-  public resolveComponent<T>(name: string): T {
+  public getComponent<T>(name: string): T | null {
     const self = this;
     return function (props: any) {
       if (!self.components[name]) {
-        throw new Error(`Component ${name} is not registered`);
+        return null;
       }
 
       const Component = self.components[name] as any;

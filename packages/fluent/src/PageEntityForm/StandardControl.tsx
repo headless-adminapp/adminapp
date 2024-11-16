@@ -3,6 +3,7 @@ import { useDataService } from '@headless-adminapp/app/transport';
 import type { Attribute } from '@headless-adminapp/core/attributes';
 import { FC, Fragment } from 'react';
 
+import { componentStore } from '../componentStore';
 import { CurrencyControl } from '../form/controls/CurrencyControl';
 import { DateControl } from '../form/controls/DateControl';
 import { DateRangeControl } from '../form/controls/DateRangeControl';
@@ -23,7 +24,7 @@ import { TextControl } from '../form/controls/TextControl';
 // TextControl
 // TextInput
 
-interface StandardControlProps {
+export interface StandardControlProps {
   attribute: Attribute;
   label?: string;
   isError: boolean;
@@ -46,27 +47,28 @@ interface StandardControlProps {
   allowNewRecord?: boolean;
 }
 
-export const StandardControl: FC<StandardControlProps> = ({
-  attribute,
-  label: _label,
-  isError,
-  // errorMessage,
-  name,
-  value,
-  onBlur,
-  onChange,
-  // dataService,
-  // fileService,
-  disabled,
-  borderOnFocusOnly,
-  placeholder: _placeholder,
-  // hideLabel,
-  hidePlaceholder,
-  readOnly,
-  // quickViewControl,
-  allowNavigation,
-  allowNewRecord,
-}) => {
+export const StandardControl: FC<StandardControlProps> = (props) => {
+  const {
+    attribute,
+    label: _label,
+    isError,
+    // errorMessage,
+    name,
+    value,
+    onBlur,
+    onChange,
+    // dataService,
+    // fileService,
+    disabled,
+    borderOnFocusOnly,
+    placeholder: _placeholder,
+    // hideLabel,
+    hidePlaceholder,
+    readOnly,
+    // quickViewControl,
+    allowNavigation,
+    allowNewRecord,
+  } = props;
   const isDisabled = attribute.readonly || disabled;
   // const label = hideLabel ? undefined : _label ?? attribute.label;
   const placeholder = hidePlaceholder
@@ -93,27 +95,57 @@ export const StandardControl: FC<StandardControlProps> = ({
       };
 
       switch (attribute.format) {
-        case 'text':
+        case 'text': {
+          const Control =
+            componentStore.getComponent<typeof TextControl>(
+              'Form.TextControl'
+            ) ?? TextControl;
           return (
-            <TextControl
+            <Control
               {...controlProps}
               textTransform={attribute.textTransform}
             />
           );
-        case 'email':
-          return <EmailControl {...controlProps} />;
-        case 'phone':
-          return <TelephoneControl {...controlProps} />;
-        case 'url':
-          return <TextControl {...controlProps} />;
-        case 'textarea':
-          return <TextAreaControl {...controlProps} />;
+        }
+        case 'email': {
+          const Control =
+            componentStore.getComponent<typeof EmailControl>(
+              'Form.EmailControl'
+            ) ?? EmailControl;
+          return <Control {...controlProps} />;
+        }
+        case 'phone': {
+          const Control =
+            componentStore.getComponent<typeof TelephoneControl>(
+              'Form.TelephoneControl'
+            ) ?? TelephoneControl;
+          return <Control {...controlProps} />;
+        }
+        case 'url': {
+          const Control =
+            componentStore.getComponent<typeof TextControl>(
+              'Form.UrlControl'
+            ) ?? TextControl;
+          return <Control {...controlProps} />;
+        }
+        case 'textarea': {
+          const Control =
+            componentStore.getComponent<typeof TextAreaControl>(
+              'Form.TextAreaControl'
+            ) ?? TextAreaControl;
+          return <Control {...controlProps} />;
+        }
         default:
           return <Fragment />;
       }
-    case 'number':
+    case 'number': {
+      const Control =
+        componentStore.getComponent<typeof NumberControl>(
+          'Form.NumberControl'
+        ) ?? NumberControl;
+
       return (
-        <NumberControl
+        <Control
           name={name}
           placeholder={placeholder}
           value={value}
@@ -124,6 +156,7 @@ export const StandardControl: FC<StandardControlProps> = ({
           readOnly={readOnly}
         />
       );
+    }
 
     case 'date': {
       const controlProps = {
@@ -138,9 +171,16 @@ export const StandardControl: FC<StandardControlProps> = ({
       };
 
       if (attribute.format === 'datetime') {
-        return <DateTimeControl {...controlProps} />;
+        const Control =
+          componentStore.getComponent<typeof DateTimeControl>(
+            'Form.DateTimeControl'
+          ) ?? DateTimeControl;
+        return <Control {...controlProps} />;
       } else {
-        return <DateControl {...controlProps} />;
+        const Control =
+          componentStore.getComponent<typeof DateControl>('Form.DateControl') ??
+          DateControl;
+        return <Control {...controlProps} />;
       }
     }
     case 'daterange': {
@@ -155,11 +195,20 @@ export const StandardControl: FC<StandardControlProps> = ({
         readOnly,
       };
 
-      return <DateRangeControl {...controlProps} />;
+      const Control =
+        componentStore.getComponent<typeof DateRangeControl>(
+          'Form.DateRangeControl'
+        ) ?? DateRangeControl;
+
+      return <Control {...controlProps} />;
     }
     case 'money': {
+      const Control =
+        componentStore.getComponent<typeof CurrencyControl>(
+          'Form.CurrencyControl'
+        ) ?? CurrencyControl;
       return (
-        <CurrencyControl
+        <Control
           name={name}
           placeholder={placeholder}
           value={value}
@@ -173,95 +222,12 @@ export const StandardControl: FC<StandardControlProps> = ({
       );
     }
     case 'lookup': {
-      //   const experienceSchema = getExperienceSchema(attribute.entity);
-      //   const routes = getExperienceRoutes(attribute.entity);
-      //   const path = routes?.create?.();
-
-      //   let createButtonProps:
-      //     | {
-      //         label: string;
-      //         onClick: () => void;
-      //       }
-      //     | undefined;
-
-      //   if (allowQuickCreate && experienceSchema.defaultQuickCreateForm) {
-      //     createButtonProps = {
-      //       label: 'New record',
-      //       onClick: async () => {
-      //         try {
-      //           const result = await openQuickCreate({
-      //             logicalName: attribute.entity,
-      //           });
-
-      //           if (result) {
-      //             onChange(result);
-      //           }
-      //         } catch (error) {
-      //           console.error(error);
-      //         }
-      //       },
-      //     };
-      //   } else if (path) {
-      //     createButtonProps = {
-      //       label: 'New record',
-      //       onClick: () => {
-      //         router.push(path);
-      //       },
-      //     };
-      //   }
-
-      //   return (
-      //     <FormControl
-      //       type="lookup"
-      //       name={name}
-      //       label={label}
-      //       placeholder={placeholder}
-      //       required={required}
-      //       value={value}
-      //       onChange={onChange}
-      //       onBlur={onBlur}
-      //       error={isError}
-      //       helperText={errorMessage}
-      //       disabled={isDisabled}
-      //       borderOnFocusOnly={borderOnFocusOnly}
-      //       readOnly={readOnly}
-      //       createButton={createButtonProps}
-      //       openRecord={
-      //         routes?.edit
-      //           ? (id) => {
-      //               router.push(routes.edit!(id));
-      //             }
-      //           : undefined
-      //       }
-      //       async
-      //       dataResolver={async (options) => {
-      //         const lookupSchema = getSchema(attribute.entity);
-
-      //         const data = await dataService.retriveRecords({
-      //           logicalName: attribute.entity,
-      //           search: options?.search ?? '',
-      //           columnFilters: {},
-      //           pagination: {
-      //             pageIndex: 0,
-      //             rowsPerPage: 10,
-      //             sortBy: 'createdAt',
-      //             sortOrder: 'desc',
-      //           },
-      //           viewFilter: null,
-      //           columns: ['_id', lookupSchema.primaryAttribute ?? 'name'],
-      //           limit: options?.limit ?? 10,
-      //         });
-
-      //         return data.records.map((x: any) => ({
-      //           _id: x._id,
-      //           name: x[lookupSchema.primaryAttribute ?? 'name'],
-      //         }));
-      //       }}
-      //     />
-      //   );
-
+      const Control =
+        componentStore.getComponent<typeof LookupControl>(
+          'Form.LookupControl'
+        ) ?? LookupControl;
       return (
-        <LookupControl
+        <Control
           name={name}
           value={value}
           onChange={onChange}
@@ -277,8 +243,13 @@ export const StandardControl: FC<StandardControlProps> = ({
       );
     }
     case 'lookups': {
+      const Control =
+        componentStore.getComponent<typeof MultiSelectLookupControl>(
+          'Form.MultiSelectLookupControl'
+        ) ?? MultiSelectLookupControl;
+
       return (
-        <MultiSelectLookupControl
+        <Control
           name={name}
           value={value}
           onChange={onChange}
@@ -295,8 +266,13 @@ export const StandardControl: FC<StandardControlProps> = ({
     }
 
     case 'boolean': {
+      const Control =
+        componentStore.getComponent<typeof SwitchControl>(
+          'Form.SwitchControl'
+        ) ?? SwitchControl;
+
       return (
-        <SwitchControl
+        <Control
           name={name}
           value={value}
           onChange={onChange}
@@ -309,8 +285,13 @@ export const StandardControl: FC<StandardControlProps> = ({
     }
 
     case 'choice': {
+      const Control =
+        componentStore.getComponent<typeof SelectControl>(
+          'Form.SelectControl'
+        ) ?? SelectControl;
+
       return (
-        <SelectControl
+        <Control
           name={name}
           value={value}
           onChange={onChange}
@@ -326,8 +307,13 @@ export const StandardControl: FC<StandardControlProps> = ({
     }
 
     case 'choices': {
+      const Control =
+        componentStore.getComponent<typeof MultiSelectControl>(
+          'Form.MultiSelectControl'
+        ) ?? MultiSelectControl;
+
       return (
-        <MultiSelectControl
+        <Control
           name={name}
           value={value}
           onChange={onChange}
@@ -364,6 +350,14 @@ export const StandardControl: FC<StandardControlProps> = ({
     //     />
     //   );
     // }
+  }
+
+  const FallBackControl = componentStore.getComponent<FC<StandardControlProps>>(
+    'StandardControl.FallBack'
+  );
+
+  if (FallBackControl) {
+    return <FallBackControl {...props} />;
   }
 
   return <Fragment />;

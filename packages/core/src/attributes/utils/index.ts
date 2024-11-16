@@ -1,4 +1,4 @@
-import { AttachmentAttribute } from '../AttachmentAttribute';
+import { AttachmentAttribute, FileObject } from '../AttachmentAttribute';
 import { Attribute } from '../Attribute';
 import { BooleanAttribute } from '../BooleanAttribute';
 import { ChoiceAttribute, ChoicesAttribute } from '../ChoiceAttribute';
@@ -22,9 +22,9 @@ export function isNumberAttribute(
   return attribute.type === 'number';
 }
 
-export function isAttachmentAttribute(
-  attribute: Attribute
-): attribute is AttachmentAttribute {
+export function isAttachmentAttribute<
+  T extends FileObject | string = FileObject | string
+>(attribute: Attribute): attribute is AttachmentAttribute<T> {
   return attribute.type === 'attachment';
 }
 

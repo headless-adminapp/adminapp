@@ -1,4 +1,5 @@
-import { AttachmentAttribute } from './AttachmentAttribute';
+import { AttachmentAttribute, FileObject } from './AttachmentAttribute';
+import { AttachmentsAttribute } from './AttachmentsAttribute';
 import { BooleanAttribute } from './BooleanAttribute';
 import { ChoiceAttribute, ChoicesAttribute } from './ChoiceAttribute';
 import { DateAttribute } from './DateAttribute';
@@ -22,7 +23,8 @@ export type Attribute =
   | LookupAttribute
   | MultiLookupAttribute
   | MoneyAttribute
-  | AttachmentAttribute
+  | AttachmentAttribute<FileObject | string>
+  | AttachmentsAttribute<FileObject | string>
   | MixedAttribute;
 
 export type AttributeType = Attribute['type'];

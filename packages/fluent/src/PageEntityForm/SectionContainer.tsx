@@ -8,11 +8,13 @@ import { useLocale } from '@headless-adminapp/app/locale';
 import { localizedLabel } from '@headless-adminapp/app/locale/utils';
 import { Section } from '@headless-adminapp/core/experience/form';
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
+import { FC } from 'react';
 import { Controller } from 'react-hook-form';
 
+import { componentStore } from '../componentStore';
 import { SectionControlWrapper } from '../DataForm/SectionControl';
 import { FormSection } from '../form/layout';
-import { StandardControl } from './StandardControl';
+import { StandardControl, StandardControlProps } from './StandardControl';
 import { SubgridControl } from './SubgridControl';
 
 export function SectionContainer<
@@ -35,8 +37,19 @@ export function SectionContainer<
     >
       {section.controls.map((control, index) => {
         switch (control.type) {
-          case 'standard':
+          case 'standard': {
             const attribute = schema.attributes[control.attributeName];
+            let Control = StandardControl;
+
+            if (control.component) {
+              const OverrideControl = componentStore.getComponent<
+                FC<StandardControlProps>
+              >(control.component);
+
+              if (OverrideControl) {
+                Control = OverrideControl;
+              }
+            }
             return (
               <div
                 key={control.attributeName as string}
@@ -73,7 +86,7 @@ export function SectionContainer<
                         isError={isError}
                         errorMessage={errorMessage}
                       >
-                        <StandardControl
+                        <Control
                           attribute={attribute}
                           name={control.attributeName as string}
                           value={field.value}
@@ -93,6 +106,7 @@ export function SectionContainer<
                 />
               </div>
             );
+          }
           case 'editablegrid': {
             return null;
           }
