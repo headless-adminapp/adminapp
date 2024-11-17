@@ -7,6 +7,7 @@ import { Icon } from '@headless-adminapp/icons';
 
 import { exportRecordsCSV, exportRecordsXLS, retriveRecords } from '../utils';
 import { createLocalizedSelector } from './utils';
+import { ViewCommandBuilder } from './ViewCommandBuilder';
 
 namespace EnabledRules {
   export function HasCreatePermisssion(context: EntitySubGridCommandContext) {
@@ -95,25 +96,6 @@ export namespace SubgridCommandBuilder {
     };
   }
 
-  interface DeleteRecordCommandStringSet {
-    confirmation: {
-      title: string | string[];
-      text: string | string[];
-      buttonCancel: string;
-      buttonConfirm: string;
-    };
-    status: {
-      deleting: string | string[];
-    };
-    successNotification: {
-      title: string | string[];
-      text: string | string[];
-    };
-    errorNotification: {
-      title: string;
-    };
-  }
-
   function plurialize(
     count: number,
     singular: string | string[],
@@ -131,40 +113,18 @@ export namespace SubgridCommandBuilder {
     return msg;
   }
 
-  export const defaultDeleteRecordStringSet: DeleteRecordCommandStringSet = {
-    confirmation: {
-      text: [
-        'Are you sure you want to delete this record?',
-        'Are you sure you want to delete selected records?',
-      ],
-      title: ['Delete record', 'Delete records'],
-      buttonConfirm: 'Delete',
-      buttonCancel: 'Cancel',
-    },
-    status: {
-      deleting: ['Deleting record', 'Deleting records'],
-    },
-    successNotification: {
-      title: ['Record deleted', 'Records deleted'],
-      text: ['Record deleted successfully', 'Records deleted successfully'],
-    },
-    errorNotification: {
-      title: 'Error',
-    },
-  };
-
   export function createDeleteRecordCommand({
     Icon,
     localizedText,
     text,
-    stringSet = defaultDeleteRecordStringSet,
+    stringSet = ViewCommandBuilder.defaultDeleteRecordStringSet,
     localizedStringSet,
   }: {
     Icon: Icon;
     text: string;
     localizedText?: Record<string, string>;
-    stringSet?: DeleteRecordCommandStringSet;
-    localizedStringSet?: Localized<DeleteRecordCommandStringSet>;
+    stringSet?: ViewCommandBuilder.DeleteRecordCommandStringSet;
+    localizedStringSet?: Localized<ViewCommandBuilder.DeleteRecordCommandStringSet>;
   }): SubGridCommandItemExperience {
     return {
       type: 'button',
@@ -234,7 +194,7 @@ export namespace SubgridCommandBuilder {
             type: 'success',
           });
 
-          await context.primaryControl.refresh();
+          context.secondaryControl.refresh();
         } catch (error) {
           context.utility.showNotification({
             title: localizeSelector((s) => s.errorNotification.title),

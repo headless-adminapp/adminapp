@@ -20,6 +20,7 @@ import {
   UpdateRecordResult,
 } from '@headless-adminapp/core/transport';
 import {
+  DependentRecord,
   ExecutionStage,
   IAutoNumberProvider,
   MessageName,
@@ -37,6 +38,7 @@ import {
 } from 'mongoose';
 
 import { transformFilter } from './conditions';
+import { getDependentRecordsToDelete } from './getDependentRecordsToDelete';
 import { MongoSchemaStore } from './MongoSchemaStore';
 import { MongoRequiredSchemaAttributes } from './types';
 
@@ -186,10 +188,13 @@ export class MongoServerSdk<
       throw new NotFoundError('Record not found');
     }
 
-    return {
-      ...record.toJSON(),
-      $entity: params.logicalName,
-    } as RetriveRecordResult<T>;
+    const transformedRecords = this.transformRecords([record], {
+      schema,
+      columns: params.columns,
+      expand: params.expand,
+    });
+
+    return transformedRecords[0] as RetriveRecordResult<T>;
   }
   protected async retriveRecords<T extends Record<string, unknown>>(
     params: RetriveRecordsParams
@@ -500,14 +505,145 @@ export class MongoServerSdk<
       count: count.length ? count[0].count : 0,
     };
   }
+
   protected async deleteRecord(
     params: DeleteRecordParams
   ): Promise<DeleteRecordResult> {
+    const model = this.options.schemaStore.getModel(params.logicalName);
+    const schema = this.options.schemaStore.getSchema(params.logicalName);
+
+    if (!this.session) {
+      throw new Error('Session is not started');
+    }
+
+    const filter: FilterQuery<unknown> = {
+      $and: [{ _id: new Types.ObjectId(params.id) }],
+    };
+
+    const orgFilter = transformFilter(
+      this.options.dataFilter?.getOrganizationFilter({
+        logicalName: params.logicalName,
+        dbContext: {
+          session: this.session,
+        } as any,
+        sdkContext: this.options.context,
+      }),
+      schema,
+      {
+        timezone: this.timezone,
+      }
+    );
+
+    if (orgFilter) {
+      filter.$and!.push(orgFilter);
+    }
+
+    const permissionFilter = transformFilter(
+      this.options.dataFilter?.getPermissionFilter({
+        logicalName: params.logicalName,
+        dbContext: {
+          session: this.session,
+        } as any,
+        sdkContext: this.options.context,
+      }),
+      schema,
+      {
+        timezone: this.timezone,
+      }
+    );
+
+    if (permissionFilter) {
+      filter.$and!.push(permissionFilter);
+    }
+
+    const record = await model.findOne(filter, undefined, {
+      session: this.session,
+    });
+
+    if (!record) {
+      throw new NotFoundError('Record not found');
+    }
+
+    let dependedRecordToBeDeleted: DependentRecord[] =
+      await getDependentRecordsToDelete({
+        schema,
+        _id: record._id as Types.ObjectId,
+        session: this.session,
+        schemaStore: this.options.schemaStore,
+      });
+
+    if (dependedRecordToBeDeleted.length) {
+      for (const { logicalName, id, record } of dependedRecordToBeDeleted) {
+        const model = this.options.schemaStore.getModel(logicalName);
+
+        await this.options.pluginStore?.execute({
+          logicalName,
+          messageName: MessageName.Delete,
+          stage: ExecutionStage.PreOperation,
+          data: record.toJSON(),
+          changedValues: {},
+          snapshot: record.toJSON(),
+          sdkContext: this.options.context,
+          dbContext: {
+            session: this.session,
+          },
+        });
+
+        await model.findByIdAndDelete(id, {
+          session: this.session,
+        });
+
+        await this.options.pluginStore?.execute({
+          logicalName,
+          messageName: MessageName.Delete,
+          stage: ExecutionStage.PostOperation,
+          data: record.toJSON(),
+          changedValues: {},
+          snapshot: null,
+          sdkContext: this.options.context,
+          dbContext: {
+            session: this.session,
+          },
+        });
+      }
+    }
+
+    await this.options.pluginStore?.execute({
+      logicalName: params.logicalName,
+      messageName: MessageName.Delete,
+      stage: ExecutionStage.PreOperation,
+      data: record.toJSON(),
+      changedValues: {},
+      snapshot: record.toJSON(),
+      sdkContext: this.options.context,
+      dbContext: {
+        session: this.session,
+      },
+    });
+
+    await model.findByIdAndDelete(params.id, {
+      session: this.session,
+    });
+
+    await this.options.pluginStore?.execute({
+      logicalName: params.logicalName,
+      messageName: MessageName.Delete,
+      stage: ExecutionStage.PostOperation,
+      data: record.toJSON(),
+      changedValues: {},
+      snapshot: null,
+      sdkContext: this.options.context,
+      dbContext: {
+        session: this.session,
+      },
+    });
+
     return {
       logicalName: params.logicalName,
       id: params.id,
     };
   }
+
   protected async createRecord(
     params: CreateRecordParams
   ): Promise<CreateRecordResult> {

@@ -5,6 +5,8 @@ import {
 import { Localized } from '@headless-adminapp/core/types';
 import { Icon } from '@headless-adminapp/icons';
 
+import { createLocalizedSelector, plurialize } from './utils';
+
 namespace EnabledRules {
   export function HasCreatePermisssion(context: EntityFormCommandContext) {
     return !context.primaryControl.schema.restrictions?.disableCreate;
@@ -89,17 +91,17 @@ export namespace FormCommandBuilder {
 
   export interface DeleteRecordCommandStringSet {
     confirmation: {
-      title: string;
-      text: string;
+      title: string | [string, string];
+      text: string | [string, string];
       buttonCancel: string;
       buttonConfirm: string;
     };
     status: {
-      deleting: string;
+      deleting: string | [string, string];
     };
     successNotification: {
-      title: string;
-      text: string;
+      title: string | [string, string];
+      text: string | [string, string];
     };
     errorNotification: {
       title: string;
@@ -130,17 +132,20 @@ export namespace FormCommandBuilder {
     text,
     localizedTexts,
     stringSet,
+    localizedStringSet,
   }: {
     Icon: Icon;
     text: string;
     localizedTexts?: Record<string, string>;
-    stringSet:
-      | DeleteRecordCommandStringSet
-      | ((context: EntityFormCommandContext) => DeleteRecordCommandStringSet);
-    localizedStringSet?: Localized<
-      | DeleteRecordCommandStringSet
-      | ((context: EntityFormCommandContext) => DeleteRecordCommandStringSet)
-    >;
+    // stringSet:
+    //   | DeleteRecordCommandStringSet
+    //   | ((context: EntityFormCommandContext) => DeleteRecordCommandStringSet);
+    // localizedStringSet?: Localized<
+    //   | DeleteRecordCommandStringSet
+    //   | ((context: EntityFormCommandContext) => DeleteRecordCommandStringSet)
+    // >;
+    stringSet: DeleteRecordCommandStringSet;
+    localizedStringSet?: Localized<DeleteRecordCommandStringSet>;
   }): EntityMainFormCommandItemExperience {
     return {
       Icon: Icon,
@@ -162,14 +167,26 @@ export namespace FormCommandBuilder {
           return;
         }
 
-        if (typeof stringSet === 'function') {
-          stringSet = stringSet(context);
-        }
+        // if (typeof stringSet === 'function') {
+        //   stringSet = stringSet(context);
+        // }
+
+        const localizeSelector = createLocalizedSelector(
+          stringSet,
+          localizedStringSet,
+          context.locale.language
+        );
 
         try {
           const confirmResult = await context.utility.openConfirmDialog({
-            title: stringSet.confirmation.title,
-            text: stringSet.confirmation.text,
+            title: plurialize(
+              1,
+              localizeSelector((s) => s.confirmation.title)
+            ),
+            text: plurialize(
+              1,
+              localizeSelector((s) => s.confirmation.text)
+            ),
             cancelButtonLabel: stringSet.confirmation.buttonCancel,
             confirmButtonLabel: stringSet.confirmation.buttonConfirm,
           });
@@ -188,8 +205,14 @@ export namespace FormCommandBuilder {
           );
 
           context.utility.showNotification({
-            title: stringSet.successNotification.title,
-            text: stringSet.successNotification.text,
+            title: plurialize(
+              1,
+              localizeSelector((s) => s.successNotification.title)
+            ),
+            text: plurialize(
+              1,
+              localizeSelector((s) => s.successNotification.text)
+            ),
             type: 'success',
           });
 

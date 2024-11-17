@@ -218,16 +218,19 @@ export namespace DefaultCommandBuilder {
   interface CreateDefaultSubgridCommandStrings {
     new: string;
     edit: string;
+    delete: string;
     refresh: string;
     export: string;
     exportCsv: string;
     exportExcel: string;
+    deleteRecordCommandStringSet: ViewCommandBuilder.DeleteRecordCommandStringSet;
   }
 
   interface CreateDefaultSubgridCommandOptions {
     icons: {
       New: Icon;
       Edit: Icon;
+      Delete: Icon;
       Refresh: Icon;
       Export: Icon;
       ExportCsv: Icon;
@@ -240,10 +243,13 @@ export namespace DefaultCommandBuilder {
   const defaultSubgridCommandStrings: CreateDefaultSubgridCommandStrings = {
     new: 'New',
     edit: 'Edit',
+    delete: 'Delete',
     refresh: 'Refresh',
     export: 'Export',
     exportCsv: 'CSV',
     exportExcel: 'Excel',
+    deleteRecordCommandStringSet:
+      ViewCommandBuilder.defaultDeleteRecordStringSet,
   };
 
   export function createDefaultSubgridCommands({
@@ -267,6 +273,19 @@ export namespace DefaultCommandBuilder {
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
             (x) => x.edit
+          ),
+        }),
+        SubgridCommandBuilder.createDeleteRecordCommand({
+          Icon: icons.Delete,
+          text: strings.delete,
+          localizedText: extractLocalizedStrings(
+            localizedSrings,
+            (x) => x.delete
+          ),
+          stringSet: strings.deleteRecordCommandStringSet,
+          localizedStringSet: extractLocalizedStrings(
+            localizedSrings,
+            (x) => x.deleteRecordCommandStringSet
           ),
         }),
         SubgridCommandBuilder.createRefreshCommand({

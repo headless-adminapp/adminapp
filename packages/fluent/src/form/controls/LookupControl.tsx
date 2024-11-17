@@ -213,7 +213,7 @@ const LookupControlMd: FC<LookupControlProps> = ({
             <Icons.Search size={18} />
           )
         }
-        placeholder={placeholder}
+        placeholder={!value ? placeholder : ''}
         inputMode="search"
         style={{ width: '100%' }}
         autoComplete="off"
