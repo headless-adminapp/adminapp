@@ -16,25 +16,25 @@ interface RestDataServiceOptions {
   endpoint: string;
 }
 
+export async function handleResponseError(response: Response) {
+  if (response.ok) {
+    return;
+  }
+
+  if (response.headers.get('content-type')?.includes('application/json')) {
+    const data = await response.json();
+
+    if (data.error) {
+      throw new HttpError(response.status, data.error);
+    }
+  }
+
+  throw new HttpError(response.status, response.statusText);
+}
+
 export class RestDataService implements IDataService {
   public constructor(protected readonly options: RestDataServiceOptions) {}
   protected readonly headers: Record<string, string> = {};
-
-  protected async handleResponseError(response: Response) {
-    if (response.ok) {
-      return;
-    }
-
-    if (response.headers.get('content-type')?.includes('application/json')) {
-      const data = await response.json();
-
-      if (data.error) {
-        throw new HttpError(response.status, data.error);
-      }
-    }
-
-    throw new HttpError(response.status, response.statusText);
-  }
 
   private getHeaders() {
     return {
@@ -58,7 +58,7 @@ export class RestDataService implements IDataService {
       body: JSON.stringify(data),
     });
 
-    await this.handleResponseError(response);
+    await handleResponseError(response);
 
     return response.json();
   }

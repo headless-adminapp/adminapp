@@ -81,13 +81,12 @@ export const AttachmentsControl: FC<AttachmentsControlProps> = ({
                 appearance="brand"
                 size="small"
                 shape="rounded"
-                // value={option}
-                dismissible
+                dismissible={!disabled && !readOnly}
                 dismissIcon={
                   <div
                     style={{ display: 'flex', cursor: 'pointer' }}
                     onClick={() => {
-                      if (readOnly) return;
+                      if (disabled || readOnly) return;
                       onChange?.(value?.filter((_, i) => i !== index));
                     }}
                   >
@@ -112,17 +111,19 @@ export const AttachmentsControl: FC<AttachmentsControlProps> = ({
                 </Link>
               </Tag>
             ))}
-            <Button
-              size="small"
-              icon={<Icons.Add size={16} />}
-              appearance="outline"
-              onClick={() => {
-                if (readOnly) return;
-                inputRef.current?.click();
-              }}
-            >
-              Add
-            </Button>
+            {!readOnly && !disabled && (
+              <Button
+                size="small"
+                icon={<Icons.Add size={16} />}
+                appearance="outline"
+                onClick={() => {
+                  if (readOnly) return;
+                  inputRef.current?.click();
+                }}
+              >
+                Add
+              </Button>
+            )}
           </TagGroup>
         </TagPickerControl>
         <TagPickerList />

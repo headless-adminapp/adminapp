@@ -2,8 +2,9 @@ import {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
+import { Data } from '@headless-adminapp/core/transport';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 import { useMetadata } from '../../metadata/hooks/useMetadata';
@@ -15,6 +16,7 @@ import {
   useGridColumnFilter,
   useGridColumns,
   useGridExtraFilter,
+  useGridSelection,
   useGridSorting,
   useMaxRecords,
   useSearchText,
@@ -36,8 +38,12 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
   const [columnFilters] = useGridColumnFilter();
   const gridColumns = useGridColumns();
   const maxRecords = useMaxRecords() ?? MAX_RECORDS;
+  const [selectedIds] = useGridSelection();
 
   const { schemaStore } = useMetadata();
+
+  const selectedIdsRef = useRef(selectedIds);
+  selectedIdsRef.current = selectedIds;
 
   const setState = useContextSetValue(GridContext);
 
@@ -189,10 +195,18 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
       count: data?.pages?.[0].data.count ?? 0,
       records: data?.pages.map((x) => x.data.records).flat() ?? [],
     };
+
+    const selectedIds = selectedIdsRef.current.filter((x) =>
+      finalData.records.some(
+        (y) => y[schema.idAttribute as keyof Data<InferredSchemaType<S>>] === x
+      )
+    );
+
     setState({
       data: finalData,
+      selectedIds,
     });
-  }, [data, setState]);
+  }, [data, setState, schema.idAttribute]);
 
   useEffect(() => {
     setState({

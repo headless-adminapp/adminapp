@@ -115,6 +115,7 @@ export function PromptDialog(props: PromptDialogProps) {
           <DialogActions>
             <Button
               appearance="secondary"
+              type="button"
               onClick={() => {
                 props.onCancel?.();
               }}

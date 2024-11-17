@@ -55,7 +55,7 @@ const Item = ({
 
     dispatchToast(
       <Toast>
-        <ToastTitle>{item.title}</ToastTitle>
+        {!!item.title && <ToastTitle>{item.title}</ToastTitle>}
         <ToastBody>{item.text}</ToastBody>
         {!!item.actions?.length && (
           <ToastFooter>

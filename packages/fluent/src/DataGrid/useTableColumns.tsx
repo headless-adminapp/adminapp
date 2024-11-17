@@ -87,7 +87,7 @@ export function useTableColumns({
   const [, setSorting] = useGridSorting();
   const schema = useDataGridSchema();
   const { schemaStore } = useMetadata();
-  const [, setSelectedIds] = useGridSelection();
+  const [selectedIds, setSelectedIds] = useGridSelection();
 
   const setSelectedIdsRef = useRef(setSelectedIds);
   setSelectedIdsRef.current = setSelectedIds;
@@ -139,6 +139,22 @@ export function useTableColumns({
   const dataRef = useRef(data);
   dataRef.current = data;
 
+  const headingSelectionState = useMemo(() => {
+    if (data?.records.length === 0) {
+      return false;
+    }
+
+    if (selectedIds.length === 0) {
+      return false;
+    }
+
+    if (selectedIds.length === dataRef.current?.records.length) {
+      return true;
+    }
+
+    return 'mixed';
+  }, [data?.records.length, selectedIds]);
+
   return useMemo(() => {
     return [
       ...(disableSelection
@@ -148,7 +164,7 @@ export function useTableColumns({
               id: '$selectColumn',
               header: () => (
                 <TableSelectionCell
-                  checked={'mixed'}
+                  checked={headingSelectionState}
                   as={'th' as any}
                   style={{
                     position: 'sticky',
@@ -160,6 +176,19 @@ export function useTableColumns({
                     width: 32,
                     maxWidth: 32,
                     minWidth: 32,
+                  }}
+                  onClick={() => {
+                    setSelectedIdsRef.current((ids) => {
+                      if (ids.length === dataRef.current?.records.length) {
+                        return [];
+                      }
+
+                      return (
+                        dataRef.current?.records.map(
+                          (record) => record[schema.idAttribute] as string
+                        ) ?? []
+                      );
+                    });
                   }}
                 />
               ),
@@ -383,5 +412,6 @@ export function useTableColumns({
     recordSetSetter,
     router,
     mutableContextCommandState,
+    headingSelectionState,
   ]);
 }

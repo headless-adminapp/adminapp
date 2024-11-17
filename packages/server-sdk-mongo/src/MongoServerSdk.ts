@@ -1,4 +1,3 @@
-import { LookupAttribute } from '@headless-adminapp/core/attributes';
 import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import { ISchemaStore } from '@headless-adminapp/core/store';
 import {
@@ -98,9 +97,13 @@ export class MongoServerSdk<
     const model = this.options.schemaStore.getModel(params.logicalName);
     const schema = this.options.schemaStore.getSchema(params.logicalName);
 
-    const filter: FilterQuery<unknown> = {
-      $and: [{ _id: new Types.ObjectId(params.id) }],
-    };
+    const basePipelines: PipelineStage[] = [];
+
+    basePipelines.push({
+      $match: {
+        _id: new Types.ObjectId(params.id),
+      },
+    });
 
     const orgFilter = transformFilter(
       this.options.dataFilter?.getOrganizationFilter({
@@ -117,7 +120,9 @@ export class MongoServerSdk<
     );
 
     if (orgFilter) {
-      filter.$and!.push(orgFilter);
+      basePipelines.push({
+        $match: orgFilter,
+      });
     }
 
     const permissionFilter = transformFilter(
@@ -135,60 +140,75 @@ export class MongoServerSdk<
     );
 
     if (permissionFilter) {
-      filter.$and!.push(permissionFilter);
-    }
-
-    let projection: any = undefined;
-
-    if (params.columns?.length) {
-      projection = params.columns.reduce((acc, x) => {
-        const attribute = schema.attributes[x];
-
-        if (!attribute) {
-          return acc;
-        }
-
-        // if (attribute.sensitive) {
-        //   return acc;
-        // }
-
-        acc[x] = 1;
-        return acc;
-      }, {} as Record<string, number>);
-    } else {
-      projection = {
-        _id: 1,
-      };
-    }
-
-    const populate = Object.keys(schema.attributes)
-      .filter(
-        (x) =>
-          schema.attributes[x].type === 'lookup' &&
-          (!projection || projection[x])
-      )
-      .map((x) => {
-        const lookup = schema.attributes[x] as LookupAttribute;
-        const lookupSchema = this.options.schemaStore.getSchema(lookup.entity);
-        return {
-          path: x,
-          select: {
-            _id: 1,
-            name: '$' + [lookupSchema.primaryAttribute || 'name'],
-          } as Record<string, unknown>,
-        };
+      basePipelines.push({
+        $match: permissionFilter,
       });
+    }
 
-    const record = await model.findOne(filter, projection, {
-      populate,
-      session: this.session,
+    const lookupPipelines: PipelineStage[] = [];
+
+    Object.entries(schema.attributes).forEach(([key, attribute]) => {
+      if (attribute.type === 'lookup') {
+        if (params?.columns?.includes(key)) {
+          const lookupSchema = this.options.schemaStore.getSchema(
+            attribute.entity
+          );
+          lookupPipelines.push({
+            $lookup: {
+              from: lookupSchema.logicalName,
+              localField: key,
+              foreignField: '_id',
+              as: `@expand.${key}`,
+            },
+          });
+          lookupPipelines.push({
+            $unwind: {
+              path: `$@expand.${key}`,
+              preserveNullAndEmptyArrays: true,
+            },
+          });
+        }
+      }
     });
 
-    if (!record) {
+    basePipelines.push(...lookupPipelines);
+
+    const projection = this.prepareProjection({
+      schema,
+      columns: params.columns,
+      expand: params.expand,
+    });
+
+    if (projection) {
+      basePipelines.push({
+        $project: projection,
+      });
+    }
+
+    const records = await model
+      .aggregate(basePipelines, {
+        collation: { locale: 'en' },
+        session: this.session,
+      })
+      .exec();
+
+    const lookupFields = Object.entries(schema.attributes)
+      .filter(([, attribute]) => attribute.type === 'lookup')
+      .map(([key]) => key);
+
+    records.forEach((record) => {
+      lookupFields.forEach((key) => {
+        if (record[key] && !record[key]._id) {
+          record[key] = null;
+        }
+      });
+    });
+
+    if (!records.length) {
       throw new NotFoundError('Record not found');
     }
 
-    const transformedRecords = this.transformRecords([record], {
+    const transformedRecords = this.transformRecords(records, {
       schema,
       columns: params.columns,
       expand: params.expand,
@@ -196,6 +216,111 @@ export class MongoServerSdk<
 
     return transformedRecords[0] as RetriveRecordResult<T>;
   }
+
+  private prepareProjection(params: {
+    columns?: string[];
+    expand?: Record<string, string[] | undefined>;
+    schema: Schema<SA>;
+  }) {
+    if (params.columns?.length) {
+      const projection = params.columns.reduce((acc, x) => {
+        const [key, subKey] = x.split('.');
+        const attribute = params.schema.attributes[key];
+        if (!attribute) {
+          return acc;
+        }
+
+        if (attribute.type !== 'lookup') {
+          acc[key] = 1;
+          return acc;
+        } else {
+          const lookupSchema = this.options.schemaStore.getSchema(
+            attribute.entity
+          );
+          let lookupProjection: Record<string, number | string> = (acc[
+            key
+          ] as Record<string, number | string>) || {
+            _id: 1,
+          };
+
+          if (!subKey) {
+            lookupProjection = {
+              ...lookupProjection,
+              name: `$${key}.${lookupSchema.primaryAttribute as string}`,
+              [`${key}.${lookupSchema.primaryAttribute as string}`]: 1,
+              logicalName: lookupSchema.logicalName,
+            };
+          } else {
+            lookupProjection[subKey] = 1;
+          }
+
+          acc[key] = lookupProjection;
+          return acc;
+        }
+      }, {} as Record<string, number | string | any | Record<string, number | string>>);
+
+      projection._id = 1;
+      projection['@data:entity'] = params.schema.logicalName;
+
+      if (params.expand && Object.keys(params.expand).length) {
+        const expand = Object.keys(params.expand).reduce((acc, cur) => {
+          const attribute = params.schema.attributes[cur];
+          if (!attribute) {
+            return acc;
+          }
+
+          if (attribute.type !== 'lookup') {
+            return acc;
+          }
+
+          const lookupSchema = this.options.schemaStore.getSchema(
+            attribute.entity
+          );
+
+          const expandProjection = {
+            '@data:entity': lookupSchema.logicalName,
+            [lookupSchema.idAttribute]: `$${cur}.${
+              lookupSchema.idAttribute as string
+            }`,
+          } as Record<string, any>;
+
+          const columns = params.expand?.[cur] ?? [];
+
+          columns.forEach((column) => {
+            expandProjection[column] = `$${cur}.${column}`;
+          });
+
+          acc[cur] = {
+            $cond: {
+              if: {
+                $and: [{ $eq: [{ $type: '$bankAccount' }, 'object'] }],
+              },
+              then: expandProjection,
+              else: null,
+            },
+          };
+
+          return acc;
+        }, {} as Record<string, any>);
+
+        if (Object.keys(expand).length) {
+          projection['@data:expand'] = expand;
+        }
+      }
+
+      return null;
+
+      // return projection;
+    } else {
+      return {
+        _id: 1,
+        [params.schema.primaryAttribute]: 1,
+        statecode: 1,
+        statuscode: 1,
+      };
+    }
+  }
+
   protected async retriveRecords<T extends Record<string, unknown>>(
     params: RetriveRecordsParams
   ): Promise<RetriveRecordsResult<T>> {
@@ -369,103 +494,15 @@ export class MongoServerSdk<
 
     listPipeline.push({ $limit: params?.limit ?? 100 });
 
-    if (params?.columns?.length) {
-      const projection = params.columns.reduce((acc, x) => {
-        const [key, subKey] = x.split('.');
-        const attribute = schema.attributes[key];
-        if (!attribute) {
-          return acc;
-        }
+    const projection = this.prepareProjection({
+      schema,
+      columns: params.columns,
+      expand: params.expand,
+    });
 
-        if (attribute.type !== 'lookup') {
-          acc[key] = 1;
-          return acc;
-        } else {
-          const lookupSchema = this.options.schemaStore.getSchema(
-            attribute.entity
-          );
-          let lookupProjection: Record<string, number | string> = (acc[
-            key
-          ] as Record<string, number | string>) || {
-            _id: 1,
-          };
-
-          if (!subKey) {
-            lookupProjection = {
-              ...lookupProjection,
-              name: `$${key}.${lookupSchema.primaryAttribute as string}`,
-              [`${key}.${lookupSchema.primaryAttribute as string}`]: 1,
-              logicalName: lookupSchema.logicalName,
-            };
-          } else {
-            lookupProjection[subKey] = 1;
-          }
-
-          acc[key] = lookupProjection;
-          return acc;
-        }
-      }, {} as Record<string, number | string | any | Record<string, number | string>>);
-
-      projection._id = 1;
-      projection['@data:entity'] = schema.logicalName;
-
-      if (params.expand && Object.keys(params.expand).length) {
-        const expand = Object.keys(params.expand).reduce((acc, cur) => {
-          const attribute = schema.attributes[cur];
-          if (!attribute) {
-            return acc;
-          }
-
-          if (attribute.type !== 'lookup') {
-            return acc;
-          }
-
-          const lookupSchema = this.options.schemaStore.getSchema(
-            attribute.entity
-          );
-
-          const expandProjection = {
-            '@data:entity': lookupSchema.logicalName,
-            [lookupSchema.idAttribute]: `$${cur}.${
-              lookupSchema.idAttribute as string
-            }`,
-          } as Record<string, any>;
-
-          const columns = params.expand?.[cur] ?? [];
-
-          columns.forEach((column) => {
-            expandProjection[column] = `$${cur}.${column}`;
-          });
-
-          acc[cur] = {
-            $cond: {
-              if: {
-                $and: [{ $eq: [{ $type: '$bankAccount' }, 'object'] }],
-              },
-              then: expandProjection,
-              else: null,
-            },
-          };
-
-          return acc;
-        }, {} as Record<string, any>);
-
-        if (Object.keys(expand).length) {
-          projection['@data:expand'] = expand;
-        }
-      }
-
-      // listPipeline.push({
-      //   $project: projection,
-      // });
-    } else {
+    if (projection) {
       listPipeline.push({
-        $project: {
-          _id: 1,
-          [schema.primaryAttribute]: 1,
-          statecode: 1,
-          statuscode: 1,
-        },
+        $project: projection,
       });
     }
 

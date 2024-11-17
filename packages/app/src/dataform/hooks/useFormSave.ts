@@ -9,6 +9,7 @@
 // Wrapper - Loader, response message
 // Core - Extract modified fields, prepare operations, perform operations
 
+import { useRouter } from '@headless-adminapp/app/route';
 import { SaveMode } from '@headless-adminapp/core/experience/form';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useRef } from 'react';
@@ -42,6 +43,7 @@ export function useFormSave() {
   const openToastNotification = useOpenToastNotification();
 
   const client = useQueryClient();
+  const router = useRouter();
 
   function showMessageAfterSave({ isCreatedMode }: { isCreatedMode: boolean }) {
     // Show notification
@@ -102,6 +104,9 @@ export function useFormSave() {
           await client.invalidateQueries({
             queryKey: ['data', 'retriveRecord'],
           });
+          if (mode === 'saveandclose') {
+            router.back();
+          }
         }
 
         await client.invalidateQueries({
