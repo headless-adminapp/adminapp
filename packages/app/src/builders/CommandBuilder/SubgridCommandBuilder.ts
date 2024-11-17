@@ -53,7 +53,7 @@ export namespace SubgridCommandBuilder {
       onClick: (context) => {
         if (context.secondaryControl.associated) {
           context.navigation.openForm({
-            logicalName: context.primaryControl.schema.logicalName,
+            logicalName: context.secondaryControl.schema.logicalName,
             parameters: {
               [context.secondaryControl.associated.refAttributeName]: {
                 id: context.secondaryControl.associated.id,
@@ -64,7 +64,7 @@ export namespace SubgridCommandBuilder {
           });
         } else {
           context.navigation.openForm({
-            logicalName: context.primaryControl.schema.logicalName,
+            logicalName: context.secondaryControl.schema.logicalName,
           });
         }
       },
@@ -177,7 +177,7 @@ export namespace SubgridCommandBuilder {
 
           for (const recordId of recordIds) {
             await context.dataService.deleteRecord(
-              context.primaryControl.logicalName,
+              context.secondaryControl.logicalName,
               recordId
             );
           }

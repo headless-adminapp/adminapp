@@ -196,7 +196,10 @@ export namespace FormCommandBuilder {
           }
 
           context.utility.showProgressIndicator(
-            stringSet.status.deleting + '...'
+            plurialize(
+              1,
+              localizeSelector((s) => s.status.deleting)
+            ) + '...'
           );
 
           await context.dataService.deleteRecord(

@@ -1,4 +1,6 @@
+import { useRouter } from '@headless-adminapp/app/route';
 import { EntityFormCommandContext } from '@headless-adminapp/core/experience/form';
+import { useCallback } from 'react';
 
 import {
   CommandItemState,
@@ -14,7 +16,7 @@ import { useFormSave } from './useFormSave';
 import { useDataFormSchema } from './useFormSchema';
 import { useRecordId } from './useRecordId';
 
-export function useFormControlContext() {
+export function useFormControlContext(): EntityFormCommandContext['primaryControl'] {
   const schema = useDataFormSchema();
   const form = useContextSelector(DataFormContext, (state) => state.form);
   const originalData = useFormRecord();
@@ -24,9 +26,14 @@ export function useFormControlContext() {
   const refresh = useContextSelector(DataFormContext, (state) => state.refresh);
 
   const formInstance = useFormInstance();
-  const readonly = useFormIsReadonly();
+  const readonly = useFormIsReadonly() ?? false;
 
   const data = formInstance.watch() as any;
+  const router = useRouter();
+
+  const close = useCallback(() => {
+    router.back();
+  }, [router]);
 
   return {
     data,
@@ -39,11 +46,12 @@ export function useFormControlContext() {
     refresh,
     save,
     readonly,
+    close,
   };
 }
 
 export function useMainFormCommandHandlerContext(): EntityFormCommandContext {
-  const primaryControl: any = useFormControlContext();
+  const primaryControl = useFormControlContext();
 
   const baseHandlerContext = useBaseCommandHandlerContext();
 
