@@ -55,9 +55,7 @@ export abstract class ServerSdk<
 {
   protected timezone: string;
   constructor(protected readonly options: Options) {
-    this.timezone = new Intl.DateTimeFormat(
-      options.context.locale
-    ).resolvedOptions().timeZone;
+    this.timezone = this.options.context.timezone;
   }
 
   protected async validateCreate(schema: Schema<SA>) {

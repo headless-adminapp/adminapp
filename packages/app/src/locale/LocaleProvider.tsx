@@ -4,7 +4,8 @@ import { FC, PropsWithChildren, useMemo } from 'react';
 import { LocaleContext } from './context';
 
 export interface LocaleProviderProps {
-  locale?: string;
+  locale: string;
+  timezone: string;
   options?: {
     direction?: Locale['direction'];
     dateFormats?: Locale['dateFormats'];
@@ -15,12 +16,13 @@ export interface LocaleProviderProps {
 
 export const LocaleProvider: FC<PropsWithChildren<LocaleProviderProps>> = ({
   children,
-  locale = 'en-US',
+  locale,
+  timezone,
   options,
 }) => {
   const localeState = useMemo(() => {
-    return getLocale(locale, options);
-  }, [locale, options]);
+    return getLocale(locale, timezone, options);
+  }, [locale, timezone, options]);
   return (
     <LocaleContext.Provider value={localeState}>
       {children}

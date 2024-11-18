@@ -22,7 +22,7 @@ import { AuthWrapper } from './AuthWrapper';
 export interface LayoutProviderProps {
   routeProps: RouteProviderProps;
   queryClient: QueryClient;
-  localeProps?: LocaleProviderProps;
+  localeProps: LocaleProviderProps;
   dataService: IDataService;
   authProps?: AuthProviderProps;
   authPlaceholder?: FC<AuthProviderPlaceholderProps>;

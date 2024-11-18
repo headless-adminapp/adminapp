@@ -134,7 +134,7 @@ export function useTableColumns({
 
   const openRecord = useOpenRecord();
 
-  const { currency, dateFormats } = useLocale();
+  const { currency, dateFormats, timezone } = useLocale();
 
   const dataRef = useRef(data);
   dataRef.current = data;
@@ -274,6 +274,7 @@ export function useTableColumns({
               getAttributeFormattedValue(attribute, value, {
                 currency: currency.currency,
                 dateFormat: dateFormats.short,
+                timezone,
               }) ?? '';
 
             if (schema.primaryAttribute === column.name) {
@@ -413,5 +414,6 @@ export function useTableColumns({
     router,
     mutableContextCommandState,
     headingSelectionState,
+    timezone,
   ]);
 }

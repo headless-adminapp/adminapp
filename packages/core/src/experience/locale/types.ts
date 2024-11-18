@@ -6,6 +6,7 @@ export type Locale = {
   language: string;
 
   // date formats
+  timezone: string;
   dateFormats: {
     short: string;
     long: string;

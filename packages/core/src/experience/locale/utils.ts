@@ -2,6 +2,7 @@ import { Locale } from './types';
 
 export function getLocale(
   locale: string,
+  timezone: string,
   options?: {
     direction?: Locale['direction'];
     dateFormats?: Locale['dateFormats'];
@@ -21,6 +22,7 @@ export function getLocale(
     locale,
     direction: direction ?? 'ltr',
     language,
+    timezone,
     dateFormats: {
       short: options?.dateFormats?.short ?? 'M/D/YYYY',
       long: options?.dateFormats?.long ?? 'WWW, MMM D, YYYY',

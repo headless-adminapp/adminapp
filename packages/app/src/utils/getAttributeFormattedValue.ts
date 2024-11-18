@@ -4,6 +4,11 @@ import {
   InferredAttributeType,
 } from '@headless-adminapp/core/attributes';
 import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 interface AttributeFormattedValueStringsSet {
   yes: string;
@@ -33,6 +38,7 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
     currency?: string;
     currencySign?: 'accounting' | 'standard';
     currencyDisplay?: 'symbol' | 'narrowSymbol' | 'code';
+    timezone?: string;
   }
 ): string | null | undefined {
   if (value === null || value === undefined) {
@@ -68,7 +74,9 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
         })
         .join(', ');
     case 'date':
-      return dayjs(value as string).format(dateFormat);
+      return dayjs(value as string)
+        .tz(options?.timezone)
+        .format(dateFormat);
     case 'daterange':
       if (!value) return null;
 
@@ -81,16 +89,18 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
 
       if (from && to) {
         return (
-          dayjs(from).format(dateFormat) + ' - ' + dayjs(to).format(dateFormat)
+          dayjs(from).tz(options?.timezone).format(dateFormat) +
+          ' - ' +
+          dayjs(to).tz(options?.timezone).format(dateFormat)
         );
       }
 
       if (from) {
-        return 'After ' + dayjs(from).format(dateFormat);
+        return 'After ' + dayjs(from).tz(options?.timezone).format(dateFormat);
       }
 
       if (to) {
-        return 'Before ' + dayjs(to).format(dateFormat);
+        return 'Before ' + dayjs(to).tz(options?.timezone).format(dateFormat);
       }
 
       return null;
