@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/fluent",
-  "version": "0.0.17-alpha.25",
+  "version": "0.0.17-alpha.26",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
@@ -42,7 +42,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-hook-form": "7.52.2",
-    "yup": "^1.4.0",
-    "uuid": "11.0.3"
+    "uuid": "11.0.3",
+    "yup": "^1.4.0"
   }
 }
