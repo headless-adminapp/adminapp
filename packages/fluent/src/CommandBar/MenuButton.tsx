@@ -12,7 +12,7 @@ import {
 } from '@fluentui/react-components';
 import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
 import { Icon } from '@headless-adminapp/icons';
-import { forwardRef } from 'react';
+import { forwardRef, memo, MemoExoticComponent } from 'react';
 
 import { MenuItemProps } from './MenuItem';
 import { MenuList } from './MenuList';
@@ -57,7 +57,9 @@ export interface CommandMenuButtonProps {
   items: ArrayGroupWithAtLeastOne<MenuItemProps>;
 }
 
-export const CommandMenuButton: ForwardRefComponent<CommandMenuButtonProps> =
+export const CommandMenuButton: MemoExoticComponent<
+  ForwardRefComponent<CommandMenuButtonProps>
+> = memo(
   forwardRef(function CommandMenuButton(
     { Icon, items, text, danger, disabled, onClick },
     ref
@@ -104,6 +106,7 @@ export const CommandMenuButton: ForwardRefComponent<CommandMenuButtonProps> =
       </Menu>
       // </div>
     );
-  });
+  })
+);
 
 CommandMenuButton.displayName = 'CommandMenuButton';

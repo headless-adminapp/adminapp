@@ -10,6 +10,7 @@ import {
 } from '@fluentui/react-components';
 import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
 import { Icon } from '@headless-adminapp/icons';
+import { memo } from 'react';
 
 import { MenuList } from './MenuList';
 
@@ -49,52 +50,53 @@ export interface MenuItemProps {
   items?: ArrayGroupWithAtLeastOne<MenuItemProps>;
 }
 
-export const MenuItem: React.FC<MenuItemProps> = ({
-  Icon,
-  text,
-  disabled,
-  danger,
-  onClick,
-  items,
-}) => {
-  const styles = useStyles();
+export const MenuItem: React.FC<MenuItemProps> = memo(
+  ({ Icon, text, disabled, danger, onClick, items }) => {
+    const styles = useStyles();
 
-  if (!items?.length) {
+    if (!items?.length) {
+      return (
+        <InternalMenuItem
+          disabled={disabled}
+          onClick={onClick}
+          icon={<Icon size={20} />}
+          className={mergeClasses(danger && styles.danger)}
+        >
+          {text}
+        </InternalMenuItem>
+      );
+    }
+
     return (
-      <InternalMenuItem
-        disabled={disabled}
-        onClick={onClick}
-        icon={<Icon size={20} />}
-        className={mergeClasses(danger && styles.danger)}
-      >
-        {text}
-      </InternalMenuItem>
+      <Menu hasIcons>
+        {onClick ? (
+          <MenuSplitGroup>
+            <InternalMenuItem
+              icon={<Icon size={20} />}
+              className={mergeClasses(danger && styles.danger)}
+            >
+              {text}
+            </InternalMenuItem>
+            <MenuTrigger disableButtonEnhancement>
+              <InternalMenuItem
+                className={mergeClasses(styles.splitMenuRight)}
+              />
+            </MenuTrigger>
+          </MenuSplitGroup>
+        ) : (
+          <MenuTrigger disableButtonEnhancement>
+            <InternalMenuItem icon={<Icon size={20} />}>
+              {text}
+            </InternalMenuItem>
+          </MenuTrigger>
+        )}
+
+        <MenuPopover>
+          <MenuList items={items} />
+        </MenuPopover>
+      </Menu>
     );
   }
+);
 
-  return (
-    <Menu hasIcons>
-      {onClick ? (
-        <MenuSplitGroup>
-          <InternalMenuItem
-            icon={<Icon size={20} />}
-            className={mergeClasses(danger && styles.danger)}
-          >
-            {text}
-          </InternalMenuItem>
-          <MenuTrigger disableButtonEnhancement>
-            <InternalMenuItem className={mergeClasses(styles.splitMenuRight)} />
-          </MenuTrigger>
-        </MenuSplitGroup>
-      ) : (
-        <MenuTrigger disableButtonEnhancement>
-          <InternalMenuItem icon={<Icon size={20} />}>{text}</InternalMenuItem>
-        </MenuTrigger>
-      )}
-
-      <MenuPopover>
-        <MenuList items={items} />
-      </MenuPopover>
-    </Menu>
-  );
-};
+MenuItem.displayName = 'MenuItem';

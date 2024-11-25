@@ -1,5 +1,5 @@
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { useContextSelector } from '../../mutable/context';
 import { MetadataContext } from '../context';
@@ -34,13 +34,16 @@ export function useMetadata() {
     [schemaStore]
   );
 
-  return {
-    schemas,
-    schemaLoading,
-    /*** @deprecated */
-    getSchema,
-    schemaStore,
-    appStore,
-    experienceStore,
-  };
+  return useMemo(
+    () => ({
+      schemas,
+      schemaLoading,
+      /*** @deprecated */
+      getSchema,
+      schemaStore,
+      appStore,
+      experienceStore,
+    }),
+    [schemas, schemaLoading, schemaStore, appStore, experienceStore, getSchema]
+  );
 }

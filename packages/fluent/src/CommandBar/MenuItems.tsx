@@ -1,6 +1,6 @@
 import { MenuDivider } from '@fluentui/react-components';
 import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
-import { Fragment } from 'react';
+import { Fragment, memo } from 'react';
 
 import { MenuItem, MenuItemProps } from './MenuItem';
 
@@ -8,7 +8,7 @@ export interface MenuItemsProps {
   items?: ArrayGroupWithAtLeastOne<MenuItemProps>;
 }
 
-export const MenuItems: React.FC<MenuItemsProps> = ({ items }) => {
+export const MenuItems: React.FC<MenuItemsProps> = memo(({ items }) => {
   return (
     <Fragment>
       {items?.map((group, index) => (
@@ -29,4 +29,6 @@ export const MenuItems: React.FC<MenuItemsProps> = ({ items }) => {
       ))}
     </Fragment>
   );
-};
+});
+
+MenuItems.displayName = 'MenuItems';

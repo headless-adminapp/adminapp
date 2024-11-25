@@ -6,7 +6,7 @@ import {
   ToolbarButton,
 } from '@fluentui/react-components';
 import { Icon } from '@headless-adminapp/icons';
-import { forwardRef } from 'react';
+import { forwardRef, memo, MemoExoticComponent } from 'react';
 
 const useStyles = makeStyles({
   root: {
@@ -47,7 +47,9 @@ export interface CommandButtonProps {
 
 const ToolbarButtonInternal = ToolbarButton as any;
 
-export const CommandButton: ForwardRefComponent<CommandButtonProps> =
+export const CommandButton: MemoExoticComponent<
+  ForwardRefComponent<CommandButtonProps>
+> = memo(
   forwardRef(function CommandButton(
     { Icon, text, danger, onClick, disabled, iconPosition = 'before' },
     ref
@@ -67,6 +69,7 @@ export const CommandButton: ForwardRefComponent<CommandButtonProps> =
         {text}
       </ToolbarButtonInternal>
     );
-  });
+  })
+);
 
 CommandButton.displayName = 'CommandButton';

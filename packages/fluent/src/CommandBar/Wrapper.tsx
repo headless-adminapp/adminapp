@@ -4,7 +4,13 @@ import {
   mergeClasses,
   Toolbar,
 } from '@fluentui/react-components';
-import { forwardRef, PropsWithChildren, RefObject } from 'react';
+import {
+  forwardRef,
+  memo,
+  MemoExoticComponent,
+  PropsWithChildren,
+  RefObject,
+} from 'react';
 
 const useStyles = makeStyles({
   root: {
@@ -26,27 +32,29 @@ export interface CommandBarWrapperProps {
   align?: 'start' | 'end';
 }
 
-export const CommandBarWrapper: ForwardRefComponent<
-  PropsWithChildren<CommandBarWrapperProps>
-> = forwardRef(function CommandBarWrapper(
-  { children, overflow, className, align = 'start' },
-  ref
-) {
-  const styles = useStyles();
+export const CommandBarWrapper: MemoExoticComponent<
+  ForwardRefComponent<PropsWithChildren<CommandBarWrapperProps>>
+> = memo(
+  forwardRef(function CommandBarWrapper(
+    { children, overflow, className, align = 'start' },
+    ref
+  ) {
+    const styles = useStyles();
 
-  return (
-    <Toolbar
-      ref={ref as RefObject<HTMLDivElement>}
-      style={{ justifyContent: 'flex-' + align }}
-      className={mergeClasses(
-        styles.root,
-        overflow === 'hidden' ? styles.overflowHidden : styles.overflowAuto,
-        className
-      )}
-    >
-      {children}
-    </Toolbar>
-  );
-});
+    return (
+      <Toolbar
+        ref={ref as RefObject<HTMLDivElement>}
+        style={{ justifyContent: 'flex-' + align }}
+        className={mergeClasses(
+          styles.root,
+          overflow === 'hidden' ? styles.overflowHidden : styles.overflowAuto,
+          className
+        )}
+      >
+        {children}
+      </Toolbar>
+    );
+  })
+);
 
 CommandBarWrapper.displayName = 'CommandBarWrapper';

@@ -204,6 +204,7 @@ export const TableHeaderFilterCell: FC<
 
   const headerCell = (
     <TableHeaderCell
+      as="div"
       className={mergeClasses(styles.root, align === 'right' && styles.right)}
       style={{
         textAlign: align,
@@ -283,35 +284,37 @@ export const TableHeaderFilterCell: FC<
 
   return (
     <Fragment>
-      <Menu positioning="below-start">
-        <MenuTrigger>{headerCell}</MenuTrigger>
-        <MenuPopover>
-          <MenuList>
-            {menuItems.map((x, i) => (
-              <Fragment key={i}>
-                {i > 0 && <MenuDivider />}
-                {x}
-              </Fragment>
-            ))}
-          </MenuList>
-        </MenuPopover>
-      </Menu>
-      <Dialog open={visible} onOpenChange={() => setVisible(false)}>
-        <DialogSurface style={{ maxWidth: 400 }}>
-          <DialogBody>
-            <DialogTitle>{strings.filterBy}</DialogTitle>
-            <FilterForm
-              attribute={attribute}
-              defaultValue={filterCondition}
-              onApply={(condition) => {
-                onChangeFilterCondition?.(condition);
-                setVisible(false);
-              }}
-              onCancel={() => setVisible(false)}
-            />
-          </DialogBody>
-        </DialogSurface>
-      </Dialog>
+      <th>
+        <Menu positioning="below-start">
+          <MenuTrigger>{headerCell}</MenuTrigger>
+          <MenuPopover>
+            <MenuList>
+              {menuItems.map((x, i) => (
+                <Fragment key={i}>
+                  {i > 0 && <MenuDivider />}
+                  {x}
+                </Fragment>
+              ))}
+            </MenuList>
+          </MenuPopover>
+        </Menu>
+        <Dialog open={visible} onOpenChange={() => setVisible(false)}>
+          <DialogSurface style={{ maxWidth: 400 }}>
+            <DialogBody>
+              <DialogTitle>{strings.filterBy}</DialogTitle>
+              <FilterForm
+                attribute={attribute}
+                defaultValue={filterCondition}
+                onApply={(condition) => {
+                  onChangeFilterCondition?.(condition);
+                  setVisible(false);
+                }}
+                onCancel={() => setVisible(false)}
+              />
+            </DialogBody>
+          </DialogSurface>
+        </Dialog>
+      </th>
     </Fragment>
   );
 };

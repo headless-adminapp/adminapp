@@ -6,7 +6,7 @@ import {
   ToolbarButton,
 } from '@fluentui/react-components';
 import { Icon } from '@headless-adminapp/icons';
-import { forwardRef } from 'react';
+import { forwardRef, memo, MemoExoticComponent } from 'react';
 
 const useStyles = makeStyles({
   root: {
@@ -27,8 +27,10 @@ export interface CommandLabelProps {
   text: string;
 }
 
-export const CommandLabel: ForwardRefComponent<CommandLabelProps> = forwardRef(
-  function CommandLabel({ Icon, text }, ref) {
+export const CommandLabel: MemoExoticComponent<
+  ForwardRefComponent<CommandLabelProps>
+> = memo(
+  forwardRef(function CommandLabel({ Icon, text }, ref) {
     const styles = useStyles();
 
     return (
@@ -41,7 +43,7 @@ export const CommandLabel: ForwardRefComponent<CommandLabelProps> = forwardRef(
         {text}
       </ToolbarButton>
     );
-  }
+  })
 );
 
 CommandLabel.displayName = 'CommandLabel';

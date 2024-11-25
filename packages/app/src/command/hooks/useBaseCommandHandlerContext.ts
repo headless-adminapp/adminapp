@@ -1,6 +1,7 @@
 import { useOpenForm } from '@headless-adminapp/app/navigation';
 import { CommandContextBase } from '@headless-adminapp/core/experience/command';
 import { useQueryClient } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
 import {
   useOpenAlertDialog,
@@ -24,23 +25,37 @@ export function useUtility(): UtilityContextState {
   const openPromptDialog = useOpenPromptDialog();
   const openToastNotification = useOpenToastNotification();
 
-  return {
-    hideProgressIndicator,
-    showProgressIndicator,
-    openAlertDialog,
-    openConfirmDialog,
-    openErrorDialog,
-    openPromptDialog,
-    showNotification: openToastNotification,
-  };
+  return useMemo(
+    () => ({
+      hideProgressIndicator,
+      showProgressIndicator,
+      openAlertDialog,
+      openConfirmDialog,
+      openErrorDialog,
+      openPromptDialog,
+      showNotification: openToastNotification,
+    }),
+    [
+      hideProgressIndicator,
+      openAlertDialog,
+      openConfirmDialog,
+      openErrorDialog,
+      openPromptDialog,
+      openToastNotification,
+      showProgressIndicator,
+    ]
+  );
 }
 
 function useNavigation() {
   const openForm = useOpenForm();
 
-  return {
-    openForm,
-  };
+  return useMemo(
+    () => ({
+      openForm,
+    }),
+    [openForm]
+  );
 }
 
 export function useBaseCommandHandlerContext(): CommandContextBase {
@@ -51,12 +66,15 @@ export function useBaseCommandHandlerContext(): CommandContextBase {
   const locale = useLocale();
   const navigation = useNavigation();
 
-  return {
-    dataService,
-    queryClient,
-    utility,
-    stores,
-    locale,
-    navigation,
-  };
+  return useMemo(
+    () => ({
+      dataService,
+      queryClient,
+      utility,
+      stores,
+      locale,
+      navigation,
+    }),
+    [dataService, queryClient, stores, utility, locale, navigation]
+  );
 }

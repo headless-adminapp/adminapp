@@ -101,14 +101,14 @@ export function mergeConditions<S extends SchemaAttributes = SchemaAttributes>(
   columnFilters: Partial<Record<string, ColumnCondition>> | undefined,
   schemaStore: ISchemaStore
 ): Filter | null {
-  const conditions: any[] = [];
+  const filters: any[] = [];
 
   if (filter) {
-    conditions.push(filter);
+    filters.push(filter);
   }
 
   if (extraFilter) {
-    conditions.push(extraFilter);
+    filters.push(extraFilter);
   }
 
   if (columnFilters) {
@@ -119,7 +119,7 @@ export function mergeConditions<S extends SchemaAttributes = SchemaAttributes>(
     );
 
     if (transformedColumnFilters) {
-      conditions.push({
+      filters.push({
         type: 'and',
         conditions: Object.entries(transformedColumnFilters).map(
           ([field, condition]) => {
@@ -135,17 +135,17 @@ export function mergeConditions<S extends SchemaAttributes = SchemaAttributes>(
     }
   }
 
-  if (conditions.length === 0) {
+  if (filters.length === 0) {
     return null;
   }
 
-  if (conditions.length === 1) {
-    return conditions[0];
+  if (filters.length === 1) {
+    return filters[0];
   }
 
   return {
     type: 'and',
-    conditions,
+    filters: filters as [Filter, ...Filter[]],
   };
 }
 

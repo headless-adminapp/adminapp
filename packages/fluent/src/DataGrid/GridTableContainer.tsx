@@ -23,20 +23,16 @@ import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { useOpenForm } from '@headless-adminapp/app/navigation';
 import { useRecordSetSetter } from '@headless-adminapp/app/recordset/hooks';
 import {
-  InferredSchemaType,
-  SchemaAttributes,
-} from '@headless-adminapp/core/schema';
-import { Data } from '@headless-adminapp/core/transport';
-import {
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { v4 as uuid } from 'uuid';
 
 import { ScrollbarWithMoreDataRequest } from './ScrollbarWithMoreDataRequest';
-import { useTableColumns } from './useTableColumns';
+import { UniqueRecord, useTableColumns } from './useTableColumns';
 import { adjustTableHeight } from './utils';
 
 const useStyles = makeStyles({
@@ -81,7 +77,7 @@ const useStyles = makeStyles({
   },
 });
 
-const fallbackData: Data<InferredSchemaType<SchemaAttributes>>[] = [];
+const fallbackData: UniqueRecord[] = [];
 
 interface GridTableContainerProps {
   disableSelection?: boolean;
@@ -159,17 +155,33 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
     tableWrapperRef,
   });
 
+  const uniqueRecords = useMemo(() => {
+    return (data?.records.map((record) => ({
+      ...record,
+      __uuid: uuid(),
+    })) ?? fallbackData) as UniqueRecord[];
+  }, [data?.records]);
+
+  const idMapping = useMemo(
+    () =>
+      uniqueRecords.reduce((acc, record) => {
+        acc[record[schema.idAttribute] as string] = record.__uuid;
+        return acc;
+      }, {} as Record<string, string>),
+    [uniqueRecords, schema.idAttribute]
+  );
+
   const rowSelection = useMemo(() => {
     return selectedIds.reduce((acc, id) => {
-      acc[id] = true;
+      acc[idMapping[id]] = true;
       return acc;
     }, {} as any);
-  }, [selectedIds]);
+  }, [selectedIds, idMapping]);
 
   const table = useReactTable({
-    data: data?.records ?? fallbackData,
+    data: uniqueRecords,
     columns: tableColumns,
-    getRowId: (row) => row[schema.idAttribute] as string,
+    getRowId: (row) => row.__uuid,
     enableRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
     columnResizeMode: 'onChange',

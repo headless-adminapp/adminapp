@@ -52,8 +52,11 @@ import { TableCellText } from '../DataGrid/TableCell';
 import { TableCellLink } from '../DataGrid/TableCell/TableCellLink';
 import { ActionCell } from './ActionCell';
 
-const columnHelper =
-  createColumnHelper<Data<InferredSchemaType<SchemaAttributes>>>();
+export type UniqueRecord = Data<InferredSchemaType<SchemaAttributes>> & {
+  __uuid: string;
+};
+
+const columnHelper = createColumnHelper<UniqueRecord>();
 
 const useStyles = makeStyles({
   selectionCell: {
@@ -155,265 +158,271 @@ export function useTableColumns({
     return 'mixed';
   }, [data?.records.length, selectedIds]);
 
-  return useMemo(() => {
+  const actionColumns = useMemo(() => {
+    if (disableContextMenu) return [];
+
     return [
-      ...(disableSelection
-        ? []
-        : [
-            columnHelper.accessor((info) => info[schema.idAttribute], {
-              id: '$selectColumn',
-              header: () => (
-                <TableSelectionCell
-                  checked={headingSelectionState}
-                  as={'th' as any}
-                  style={{
-                    position: 'sticky',
-                    display: 'flex',
-                    left: 0,
-                    top: 0,
-                    background: tokens.colorNeutralBackground3,
-                    zIndex: 1,
-                    width: 32,
-                    maxWidth: 32,
-                    minWidth: 32,
-                  }}
-                  onClick={() => {
-                    setSelectedIdsRef.current((ids) => {
-                      if (ids.length === dataRef.current?.records.length) {
-                        return [];
-                      }
+      columnHelper.accessor((info) => info[schema.idAttribute], {
+        id: '$actionColumn',
+        header: () => (
+          <TableHeaderCell
+            style={{
+              minWidth: 32,
+              flexShrink: 0,
+              // width: 32,
+              flex: 1,
+              position: 'sticky',
+              display: 'flex',
+              right: 0,
+              top: 0,
+              // zIndex: 1,
+              background: tokens.colorNeutralBackground3,
+              borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,
+            }}
+          >
+            &nbsp;
+          </TableHeaderCell>
+        ),
+        cell: (info) => (
+          <ActionCell
+            onOpen={() => {
+              const id = info.row.original[schema.idAttribute] as string;
+              setSelectedIdsRef.current([id]);
+            }}
+            mutableState={mutableContextCommandState as any}
+          />
+        ),
+        enableResizing: false,
+        size: 32,
+        minSize: 32,
+        maxSize: 32,
+      }),
+    ];
+  }, [disableContextMenu, mutableContextCommandState, schema.idAttribute]);
 
-                      return (
-                        dataRef.current?.records.map(
-                          (record) => record[schema.idAttribute] as string
-                        ) ?? []
-                      );
-                    });
-                  }}
-                />
-              ),
-              cell: (info) => (
-                <TableSelectionCell
-                  className={mergeClasses(styles.selectionCell)}
-                  checked={info.row.getIsSelected()}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
+  const selectionColumns = useMemo(() => {
+    if (disableSelection) return [];
 
-                    setSelectedIdsRef.current((ids) => {
-                      const id = info.row.original[
-                        schema.idAttribute
-                      ] as string;
-                      if (ids.includes(id)) {
-                        return ids.filter((i) => i !== id);
-                      }
+    return [
+      columnHelper.accessor((info) => info[schema.idAttribute], {
+        id: '$selectColumn',
+        header: () => (
+          <TableSelectionCell
+            checked={headingSelectionState}
+            as={'th' as any}
+            style={{
+              position: 'sticky',
+              display: 'flex',
+              left: 0,
+              top: 0,
+              background: tokens.colorNeutralBackground3,
+              zIndex: 1,
+              width: 32,
+              maxWidth: 32,
+              minWidth: 32,
+            }}
+            onClick={() => {
+              setSelectedIdsRef.current((ids) => {
+                if (ids.length === dataRef.current?.records.length) {
+                  return [];
+                }
 
-                      return [...ids, id];
-                    });
-                  }}
-                  style={{
-                    width: 32,
-                    maxWidth: 32,
-                    minWidth: 32,
-                  }}
-                />
-              ),
-              enableResizing: false,
-              size: 32,
-              minSize: 32,
-              maxSize: 32,
-            }),
-          ]),
-      ...gridColumns.map((column, index) => {
-        return columnHelper.accessor((info) => info[column.name], {
-          id: column.id,
-          header: (props) => {
+                return (
+                  dataRef.current?.records.map(
+                    (record) => record[schema.idAttribute] as string
+                  ) ?? []
+                );
+              });
+            }}
+          />
+        ),
+        cell: (info) => (
+          <TableSelectionCell
+            className={mergeClasses(styles.selectionCell)}
+            checked={info.row.getIsSelected()}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+
+              setSelectedIdsRef.current((ids) => {
+                const id = info.row.original[schema.idAttribute] as string;
+                if (ids.includes(id)) {
+                  return ids.filter((i) => i !== id);
+                }
+
+                return [...ids, id];
+              });
+            }}
+            style={{
+              width: 32,
+              maxWidth: 32,
+              minWidth: 32,
+            }}
+          />
+        ),
+        enableResizing: false,
+        size: 32,
+        minSize: 32,
+        maxSize: 32,
+      }),
+    ];
+  }, [
+    disableSelection,
+    headingSelectionState,
+    schema.idAttribute,
+    styles.selectionCell,
+  ]);
+
+  const restColumns = useMemo(() => {
+    return gridColumns.map((column, index) => {
+      return columnHelper.accessor((info) => info[column.name], {
+        id: column.id,
+        header: (props) => {
+          return (
+            <TableHeaderFilterCell
+              key={column.id}
+              columnName={column.name}
+              sortDirection={props.column.getIsSorted() || undefined}
+              minWidth={props.header.getSize()}
+              column={column}
+              resizable={!disableColumnResize}
+              disableFilter={disableColumnFilter}
+              disableSort={disableColumnSort}
+              onChangeSortDirection={(direction) => {
+                setSorting([
+                  {
+                    field: column.name,
+                    order: direction,
+                  },
+                ]);
+              }}
+              attribute={schema.attributes[column.name]}
+              onResetSize={props.column.resetSize}
+              resizeHandler={props.header.getResizeHandler()}
+            >
+              {column.label}
+            </TableHeaderFilterCell>
+          );
+        },
+        cell: (info) => {
+          let attribute: Attribute | undefined;
+          let value: unknown;
+          if (column.expandedKey) {
+            const lookup = column.name;
+            const field = column.expandedKey;
+            const entity = (schema.attributes[lookup] as LookupAttribute)
+              .entity;
+            const lookupSchema = schemaStore.getSchema(entity);
+            attribute = lookupSchema.attributes[field];
+            value = info.row.original.$expand?.[lookup]?.[field];
+          } else {
+            attribute = schema.attributes[column.name];
+            value = info.getValue();
+          }
+
+          const formattedValue =
+            getAttributeFormattedValue(attribute, value, {
+              currency: currency.currency,
+              dateFormat: dateFormats.short,
+              timezone,
+            }) ?? '';
+
+          if (schema.primaryAttribute === column.name) {
+            const path = routeResolver({
+              logicalName: schema.logicalName,
+              type: PageType.EntityForm,
+              id: info.row.original[schema.idAttribute] as string,
+            });
+
             return (
-              <TableHeaderFilterCell
+              <TableCellLink
                 key={column.id}
-                columnName={column.name}
-                sortDirection={props.column.getIsSorted() || undefined}
-                minWidth={props.header.getSize()}
-                column={column}
-                resizable={!disableColumnResize}
-                disableFilter={disableColumnFilter}
-                disableSort={disableColumnSort}
-                onChangeSortDirection={(direction) => {
-                  setSorting([
-                    {
-                      field: column.name,
-                      order: direction,
-                    },
-                  ]);
+                value={value as string}
+                width={info.column.getSize()}
+                href={path}
+                onClick={() => {
+                  openRecord(info.row.original[schema.idAttribute] as string);
                 }}
-                attribute={schema.attributes[column.name]}
-                onResetSize={props.column.resetSize}
-                resizeHandler={props.header.getResizeHandler()}
-              >
-                {column.label}
-              </TableHeaderFilterCell>
+              />
             );
-          },
-          cell: (info) => {
-            let attribute: Attribute | undefined;
-            let value: unknown;
-            if (column.expandedKey) {
-              const lookup = column.name;
-              const field = column.expandedKey;
-              const entity = (schema.attributes[lookup] as LookupAttribute)
-                .entity;
-              const lookupSchema = schemaStore.getSchema(entity);
-              attribute = lookupSchema.attributes[field];
-              value = info.row.original.$expand?.[lookup]?.[field];
-            } else {
-              attribute = schema.attributes[column.name];
-              value = info.getValue();
-            }
+          }
 
-            const formattedValue =
-              getAttributeFormattedValue(attribute, value, {
-                currency: currency.currency,
-                dateFormat: dateFormats.short,
-                timezone,
-              }) ?? '';
-
-            if (schema.primaryAttribute === column.name) {
+          switch (attribute?.type) {
+            case 'money':
+              return (
+                <TableCellText
+                  key={column.id}
+                  value={formattedValue}
+                  width={info.column.getSize()}
+                  textAlignment="right"
+                />
+              );
+            case 'lookup':
+              if (!value) {
+                return (
+                  <TableCellText
+                    key={column.id}
+                    value=""
+                    width={info.column.getSize()}
+                  />
+                );
+              }
               const path = routeResolver({
-                logicalName: schema.logicalName,
+                logicalName: attribute.entity,
                 type: PageType.EntityForm,
-                id: info.row.original[schema.idAttribute] as string,
+                id: (value as unknown as DataLookup<Id>).id as string,
               });
 
               return (
                 <TableCellLink
                   key={column.id}
-                  value={value as string}
+                  value={formattedValue}
                   width={info.column.getSize()}
                   href={path}
                   onClick={() => {
-                    openRecord(info.row.original[schema.idAttribute] as string);
+                    recordSetSetter('', []);
+                    router.push(path);
                   }}
                 />
               );
-            }
+          }
 
-            switch (attribute?.type) {
-              case 'money':
-                return (
-                  <TableCellText
-                    key={column.id}
-                    value={formattedValue}
-                    width={info.column.getSize()}
-                    textAlignment="right"
-                  />
-                );
-              case 'lookup':
-                if (!value) {
-                  return (
-                    <TableCellText
-                      key={column.id}
-                      value=""
-                      width={info.column.getSize()}
-                    />
-                  );
-                }
-                const path = routeResolver({
-                  logicalName: attribute.entity,
-                  type: PageType.EntityForm,
-                  id: (value as unknown as DataLookup<Id>).id as string,
-                });
-
-                return (
-                  <TableCellLink
-                    key={column.id}
-                    value={formattedValue}
-                    width={info.column.getSize()}
-                    href={path}
-                    onClick={() => {
-                      recordSetSetter('', []);
-                      router.push(path);
-                    }}
-                  />
-                );
-            }
-
-            return (
-              <TableCellText
-                key={column.id}
-                value={formattedValue}
-                width={info.column.getSize()}
-              />
-            );
-          },
-          enableResizing: true,
-          size: columnWidths[index],
-          minSize: 100,
-          maxSize: 1000,
-        });
-      }),
-      ...(disableContextMenu
-        ? []
-        : [
-            columnHelper.accessor((info) => info[schema.idAttribute], {
-              id: '$actionColumn',
-              header: () => (
-                <TableHeaderCell
-                  style={{
-                    minWidth: 32,
-                    flexShrink: 0,
-                    // width: 32,
-                    flex: 1,
-                    position: 'sticky',
-                    display: 'flex',
-                    right: 0,
-                    top: 0,
-                    // zIndex: 1,
-                    background: tokens.colorNeutralBackground3,
-                    borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,
-                  }}
-                >
-                  &nbsp;
-                </TableHeaderCell>
-              ),
-              cell: (info) => (
-                <ActionCell
-                  onOpen={() => {
-                    const id = info.row.original[schema.idAttribute] as string;
-                    setSelectedIdsRef.current([id]);
-                  }}
-                  mutableState={mutableContextCommandState as any}
-                />
-              ),
-              enableResizing: false,
-              size: 32,
-              minSize: 32,
-              maxSize: 32,
-            }),
-          ]),
-    ];
+          return (
+            <TableCellText
+              key={column.id}
+              value={formattedValue}
+              width={info.column.getSize()}
+            />
+          );
+        },
+        enableResizing: true,
+        size: columnWidths[index],
+        minSize: 100,
+        maxSize: 1000,
+      });
+    });
   }, [
-    disableSelection,
-    gridColumns,
-    disableContextMenu,
-    schema.idAttribute,
-    schema.attributes,
-    schema.primaryAttribute,
-    schema.logicalName,
-    styles.selectionCell,
     columnWidths,
-    disableColumnResize,
-    disableColumnFilter,
-    disableColumnSort,
-    setSorting,
     currency.currency,
     dateFormats.short,
-    schemaStore,
-    routeResolver,
+    disableColumnFilter,
+    disableColumnResize,
+    disableColumnSort,
+    gridColumns,
     openRecord,
     recordSetSetter,
+    routeResolver,
     router,
-    mutableContextCommandState,
-    headingSelectionState,
+    schema.attributes,
+    schema.idAttribute,
+    schema.logicalName,
+    schema.primaryAttribute,
+    schemaStore,
+    setSorting,
     timezone,
   ]);
+
+  return useMemo(() => {
+    return [...selectionColumns, ...restColumns, ...actionColumns];
+  }, [selectionColumns, restColumns, actionColumns]);
 }

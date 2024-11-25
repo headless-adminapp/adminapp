@@ -2,7 +2,7 @@ import { useAppContext } from '@headless-adminapp/app/app';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { CommandItemExperience } from '@headless-adminapp/core/experience/command';
 import { EntityMainGridCommandContext } from '@headless-adminapp/core/experience/view';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { useBaseCommandHandlerContext, useCommands } from '../../command';
 import {
@@ -78,22 +78,38 @@ export function useGridControlContext(): EntityMainGridCommandContext['primaryCo
     );
   }, [data, schema, selectedIdsObj]);
 
-  return {
-    data,
-    logicalName: schema.logicalName,
-    schema,
-    refresh,
-    searchText,
-    selectedIds,
-    selectedRecords,
-    view,
-    viewId: view.id,
-    columnFilter,
-    extraFilter,
-    openRecord,
-    gridColumns,
-    sorting,
-  };
+  return useMemo(
+    () => ({
+      data,
+      logicalName: schema.logicalName,
+      schema,
+      refresh,
+      searchText,
+      selectedIds,
+      selectedRecords,
+      view,
+      viewId: view.id,
+      columnFilter,
+      extraFilter,
+      openRecord,
+      gridColumns,
+      sorting,
+    }),
+    [
+      columnFilter,
+      data,
+      extraFilter,
+      gridColumns,
+      openRecord,
+      refresh,
+      schema,
+      searchText,
+      selectedIds,
+      selectedRecords,
+      sorting,
+      view,
+    ]
+  );
 }
 
 export function useMainGridCommandHandlerContext(): EntityMainGridCommandContext {
@@ -101,10 +117,13 @@ export function useMainGridCommandHandlerContext(): EntityMainGridCommandContext
 
   const primaryControl = useGridControlContext();
 
-  return {
-    ...baseHandlerContext,
-    primaryControl,
-  };
+  return useMemo(
+    () => ({
+      ...baseHandlerContext,
+      primaryControl,
+    }),
+    [baseHandlerContext, primaryControl]
+  );
 }
 
 const emptyCommands: CommandItemExperience<EntityMainGridCommandContext>[][] =

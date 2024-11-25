@@ -361,12 +361,27 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       },
     };
   },
-  between: (condition) => ({
-    [condition.field]: {
-      $gte: new Date(condition.value[0]),
-      $lte: new Date(condition.value[1]),
-    },
-  }),
+  between: (condition, attribute) => {
+    if (attribute.type === 'date') {
+      return {
+        [condition.field]: {
+          $gte: new Date(condition.value[0]),
+          $lte: new Date(condition.value[1]),
+        },
+      };
+    }
+
+    if (attribute.type === 'number' || attribute.type === 'money') {
+      return {
+        [condition.field]: {
+          $gte: condition.value[0],
+          $lte: condition.value[1],
+        },
+      };
+    }
+
+    return null;
+  },
 
   'not-null': (condition) => {
     return {
