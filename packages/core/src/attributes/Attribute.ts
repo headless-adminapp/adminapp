@@ -1,4 +1,4 @@
-import { AttachmentAttribute, FileObject } from './AttachmentAttribute';
+import { AttachmentAttribute } from './AttachmentAttribute';
 import { AttachmentsAttribute } from './AttachmentsAttribute';
 import { BooleanAttribute } from './BooleanAttribute';
 import { ChoiceAttribute, ChoicesAttribute } from './ChoiceAttribute';

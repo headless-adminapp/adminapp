@@ -14,6 +14,7 @@ import { LookupControl } from '../form/controls/LookupControl';
 import MultiSelectControl from '../form/controls/MultiSelectControl';
 import { MultiSelectLookupControl } from '../form/controls/MultiSelectLookupControl';
 import { NumberControl } from '../form/controls/NumberControl';
+import { RichTextControl } from '../form/controls/RichTextControl';
 import SelectControl from '../form/controls/SelectControl';
 import { SwitchControl } from '../form/controls/SwitchControl';
 import { TelephoneControl } from '../form/controls/TelephoneControl';
@@ -134,6 +135,13 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
             componentStore.getComponent<typeof TextAreaControl>(
               'Form.TextAreaControl'
             ) ?? TextAreaControl;
+          return <Control {...controlProps} />;
+        }
+        case 'richtext': {
+          const Control =
+            componentStore.getComponent<typeof TextAreaControl>(
+              'Form.RichTextControl'
+            ) ?? RichTextControl;
           return <Control {...controlProps} />;
         }
         default:

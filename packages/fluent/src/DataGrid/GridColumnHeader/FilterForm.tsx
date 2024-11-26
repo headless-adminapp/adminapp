@@ -66,7 +66,9 @@ export const FilterForm: FC<FilterFormProps> = ({
   const isValid = useMemo(() => {
     return (
       !!selectedOption &&
-      values.filter(Boolean).length === selectedOption.controls.length
+      values.filter((value) => {
+        return value !== null && value !== undefined;
+      }).length === selectedOption.controls.length
     );
   }, [selectedOption, values]);
 

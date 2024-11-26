@@ -17,10 +17,10 @@
     "url": "https://github.com/headless-adminapp/adminapp/issues"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && sass src/styles/index.scss dist/styles.css --no-source-map",
     "clean": "rm -rf dist && rm -f tsconfig.tsbuildinfo",
     "ts-check": "tsc --noEmit",
-    "copy-files": "cp package.json dist && cp src/index.css dist",
+    "copy-files": "cp package.json dist",
     "prepublishOnly": "pnpm run build && pnpm run copy-files",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -42,7 +42,9 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-hook-form": "7.52.2",
+    "react-quill": "^2.0.0",
     "uuid": "11.0.3",
+    "sass": "1.81.0",
     "yup": "^1.4.0"
   }
 }

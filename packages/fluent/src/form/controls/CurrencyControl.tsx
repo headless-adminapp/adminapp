@@ -1,5 +1,6 @@
 import { Input } from '@fluentui/react-components';
 import { useCurrencySymbol } from '@headless-adminapp/app/locale';
+import { useEffect, useRef, useState } from 'react';
 
 import { ControlProps } from './types';
 
@@ -20,40 +21,72 @@ export function CurrencyControl({
   readOnly,
 }: CurrencyControlProps) {
   const symbol = useCurrencySymbol();
+  const [internalValue, setInternalValue] = useState<string>(
+    value ? value.toString() : ''
+  );
+
+  const internalValueRef = useRef(internalValue);
+  internalValueRef.current = internalValue;
+
+  useEffect(() => {
+    let _value = '';
+    if (typeof value === 'number') {
+      _value = value.toString();
+    }
+
+    if (!_value && internalValueRef.current === '-') {
+      return;
+    }
+
+    if (internalValueRef.current !== _value) {
+      setInternalValue(_value);
+    }
+  }, [value]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+
+    if (!value) {
+      setInternalValue('');
+      onChange?.(null);
+
+      return;
+    }
+
+    value = value.replace(',', '');
+
+    if (value === '-') {
+      setInternalValue('-');
+      onChange?.(null);
+
+      return;
+    }
+
+    if (isNaN(Number(value))) {
+      return;
+    }
+
+    setInternalValue(value);
+    onChange?.(Number(value));
+  };
+
   return (
     <Input
       placeholder={placeholder}
       id={id}
       autoFocus={autoFocus}
       name={name}
-      value={value?.toString() ?? ''}
-      onChange={(e) =>
-        onChange?.(e.target.value ? Number(e.target.value) : null)
-      }
+      value={internalValue}
+      onChange={handleChange}
       onBlur={() => onBlur?.()}
       appearance="filled-darker"
       onFocus={() => onFocus?.()}
-      // invalid={error}
-      // icon={<div>₹</div>}
-      // startDecorator={<div>₹</div>}
       contentBefore={<div>{symbol}</div>}
       disabled={disabled}
       readOnly={readOnly}
       style={{
         width: '100%',
       }}
-      // size="sm"
-      // styles={{
-      //   input: {
-      //     ...(borderOnFocusOnly &&
-      //       !error && {
-      //         '&:not(:hover):not(:focus)': {
-      //           borderColor: 'transparent',
-      //           backgroundColor: 'transparent',
-      //         },
-      //       }),
-      //   },
-      // }}
     />
   );
 }
