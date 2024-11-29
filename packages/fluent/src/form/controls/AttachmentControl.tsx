@@ -10,7 +10,10 @@ import {
   Spinner,
   tokens,
 } from '@fluentui/react-components';
-import { useOpenConfirmDialog } from '@headless-adminapp/app/dialog/hooks';
+import {
+  useOpenConfirmDialog,
+  useOpenErrorDialog,
+} from '@headless-adminapp/app/dialog/hooks';
 import {
   AttachmentAttribute,
   FileObject,
@@ -36,6 +39,8 @@ function useAttachmentSelector({
   location,
   onChange,
 }: UseAttachmentSelectorOptions) {
+  const openErrorDialog = useOpenErrorDialog();
+
   const { isPending, mutate: handleFile } = useMutation({
     mutationFn: async (file: File) => {
       if (location === 'local') {
@@ -50,6 +55,13 @@ function useAttachmentSelector({
     },
     onSuccess: (fileObject: FileObject) => {
       onChange?.(fileObject);
+    },
+    onError: (error) => {
+      console.error(error);
+      openErrorDialog({
+        title: 'Failed to upload file',
+        text: error.message,
+      });
     },
   });
 

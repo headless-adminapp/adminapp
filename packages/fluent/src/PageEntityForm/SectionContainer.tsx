@@ -102,8 +102,8 @@ export function SectionContainer<
                           fileServiceContext={{
                             type: 'entity-form',
                             recordId,
-                            logicalName: control.attributeName,
-                            schemaLogicalName: schema.logicalName,
+                            attributeName: control.attributeName,
+                            logicalName: schema.logicalName,
                           }}
                         />
                       </SectionControlWrapper>
