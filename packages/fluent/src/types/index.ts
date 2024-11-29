@@ -41,5 +41,13 @@ declare module '@headless-adminapp/icons/types' {
     ExportCsv: Icon;
     ExportExcel: Icon;
     Entity: Icon;
+
+    OpenInNew: Icon;
+    Play: Icon;
+    Audio: Icon;
+    Video: Icon;
+    Copy: Icon;
+    Document: Icon;
+    Image: Icon;
   }
 }

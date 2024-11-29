@@ -20,6 +20,7 @@ import {
   UpdateRecordParams,
   UpdateRecordResult,
 } from '@headless-adminapp/core/transport';
+import { urlToFileObject } from '@headless-adminapp/core/utils';
 import {
   DependentRecord,
   ExecutionStage,
@@ -816,6 +817,12 @@ export class SequelizeServerSdk<
                 name: expandedValue[lookupSchema.primaryAttribute],
                 logicalName: attribute.entity,
               };
+            }
+          } else if (attribute.type === 'attachment') {
+            if (recordJson[column]) {
+              transformedRecord[column] = urlToFileObject(recordJson[column]);
+            } else {
+              transformedRecord[column] = null;
             }
           } else {
             transformedRecord[column] = recordJson[column];

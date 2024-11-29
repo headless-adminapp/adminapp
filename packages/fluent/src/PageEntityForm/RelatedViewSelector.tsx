@@ -108,6 +108,7 @@ export function RelatedViewSelector(props: RelatedViewSelectorProps) {
             outlineStyle: 'none',
             textTransform: 'none',
             columnGap: tokens.spacingHorizontalSNudge,
+            color: tokens.colorNeutralForeground2,
           }}
         >
           {strings.related}

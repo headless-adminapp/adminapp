@@ -74,4 +74,11 @@ export const iconSet = defineIconSet({
     createIcon(ExcelFilled, true)
   ),
   Entity: bundleLazyIcon('PuzzlePiece24Regular', 'PuzzlePiece24Filled'),
+  OpenInNew: bundleLazyIcon('Open24Regular', 'Open24Filled'),
+  Play: bundleLazyIcon('PlayCircle24Regular', 'PlayCircle24Filled'),
+  Audio: bundleLazyIcon('MusicNote224Regular', 'MusicNote224Filled'),
+  Video: bundleLazyIcon('Video24Regular', 'Video24Filled'),
+  Copy: bundleLazyIcon('Copy24Regular', 'Copy24Filled'),
+  Document: bundleLazyIcon('Document24Regular', 'Document24Filled'),
+  Image: bundleLazyIcon('Image24Regular', 'Image24Filled'),
 });

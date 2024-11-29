@@ -1,4 +1,4 @@
-import { IDataService } from '@headless-adminapp/core/transport';
+import { IDataService, IFileService } from '@headless-adminapp/core/transport';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { FC, PropsWithChildren } from 'react';
 
@@ -17,6 +17,7 @@ import { RouteProvider } from '../route';
 import { RouteProviderProps } from '../route/RouteProvider';
 import { ToastNotificationProvider } from '../toast-notification';
 import { DataServiceContext } from '../transport';
+import { FileServiceContext, noopFileService } from '../transport/context';
 import { AuthWrapper } from './AuthWrapper';
 
 export interface LayoutProviderProps {
@@ -24,6 +25,7 @@ export interface LayoutProviderProps {
   queryClient: QueryClient;
   localeProps: LocaleProviderProps;
   dataService: IDataService;
+  fileService?: IFileService;
   authProps?: AuthProviderProps;
   authPlaceholder?: FC<AuthProviderPlaceholderProps>;
   metadataProps: MetadataProviderProps;
@@ -38,6 +40,7 @@ export const LayoutProvider: FC<PropsWithChildren<LayoutProviderProps>> = ({
   authPlaceholder,
   authProps,
   dataService,
+  fileService,
   localeProps,
   metadataProps,
   queryClient,
@@ -55,20 +58,24 @@ export const LayoutProvider: FC<PropsWithChildren<LayoutProviderProps>> = ({
         <LocaleProvider {...localeProps}>
           <MetadataProvider {...metadataProps}>
             <DataServiceContext.Provider value={dataService}>
-              <DialogProvider>
-                <ProgressIndicatorProvider>
-                  <ToastNotificationProvider>
-                    <DialogContainer />
-                    <ProgressIndicatorContainer />
-                    <ToastNotificationContainer />
-                    <AuthProvider {...authProps}>
-                      <AuthWrapper Placeholder={authPlaceholder}>
-                        <RecordSetProvider>{children}</RecordSetProvider>
-                      </AuthWrapper>
-                    </AuthProvider>
-                  </ToastNotificationProvider>
-                </ProgressIndicatorProvider>
-              </DialogProvider>
+              <FileServiceContext.Provider
+                value={fileService ?? noopFileService}
+              >
+                <DialogProvider>
+                  <ProgressIndicatorProvider>
+                    <ToastNotificationProvider>
+                      <DialogContainer />
+                      <ProgressIndicatorContainer />
+                      <ToastNotificationContainer />
+                      <AuthProvider {...authProps}>
+                        <AuthWrapper Placeholder={authPlaceholder}>
+                          <RecordSetProvider>{children}</RecordSetProvider>
+                        </AuthWrapper>
+                      </AuthProvider>
+                    </ToastNotificationProvider>
+                  </ProgressIndicatorProvider>
+                </DialogProvider>
+              </FileServiceContext.Provider>
             </DataServiceContext.Provider>
           </MetadataProvider>
         </LocaleProvider>

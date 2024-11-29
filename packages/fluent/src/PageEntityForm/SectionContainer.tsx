@@ -99,6 +99,12 @@ export function SectionContainer<
                           placeholder={label}
                           allowNavigation={true}
                           allowNewRecord={true}
+                          fileServiceContext={{
+                            type: 'entity-form',
+                            recordId,
+                            logicalName: control.attributeName,
+                            schemaLogicalName: schema.logicalName,
+                          }}
                         />
                       </SectionControlWrapper>
                     );

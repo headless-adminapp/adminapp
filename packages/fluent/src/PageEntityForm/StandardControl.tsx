@@ -1,9 +1,13 @@
 import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
-import { useDataService } from '@headless-adminapp/app/transport';
+import {
+  useDataService,
+  useFileService,
+} from '@headless-adminapp/app/transport';
 import type { Attribute } from '@headless-adminapp/core/attributes';
 import { FC, Fragment } from 'react';
 
 import { componentStore } from '../componentStore';
+import { AttachmentControl } from '../form/controls/AttachmentControl';
 import { AttachmentsControl } from '../form/controls/AttachmentsControl';
 import { CurrencyControl } from '../form/controls/CurrencyControl';
 import { DateControl } from '../form/controls/DateControl';
@@ -36,8 +40,7 @@ export interface StandardControlProps {
   placeholder?: string;
   onChange: (value: any) => void;
   onBlur: () => void;
-  // dataService: IDataService;
-  // fileService: FileServiceFactory;
+  fileServiceContext?: Record<string, unknown>;
   disabled?: boolean;
   borderOnFocusOnly?: boolean;
   hideLabel?: boolean;
@@ -79,6 +82,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
   // const required = quickViewControl ? false : attribute.required;
 
   const dataService = useDataService();
+  const fileService = useFileService();
   const { schemaStore, experienceStore } = useMetadata();
 
   // const { openQuickCreate } = useQuickCreateForm();
@@ -333,6 +337,31 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           placeholder={placeholder}
           borderOnFocusOnly={borderOnFocusOnly}
           readOnly={readOnly}
+        />
+      );
+    }
+
+    case 'attachment': {
+      const Control =
+        componentStore.getComponent<typeof AttachmentControl>(
+          'Form.AttachmentControl'
+        ) ?? AttachmentControl;
+
+      return (
+        <Control
+          fileService={fileService}
+          format={attribute.format}
+          location={attribute.location}
+          name={name}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          error={isError}
+          disabled={isDisabled}
+          placeholder={placeholder}
+          borderOnFocusOnly={borderOnFocusOnly}
+          readOnly={readOnly}
+          fileServiceContext={props.fileServiceContext}
         />
       );
     }
