@@ -566,6 +566,14 @@ export class SequelizeServerSdk<
         acc[key] = value;
       }
 
+      if (schema.attributes[key]?.type === 'attachment') {
+        if (typeof value === 'object') {
+          acc[key] = value.url;
+        } else if (typeof value === 'string') {
+          acc[key] = value;
+        }
+      }
+
       return acc;
     }, {} as Record<string, any>);
 
@@ -679,6 +687,14 @@ export class SequelizeServerSdk<
         acc[key] = value;
       } else {
         acc[key] = value;
+      }
+
+      if (schema.attributes[key]?.type === 'attachment') {
+        if (typeof value === 'object') {
+          acc[key] = value.url;
+        } else if (typeof value === 'string') {
+          acc[key] = value;
+        }
       }
 
       return acc;

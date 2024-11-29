@@ -59,8 +59,9 @@ function getRelatedItems(
             logicalName: s.logicalName,
             label: s.label,
             localizedLabels: s.localizedLabels,
-            pluralLabel: s.pluralLabel,
-            localizedPluralLabels: s.localizedPluralLabels,
+            pluralLabel: item.attribute.relatedLabel ?? s.pluralLabel,
+            localizedPluralLabels:
+              item.attribute.localizedRelatedLabel ?? s.localizedPluralLabels,
             attributeName: item.key,
           };
         });
