@@ -7,6 +7,7 @@ import {
   AuthProviderPlaceholderProps,
   AuthProviderProps,
 } from '../auth';
+import { queryClient as defaultQueryClient } from '../defaults';
 import { DialogProvider } from '../dialog';
 import { LocaleProvider, LocaleProviderProps } from '../locale';
 import { MetadataProvider } from '../metadata';
@@ -22,13 +23,13 @@ import { AuthWrapper } from './AuthWrapper';
 
 export interface LayoutProviderProps {
   routeProps: RouteProviderProps;
-  queryClient: QueryClient;
-  localeProps: LocaleProviderProps;
-  dataService: IDataService;
+  queryClient?: QueryClient;
+  localeProps?: LocaleProviderProps;
+  dataService?: IDataService;
   fileService?: IFileService;
   authProps?: AuthProviderProps;
   authPlaceholder?: FC<AuthProviderPlaceholderProps>;
-  metadataProps: MetadataProviderProps;
+  metadataProps?: MetadataProviderProps;
   containers: {
     DialogContainer: FC;
     ProgressIndicatorContainer: FC;
@@ -36,14 +37,40 @@ export interface LayoutProviderProps {
   };
 }
 
+const dataServiceNotProvidedError = new Error('No data service provided');
+
+const defaultDataService: IDataService = {
+  createRecord: async () => {
+    throw dataServiceNotProvidedError;
+  },
+  deleteRecord: async () => {
+    throw dataServiceNotProvidedError;
+  },
+  customAction: async () => {
+    throw dataServiceNotProvidedError;
+  },
+  retriveAggregate: async () => {
+    throw dataServiceNotProvidedError;
+  },
+  retriveRecord: async () => {
+    throw dataServiceNotProvidedError;
+  },
+  retriveRecords: async () => {
+    throw dataServiceNotProvidedError;
+  },
+  updateRecord: async () => {
+    throw dataServiceNotProvidedError;
+  },
+};
+
 export const LayoutProvider: FC<PropsWithChildren<LayoutProviderProps>> = ({
   authPlaceholder,
   authProps,
-  dataService,
+  dataService = defaultDataService,
   fileService,
   localeProps,
   metadataProps,
-  queryClient,
+  queryClient = defaultQueryClient,
   routeProps,
   children,
   containers: {

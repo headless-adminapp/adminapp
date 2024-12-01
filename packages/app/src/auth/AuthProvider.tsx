@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { FC, PropsWithChildren, useCallback, useEffect, useRef } from 'react';
 
 import {
@@ -27,10 +28,23 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({
 }) => {
   const onUnauthenticatedRef = useRef(onUnauthenticated);
   onUnauthenticatedRef.current = onUnauthenticated;
+  const queryClient = useQueryClient();
 
-  const onUnauthenticatedInternal = useCallback((reason: UnauthorizeReason) => {
-    onUnauthenticatedRef.current?.(reason);
-  }, []);
+  const onUnauthenticatedInternal = useCallback(
+    (reason: UnauthorizeReason) => {
+      onUnauthenticatedRef.current?.(reason);
+      queryClient.clear();
+      queryClient.removeQueries({
+        queryKey: ['data'],
+      });
+      queryClient
+        .invalidateQueries({
+          queryKey: ['data'],
+        })
+        .catch(console.error);
+    },
+    [queryClient]
+  );
 
   const contextValue = useCreateContextStore<AuthState>({
     loading: true,
