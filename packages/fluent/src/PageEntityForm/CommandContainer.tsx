@@ -3,6 +3,7 @@ import {
   useDataFormSchema,
   useMainFormCommands,
 } from '@headless-adminapp/app/dataform/hooks';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { RecordSetContext } from '@headless-adminapp/app/recordset';
 import { useRecordSetVisibility } from '@headless-adminapp/app/recordset/hooks';
@@ -16,6 +17,7 @@ export const CommandContainer: FC = () => {
   const gridCommands = useMainFormCommands();
 
   const router = useRouter();
+  const isMobile = useIsMobile();
 
   const schema = useDataFormSchema();
   const [recordSetVisible, setRecordSetVisible] = useRecordSetVisibility();
@@ -36,7 +38,8 @@ export const CommandContainer: FC = () => {
         } as CommandItemState,
       ],
       ...(recordSetContext.logicalName === schema.logicalName &&
-      recordSetContext.ids.length > 0
+      recordSetContext.ids.length > 0 &&
+      !isMobile
         ? [
             [
               {
@@ -53,6 +56,7 @@ export const CommandContainer: FC = () => {
     ];
   }, [
     gridCommands,
+    isMobile,
     recordSetContext.ids.length,
     recordSetContext.logicalName,
     recordSetVisible,

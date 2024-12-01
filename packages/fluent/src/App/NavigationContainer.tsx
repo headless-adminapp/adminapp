@@ -14,7 +14,7 @@ import {
   useRouteResolver,
 } from '@headless-adminapp/app/route/hooks';
 import { IconPlaceholder, Icons } from '@headless-adminapp/icons';
-import { Fragment, useState } from 'react';
+import { FC, Fragment } from 'react';
 
 import { transformNavPageItem } from './utils';
 
@@ -42,12 +42,19 @@ const useStyles = makeStyles({
 
 type DrawerType = Required<DrawerProps>['type'];
 
-export const NavigationContainer = () => {
+interface NavigationContainerProps {
+  open: boolean;
+  type: DrawerType;
+  onOpenChange: (open: boolean) => void;
+}
+
+export const NavigationContainer: FC<NavigationContainerProps> = ({
+  open,
+  type,
+  onOpenChange,
+}) => {
   const styles = useStyles();
   const { app, schemaMetadataDic } = useAppContext();
-
-  const [isOpen] = useState(true);
-  const [type] = useState<DrawerType>('inline');
 
   const router = useRouter();
   const pathname = usePathname();
@@ -60,7 +67,12 @@ export const NavigationContainer = () => {
 
   return (
     <div className={styles.root}>
-      <NavDrawer selectedValue="active" open={isOpen} type={type}>
+      <NavDrawer
+        selectedValue="active"
+        open={open}
+        type={type}
+        onOpenChange={(value, data) => onOpenChange(data.open)}
+      >
         <NavDrawerBody style={{ paddingTop: 8 }}>
           {app.navItems.map((area) => (
             <Fragment key={area.label}>
@@ -87,6 +99,9 @@ export const NavigationContainer = () => {
                         key={index}
                         href={navItem.link}
                         onClick={(event) => {
+                          if (type === 'overlay') {
+                            onOpenChange(false);
+                          }
                           event.preventDefault();
                           router.push(navItem.link);
                         }}

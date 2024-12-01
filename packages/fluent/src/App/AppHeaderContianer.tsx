@@ -11,8 +11,10 @@ import {
   Subtitle2,
   tokens,
 } from '@fluentui/react-components';
+import { Hamburger } from '@fluentui/react-nav-preview';
 import { useAppContext } from '@headless-adminapp/app/app';
 import { useAuthSession, useLogout } from '@headless-adminapp/app/auth/hooks';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { Icons } from '@headless-adminapp/icons';
 import { FC, useMemo } from 'react';
@@ -21,12 +23,19 @@ import { AppLogo } from './AppLogo';
 import { useAppStrings } from './AppStringContext';
 import { QuickActionItem } from './QuickActionItem';
 
-export const AppHeaderContainer: FC = () => {
+interface AppHeaderContainerProps {
+  onNavToggle?: () => void;
+}
+
+export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
+  onNavToggle,
+}) => {
   const { app } = useAppContext();
   const authSession = useAuthSession();
   const logout = useLogout();
   const strings = useAppStrings();
   const { language } = useLocale();
+  const isMobile = useIsMobile();
 
   const initials = useMemo(() => {
     return authSession?.fullName
@@ -44,27 +53,36 @@ export const AppHeaderContainer: FC = () => {
         height: 50,
         minHeight: 50,
         background: tokens.colorBrandBackground,
+        paddingInline: 8,
+        gap: 8,
       }}
     >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 12,
-          paddingLeft: 20,
-          paddingRight: 8,
-          cursor: 'pointer',
-          color: 'white',
-        }}
-      >
-        <AppLogo logo={app.logo} title={app.title} />
-        <Subtitle2>{app.title}</Subtitle2>
+      <div style={{ display: 'flex', flex: 1, alignItems: 'center', gap: 8 }}>
+        {isMobile && (
+          <div
+            style={{
+              cursor: 'pointer',
+            }}
+            onClick={onNavToggle}
+          >
+            <Hamburger style={{ color: 'white' }} />
+          </div>
+        )}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            color: 'white',
+          }}
+        >
+          <AppLogo logo={app.logo} title={app.title} />
+          <Subtitle2 style={{ paddingLeft: 4 }}>{app.title}</Subtitle2>
+        </div>
       </div>
-      <div style={{ flex: 1 }}></div>
       <div
         style={{
           paddingLeft: 8,
-          paddingRight: 8,
           display: 'flex',
           gap: 16,
         }}
