@@ -54,8 +54,16 @@ export abstract class ServerSdk<
 > implements IServerSdk
 {
   protected timezone: string;
-  constructor(protected readonly options: Options) {
-    this.timezone = this.options.context.timezone;
+  protected readonly options: Options;
+  constructor(options: Omit<Options, 'context'> & { context?: SdkContext }) {
+    this.timezone = options.context?.timezone ?? 'UTC';
+    this.options = {
+      ...options,
+      context: {
+        ...options.context,
+        timezone: this.timezone,
+      },
+    } as Options;
   }
 
   protected async validateCreate(schema: Schema<SA>) {

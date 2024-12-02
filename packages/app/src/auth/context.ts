@@ -26,6 +26,7 @@ export type AuthState = (
 ) & {
   loading: boolean;
   loadError: boolean;
+  skipAuthCheck?: boolean;
   loadSession: () => Promise<void>;
   onUnauthenticated?: (reason: UnauthorizeReason) => void;
 };

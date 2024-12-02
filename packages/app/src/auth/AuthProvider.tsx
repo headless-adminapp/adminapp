@@ -8,21 +8,13 @@ import {
 import { AuthContext, AuthState } from './context';
 import { SessionResolver, UnauthorizeReason } from './types';
 
-const defaultSessionResolver: SessionResolver = async () => {
-  return {
-    email: 'demo@example.com',
-    fullName: 'Demo User',
-    exp: Date.now() / 1000 + 60 * 60 * 24,
-  };
-};
-
 export interface AuthProviderProps {
   onUnauthenticated?: (reason: UnauthorizeReason) => void;
   sessionResolver?: SessionResolver;
 }
 
 export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({
-  sessionResolver = defaultSessionResolver,
+  sessionResolver,
   onUnauthenticated,
   children,
 }) => {
@@ -47,12 +39,14 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({
   );
 
   const contextValue = useCreateContextStore<AuthState>({
-    loading: true,
+    loading: !!sessionResolver,
     loadError: false,
-    initialized: false,
+    authenticated: !sessionResolver,
+    initialized: !sessionResolver,
+    skipAuthCheck: !sessionResolver,
     loadSession: () => Promise.resolve(),
     onUnauthenticated: onUnauthenticatedInternal,
-  });
+  } as AuthState);
   const state = useContextSelectorInternal(contextValue, (state) => state);
   const session = state.initialized && state.authenticated && state.session;
 
@@ -63,6 +57,10 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({
   const loadSession = useCallback(async () => {
     contextValue.setValue({ loading: true, loadError: false });
     try {
+      if (!sessionResolverRef.current) {
+        return;
+      }
+
       const data = await sessionResolverRef.current();
 
       if (!data) {

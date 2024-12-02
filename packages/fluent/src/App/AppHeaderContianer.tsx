@@ -14,6 +14,7 @@ import {
 import { Hamburger } from '@fluentui/react-nav-preview';
 import { useAppContext } from '@headless-adminapp/app/app';
 import { useAuthSession, useLogout } from '@headless-adminapp/app/auth/hooks';
+import { useIsSkipAuthCheck } from '@headless-adminapp/app/auth/hooks/useIsSkipAuthCheck';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { Icons } from '@headless-adminapp/icons';
@@ -32,6 +33,7 @@ export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
 }) => {
   const { app } = useAppContext();
   const authSession = useAuthSession();
+  const isSkipAuthCheck = useIsSkipAuthCheck();
   const logout = useLogout();
   const strings = useAppStrings();
   const { language } = useLocale();
@@ -100,73 +102,79 @@ export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
             );
           })}
         </div>
-        <Popover>
-          <PopoverTrigger disableButtonEnhancement>
-            <Avatar
-              initials={initials}
-              color="neutral"
-              style={{ cursor: 'pointer' }}
-              image={{
-                src: authSession?.profilePicture,
-              }}
-            />
-          </PopoverTrigger>
-          <PopoverSurface tabIndex={-1} style={{ padding: 0 }}>
-            <div
-              style={{
-                display: 'flex',
-                gap: 8,
-                padding: 8,
-                overflow: 'hidden',
-                width: 200,
-              }}
-            >
-              <div>
-                <Avatar
-                  initials={initials}
-                  color="neutral"
-                  image={{
-                    src: authSession?.profilePicture,
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  overflow: 'hidden',
-                  flex: 1,
+        {(!isSkipAuthCheck || !!app.accountMenuItems?.length) && (
+          <Popover>
+            <PopoverTrigger disableButtonEnhancement>
+              <Avatar
+                initials={initials}
+                color="neutral"
+                style={{ cursor: 'pointer' }}
+                image={{
+                  src: authSession?.profilePicture,
                 }}
-              >
-                <Caption1Strong>{authSession?.fullName}</Caption1Strong>
-                <Caption1
-                  style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
+              />
+            </PopoverTrigger>
+            <PopoverSurface tabIndex={-1} style={{ padding: 0 }}>
+              {!isSkipAuthCheck && (
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: 8,
+                    padding: 8,
+                    overflow: 'hidden',
+                    width: 200,
+                  }}
                 >
-                  {authSession?.email}
-                </Caption1>
-              </div>
-            </div>
-            <MenuDivider style={{ marginInline: 0 }} />
-            <MenuList style={{ width: 200, marginBottom: 4 }}>
-              {app.accountMenuItems?.map((item, index) => {
-                const Icon = item.icon;
-
-                return (
-                  <MenuItem
-                    key={index}
-                    icon={<Icon size="inherit" />}
-                    onClick={() => item.onClick?.()}
+                  <div>
+                    <Avatar
+                      initials={initials}
+                      color="neutral"
+                      image={{
+                        src: authSession?.profilePicture,
+                      }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      overflow: 'hidden',
+                      flex: 1,
+                    }}
                   >
-                    {item.localizedLabel?.[language] ?? item.label}
+                    <Caption1Strong>{authSession?.fullName}</Caption1Strong>
+                    <Caption1
+                      style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
+                    >
+                      {authSession?.email}
+                    </Caption1>
+                  </div>
+                </div>
+              )}
+              {!isSkipAuthCheck && <MenuDivider style={{ marginInline: 0 }} />}
+              <MenuList style={{ width: 200, marginBottom: 4 }}>
+                {app.accountMenuItems?.map((item, index) => {
+                  const Icon = item.icon;
+
+                  return (
+                    <MenuItem
+                      key={index}
+                      icon={<Icon size="inherit" />}
+                      onClick={() => item.onClick?.()}
+                    >
+                      {item.localizedLabel?.[language] ?? item.label}
+                    </MenuItem>
+                  );
+                })}
+                {!isSkipAuthCheck && (
+                  <MenuItem icon={<Icons.SignOut />} onClick={() => logout()}>
+                    {strings.logout}
                   </MenuItem>
-                );
-              })}
-              <MenuItem icon={<Icons.SignOut />} onClick={() => logout()}>
-                {strings.logout}
-              </MenuItem>
-            </MenuList>
-          </PopoverSurface>
-        </Popover>
+                )}
+              </MenuList>
+            </PopoverSurface>
+          </Popover>
+        )}
       </div>
     </div>
   );
