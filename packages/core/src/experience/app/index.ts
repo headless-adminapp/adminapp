@@ -127,7 +127,7 @@ export interface AppExperience {
   shortTitle?: string;
   enableArea?: boolean;
   navItems: NavPageGroupArea[];
-  defaultPage: NavPageItem;
+  defaultPage?: NavPageItem;
   accountMenuItems?: AccountMenuItem[];
   quickActionItems?: QuickActionItem[];
 

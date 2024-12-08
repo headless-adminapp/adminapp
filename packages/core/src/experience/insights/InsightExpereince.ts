@@ -13,6 +13,7 @@ export type InsightCommandItemExperience =
 export interface InsightExpereince<
   S extends SchemaAttributes = SchemaAttributes
 > {
+  id: string;
   title: string;
   subtitle: string;
   attributes: S;
@@ -22,7 +23,15 @@ export interface InsightExpereince<
   widgets: WidgetExperience[];
 }
 
+export interface InsightLookup {
+  id: string;
+  title: string;
+  subtitle: string;
+}
+
 export interface InsightsState<S extends SchemaAttributes = SchemaAttributes> {
   experience: InsightExpereince<S>;
   data: InferredSchemaType<S>;
+  insightLookup: InsightLookup[];
+  onInsightSelect: (id: string) => void;
 }

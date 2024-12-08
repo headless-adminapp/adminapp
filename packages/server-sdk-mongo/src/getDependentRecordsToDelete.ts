@@ -50,7 +50,7 @@ export async function getDependentRecordsToDelete<
 }: {
   schema: Schema<SA>;
   _id: Types.ObjectId;
-  session: ClientSession;
+  session: ClientSession | null;
   schemaStore: MongoSchemaStore<SA>;
 }) {
   const dependedAttributes = getDependedAttributes(schema, schemaStore);

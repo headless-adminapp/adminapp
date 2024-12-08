@@ -1,7 +1,6 @@
 import { Divider, tokens } from '@fluentui/react-components';
 import React, { FC } from 'react';
 
-
 interface PageEntityViewDesktopFrameProps {
   commandBar: React.ReactNode;
   header: React.ReactNode;
@@ -41,6 +40,7 @@ export const PageEntityViewDesktopFrame: FC<
             background: tokens.colorNeutralBackground1,
             display: 'flex',
             // overflow: 'hidden',
+            minHeight: 40,
           }}
         >
           {commandBar}

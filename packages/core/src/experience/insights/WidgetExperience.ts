@@ -65,11 +65,18 @@ export interface DataGridWidgetExperience extends BaseWidgetExperience {
   commands: DataGridWidgetCommandItemExperience[];
 }
 
+export interface CustomWidgetExperience extends BaseWidgetExperience {
+  type: 'custom';
+  commands: CommandItemExperience<unknown>[];
+  Component: React.ComponentType;
+}
+
 export type WidgetContentExperience =
   | ChartWidgetExperience
   | TileWidgetExperience
   | TableWidgetExperience
-  | DataGridWidgetExperience;
+  | DataGridWidgetExperience
+  | CustomWidgetExperience;
 export interface WidgetExperience<
   S extends SchemaAttributes = SchemaAttributes,
   W extends WidgetContentExperience = WidgetContentExperience

@@ -8,4 +8,5 @@ export interface FilterItem<S extends SchemaAttributes = SchemaAttributes> {
   showInFilterBar?: boolean;
   allowQuickFilter?: boolean;
   quickFilterTitle?: string;
+  beforeContent?: string;
 }

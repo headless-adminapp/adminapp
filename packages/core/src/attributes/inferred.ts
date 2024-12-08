@@ -27,6 +27,10 @@ export type InferredAttributeType<A extends Attribute> = A extends {
   ? A extends IdTypes
     ? DataLookup<InferredIdType<A>>
     : never
+  : A extends { type: 'lookups' }
+  ? A extends IdTypes
+    ? DataLookup<InferredIdType<A>>[]
+    : never
   : A extends { type: 'money' }
   ? number
   : A extends { type: 'attachment' }

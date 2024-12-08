@@ -28,7 +28,7 @@ import {
   ServerSdkContext,
   ServerSdkOptions,
 } from '@headless-adminapp/server-sdk';
-import {
+import mongoose, {
   ClientSession,
   FilterQuery,
   PipelineStage,
@@ -70,6 +70,9 @@ export class MongoServerSdk<
   // }
 
   public async startSesssion() {
+    if (!this.supportSession()) {
+      return;
+    }
     this.session = await startSession();
     this.session.startTransaction();
   }
@@ -89,6 +92,28 @@ export class MongoServerSdk<
       await this.session.endSession();
       this.session = null;
     }
+  }
+
+  private supportSession(): boolean {
+    const client = mongoose.connection.getClient();
+
+    if (!('topology' in client)) {
+      return false;
+    }
+
+    const topology = client.topology as {
+      s: {
+        description: {
+          type: string;
+        };
+      };
+    };
+
+    const isReplicaSet =
+      topology.s.description.type === 'ReplicaSetWithPrimary';
+    const isSharded = topology.s.description.type === 'Sharded';
+
+    return isReplicaSet || isSharded;
   }
 
   protected async retriveRecord<T extends Record<string, unknown>>(
@@ -549,7 +574,9 @@ export class MongoServerSdk<
     const model = this.options.schemaStore.getModel(params.logicalName);
     const schema = this.options.schemaStore.getSchema(params.logicalName);
 
-    if (!this.session) {
+    model.db.getClient();
+
+    if (this.supportSession() && !this.session) {
       throw new Error('Session is not started');
     }
 
@@ -684,7 +711,7 @@ export class MongoServerSdk<
   protected async createRecord(
     params: CreateRecordParams
   ): Promise<CreateRecordResult> {
-    if (!this.session) {
+    if (this.supportSession() && !this.session) {
       throw new Error('Session is not started');
     }
 
