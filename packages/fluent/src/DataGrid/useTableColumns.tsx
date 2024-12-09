@@ -39,14 +39,17 @@ import {
   LookupAttribute,
 } from '@headless-adminapp/core/attributes';
 import { PageType } from '@headless-adminapp/core/experience/app';
+import { ViewColumn } from '@headless-adminapp/core/experience/view';
 import {
   InferredSchemaType,
+  Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
 import { Data } from '@headless-adminapp/core/transport';
 import { createColumnHelper } from '@tanstack/react-table';
-import { useEffect, useMemo, useRef } from 'react';
+import { FC, useEffect, useMemo, useRef } from 'react';
 
+import { componentStore } from '../componentStore';
 import { TableHeaderFilterCell } from '../DataGrid/GridColumnHeader';
 import { TableCellText } from '../DataGrid/TableCell';
 import { TableCellLink } from '../DataGrid/TableCell/TableCellLink';
@@ -327,6 +330,36 @@ export function useTableColumns({
               timezone,
             }) ?? '';
 
+          if (column.component) {
+            const Component = componentStore.getComponent<
+              FC<{
+                column: ViewColumn;
+                schema: Schema;
+                record: UniqueRecord;
+                value: unknown;
+                attribute: Attribute;
+                formattedValue: string;
+              }>
+            >(column.component);
+
+            if (!Component) {
+              throw new Error(
+                `Component with name ${column.component} not found`
+              );
+            }
+
+            return (
+              <Component
+                column={column}
+                schema={schema}
+                record={info.row.original}
+                value={value}
+                attribute={attribute}
+                formattedValue={formattedValue}
+              />
+            );
+          }
+
           if (schema.primaryAttribute === column.name) {
             const path = routeResolver({
               logicalName: schema.logicalName,
@@ -413,10 +446,7 @@ export function useTableColumns({
     recordSetSetter,
     routeResolver,
     router,
-    schema.attributes,
-    schema.idAttribute,
-    schema.logicalName,
-    schema.primaryAttribute,
+    schema,
     schemaStore,
     setSorting,
     timezone,

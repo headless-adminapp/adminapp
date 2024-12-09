@@ -5,6 +5,7 @@ export interface ViewColumn<S extends SchemaAttributes = SchemaAttributes> {
   maxWidth?: number;
   name: keyof S;
   expandedKey?: string;
+  component?: string;
 }
 
 export interface TransformedViewColumn<
