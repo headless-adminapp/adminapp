@@ -69,7 +69,7 @@ interface Store {
 export interface CommandContextBase {
   dataService: IDataService;
   navigation: Navigation;
-  queryClient: Pick<QueryClient, 'clear'>;
+  queryClient: QueryClient;
   utility: Utiltity;
   stores: Store;
   locale: Locale;
