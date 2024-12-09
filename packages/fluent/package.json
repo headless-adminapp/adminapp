@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/fluent",
-  "version": "0.0.17-alpha.35",
+  "version": "0.0.17-alpha.37",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
