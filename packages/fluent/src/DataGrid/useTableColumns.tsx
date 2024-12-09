@@ -38,6 +38,7 @@ import {
   Id,
   LookupAttribute,
 } from '@headless-adminapp/core/attributes';
+import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
 import { PageType } from '@headless-adminapp/core/experience/app';
 import { ViewColumn } from '@headless-adminapp/core/experience/view';
 import {
@@ -416,6 +417,27 @@ export function useTableColumns({
                     recordSetSetter('', []);
                     router.push(path);
                   }}
+                />
+              );
+            case 'attachment':
+              const url = (value as unknown as FileObject)?.url;
+              if (!url) {
+                return (
+                  <TableCellText
+                    key={column.id}
+                    value=""
+                    width={info.column.getSize()}
+                  />
+                );
+              }
+
+              return (
+                <TableCellLink
+                  key={column.id}
+                  value={formattedValue}
+                  width={info.column.getSize()}
+                  href={url}
+                  target="_blank"
                 />
               );
           }

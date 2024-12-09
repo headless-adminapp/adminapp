@@ -7,10 +7,11 @@ export interface TableCellLinkProps {
   href?: string;
   onClick?: () => void;
   width: number;
+  target?: string;
 }
 
 export const TableCellLink: FC<TableCellLinkProps> = memo(
-  ({ value, href, onClick, width }) => {
+  ({ value, href, onClick, width, target }) => {
     const router = useRouter();
 
     return (
@@ -29,7 +30,12 @@ export const TableCellLink: FC<TableCellLinkProps> = memo(
         <Link
           as="a"
           href={href}
+          target={target}
           onClick={(event) => {
+            if (target === '_blank') {
+              return;
+            }
+
             if (event.metaKey || event.ctrlKey) {
               return;
             }

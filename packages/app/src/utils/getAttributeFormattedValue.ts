@@ -3,6 +3,7 @@ import {
   DataLookup,
   InferredAttributeType,
 } from '@headless-adminapp/core/attributes';
+import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
@@ -128,6 +129,8 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
       }).format(value as number);
     case 'number':
       return new Intl.NumberFormat(locale).format(value as number);
+    case 'attachment':
+      return (value as unknown as FileObject)?.url ?? null;
     default:
       return typeof value === 'object'
         ? JSON.stringify(value)

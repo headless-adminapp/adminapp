@@ -24,6 +24,7 @@ import { SwitchControl } from '../form/controls/SwitchControl';
 import { TelephoneControl } from '../form/controls/TelephoneControl';
 import { TextAreaControl } from '../form/controls/TextAreaControl';
 import { TextControl } from '../form/controls/TextControl';
+import { UrlControl } from '../form/controls/UrlControl';
 
 // Standard Control (Base control)
 
@@ -129,9 +130,8 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         }
         case 'url': {
           const Control =
-            componentStore.getComponent<typeof TextControl>(
-              'Form.UrlControl'
-            ) ?? TextControl;
+            componentStore.getComponent<typeof UrlControl>('Form.UrlControl') ??
+            UrlControl;
           return <Control {...controlProps} />;
         }
         case 'textarea': {
