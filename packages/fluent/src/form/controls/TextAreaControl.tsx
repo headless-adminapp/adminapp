@@ -16,6 +16,7 @@ export function TextAreaControl({
   onBlur,
   onFocus,
   disabled,
+  readOnly,
   rows = 5,
   textTransform,
 }: TextAreaControlProps) {
@@ -36,7 +37,7 @@ export function TextAreaControl({
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}
       // error={error}
-      disabled={disabled}
+      readOnly={disabled || readOnly}
       rows={rows}
     />
   );

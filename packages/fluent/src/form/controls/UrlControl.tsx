@@ -14,6 +14,7 @@ export function UrlControl({
   onFocus,
   placeholder,
   disabled,
+  readOnly,
 }: UrlControlProps) {
   return (
     <Input
@@ -27,7 +28,7 @@ export function UrlControl({
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}
       // invalid={error}
-      disabled={disabled}
+      readOnly={disabled || readOnly}
       autoComplete="off"
       style={{
         width: '100%',

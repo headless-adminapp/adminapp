@@ -13,7 +13,7 @@ import {
   useGridSelection,
   useGridSorting,
   useMainGridContextCommands,
-  useSubGridCommands,
+  useSubGridContextCommands,
 } from '@headless-adminapp/app/datagrid/hooks';
 import { useOpenRecord } from '@headless-adminapp/app/datagrid/hooks/useOpenRecord';
 import { useElementSize } from '@headless-adminapp/app/hooks';
@@ -103,7 +103,7 @@ export function useTableColumns({
 
   const contextCommands = isSubgrid
     ? // eslint-disable-next-line react-hooks/rules-of-hooks
-      useSubGridCommands()
+      useSubGridContextCommands()
     : // eslint-disable-next-line react-hooks/rules-of-hooks
       useMainGridContextCommands();
 

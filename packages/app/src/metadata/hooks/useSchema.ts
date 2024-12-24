@@ -7,5 +7,9 @@ export function useSchema<S extends SchemaAttributes = SchemaAttributes>(
 ) {
   const { schemaStore } = useMetadata();
 
+  if (!schemaStore.hasSchema(logicalName)) {
+    return null;
+  }
+
   return schemaStore.getSchema<S>(logicalName);
 }

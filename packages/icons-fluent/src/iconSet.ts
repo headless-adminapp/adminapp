@@ -81,4 +81,5 @@ export const iconSet = defineIconSet({
   Copy: bundleLazyIcon('Copy24Regular', 'Copy24Filled'),
   Document: bundleLazyIcon('Document24Regular', 'Document24Filled'),
   Image: bundleLazyIcon('Image24Regular', 'Image24Filled'),
+  Checkmark: bundleLazyIcon('Checkmark24Regular', 'Checkmark24Filled'),
 });

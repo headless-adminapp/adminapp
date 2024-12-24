@@ -1,4 +1,5 @@
 import { useLoadMainGridPage } from '@headless-adminapp/app/datagrid';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { PageEntityViewProvider } from '@headless-adminapp/app/providers/PageEntityViewProvider';
 import { Icons } from '@headless-adminapp/icons';
 import { FC } from 'react';
@@ -6,6 +7,7 @@ import { FC } from 'react';
 import { PageBroken } from '../components/PageBroken';
 import { PageLoading } from '../components/PageLoading';
 import { PageEntityViewDesktopContainer } from './PageEntityViewDesktopContainer';
+import { PageEntityViewMobileContainer } from './PageEntityViewMobileContainer';
 
 interface PageEntityViewProps {
   logicalName: string;
@@ -19,6 +21,7 @@ export const PageEntityView: FC<PageEntityViewProps> = ({
   onChangeView,
 }) => {
   const result = useLoadMainGridPage(logicalName, viewId);
+  const isMobile = useIsMobile();
 
   if (result.loading) {
     return <PageLoading />;
@@ -44,7 +47,11 @@ export const PageEntityView: FC<PageEntityViewProps> = ({
       commands={commands}
       onChangeView={onChangeView}
     >
-      <PageEntityViewDesktopContainer />
+      {isMobile ? (
+        <PageEntityViewMobileContainer />
+      ) : (
+        <PageEntityViewDesktopContainer />
+      )}
     </PageEntityViewProvider>
   );
 };

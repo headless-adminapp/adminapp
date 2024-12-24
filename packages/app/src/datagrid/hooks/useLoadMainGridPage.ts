@@ -45,7 +45,7 @@ export function useLoadMainGridPage(
       loading: false,
       error: true,
       title: 'Schema not found',
-      message: 'The schema was not found',
+      message: `The schema "${logicalName}" was not found`,
     };
   }
 

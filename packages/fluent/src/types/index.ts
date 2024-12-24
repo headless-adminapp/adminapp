@@ -49,5 +49,6 @@ declare module '@headless-adminapp/icons/types' {
     Copy: Icon;
     Document: Icon;
     Image: Icon;
+    Checkmark: Icon;
   }
 }

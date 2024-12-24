@@ -1,3 +1,4 @@
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { InsightsContext } from '@headless-adminapp/app/insights';
 import {
   useContextSelector,
@@ -45,11 +46,17 @@ export function Widgets({
 }: {
   widgets: InsightExpereince['widgets'];
 }) {
+  const isMobile = useIsMobile();
+
   return (
     <WidgetGrid>
       {widgets.map((widget, index) => {
         return (
-          <WidgetGridItem key={index} row={widget.rows} column={widget.columns}>
+          <WidgetGridItem
+            key={index}
+            row={widget.rows}
+            column={isMobile ? 12 : widget.columns}
+          >
             <WidgetProvider widget={widget}>
               <WidgetItem />
             </WidgetProvider>

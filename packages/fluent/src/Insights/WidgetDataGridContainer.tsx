@@ -28,6 +28,10 @@ export function WidgetDataGridContainer({
     return <div>Loading...</div>;
   }
 
+  if (!schema) {
+    return <div>Schema not found</div>;
+  }
+
   return (
     <div
       style={{

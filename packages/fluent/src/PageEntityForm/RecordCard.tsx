@@ -106,7 +106,9 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
           flex: 1,
         }}
       >
-        <Body1>{_record[cardView.primaryColumn]}</Body1>
+        <Body1 style={{ wordBreak: 'break-all' }}>
+          {_record[cardView.primaryColumn]}
+        </Body1>
         {cardView.secondaryColumns?.map((column) => {
           const value = _record[column.name];
           if (!value) {

@@ -16,6 +16,7 @@ export function TelephoneControl({
   onFocus,
   placeholder,
   disabled,
+  readOnly,
   autoComplete,
 }: TelephoneControlProps) {
   return (
@@ -30,7 +31,7 @@ export function TelephoneControl({
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}
       // invalid={error}
-      disabled={disabled}
+      readOnly={disabled || readOnly}
       autoComplete={autoComplete}
       style={{
         width: '100%',
