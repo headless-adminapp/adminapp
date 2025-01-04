@@ -2,7 +2,7 @@ import { useAppContext } from '@headless-adminapp/app/app';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { CommandItemExperience } from '@headless-adminapp/core/experience/command';
 import { EntityMainGridCommandContext } from '@headless-adminapp/core/experience/view';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { useBaseCommandHandlerContext, useCommands } from '../../command';
 import {

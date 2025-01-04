@@ -1,4 +1,5 @@
-
+/* eslint-disable unused-imports/no-unused-vars */
+// TODO: Remove eslint disable condition after finishing the implementation
 
 export interface ItemInfo {
   date: number;

@@ -32,7 +32,7 @@ const WidgetProvider: FC<PropsWithChildren<{ widget: WidgetExperience }>> = ({
       widget,
       data: widget.defaultData,
     });
-  }, [widget]);
+  }, [contextValue, widget]);
 
   return (
     <WidgetContext.Provider value={contextValue}>

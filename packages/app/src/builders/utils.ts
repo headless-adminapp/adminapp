@@ -205,10 +205,10 @@ export const exportRecordsXLS: ExportFn = async ({
   // Generate the Excel file
   const buffer = await workbook.xlsx.writeBuffer();
 
-  var blob = new Blob([buffer], {
+  const blob = new Blob([buffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
-  var link = document.createElement('a');
+  const link = document.createElement('a');
   link.href = window.URL.createObjectURL(blob);
   link.download = fileName;
   link.click();

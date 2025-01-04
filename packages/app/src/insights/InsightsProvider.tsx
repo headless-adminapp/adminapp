@@ -43,7 +43,7 @@ export function InsightsProvider<
       experience,
       data: experience.defaultData,
     });
-  }, [experience, insightLookup]);
+  }, [experience, insightsValues]);
 
   return (
     <InsightsContext.Provider

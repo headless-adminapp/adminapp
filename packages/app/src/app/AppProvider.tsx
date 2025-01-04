@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { FC, PropsWithChildren, useMemo } from 'react';
 
 import { useAppStore, useExperienceStore } from '../metadata/hooks';
-import { AppContext } from './context';
+import { AppContext, AppContextState } from './context';
 
 interface AppProviderProps {
   appId: string;
@@ -43,6 +43,11 @@ export const AppProvider: FC<PropsWithChildren<AppProviderProps>> = ({
     [schemaMetadataList]
   );
 
+  const contextValue = useMemo(
+    () => ({ app, schemaMetadataDic, schemaMetadataList }),
+    [app, schemaMetadataDic, schemaMetadataList]
+  );
+
   if (isLoading) {
     return loadingComponent;
   }
@@ -52,7 +57,7 @@ export const AppProvider: FC<PropsWithChildren<AppProviderProps>> = ({
   }
 
   return (
-    <AppContext.Provider value={{ app, schemaMetadataDic, schemaMetadataList }}>
+    <AppContext.Provider value={contextValue as AppContextState}>
       {children}
     </AppContext.Provider>
   );

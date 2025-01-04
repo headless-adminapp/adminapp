@@ -54,21 +54,21 @@ abstract class BaseSchemaExperienceBuilder<S extends SchemaAttributes> {
       throw new Error('Default lookup is required');
     }
 
-    if (!this.views.find(v => v.id === this.defaultViewId)) {
+    if (!this.views.find((v) => v.id === this.defaultViewId)) {
       throw new Error('Default view not found');
     }
 
-    if (!this.forms.find(f => f.id === this.defaultFormId)) {
+    if (!this.forms.find((f) => f.id === this.defaultFormId)) {
       throw new Error('Default form not found');
     }
 
-    if (!this.lookups.find(l => l.id === this.defaultLookupId)) {
+    if (!this.lookups.find((l) => l.id === this.defaultLookupId)) {
       throw new Error('Default lookup not found');
     }
 
     if (
       this.defaultQuickCreateFormId &&
-      !this.quickCreateForms.find(f => f.id === this.defaultQuickCreateFormId)
+      !this.quickCreateForms.find((f) => f.id === this.defaultQuickCreateFormId)
     ) {
       throw new Error('Default quick create form not found');
     }
@@ -107,9 +107,9 @@ export class SchemaExperienceBuilder<
   S extends SchemaAttributes = SchemaAttributes
 > extends BaseSchemaExperienceBuilder<S> {
   constructor(
-    private schema: Schema<S>,
-    private defaults?: SchemaExperienceBuilderDefaults,
-    private options?: SchemaExperienceBuilderOptions
+    private readonly schema: Schema<S>,
+    private readonly defaults?: SchemaExperienceBuilderDefaults,
+    private readonly options?: SchemaExperienceBuilderOptions
   ) {
     super(schema.logicalName);
   }
@@ -219,12 +219,12 @@ export class SchemaExperienceBuilder<
     const langugesSet = new Set<string>();
 
     this.schema.localizedPluralLabels &&
-      Object.keys(this.schema.localizedPluralLabels).forEach(key =>
+      Object.keys(this.schema.localizedPluralLabels).forEach((key) =>
         langugesSet.add(key)
       );
 
     this.defaults?.localizedViewNames &&
-      Object.keys(this.defaults.localizedViewNames).forEach(key =>
+      Object.keys(this.defaults.localizedViewNames).forEach((key) =>
         langugesSet.add(key)
       );
 
@@ -259,7 +259,7 @@ export class SchemaExperienceBuilder<
       return data[0].id;
     }
 
-    if (!data.find(x => x.id === defaultId)) {
+    if (!data.find((x) => x.id === defaultId)) {
       return data[0].id;
     }
 
@@ -379,27 +379,27 @@ export class SchemaExperienceBuilder<
       defaultLookupId,
       defaultAssociatedViewId,
       quickCreateForms:
-        experience.quickCreateForms?.map(x => ({
+        experience.quickCreateForms?.map((x) => ({
           ...x,
           logicalName: this.logicalName,
         })) ?? [],
       views:
-        views.map(x => ({
+        views.map((x) => ({
           ...x,
           logicalName: this.logicalName,
         })) ?? [],
       forms:
-        forms.map(x => ({
+        forms.map((x) => ({
           ...x,
           logicalName: this.logicalName,
         })) ?? [],
       lookups:
-        lookups.map(x => ({
+        lookups.map((x) => ({
           ...x,
           logicalName: this.logicalName,
         })) ?? [],
       associatedViews:
-        associatedViews.map(x => ({
+        associatedViews.map((x) => ({
           ...x,
           logicalName: this.logicalName,
         })) ?? [],

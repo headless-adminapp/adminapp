@@ -110,7 +110,7 @@ export function renderLines(lines: LineInfo[], dataset: any[]) {
   return lines.map((line) => renderLine(line, dataset));
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+// eslint-disable-next-line unused-imports/no-unused-vars
 export function renderArea(area: AreaInfo, dataset: any[]) {
   return (
     <Area
@@ -135,7 +135,7 @@ export function renderAreas(areas: AreaInfo[], dataset: any[]) {
   return areas.map((area) => renderArea(area, dataset));
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+// eslint-disable-next-line unused-imports/no-unused-vars
 export function renderBar(bar: BarInfo, dataset: any[]) {
   return (
     <Bar

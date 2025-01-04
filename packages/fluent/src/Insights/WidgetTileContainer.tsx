@@ -1,9 +1,9 @@
-'use client';
 import { Title2, tokens } from '@fluentui/react-components';
 import { TileWidgetExperience } from '@headless-adminapp/core/experience/insights';
 import { FC } from 'react';
-import { WidgetTitleBar } from './WidgetTitleBar';
+
 import { useWidgetDetail } from './hooks/useWidgetDetail';
+import { WidgetTitleBar } from './WidgetTitleBar';
 
 interface WidgetTileContainerProps {
   content: TileWidgetExperience;

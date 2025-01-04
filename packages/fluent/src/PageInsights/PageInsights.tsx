@@ -30,7 +30,7 @@ export function PageInsights({
 }: PageInsightsProps) {
   const insightExpereince = useMemo(() => {
     return insights.find((insight) => insight.id === insightId);
-  }, [insightId]);
+  }, [insightId, insights]);
 
   const insightLookups = useMemo(
     () => createInsightLookup(insights),

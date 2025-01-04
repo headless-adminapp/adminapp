@@ -12,13 +12,6 @@ import {
 } from './operations/RetriveRecords';
 import { OperatorKey } from './OperatorKey';
 
-/*** @deprecated Use RetriveRecordsResult instead */
-export interface GetListResult<T> {
-  logicalName: string;
-  records: Array<T>;
-  count: number;
-}
-
 export interface IDataService {
   retriveRecord<T = unknown>(
     logicalName: string,
