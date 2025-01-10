@@ -119,6 +119,13 @@ export function SectionContainer<
           case 'quickview':
             return null;
           case 'subgrid':
+            let ContainerComponent: FC | null = null;
+
+            if (control.component) {
+              ContainerComponent = componentStore.getComponent<FC>(
+                control.component
+              );
+            }
             return (
               <SubgridControl
                 key={index}
@@ -126,6 +133,7 @@ export function SectionContainer<
                 allowViewSelection={control.allowViewSelection}
                 viewId={control.viewId}
                 availableViewIds={control.availableViewIds}
+                ContainerComponent={ContainerComponent}
                 associated={
                   !control.associatedAttribute
                     ? false

@@ -34,6 +34,7 @@ export interface SectionSubgridControl extends BaseSectionControl {
   // noAssociateFilter?: boolean;
   // relatedRecordsOnly: boolean;
   associatedAttribute: false | string; // false if no associated attribute // local attirubte for the subgrid
+  component?: string; // unique name of component from registry to override default component
 }
 
 export interface SectionQuickViewControl<

@@ -1,4 +1,5 @@
 import {
+  Body1,
   makeStyles,
   mergeClasses,
   SkeletonItem,
@@ -22,6 +23,7 @@ import { useLocale } from '@headless-adminapp/app/locale';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { useOpenForm } from '@headless-adminapp/app/navigation';
 import { useRecordSetSetter } from '@headless-adminapp/app/recordset/hooks';
+import { Icons } from '@headless-adminapp/icons';
 import {
   flexRender,
   getCoreRowModel,
@@ -31,6 +33,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
+import { usePageEntityViewStrings } from '../PageEntityView/PageEntityViewStringContext';
 import { ScrollbarWithMoreDataRequest } from './ScrollbarWithMoreDataRequest';
 import { UniqueRecord, useTableColumns } from './useTableColumns';
 import { adjustTableHeight } from './utils';
@@ -142,6 +145,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
   );
 
   const { direction } = useLocale();
+  const strings = usePageEntityViewStrings();
 
   const dataRef = useRef(data);
   dataRef.current = data;
@@ -405,6 +409,25 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
             )}
           </Table>
         </div>
+        {data?.records.length === 0 && !dataState.isFetching && (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'absolute',
+              inset: 0,
+              gap: tokens.spacingVerticalL,
+              color: tokens.colorNeutralForeground3,
+            }}
+          >
+            <div>
+              <Icons.Search size={64} />
+            </div>
+            <Body1>{strings.noRecordsFound}</Body1>
+          </div>
+        )}
       </ScrollbarWithMoreDataRequest>
     </div>
   );

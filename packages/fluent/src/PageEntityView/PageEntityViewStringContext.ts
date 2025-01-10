@@ -20,6 +20,7 @@ export interface PageEntityViewStringSet {
   filter: string;
   clearFilter: string;
   filterBy: string;
+  noRecordsFound: string;
 }
 
 export const defaultPageEntityViewStrings: PageEntityViewStringSet = {
@@ -41,6 +42,7 @@ export const defaultPageEntityViewStrings: PageEntityViewStringSet = {
   filter: 'Filter',
   sortByDescending: 'Sort by descending',
   filterBy: 'Filter by',
+  noRecordsFound: "We didn't find anything to show here",
 };
 
 export const PageEntityViewStringContext =

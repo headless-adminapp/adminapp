@@ -24,6 +24,7 @@ interface SubgridControlProps {
         id: string;
         refAttributeName: string;
       };
+  ContainerComponent?: React.ComponentType<any> | null;
 }
 
 export function SubgridControl(props: SubgridControlProps) {
@@ -115,6 +116,8 @@ export function SubgridControl(props: SubgridControlProps) {
     return brokenContent;
   }
 
+  const ContainerComponent = props.ContainerComponent ?? FormSubgridContainer;
+
   return (
     <DataGridProvider
       schema={schema}
@@ -127,7 +130,7 @@ export function SubgridControl(props: SubgridControlProps) {
       extraFilter={extraFilter}
       allowViewSelection={props.allowViewSelection ?? false}
     >
-      <FormSubgridContainer />
+      <ContainerComponent />
     </DataGridProvider>
   );
 }

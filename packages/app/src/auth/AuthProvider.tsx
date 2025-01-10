@@ -116,6 +116,12 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({
       return;
     }
 
+    const MAX_TIMEOUT = 2147483647;
+
+    if (timeout > MAX_TIMEOUT) {
+      return;
+    }
+
     const timer = setTimeout(() => {
       contextValue.setValue({
         initialized: true,

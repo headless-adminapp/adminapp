@@ -68,17 +68,17 @@ interface PageExternalLink extends BasePageItem, BasePageExternalLink {
 }
 
 interface PageCustom extends BasePageItem, BasePageCustom {
-  icon: Icon;
+  icon?: Icon;
   label: string;
 }
 
 interface PageDashboard extends BasePageItem, BasePageDashboard {
-  icon: Icon;
+  icon?: Icon;
   label: string;
 }
 
 interface PageReport extends BasePageItem, BasePageReport {
-  icon: Icon;
+  icon?: Icon;
   label: string;
 }
 
