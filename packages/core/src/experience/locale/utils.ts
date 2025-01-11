@@ -28,7 +28,7 @@ export function getLocale(
       long: options?.dateFormats?.long ?? 'WWW, MMM D, YYYY',
     },
     timeFormats: {
-      short: 'hh:mm aa',
+      short: options?.timeFormats?.short ?? 'hh:mm A',
     },
     numberFormats: {},
     currency: {

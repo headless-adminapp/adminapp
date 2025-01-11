@@ -41,7 +41,7 @@ import {
 } from 'sequelize';
 import type { Col, Fn, Literal } from 'sequelize/types/utils';
 
-import { transformFilter } from './conditions';
+import { getLikeOperator, transformFilter } from './conditions';
 import { SequelizeSchemaStore } from './SequelizeSchemaStore';
 import { Id } from './types';
 
@@ -114,6 +114,7 @@ export class SequelizeServerSdk<
       {
         schemaStore: this.options.schemaStore,
         timezone: this.timezone,
+        sequelize: this.options.sequelize,
       }
     );
 
@@ -133,6 +134,7 @@ export class SequelizeServerSdk<
       {
         schemaStore: this.options.schemaStore,
         timezone: this.timezone,
+        sequelize: this.options.sequelize,
       }
     );
 
@@ -144,6 +146,7 @@ export class SequelizeServerSdk<
       const transformedFilter = transformFilter(filter, schema, {
         schemaStore: this.options.schemaStore,
         timezone: this.timezone,
+        sequelize: this.options.sequelize,
       });
       if (transformedFilter) {
         whereClause.push(transformedFilter);
@@ -166,7 +169,7 @@ export class SequelizeServerSdk<
           if (attribute.type === 'string') {
             return {
               [x]: {
-                [Op.iLike]: `%${search}%`,
+                [getLikeOperator(this.options.sequelize)]: `%${search}%`,
               },
             };
           } else if (attribute.type === 'number') {
@@ -190,7 +193,7 @@ export class SequelizeServerSdk<
                 x as string,
                 attribute.entity
               )}.${lookupSchema.primaryAttribute as string}$`]: {
-                [Op.iLike]: `%${search}%`,
+                [getLikeOperator(this.options.sequelize)]: `%${search}%`,
               },
             };
           }

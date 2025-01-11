@@ -23,6 +23,7 @@ const defaultAttributeFormattedValueStrings: AttributeFormattedValueStringsSet =
   };
 
 const defaultDateFormat = 'YYYY-MM-DD';
+const defaultTimeFormat = 'HH:mm';
 const defaultLocale = 'en-US';
 const defaultCurrency = 'USD';
 const defaultCurrencySign = 'accounting';
@@ -35,6 +36,7 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
     maxCount?: number; // for choices and lookups
     strings?: AttributeFormattedValueStringsSet;
     dateFormat?: string;
+    timeFormat?: string;
     locale?: string;
     currency?: string;
     currencySign?: 'accounting' | 'standard';
@@ -48,6 +50,7 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
 
   const strings = options?.strings ?? defaultAttributeFormattedValueStrings;
   const dateFormat = options?.dateFormat ?? defaultDateFormat;
+  const timeFormat = options?.timeFormat ?? defaultTimeFormat;
   const locale = options?.locale ?? defaultLocale;
   const currency = options?.currency ?? defaultCurrency;
   const currencySign = options?.currencySign ?? defaultCurrencySign;
@@ -75,9 +78,15 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
         })
         .join(', ');
     case 'date':
-      return dayjs(value as string)
-        .tz(options?.timezone)
-        .format(dateFormat);
+      if (attribute.format === 'date') {
+        return dayjs(value as string)
+          .tz(options?.timezone)
+          .format(dateFormat + ' ' + timeFormat);
+      } else {
+        return dayjs(value as string)
+          .tz(options?.timezone)
+          .format(dateFormat);
+      }
     case 'daterange':
       if (!value) return null;
 

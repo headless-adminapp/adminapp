@@ -17,7 +17,7 @@ import { v4 as uuid } from 'uuid';
 import { RecordCard } from '../PageEntityForm/RecordCard';
 import { RecordCardLoading } from '../PageEntityForm/RecordCardLoading';
 import { ScrollbarWithMoreDataRequest } from './ScrollbarWithMoreDataRequest';
-import { UniqueRecord } from './useTableColumns';
+import { UniqueRecord } from './types';
 
 const useStyles = makeStyles({
   root: {

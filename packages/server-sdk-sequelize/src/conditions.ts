@@ -8,12 +8,24 @@ import {
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 
 import { SequelizeSchemaStore } from './SequelizeSchemaStore';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+function isSqlite(sequelize: Sequelize) {
+  return sequelize.getDialect() === 'sqlite';
+}
+
+export function getLikeOperator(sequelize: Sequelize): any {
+  return isSqlite(sequelize) ? Op.like : Op.iLike;
+}
+
+export function getNotLikeOperator(sequelize: Sequelize): any {
+  return isSqlite(sequelize) ? Op.notLike : Op.notILike;
+}
 
 function startOfFiscalYear(year: number, tz: string) {
   return dayjs
@@ -37,6 +49,7 @@ interface ConditionTransformerOptions<
 > {
   timezone: string;
   schemaStore: SequelizeSchemaStore<SA>;
+  sequelize: Sequelize;
 }
 
 type ConditionTransformer = (
@@ -69,34 +82,34 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
   }),
 
   // text
-  like: (condition) => ({
+  like: (condition, attribute, options) => ({
     [condition.field]: {
-      [Op.iLike]: `%${condition.value}%`,
+      [getLikeOperator(options.sequelize)]: `%${condition.value}%`,
     },
   }),
-  'not-like': (condition) => ({
+  'not-like': (condition, attribute, options) => ({
     [condition.field]: {
-      [Op.notILike]: `%${condition.value}%`,
+      [getNotLikeOperator(options.sequelize)]: `%${condition.value}%`,
     },
   }),
-  'begins-with': (condition) => ({
+  'begins-with': (condition, attribute, options) => ({
     [condition.field]: {
-      [Op.iLike]: `${condition.value}%`,
+      [getLikeOperator(options.sequelize)]: `${condition.value}%`,
     },
   }),
-  'ends-with': (condition) => ({
+  'ends-with': (condition, attribute, options) => ({
     [condition.field]: {
-      [Op.iLike]: `%${condition.value}`,
+      [getLikeOperator(options.sequelize)]: `%${condition.value}`,
     },
   }),
-  'not-begin-with': (condition) => ({
+  'not-begin-with': (condition, attribute, options) => ({
     [condition.field]: {
-      [Op.notILike]: `${condition.value}%`,
+      [getNotLikeOperator(options.sequelize)]: `${condition.value}%`,
     },
   }),
-  'not-end-with': (condition) => ({
+  'not-end-with': (condition, attribute, options) => ({
     [condition.field]: {
-      [Op.notILike]: `%${condition.value}`,
+      [getNotLikeOperator(options.sequelize)]: `%${condition.value}`,
     },
   }),
 
@@ -352,11 +365,11 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
   }),
 
   // mixed
-  eq: (condition, attribute) => {
+  eq: (condition, attribute, options) => {
     if (attribute.type === 'string') {
       return {
         [condition.field]: {
-          [Op.iLike]: condition.value,
+          [getLikeOperator(options.sequelize)]: condition.value,
         },
       };
     }
@@ -373,11 +386,11 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       },
     };
   },
-  ne: (condition, attribute) => {
+  ne: (condition, attribute, options) => {
     if (attribute.type === 'string') {
       return {
         [condition.field]: {
-          [Op.notILike]: condition.value,
+          [getNotLikeOperator(options.sequelize)]: condition.value,
         },
       };
     }
@@ -512,6 +525,7 @@ export function transformCondition<
   return transformer(condition, attribute, {
     schemaStore: options.schemaStore as unknown as SequelizeSchemaStore,
     timezone: options.timezone,
+    sequelize: options.sequelize,
   });
 }
 

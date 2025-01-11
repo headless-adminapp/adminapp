@@ -35,7 +35,8 @@ import { v4 as uuid } from 'uuid';
 
 import { usePageEntityViewStrings } from '../PageEntityView/PageEntityViewStringContext';
 import { ScrollbarWithMoreDataRequest } from './ScrollbarWithMoreDataRequest';
-import { UniqueRecord, useTableColumns } from './useTableColumns';
+import { UniqueRecord } from './types';
+import { useTableColumns } from './useTableColumns';
 import { adjustTableHeight } from './utils';
 
 const useStyles = makeStyles({

@@ -41,12 +41,7 @@ import {
 import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
 import { PageType } from '@headless-adminapp/core/experience/app';
 import { ViewColumn } from '@headless-adminapp/core/experience/view';
-import {
-  InferredSchemaType,
-  Schema,
-  SchemaAttributes,
-} from '@headless-adminapp/core/schema';
-import { Data } from '@headless-adminapp/core/transport';
+import { Schema } from '@headless-adminapp/core/schema';
 import { createColumnHelper } from '@tanstack/react-table';
 import { FC, useEffect, useMemo, useRef } from 'react';
 
@@ -55,10 +50,8 @@ import { TableHeaderFilterCell } from '../DataGrid/GridColumnHeader';
 import { TableCellText } from '../DataGrid/TableCell';
 import { TableCellLink } from '../DataGrid/TableCell/TableCellLink';
 import { ActionCell } from './ActionCell';
-
-export type UniqueRecord = Data<InferredSchemaType<SchemaAttributes>> & {
-  __uuid: string;
-};
+import { TableCellChoice } from './TableCell/TableCellChoice';
+import { UniqueRecord } from './types';
 
 const columnHelper = createColumnHelper<UniqueRecord>();
 
@@ -141,7 +134,7 @@ export function useTableColumns({
 
   const openRecord = useOpenRecord();
 
-  const { currency, dateFormats, timezone } = useLocale();
+  const { currency, dateFormats, timezone, timeFormats } = useLocale();
 
   const dataRef = useRef(data);
   dataRef.current = data;
@@ -328,8 +321,19 @@ export function useTableColumns({
             getAttributeFormattedValue(attribute, value, {
               currency: currency.currency,
               dateFormat: dateFormats.short,
+              timeFormat: timeFormats.short,
               timezone,
             }) ?? '';
+
+          if (column.plainText) {
+            return (
+              <TableCellText
+                key={column.id}
+                value={formattedValue}
+                width={info.column.getSize()}
+              />
+            );
+          }
 
           if (column.component) {
             const Component = componentStore.getComponent<
@@ -340,6 +344,7 @@ export function useTableColumns({
                 value: unknown;
                 attribute: Attribute;
                 formattedValue: string;
+                width: number;
               }>
             >(column.component);
 
@@ -357,6 +362,7 @@ export function useTableColumns({
                 value={value}
                 attribute={attribute}
                 formattedValue={formattedValue}
+                width={info.column.getSize()}
               />
             );
           }
@@ -440,6 +446,18 @@ export function useTableColumns({
                   target="_blank"
                 />
               );
+            case 'choice':
+              return (
+                <TableCellChoice
+                  column={column}
+                  schema={schema}
+                  record={info.row.original}
+                  value={value}
+                  attribute={attribute}
+                  formattedValue={formattedValue}
+                  width={info.column.getSize()}
+                />
+              );
           }
 
           return (
@@ -460,6 +478,7 @@ export function useTableColumns({
     columnWidths,
     currency.currency,
     dateFormats.short,
+    timeFormats.short,
     disableColumnFilter,
     disableColumnResize,
     disableColumnSort,

@@ -6,6 +6,7 @@ export interface ViewColumn<S extends SchemaAttributes = SchemaAttributes> {
   name: keyof S;
   expandedKey?: string;
   component?: string;
+  plainText?: boolean; // Forcing plain text rendering
 }
 
 export interface TransformedViewColumn<
