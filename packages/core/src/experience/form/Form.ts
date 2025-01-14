@@ -1,5 +1,5 @@
 import { SchemaAttributes } from '../../schema';
-import { AllowAsync } from '../../types';
+import { AllowAsync, Localized } from '../../types';
 import { Metadata } from '../types';
 import { EditableGridCloneAttribute } from './EditableGridCloneAttribute';
 import { Tab } from './Tab';
@@ -21,4 +21,12 @@ export interface FormExperience<S extends SchemaAttributes = SchemaAttributes> {
     (keyof S | (string & {})) | EditableGridCloneAttribute
   >;
   includeAttributes?: Array<keyof S>; // additional attributes to include in the form which is not included by any controls
+  relatedItems?: FormRelatedItemInfo[] | null; // undefined will use default related items // null will hide related items
+}
+
+export interface FormRelatedItemInfo {
+  logicalName: string; // Child table logical name
+  attributeName: string; // Child table reference field name
+  pluralLabel?: string; // default is plural label from schema
+  localizedPluralLabels?: Localized<string>; // default is plural localized label from schema
 }

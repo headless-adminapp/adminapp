@@ -10,6 +10,7 @@ import {
   TableRow,
   tokens,
 } from '@fluentui/react-components';
+import { ScrollbarWithMoreDataRequest } from '@headless-adminapp/app/components/ScrollbarWithMoreDataRequest';
 import { GridContext } from '@headless-adminapp/app/datagrid';
 import {
   useDataGridSchema,
@@ -34,7 +35,6 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { usePageEntityViewStrings } from '../PageEntityView/PageEntityViewStringContext';
-import { ScrollbarWithMoreDataRequest } from './ScrollbarWithMoreDataRequest';
 import { UniqueRecord } from './types';
 import { useTableColumns } from './useTableColumns';
 import { adjustTableHeight } from './utils';

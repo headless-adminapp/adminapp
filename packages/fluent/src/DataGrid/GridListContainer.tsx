@@ -1,4 +1,5 @@
 import { makeStyles, mergeClasses, tokens } from '@fluentui/react-components';
+import { ScrollbarWithMoreDataRequest } from '@headless-adminapp/app/components/ScrollbarWithMoreDataRequest';
 import { GridContext } from '@headless-adminapp/app/datagrid';
 import {
   useDataGridSchema,
@@ -16,7 +17,6 @@ import { v4 as uuid } from 'uuid';
 
 import { RecordCard } from '../PageEntityForm/RecordCard';
 import { RecordCardLoading } from '../PageEntityForm/RecordCardLoading';
-import { ScrollbarWithMoreDataRequest } from './ScrollbarWithMoreDataRequest';
 import { UniqueRecord } from './types';
 
 const useStyles = makeStyles({

@@ -1,15 +1,18 @@
 import {
+  useClearDataExceptFirstPage,
+  useRetrieveRecordsKey,
+  useRetriveRecords,
+} from '@headless-adminapp/app/transport/hooks/useRetriveRecords';
+import {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
 import { Data } from '@headless-adminapp/core/transport';
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef } from 'react';
 
 import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 import { useMetadata } from '../../metadata/hooks/useMetadata';
 import { useContextSetValue } from '../../mutable/context';
-import { useDataService } from '../../transport';
 import { GridContext } from '../context';
 import {
   useDataGridSchema,
@@ -24,14 +27,12 @@ import {
 } from '../hooks';
 import { collectExpandedKeys, mergeConditions } from './utils';
 
-const ROWS_PER_PAGE = 100;
 const MAX_RECORDS = 10000;
 
 export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
   const schema = useDataGridSchema();
   const view = useSelectedView();
 
-  const dataService = useDataService();
   const [sorting] = useGridSorting();
   const [searchText] = useSearchText();
   const extraFilter = useGridExtraFilter();
@@ -62,118 +63,37 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
 
   const expand = useMemo(() => collectExpandedKeys(gridColumns), [gridColumns]);
 
-  const queryKey = useMemo(
-    () => [
-      'data',
-      'retriveRecords',
-      schema.logicalName,
-      search,
+  const filter = useMemo(() => {
+    return mergeConditions(
+      schema,
       view.experience.filter,
       extraFilter,
-      sorting,
       columnFilters,
+      schemaStore
+    );
+  }, [columnFilters, extraFilter, schema, schemaStore, view.experience.filter]);
+
+  const queryKey = useRetrieveRecordsKey({
+    columns,
+    expand,
+    filter,
+    maxRecords,
+    schema,
+    search,
+    sorting,
+  });
+
+  useClearDataExceptFirstPage(queryKey);
+
+  const { fetchNextPage, data, hasNextPage, isFetching, isFetchingNextPage } =
+    useRetriveRecords(queryKey, {
       columns,
       expand,
+      filter,
       maxRecords,
-    ],
-    [
-      columnFilters,
-      columns,
-      expand,
-      extraFilter,
-      schema.logicalName,
+      schema,
       search,
       sorting,
-      view.experience.filter,
-      maxRecords,
-    ]
-  );
-
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    return () => {
-      // Clear all pages except the first one when the component is unmounted
-      queryClient.setQueryData(
-        queryKey,
-        (oldData: { pageParams: unknown[]; pages: unknown[] }) => {
-          if (!oldData) {
-            return oldData;
-          }
-
-          if (!oldData.pageParams.length || !oldData.pages.length) {
-            return oldData;
-          }
-
-          return {
-            pageParams: [oldData.pageParams[0]],
-            pages: [oldData.pages[0]],
-          };
-        }
-      );
-    };
-  }, [queryClient, queryKey]);
-
-  const { data, isFetching, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey: queryKey,
-      queryFn: async (queryContext) => {
-        const params: {
-          pageIndex: number;
-        } = queryContext.pageParam ?? {
-          pageIndex: 0,
-        };
-
-        const skip = params.pageIndex * ROWS_PER_PAGE;
-        const limit = Math.min(ROWS_PER_PAGE, Math.max(0, maxRecords - skip));
-
-        if (limit <= 0) {
-          return {
-            params: params,
-            data: {
-              logicalName: schema.logicalName,
-              count: 0,
-              records: [],
-            },
-          };
-        }
-
-        const result = await dataService.retriveRecords<InferredSchemaType<S>>({
-          logicalName: schema.logicalName,
-          search,
-          columns: columns as unknown as Array<keyof InferredSchemaType<S>>,
-          expand,
-          filter: mergeConditions(
-            schema,
-            view.experience.filter,
-            extraFilter,
-            columnFilters,
-            schemaStore
-          ),
-          skip,
-          limit,
-          sort: sorting as any,
-        });
-        return {
-          params: params,
-          data: result,
-        };
-      },
-      getNextPageParam: (lastPage) => {
-        if (
-          lastPage.data.count <
-          ROWS_PER_PAGE * (lastPage.params.pageIndex + 1)
-        ) {
-          return undefined;
-        }
-
-        return {
-          pageIndex: lastPage.params.pageIndex + 1,
-        };
-      },
-      initialPageParam: {
-        pageIndex: 0,
-      },
     });
 
   useEffect(() => {
@@ -183,27 +103,21 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
   }, [fetchNextPage, setState]);
 
   useEffect(() => {
-    if (!data?.pages.length) {
+    if (!data) {
       setState({
         data: null,
       });
       return;
     }
 
-    const finalData = {
-      logicalName: data?.pages?.[0].data.logicalName,
-      count: data?.pages?.[0].data.count ?? 0,
-      records: data?.pages.map((x) => x.data.records).flat() ?? [],
-    };
-
     const selectedIds = selectedIdsRef.current.filter((x) =>
-      finalData.records.some(
+      data.records.some(
         (y) => y[schema.idAttribute as keyof Data<InferredSchemaType<S>>] === x
       )
     );
 
     setState({
-      data: finalData,
+      data,
       selectedIds,
     });
   }, [data, setState, schema.idAttribute]);

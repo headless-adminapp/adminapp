@@ -78,7 +78,7 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
         })
         .join(', ');
     case 'date':
-      if (attribute.format === 'date') {
+      if (attribute.format === 'datetime') {
         return dayjs(value as string)
           .tz(options?.timezone)
           .format(dateFormat + ' ' + timeFormat);

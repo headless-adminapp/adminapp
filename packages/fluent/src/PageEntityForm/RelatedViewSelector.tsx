@@ -6,10 +6,14 @@ import {
   MenuTrigger,
   tokens,
 } from '@fluentui/react-components';
-import { useDataFormSchema } from '@headless-adminapp/app/dataform/hooks';
+import {
+  useDataFormSchema,
+  useSelectedForm,
+} from '@headless-adminapp/app/dataform/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
 import { isLookupAttribute } from '@headless-adminapp/core/attributes/utils';
+import { FormRelatedItemInfo } from '@headless-adminapp/core/experience/form/Form';
 import { Schema } from '@headless-adminapp/core/schema';
 import { Localized } from '@headless-adminapp/core/types';
 import { Icons } from '@headless-adminapp/icons';
@@ -20,8 +24,6 @@ import { usePageEntityFormStrings } from './PageEntityFormStringContext';
 export interface RelatedItemInfo {
   key: string;
   logicalName: string;
-  label: string;
-  localizedLabels?: Localized<string>;
   pluralLabel: string;
   localizedPluralLabels?: Localized<string>;
   attributeName: string;
@@ -29,8 +31,51 @@ export interface RelatedItemInfo {
 
 function getRelatedItems(
   currentSchema: Schema,
-  schemas: Record<string, Schema>
+  schemas: Record<string, Schema>,
+  relatedItems?: FormRelatedItemInfo[] | null
 ): RelatedItemInfo[] {
+  if (relatedItems === null) {
+    return [];
+  }
+
+  if (relatedItems) {
+    return relatedItems.map((item) => {
+      const schema = schemas[item.logicalName];
+      if (!schema) {
+        throw new Error(`Schema not found: ${item.logicalName}`);
+      }
+
+      if (!schema.attributes[item.attributeName]) {
+        throw new Error(
+          `Attribute not found: ${item.logicalName}.${item.attributeName}`
+        );
+      }
+
+      const attribute = schema.attributes[item.attributeName];
+
+      if (!isLookupAttribute(attribute)) {
+        throw new Error(
+          `Attribute is not a lookup: ${item.logicalName}.${item.attributeName}`
+        );
+      }
+
+      if (attribute.entity !== currentSchema.logicalName) {
+        throw new Error(
+          `Attribute entity does not match: ${item.logicalName}.${item.attributeName}`
+        );
+      }
+
+      return {
+        key: `${schema.logicalName}.${item.attributeName}`,
+        logicalName: schema.logicalName,
+        attributeName: item.attributeName,
+        pluralLabel: item.pluralLabel ?? schema.pluralLabel,
+        localizedPluralLabels:
+          item.localizedPluralLabels ?? schema.localizedPluralLabels,
+      };
+    });
+  }
+
   return Object.values(schemas)
     .map((s) => {
       return Object.entries(s.attributes)
@@ -57,12 +102,10 @@ function getRelatedItems(
           return {
             key: `${s.logicalName}.${item.key}`,
             logicalName: s.logicalName,
-            label: s.label,
-            localizedLabels: s.localizedLabels,
+            attributeName: item.key,
             pluralLabel: item.attribute.relatedLabel ?? s.pluralLabel,
             localizedPluralLabels:
               item.attribute.localizedRelatedLabel ?? s.localizedPluralLabels,
-            attributeName: item.key,
           };
         });
     })
@@ -75,13 +118,14 @@ interface RelatedViewSelectorProps {
 
 export function RelatedViewSelector(props: RelatedViewSelectorProps) {
   const schema = useDataFormSchema();
+  const formConfig = useSelectedForm();
   const { schemas } = useMetadata();
   const strings = usePageEntityFormStrings();
   const { language } = useLocale();
 
   const data = useMemo(
-    () => getRelatedItems(schema, schemas),
-    [schema, schemas]
+    () => getRelatedItems(schema, schemas, formConfig.experience.relatedItems),
+    [formConfig.experience.relatedItems, schema, schemas]
   );
 
   if (!data.length) {

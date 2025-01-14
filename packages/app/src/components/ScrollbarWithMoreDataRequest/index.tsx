@@ -1,5 +1,6 @@
-import { ScrollView } from '@headless-adminapp/app/components/ScrollView';
 import { FC, PropsWithChildren, useEffect, useRef } from 'react';
+
+import { ScrollView } from '../ScrollView';
 
 interface ScrollbarWithMoreDataRequest {
   data: any;

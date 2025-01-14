@@ -1,4 +1,5 @@
 import { Tag } from '@fluentui/react-components';
+import { isColorDark } from '@headless-adminapp/app/utils/color';
 import { ChoiceAttribute } from '@headless-adminapp/core/attributes';
 import { ViewColumn } from '@headless-adminapp/core/experience/view';
 import { Schema } from '@headless-adminapp/core/schema';
@@ -6,15 +7,6 @@ import { useMemo } from 'react';
 
 import { UniqueRecord } from '../types';
 import { TableCellBase } from './TableCellBase';
-
-function isColorDark(color: string) {
-  const rgb = parseInt(color, 16);
-  const r = (rgb >> 16) & 0xff;
-  const g = (rgb >> 8) & 0xff;
-  const b = (rgb >> 0) & 0xff;
-  const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  return luma < 128;
-}
 
 interface TableCellChoiceProps {
   column: ViewColumn;
@@ -35,7 +27,7 @@ export function TableCellChoice(props: TableCellChoiceProps) {
     return props.attribute.options.find(
       (option) => option.value === props.value
     )?.color;
-  }, [props.formattedValue]);
+  }, [props.attribute.options, props.value]);
 
   const color = useMemo(() => {
     if (!bgColor) {

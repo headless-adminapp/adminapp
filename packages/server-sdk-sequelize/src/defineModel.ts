@@ -38,6 +38,12 @@ export function defineModel<S extends SequelizeRequiredSchemaAttributes>(
         case 'date':
           acc[key] = { type: DataTypes.DATEONLY };
           break;
+        case 'number':
+          acc[key] = { type: DataTypes.NUMBER };
+          break;
+        case 'money':
+          acc[key] = { type: DataTypes.NUMBER };
+          break;
         case 'choice':
           if ('string' in attribute && attribute.string) {
             acc[key] = { type: DataTypes.STRING };
