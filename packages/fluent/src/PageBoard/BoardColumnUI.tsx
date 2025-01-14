@@ -12,7 +12,7 @@ import { ScrollbarWithMoreDataRequest } from '@headless-adminapp/app/components/
 import { useContextSelector } from '@headless-adminapp/app/mutable/context';
 import { Schema } from '@headless-adminapp/core/schema';
 import type { Identifier } from 'dnd-core';
-import { FC, useRef } from 'react';
+import { FC, useMemo, useRef } from 'react';
 import { useDrop } from 'react-dnd';
 
 import { BoardColumnCard } from './BoardColumnCard';
@@ -28,7 +28,7 @@ export const BoardColumnUI: FC = () => {
 
   const { columnId, acceptSourceIds, title, updateFn } = useBoardColumnConfig();
 
-  const { PreviewComponent, schema } = useBoardConfig();
+  const { PreviewComponent, schema, columnConfigs } = useBoardConfig();
 
   const baseContext = useBaseCommandHandlerContext();
 
@@ -59,6 +59,10 @@ export const BoardColumnUI: FC = () => {
       })().catch(console.error);
     },
   });
+
+  const canDrag = useMemo(() => {
+    return columnConfigs.some((config) => config.acceptSourceIds.length > 0);
+  }, [columnConfigs]);
 
   drop(ref);
 
@@ -113,7 +117,7 @@ export const BoardColumnUI: FC = () => {
               record={record}
               index={index}
               columnId={columnId}
-              canDrag={acceptSourceIds.length > 0}
+              canDrag={canDrag}
               PreviewComponent={PreviewComponent}
               schema={schema}
             />

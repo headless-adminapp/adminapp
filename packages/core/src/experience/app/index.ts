@@ -32,7 +32,7 @@ interface BasePageEntiyForm {
   type: PageType.EntityForm;
   logicalName: string;
   formId?: string;
-  id?: string; // record id
+  id?: string | number | null; // record id
   defaultParams?: Record<string, unknown>;
 }
 

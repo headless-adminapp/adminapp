@@ -16,7 +16,7 @@ import { Locale } from '../locale';
 
 export interface OpenFormOptions {
   logicalName: string;
-  id?: string;
+  id?: string | number | null;
   formId?: string;
   parameters?: Record<string, unknown>; // Used while creating a new record
   useQuickCreateForm?: boolean; // Used while creating a new record and create create form should available
