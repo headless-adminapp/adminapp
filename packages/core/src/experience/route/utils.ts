@@ -61,12 +61,14 @@ export function createIsRouteActive(routeInfo: RouteInfo): IsRouteActive {
     switch (item.type) {
       case PageType.Dashboard:
         return path === `${basePath}/${routeInfo.dashboard}`;
-      case PageType.EntityView:
-        return path === `${basePath}/${routeInfo.entity}/${item.logicalName}`;
       case PageType.EntityForm:
         return (
           path ===
           `${basePath}/${routeInfo.entity}/${item.logicalName}/${item.id}`
+        );
+      case PageType.EntityView:
+        return path.startsWith(
+          `${basePath}/${routeInfo.entity}/${item.logicalName}`
         );
       case PageType.Report:
         return path === `${basePath}/${routeInfo.report}/${item.reportId}`;
@@ -75,7 +77,13 @@ export function createIsRouteActive(routeInfo: RouteInfo): IsRouteActive {
           return path === item.link;
         }
 
-        return path === `${basePath}/${item.link}`;
+        let link = item.link;
+
+        if (!link.startsWith('/')) {
+          link = `/${link}`;
+        }
+
+        return path === `${basePath}${link}`;
       case PageType.External:
         return path === item.link;
       default:

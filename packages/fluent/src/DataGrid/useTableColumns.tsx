@@ -173,7 +173,7 @@ export function useTableColumns({
               right: 0,
               top: 0,
               // zIndex: 1,
-              background: tokens.colorNeutralBackground3,
+              background: tokens.colorNeutralBackground1,
               borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,
             }}
           >
@@ -212,7 +212,7 @@ export function useTableColumns({
               display: 'flex',
               left: 0,
               top: 0,
-              background: tokens.colorNeutralBackground3,
+              background: tokens.colorNeutralBackground1,
               zIndex: 1,
               width: 32,
               maxWidth: 32,

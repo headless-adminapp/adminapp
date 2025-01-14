@@ -6,6 +6,7 @@ import {
   MenuList,
   MenuPopover,
   MenuTrigger,
+  tokens,
 } from '@fluentui/react-components';
 import {
   useChangeView,
@@ -65,6 +66,10 @@ export const GridHeaderDesktop: FC<GridHeaderDesktopProps> = (props) => {
               appearance="subtle"
               icon={<Icons.ChevronDown />}
               iconPosition="after"
+              style={{
+                fontSize: tokens.fontSizeBase400,
+                fontWeight: tokens.fontWeightMedium,
+              }}
             >
               {selectedView.localizedNames?.[language] ?? selectedView.name}
             </Button>
@@ -97,6 +102,7 @@ export const GridHeaderDesktop: FC<GridHeaderDesktopProps> = (props) => {
           placeholder={appStrings.searchPlaceholder}
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
+          appearance="filled-darker"
         />
       </div>
     </div>

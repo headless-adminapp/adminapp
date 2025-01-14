@@ -213,6 +213,7 @@ export const TableHeaderFilterCell: FC<
         maxWidth: minWidth,
         display: 'flex',
         alignItems: 'center',
+        fontWeight: tokens.fontWeightMedium,
         // pointerEvents: disableFilter && disableSort ? 'none' : 'auto',
       }}
       onClick={(event) => {

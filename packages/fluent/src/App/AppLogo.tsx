@@ -37,7 +37,7 @@ export const AppLogo: FC<AppLogoProps> = ({ logo, title }) => {
           height: 32,
         }}
       >
-        <img src={logo.image} alt={title} style={{ width: 24, height: 24 }} />
+        <img src={logo.image} alt={title} style={{ width: 32, height: 32 }} />
       </div>
     );
   }

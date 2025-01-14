@@ -41,6 +41,17 @@ import { adjustTableHeight } from './utils';
 
 const useStyles = makeStyles({
   root: {
+    '[aria-selected="true"]': {
+      background: tokens.colorBrandBackground2,
+
+      '& .fui-TableSelectionCell': {
+        background: 'inherit',
+      },
+
+      '& .tableCellAction': {
+        background: 'inherit',
+      },
+    },
     '&:hover': {
       // background: tokens.colorNeutralForeground1Hover,
       '& .fui-TableSelectionCell': {
@@ -303,7 +314,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
                 display: 'flex',
                 position: 'sticky',
                 top: 0,
-                background: tokens.colorNeutralBackground3,
+                background: tokens.colorNeutralBackground1,
                 zIndex: 2,
               }}
             >
@@ -315,6 +326,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
                     top: 0,
                     display: 'flex',
                     minWidth: 'calc(100% - 16px)',
+                    borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,
                   }}
                 >
                   {headerGroup.headers.map((header) =>
@@ -341,6 +353,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
                 return (
                   <TableRow
                     key={row.id}
+                    aria-selected={row.getIsSelected()}
                     className={mergeClasses(styles.root)}
                     style={{
                       display: 'flex',

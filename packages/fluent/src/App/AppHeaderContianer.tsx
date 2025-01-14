@@ -78,7 +78,9 @@ export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
             color: 'white',
           }}
         >
-          <AppLogo logo={app.logo} title={app.title} />
+          <div style={{ display: 'flex', paddingLeft: 4, paddingRight: 6 }}>
+            <AppLogo logo={app.logo} title={app.title} />
+          </div>
           <Subtitle2 style={{ paddingLeft: 4 }}>{app.title}</Subtitle2>
         </div>
       </div>
