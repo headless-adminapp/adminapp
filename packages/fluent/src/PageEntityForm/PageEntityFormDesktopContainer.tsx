@@ -15,6 +15,7 @@ import {
   useFormInstance,
   useFormIsDirty,
   useFormNotifications,
+  useProcessFlowSteps,
   useRecordId,
   useRecordTitle,
   useSelectedForm,
@@ -36,6 +37,7 @@ import { FormTab } from '../form/layout/FormTab';
 import { CommandContainer } from './CommandContainer';
 import { FormTabRelated } from './FormTabRelated';
 import { usePageEntityFormStrings } from './PageEntityFormStringContext';
+import { ProcessFlow } from './ProcessFlow';
 import { RelatedItemInfo, RelatedViewSelector } from './RelatedViewSelector';
 import { SectionContainer } from './SectionContainer';
 
@@ -57,6 +59,7 @@ export const PageEntityFormDesktopContainer: FC = () => {
   const schema = useDataFormSchema();
 
   const formConfig = useSelectedForm();
+  const processFlowSteps = useProcessFlowSteps();
 
   const setActiveTab = useContextValueSetter(
     DataFormContext,
@@ -225,6 +228,9 @@ export const PageEntityFormDesktopContainer: FC = () => {
               )}
             </div>
           </div>
+          {!!processFlowSteps?.length && (
+            <ProcessFlow height={28} rounded={false} items={processFlowSteps} />
+          )}
           <div
             style={{ display: 'flex', paddingBottom: tokens.spacingVerticalS }}
           >
@@ -278,15 +284,4 @@ export const PageEntityFormDesktopContainer: FC = () => {
       </FormBody>
     </div>
   );
-  // return (
-  //   <Fragment>
-  //     <PageEntityViewDesktopFrame
-  //       commandBar={<CommandContainer />}
-  //       header={<GridHeaderContainer />}
-  //       content={<GridTableContainer />}
-  //       footer={<GridPaginationContainer />}
-  //     />
-  //     {/* <CustomizeColumnsContainer /> */}
-  //   </Fragment>
-  // );
 };

@@ -9,6 +9,7 @@ import {
   tokens,
 } from '@fluentui/react-components';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
+import { isColorDark } from '@headless-adminapp/app/utils/color';
 import { CardView } from '@headless-adminapp/core/experience/view';
 import {
   InferredSchemaType,
@@ -135,14 +136,21 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
                 return null;
               }
 
+              const bgColor = choice.color;
+              const color = bgColor
+                ? isColorDark(bgColor)
+                  ? '#FFFFFF'
+                  : '#000000'
+                : undefined;
+
               return (
                 <Tag
                   key={column.name as string}
                   size="extra-small"
                   appearance="filled"
                   style={{
-                    background: choice.color,
-                    color: 'white',
+                    background: bgColor,
+                    color: color,
                     height: 16,
                     display: 'flex',
                     alignItems: 'center',

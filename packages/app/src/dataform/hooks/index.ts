@@ -10,3 +10,4 @@ export * from './useRecordId';
 export * from './useRecordTitle';
 export * from './useSelectedForm';
 export * from './useLoadFormGridPage';
+export * from './useProcessFlowSteps';

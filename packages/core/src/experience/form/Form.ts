@@ -2,6 +2,7 @@ import { SchemaAttributes } from '../../schema';
 import { AllowAsync, Localized } from '../../types';
 import { Metadata } from '../types';
 import { EditableGridCloneAttribute } from './EditableGridCloneAttribute';
+import { ProcessFlowInfo } from './ProcessFlowInfo';
 import { Tab } from './Tab';
 
 export interface Form<S extends SchemaAttributes = SchemaAttributes>
@@ -22,6 +23,7 @@ export interface FormExperience<S extends SchemaAttributes = SchemaAttributes> {
   >;
   includeAttributes?: Array<keyof S>; // additional attributes to include in the form which is not included by any controls
   relatedItems?: FormRelatedItemInfo[] | null; // undefined will use default related items // null will hide related items
+  processFlow?: ProcessFlowInfo;
 }
 
 export interface FormRelatedItemInfo {
