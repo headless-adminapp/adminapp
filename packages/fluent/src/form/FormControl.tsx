@@ -5,11 +5,11 @@ import { JSX, useCallback, useMemo } from 'react';
 import { CurrencyControl } from './controls/CurrencyControl';
 import { DateControl } from './controls/DateControl';
 import { DateTimeControl } from './controls/DateTimeControl';
+import { DecimalControl } from './controls/DecimalControl';
 import { EmailControl } from './controls/EmailControl';
 import { LookupControl } from './controls/LookupControl';
 import MultiSelectControl from './controls/MultiSelectControl';
 import { MultiSelectLookupControl } from './controls/MultiSelectLookupControl';
-import { NumberControl } from './controls/NumberControl';
 import { PasswordControl } from './controls/PasswordControl';
 import SelectControl from './controls/SelectControl';
 import { SwitchControl } from './controls/SwitchControl';
@@ -55,7 +55,7 @@ function Control<T>(props: FormControlProps<T>): JSX.Element {
       );
     case 'number':
       return (
-        <NumberControl value={value} onChange={onChange} {...(rest as any)} />
+        <DecimalControl value={value} onChange={onChange} {...(rest as any)} />
       );
     case 'currency':
       return (

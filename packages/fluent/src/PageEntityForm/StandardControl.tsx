@@ -13,11 +13,13 @@ import { CurrencyControl } from '../form/controls/CurrencyControl';
 import { DateControl } from '../form/controls/DateControl';
 import { DateRangeControl } from '../form/controls/DateRangeControl';
 import { DateTimeControl } from '../form/controls/DateTimeControl';
+import { DecimalControl } from '../form/controls/DecimalControl';
+import { DurationControl } from '../form/controls/DurationControl';
 import { EmailControl } from '../form/controls/EmailControl';
+import { IntegerControl } from '../form/controls/IntegerControl';
 import { LookupControl } from '../form/controls/LookupControl';
 import MultiSelectControl from '../form/controls/MultiSelectControl';
 import { MultiSelectLookupControl } from '../form/controls/MultiSelectLookupControl';
-import { NumberControl } from '../form/controls/NumberControl';
 import { RichTextControl } from '../form/controls/RichTextControl';
 import SelectControl from '../form/controls/SelectControl';
 import { SwitchControl } from '../form/controls/SwitchControl';
@@ -152,23 +154,69 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           return <Fragment />;
       }
     case 'number': {
-      const Control =
-        componentStore.getComponent<typeof NumberControl>(
-          'Form.NumberControl'
-        ) ?? NumberControl;
+      switch (attribute.format) {
+        case 'decimal': {
+          const Control =
+            componentStore.getComponent<typeof DecimalControl>(
+              'Form.DecimalControl'
+            ) ?? DecimalControl;
 
-      return (
-        <Control
-          name={name}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
-          error={isError}
-          disabled={isDisabled}
-          readOnly={readOnly}
-        />
-      );
+          return (
+            <Control
+              name={name}
+              placeholder={placeholder}
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={isError}
+              disabled={isDisabled}
+              readOnly={readOnly}
+              decimalPlaces={attribute.decimalPlaces}
+            />
+          );
+        }
+        case 'integer': {
+          const Control =
+            componentStore.getComponent<typeof IntegerControl>(
+              'Form.IntegerControl'
+            ) ?? IntegerControl;
+
+          return (
+            <Control
+              name={name}
+              placeholder={placeholder}
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={isError}
+              disabled={isDisabled}
+              readOnly={readOnly}
+            />
+          );
+        }
+        case 'duration': {
+          const Control =
+            componentStore.getComponent<typeof DurationControl>(
+              'Form.DurationControl'
+            ) ?? DurationControl;
+
+          return (
+            <Control
+              name={name}
+              placeholder={placeholder}
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={isError}
+              disabled={isDisabled}
+              readOnly={readOnly}
+            />
+          );
+        }
+        default: {
+          return <Fragment />;
+        }
+      }
     }
 
     case 'date': {

@@ -1,5 +1,7 @@
+import { tokens } from '@fluentui/react-components';
 import { DatePicker } from '@fluentui/react-datepicker-compat';
 import { useLocale } from '@headless-adminapp/app/locale';
+import { Icons } from '@headless-adminapp/icons';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
@@ -52,31 +54,19 @@ export function DateControl({
         )
       }
       strings={datePickerStrings}
-      // inputFormat={inputFormat}
-      // value={value ? new Date(value) : null}
-      // onChange={(date) => onChange?.(date ? date.toISOString() : null)}
-      // styles={{
-      //   input: {
-      //     ...(borderOnFocusOnly &&
-      //       !error && {
-      //         '&:not(:hover):not(:focus)': {
-      //           borderColor: 'transparent',
-      //           backgroundColor: 'transparent',
-      //         },
-      //       }),
-      //   },
-      //   root: {
-      //     '&:not(:hover):not(:focus) .mantine-Input-rightSection': {
-      //       display: 'none',
-      //     },
-      //     '& td': {
-      //       padding: '0px !important',
-      //     },
-      //     '& thead tr th': {
-      //       borderBottom: 'none !important',
-      //     },
-      //   },
-      // }}
+      contentAfter={
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginRight: -4,
+            color: tokens.colorNeutralForeground2,
+          }}
+        >
+          <Icons.Calendar size={20} />
+        </div>
+      }
     />
   );
 }

@@ -4,11 +4,11 @@ import { JSX } from 'react';
 import { CurrencyControlProps } from './controls/CurrencyControl';
 import { DateControlProps } from './controls/DateControl';
 import { DateTimeControlProps } from './controls/DateTimeControl';
+import { DecimalControlProps } from './controls/DecimalControl';
 import { EmailControlProps } from './controls/EmailControl';
 import { LookupControlProps } from './controls/LookupControl';
 import { MultiSelectControlProps } from './controls/MultiSelectControl';
 import { MultiSelectLookupControlProps } from './controls/MultiSelectLookupControl';
-import { NumberControlProps } from './controls/NumberControl';
 import { PasswordControlProps } from './controls/PasswordControl';
 import { SelectControlProps } from './controls/SelectControl';
 import { SwitchControlProps } from './controls/SwitchControl';
@@ -47,7 +47,7 @@ export type PasswordFormControlProps = BaseFormControlProps &
   };
 
 export type NumberFormControlProps = BaseFormControlProps &
-  NumberControlProps & {
+  DecimalControlProps & {
     type: 'number';
   };
 

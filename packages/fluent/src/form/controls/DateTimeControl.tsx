@@ -1,4 +1,6 @@
+import { tokens } from '@fluentui/react-components';
 import { DatePicker } from '@fluentui/react-datepicker-compat';
+import { Icons } from '@headless-adminapp/icons';
 import dayjs from 'dayjs';
 
 // import { useLocale } from '@react-adminapp/components';
@@ -43,32 +45,22 @@ export function DateTimeControl({
       // minDate={minDate}
       disabled={disabled}
       readOnly={readOnly}
-      // inputFormat={inputFormat}
       value={value ? new Date(value) : null}
       onSelectDate={(date) => onChange?.(date ? date.toISOString() : null)}
-      // onChange={(date) => onChange?.(date ? date.toISOString() : null)}
-      // styles={{
-      //   input: {
-      //     ...(borderOnFocusOnly &&
-      //       !error && {
-      //         '&:not(:hover):not(:focus)': {
-      //           borderColor: 'transparent',
-      //           backgroundColor: 'transparent',
-      //         },
-      //       }),
-      //   },
-      //   root: {
-      //     '&:not(:hover):not(:focus) .mantine-Input-rightSection': {
-      //       display: 'none',
-      //     },
-      //     '& td': {
-      //       padding: '0px !important',
-      //     },
-      //     '& thead tr th': {
-      //       borderBottom: 'none !important',
-      //     },
-      //   },
-      // }}
+      allowTextInput={true}
+      contentAfter={
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginRight: -4,
+            color: tokens.colorNeutralForeground2,
+          }}
+        >
+          <Icons.Calendar size={20} />
+        </div>
+      }
     />
   );
 }
