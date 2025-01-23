@@ -1,7 +1,7 @@
 import { useContextSelector } from '@headless-adminapp/app/mutable/context';
-import { BoardColumnContext, BoardContext } from '../context';
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
-import { BoardColumnConfig, BoardConfig } from '../types';
+
+import { BoardColumnContext } from '../context';
+import { BoardColumnConfig } from '../types';
 
 export function useBoardColumnConfig() {
   return useContextSelector(

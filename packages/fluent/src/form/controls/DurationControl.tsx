@@ -101,7 +101,7 @@ const options = [
   },
 ];
 
-export type DurationControlProps = ControlProps<number> & {};
+export type DurationControlProps = ControlProps<number>;
 
 export const DurationControl: FC<DurationControlProps> = ({
   value,

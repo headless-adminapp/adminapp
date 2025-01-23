@@ -1,3 +1,4 @@
+import { LookupAttribute } from '../attributes';
 import { Schema, SchemaAttributes } from '../schema';
 import { ISchemaStore } from './ISchemaStore';
 
@@ -24,5 +25,41 @@ export class SchemaStore<SA extends SchemaAttributes = SchemaAttributes>
     }
 
     return this.schemas[logicalName] as unknown as Schema<S>;
+  }
+
+  validate() {
+    const allSchemas = Object.values(this.schemas);
+
+    for (const schema of allSchemas) {
+      const primaryAttribute = schema.attributes[schema.primaryAttribute];
+
+      if (!primaryAttribute) {
+        throw new Error(
+          `Schema ${schema.logicalName} does not have primary attribute`
+        );
+      }
+
+      if (primaryAttribute.type !== 'string') {
+        throw new Error(
+          `Primary attribute ${schema.primaryAttribute as string} of schema ${
+            schema.logicalName
+          } must be of type string`
+        );
+      }
+
+      const lookupAttributes = Object.entries(schema.attributes).filter(
+        ([_, attr]) => attr.type === 'lookup'
+      ) as [string, LookupAttribute][];
+
+      for (const [key, lookupAttribute] of lookupAttributes) {
+        const lookupSchema = this.schemas[lookupAttribute.entity];
+
+        if (!lookupSchema) {
+          throw new Error(
+            `Schema ${schema.logicalName} has lookup attribute ${key} with target ${lookupAttribute.entity} which does not exist`
+          );
+        }
+      }
+    }
   }
 }

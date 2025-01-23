@@ -36,7 +36,11 @@ export function defineModel<S extends SequelizeRequiredSchemaAttributes>(
           acc[key] = { type: DataTypes.BOOLEAN };
           break;
         case 'date':
-          acc[key] = { type: DataTypes.DATEONLY };
+          if (attribute.format === 'datetime') {
+            acc[key] = { type: DataTypes.DATE };
+          } else {
+            acc[key] = { type: DataTypes.DATEONLY };
+          }
           break;
         case 'number':
           acc[key] = { type: DataTypes.NUMBER };

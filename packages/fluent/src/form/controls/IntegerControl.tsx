@@ -18,14 +18,13 @@ export function IntegerControl({
   borderOnFocusOnly,
   readOnly,
 }: IntegerControlProps) {
-  console.log('IntegerControl', value);
   return (
     <SpinButton
       appearance="filled-darker"
       placeholder={placeholder}
       id={id}
       name={name}
-      value={value}
+      value={value ?? null}
       onChange={(e, data) => {
         if (data.value !== undefined) {
           onChange?.(data.value);

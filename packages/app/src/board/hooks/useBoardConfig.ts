@@ -1,6 +1,7 @@
 import { useContextSelector } from '@headless-adminapp/app/mutable/context';
-import { BoardContext } from '../context';
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
+
+import { BoardContext } from '../context';
 import { BoardConfig } from '../types';
 
 export function useBoardConfig<

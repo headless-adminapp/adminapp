@@ -9,6 +9,7 @@ declare module '@headless-adminapp/icons/types' {
     Eye: Icon;
     EyeOff: Icon;
     Calendar: Icon;
+    Clock: Icon;
 
     // arrows
     ArrowLeft: Icon;

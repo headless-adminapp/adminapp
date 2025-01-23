@@ -1,4 +1,9 @@
-import type { Attribute } from '@headless-adminapp/core/attributes';
+import type {
+  AttachmentsAttribute,
+  Attribute,
+  StringAttribute,
+} from '@headless-adminapp/core/attributes';
+import { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
 import {
   Form,
   SectionEditableGridControl,
@@ -508,102 +513,195 @@ export const generateValidationSchema = memoize(
     })
 );
 
+function createAttributeValidationSchema(attribute: Attribute): yup.Schema {
+  let validationSchema: yup.Schema;
+
+  switch (attribute.type) {
+    case 'string':
+      validationSchema = yup.string().nullable();
+      break;
+    case 'number':
+      validationSchema = yup.number().nullable();
+      break;
+    case 'attachments':
+    case 'choices':
+    case 'lookups':
+      validationSchema = yup.array().nullable();
+      break;
+    default:
+      validationSchema = yup.mixed().nullable();
+      break;
+  }
+
+  return validationSchema;
+}
+
+function extendAttributeRequiredValidationSchema({
+  attribute,
+  validationSchema,
+  label,
+  strings,
+}: {
+  attribute: AttributeBase;
+  validationSchema: yup.Schema;
+  strings: FormValidationStringSet;
+  label: string;
+}): yup.Schema {
+  if (attribute.required) {
+    validationSchema = validationSchema.required(
+      `${label}: ${strings.required}`
+    );
+  }
+
+  return validationSchema;
+}
+
+function extendAttributeValidationSchema({
+  attribute,
+  validationSchema,
+  label,
+  strings,
+}: {
+  attribute: Attribute;
+  validationSchema: yup.Schema;
+  strings: FormValidationStringSet;
+  label: string;
+}): yup.Schema {
+  switch (attribute.type) {
+    case 'string':
+      validationSchema = extendAttributeStringValidationSchema({
+        attribute,
+        validationSchema: validationSchema as yup.StringSchema,
+        label,
+        strings,
+      });
+
+      break;
+    case 'attachments':
+      validationSchema = extendAttributeAttachmentsValidationSchema({
+        attribute,
+        validationSchema: validationSchema as yup.ArraySchema<any, any>,
+        label,
+        strings,
+      });
+      break;
+    default:
+      break;
+  }
+
+  return validationSchema;
+}
+
+function extendAttributeStringValidationSchema({
+  attribute,
+  validationSchema,
+  label,
+  strings,
+}: {
+  attribute: StringAttribute;
+  validationSchema: yup.StringSchema;
+  strings: FormValidationStringSet;
+  label: string;
+}): yup.Schema {
+  if (attribute.maxLength) {
+    // extend the validation schema with the max length
+    validationSchema = validationSchema.max(
+      attribute.maxLength,
+      `${label}: ${strings.maxLength}`
+    );
+  }
+
+  if (attribute.minLength) {
+    // extend the validation schema with the min length
+    validationSchema = validationSchema.min(
+      attribute.minLength,
+      `${label}: ${strings.minLength}`
+    );
+  }
+
+  if (attribute.pattern) {
+    // extend the validation schema with the pattern
+    validationSchema = validationSchema.matches(
+      new RegExp(attribute.pattern),
+      `${label}: ${strings.invalidFormat}`
+    );
+  }
+
+  if (attribute.format === 'email') {
+    // extend the validation schema with the email format
+    validationSchema = validationSchema.email(
+      `${label}: ${strings.invalidEmail}`
+    );
+  } else if (attribute.format === 'phone') {
+    // extend the validation schema with the phone format
+    validationSchema = validationSchema.matches(
+      /^(\+\d{1,2}\s?)?\d{10}$/,
+      `${label}: ${strings.invalidPhoneNumber}`
+    );
+  }
+
+  return validationSchema;
+}
+
+function extendAttributeAttachmentsValidationSchema({
+  attribute,
+  validationSchema,
+  label,
+  strings,
+}: {
+  attribute: AttachmentsAttribute;
+  validationSchema: yup.ArraySchema<any, any>;
+  strings: FormValidationStringSet;
+  label: string;
+}): yup.Schema {
+  if (attribute.required) {
+    // extend the validation schema with the min length
+    validationSchema = validationSchema.min(1, `${label}: ${strings.required}`);
+  }
+
+  if (attribute.maxSize) {
+    // extend the validation schema with the max size
+    validationSchema = validationSchema.test(
+      'fileSize',
+      `${label}: ${strings.fileSizeExceeded}`,
+      (value) => {
+        if (!value) {
+          return true;
+        }
+
+        return value.every(
+          (file: any) => file?.size && file.size <= attribute.maxSize!
+        );
+      }
+    );
+  }
+
+  return validationSchema;
+}
+
 export const generateAttributeValidationSchema = memoize(
   function generateAttributeValidationSchema(
     attribute: Attribute,
     language: string,
     strings: FormValidationStringSet
   ) {
-    let validationSchema: yup.Schema;
-
-    switch (attribute.type) {
-      case 'string':
-        validationSchema = yup.string().nullable();
-        break;
-      case 'number':
-        validationSchema = yup.number().nullable();
-        break;
-      case 'attachments':
-      case 'choices':
-      case 'lookups':
-        validationSchema = yup.array().nullable();
-        break;
-      default:
-        validationSchema = yup.mixed().nullable();
-        break;
-    }
+    let validationSchema = createAttributeValidationSchema(attribute);
 
     const label = localizedLabel(language, attribute);
 
-    if (attribute.required) {
-      validationSchema = validationSchema.required(
-        `${label}: ${strings.required}`
-      );
-    }
+    validationSchema = extendAttributeRequiredValidationSchema({
+      attribute,
+      validationSchema,
+      label,
+      strings,
+    });
 
-    switch (attribute.type) {
-      case 'string':
-        if (attribute.maxLength) {
-          validationSchema = (validationSchema as yup.StringSchema).max(
-            attribute.maxLength,
-            `${label}: ${strings.maxLength}`
-          );
-        }
-
-        if (attribute.minLength) {
-          validationSchema = (validationSchema as yup.StringSchema).min(
-            attribute.minLength,
-            `${label}: ${strings.minLength}`
-          );
-        }
-
-        if (attribute.pattern) {
-          validationSchema = (validationSchema as yup.StringSchema).matches(
-            new RegExp(attribute.pattern),
-            `${label}: ${strings.invalidFormat}`
-          );
-        }
-
-        if (attribute.format === 'email') {
-          validationSchema = (validationSchema as yup.StringSchema).email(
-            `${label}: ${strings.invalidEmail}`
-          );
-        } else if (attribute.format === 'phone') {
-          validationSchema = (validationSchema as yup.StringSchema).matches(
-            /^(\+\d{1,2}\s?)?\d{10}$/,
-            `${label}: ${strings.invalidPhoneNumber}`
-          );
-        }
-
-        break;
-      case 'attachments':
-        if (attribute.required) {
-          validationSchema = (
-            validationSchema as yup.ArraySchema<any, any>
-          ).min(1, `${label}: ${strings.required}`);
-        }
-
-        if (attribute.maxSize) {
-          validationSchema = (
-            validationSchema as yup.ArraySchema<any, any>
-          ).test(
-            'fileSize',
-            `${label}: ${strings.fileSizeExceeded}`,
-            (value) => {
-              if (!value) {
-                return true;
-              }
-
-              return value.every(
-                (file: any) => file?.size && file.size <= attribute.maxSize!
-              );
-            }
-          );
-        }
-        break;
-      default:
-        break;
-    }
+    validationSchema = extendAttributeValidationSchema({
+      attribute,
+      validationSchema,
+      label,
+      strings,
+    });
 
     validationSchema = validationSchema.transform((value) => {
       if (value === '') {

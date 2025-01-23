@@ -18,6 +18,7 @@ export const iconSet = defineIconSet({
   Eye: bundleLazyIcon('Eye24Regular', 'Eye24Filled'),
   EyeOff: bundleLazyIcon('EyeOff24Regular', 'EyeOff24Filled'),
   Calendar: bundleLazyIcon('CalendarMonth24Regular', 'CalendarMonth24Regular'),
+  Clock: bundleLazyIcon('Clock24Regular', 'Clock24Filled'),
 
   // arrows
   ArrowLeft: bundleLazyIcon('ArrowLeft24Regular', 'ArrowLeft24Filled'),
