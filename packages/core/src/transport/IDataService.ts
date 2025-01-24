@@ -49,5 +49,5 @@ export interface IDataService {
 
   customAction<T = unknown>(actionName: string, payload: unknown): Promise<T>;
 
-  supportedOperators?: Record<AttributeType, OperatorKey[]> | undefined;
+  supportedOperators?: Record<AttributeType, OperatorKey[]>;
 }

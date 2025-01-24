@@ -18,7 +18,8 @@ export function fileToObject(file: File): Promise<FileObject> {
       });
     };
     reader.onerror = (error) => {
-      reject(error);
+      console.error(error);
+      reject(new Error(`Error reading file: ${file.name}`));
     };
     reader.readAsDataURL(file);
   });

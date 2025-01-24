@@ -8,7 +8,7 @@ export { iconSetStore as Icons } from './store';
 export { IconPlaceholder } from './IconPlaceholder';
 
 export function iconResolver<T extends boolean | Icon>(
-  name: keyof IconSet | (string & {}),
+  name: keyof IconSet | {},
   placeholder?: T
 ): T extends true | Icon ? Icon : Icon | undefined {
   const icon = resolveIcon(name, iconSetStore);

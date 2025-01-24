@@ -62,6 +62,7 @@ export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
       <div style={{ display: 'flex', flex: 1, alignItems: 'center', gap: 8 }}>
         {isMobile && (
           <div
+            role="button"
             style={{
               cursor: 'pointer',
             }}

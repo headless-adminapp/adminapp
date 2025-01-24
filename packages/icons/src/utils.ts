@@ -2,7 +2,7 @@ import { IconPlaceholder } from './IconPlaceholder';
 import { Icon, IconSet } from './types';
 
 export function resolveIcon<T extends IconSet>(
-  name: keyof T | (string & {}),
+  name: keyof T | {},
   iconSet: T
 ): Icon | undefined {
   return (iconSet as any)[name];

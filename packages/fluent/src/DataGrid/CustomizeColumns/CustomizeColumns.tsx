@@ -24,8 +24,8 @@ import { AddColumns } from './AddColumns';
 import { ColumnItem } from './ColumnItem';
 
 interface CustomizeColumnsProps {
-  opened: boolean;
-  onClose: () => void;
+  readonly opened: boolean;
+  readonly onClose: () => void;
   // strings?: CustomizeColumnStrings;
 }
 

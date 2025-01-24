@@ -1,15 +1,19 @@
 import { tokens } from '@fluentui/react-components';
 import { DatePicker } from '@fluentui/react-datepicker-compat';
 import { TimePicker } from '@fluentui/react-timepicker-compat';
+import { useLocale } from '@headless-adminapp/app/locale';
 import { Icons } from '@headless-adminapp/icons';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import { useEffect, useRef, useState } from 'react';
 
-// import { useLocale } from '@react-adminapp/components';
 import { ControlProps } from './types';
 
 dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export interface DateTimeControlProps extends ControlProps<string> {
   maxDate?: Date;
@@ -26,22 +30,28 @@ export function DateTimeControl({
   placeholder,
   disabled,
   readOnly,
-}: DateTimeControlProps) {
-  // const { shortDate: dateFormat } = useLocale();
+}: Readonly<DateTimeControlProps>) {
+  const {
+    dateFormats: { short: dateFormat },
+    timeFormats: { short: timeFormat },
+    timezone,
+  } = useLocale();
   const [internalTimeValue, setInternalTimeValue] = useState<string>(
-    value ? dayjs(value).format('hh:mm A') : ''
+    value ? dayjs(value).tz(timezone).format(timeFormat) : ''
   );
 
   const internalTimeValueRef = useRef(internalTimeValue);
   internalTimeValueRef.current = internalTimeValue;
 
   useEffect(() => {
-    const updatedValue = value ? dayjs(value).format('hh:mm A') : '';
+    const updatedValue = value
+      ? dayjs(value).tz(timezone).format(timeFormat)
+      : '';
 
     if (internalTimeValueRef.current !== updatedValue) {
       setInternalTimeValue(updatedValue);
     }
-  }, [value]);
+  }, [value, timezone, timeFormat]);
 
   return (
     <div
@@ -58,7 +68,9 @@ export function DateTimeControl({
         onBlur={() => onBlur?.()}
         placeholder={placeholder}
         appearance="filled-darker"
-        formatDate={(date) => (date ? dayjs(date).format('YYYY-MM-DD') : '')}
+        formatDate={(date) =>
+          date ? dayjs(date).tz(timezone).format(dateFormat) : ''
+        }
         disabled={disabled}
         readOnly={readOnly}
         value={value ? new Date(value) : null}
@@ -66,12 +78,13 @@ export function DateTimeControl({
           if (!date) {
             onChange?.(null);
           } else if (!value) {
-            onChange?.(date.toISOString());
+            onChange?.(dayjs(date).tz(timezone, true).toISOString());
           } else {
             onChange?.(
               dayjs(date)
-                .set('hour', dayjs(value).hour())
-                .set('minute', dayjs(value).minute())
+                .tz(timezone, true)
+                .set('hour', dayjs(value).tz(timezone).hour())
+                .set('minute', dayjs(value).tz(timezone).minute())
                 .toISOString()
             );
           }
@@ -106,23 +119,30 @@ export function DateTimeControl({
         freeform
         value={internalTimeValue}
         onTimeChange={(_, data) => {
-          const dateValue = value ? new Date(value) : new Date();
+          const dateValue = value
+            ? dayjs(value).tz(timezone)
+            : dayjs().tz(timezone);
           if (data.selectedTime) {
             onChange?.(
-              dayjs(dateValue)
+              dateValue
                 .set('hour', data.selectedTime.getHours())
                 .set('minute', data.selectedTime.getMinutes())
                 .toISOString()
             );
           } else if (data.selectedTimeText) {
-            let resolvedTime = resolveTimeValue(data.selectedTimeText);
+            let resolvedTime = resolveTimeValue(
+              data.selectedTimeText,
+              timeFormat
+            );
 
             if (!resolvedTime) {
-              setInternalTimeValue(value ? dayjs(value).format('hh:mm A') : '');
+              setInternalTimeValue(
+                value ? dayjs(value).format(timeFormat) : ''
+              );
               return;
             }
 
-            const newValue = dayjs(dateValue)
+            const newValue = dateValue
               .set('hour', resolvedTime.getHours())
               .set('minute', resolvedTime.getMinutes())
               .toISOString();
@@ -132,7 +152,7 @@ export function DateTimeControl({
             }
 
             setInternalTimeValue(
-              newValue ? dayjs(newValue).format('hh:mm A') : ''
+              newValue ? dayjs(newValue).tz(timezone).format(timeFormat) : ''
             );
           }
         }}
@@ -160,14 +180,12 @@ export function DateTimeControl({
   );
 }
 
-function resolveTimeValue(value: string): Date | undefined {
+function resolveTimeValue(value: string, timeFormat: string): Date | undefined {
   if (!value) {
     return;
   }
 
-  const time = dayjs(value, 'hh:mm A');
-
-  console.log('resolveTimeValue', time);
+  const time = dayjs(value, timeFormat);
 
   if (!time.isValid()) {
     return;
