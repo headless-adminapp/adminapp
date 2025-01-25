@@ -125,7 +125,7 @@ export function SubgridControl(props: SubgridControlProps) {
       views={viewLookup}
       onChangeView={setViewId}
       commands={(props.associated ? subgridCommands : commands) as any}
-      isSubGrid={props.associated ? true : false}
+      isSubGrid={!!props.associated}
       associated={props.associated}
       extraFilter={extraFilter}
       allowViewSelection={props.allowViewSelection ?? false}

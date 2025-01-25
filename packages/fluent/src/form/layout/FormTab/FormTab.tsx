@@ -55,7 +55,7 @@ const FormTabInternal: FC<PropsWithChildren<FormTabProps>> = ({
 }) => {
   const divRef = useRef<HTMLDivElement>(null);
 
-  const divSize = useElementSize(divRef);
+  const divSize = useElementSize(divRef, 100);
 
   const padding = 0;
   // const columnCount = 2;

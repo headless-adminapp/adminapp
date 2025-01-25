@@ -42,48 +42,8 @@ export const OverflowCommandBar: FC<OverflowCommandBarProps> = ({
 
               switch (item.type) {
                 case 'menu':
-                  return (
-                    <OverflowItem
-                      key={index}
-                      id={`${groupIndex}-${index}`}
-                      groupId={String(groupIndex)}
-                    >
-                      {renderCommandItem(
-                        `${groupIndex}-${index}`,
-                        item,
-                        language
-                      )}
-                    </OverflowItem>
-                  );
                 case 'button':
-                  return (
-                    <OverflowItem
-                      key={index}
-                      id={`${groupIndex}-${index}`}
-                      groupId={String(groupIndex)}
-                    >
-                      {renderCommandItem(
-                        `${groupIndex}-${index}`,
-                        item,
-                        language
-                      )}
-                    </OverflowItem>
-                  );
                 case 'label':
-                  return (
-                    <OverflowItem
-                      key={index}
-                      id={`${groupIndex}-${index}`}
-                      groupId={String(groupIndex)}
-                    >
-                      {renderCommandItem(
-                        `${groupIndex}-${index}`,
-                        item,
-                        language
-                      )}
-                    </OverflowItem>
-                  );
-
                 case 'icon':
                   return (
                     <OverflowItem

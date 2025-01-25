@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useState } from 'react';
+import { RefObject, useLayoutEffect, useState } from 'react';
 
 interface Size {
   width: number;
@@ -11,7 +11,7 @@ export function useElementSize(
 ) {
   const [size, setSize] = useState<Size>({ width: 0, height: 0 });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     function updateSize() {
       if (elementRef.current) {
         const element = elementRef.current;

@@ -41,6 +41,12 @@ import { ProcessFlow } from './ProcessFlow';
 import { RelatedItemInfo, RelatedViewSelector } from './RelatedViewSelector';
 import { SectionContainer } from './SectionContainer';
 
+let previousCachedActiveTabInfo: {
+  logicalName: string;
+  name: string;
+  relatedItem: RelatedItemInfo | null;
+} | null = null;
+
 export const PageEntityFormDesktopContainer: FC = () => {
   const dataState = useContextSelector(
     DataFormContext,
@@ -72,8 +78,21 @@ export const PageEntityFormDesktopContainer: FC = () => {
   );
 
   useEffect(() => {
-    setActiveTab('general');
-  }, [setActiveTab]);
+    if (
+      previousCachedActiveTabInfo &&
+      previousCachedActiveTabInfo.logicalName === schema.logicalName
+    ) {
+      setActiveTab(previousCachedActiveTabInfo.name);
+      setSelectedRelatedItem(previousCachedActiveTabInfo.relatedItem);
+    } else {
+      setActiveTab(formConfig.experience.tabs[0].name);
+      previousCachedActiveTabInfo = {
+        logicalName: schema.logicalName,
+        name: formConfig.experience.tabs[0].name,
+        relatedItem: null,
+      };
+    }
+  }, [setActiveTab, formConfig, schema]);
 
   const recordTitle = useRecordTitle();
 
@@ -236,7 +255,14 @@ export const PageEntityFormDesktopContainer: FC = () => {
           >
             <TabList
               selectedValue={activeTab}
-              onTabSelect={(e, value) => setActiveTab(value.value as string)}
+              onTabSelect={(e, value) => {
+                setActiveTab(value.value as string);
+                previousCachedActiveTabInfo = {
+                  logicalName: schema.logicalName,
+                  name: value.value as string,
+                  relatedItem: null,
+                };
+              }}
             >
               {formConfig.experience.tabs.map((tab) => (
                 <Tab key={tab.name} value={tab.name}>
@@ -254,6 +280,12 @@ export const PageEntityFormDesktopContainer: FC = () => {
               onSelect={(item) => {
                 setSelectedRelatedItem(item);
                 setActiveTab('related');
+
+                previousCachedActiveTabInfo = {
+                  logicalName: schema.logicalName,
+                  name: 'related',
+                  relatedItem: item,
+                };
               }}
             />
           </div>

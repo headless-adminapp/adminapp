@@ -106,7 +106,7 @@ export function useTableColumns({
     mutableContextCommandState.setValue(contextCommands);
   }, [contextCommands, mutableContextCommandState]);
 
-  const tableWrapperSize = useElementSize(tableWrapperRef);
+  const tableWrapperSize = useElementSize(tableWrapperRef, 100);
 
   const columnWidths = useMemo(() => {
     const availableWidth = Math.max(

@@ -60,16 +60,20 @@ export const FormSubgridContainer: FC<FormSubgridContainerProps> = ({
             style={{
               display: 'flex',
               flexDirection: 'row',
-              gap: 40,
+              gap: 10,
               overflow: 'hidden',
               width: '100%',
               paddingBlock: 4,
             }}
           >
-            <div style={{ flex: 1 }}>
+            <div
+              style={{
+                flex: 1,
+                minWidth: 0,
+              }}
+            >
               {!hideCommandBar && <FormSubgridCommandContainer />}
             </div>
-            <div style={{ flex: 1 }} />
             {!hideSearch && (
               <div
                 style={{
