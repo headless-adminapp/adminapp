@@ -13,6 +13,7 @@ import {
   useRouter,
   useRouteResolver,
 } from '@headless-adminapp/app/route/hooks';
+import { NavPageItem } from '@headless-adminapp/core/experience/app';
 import { IconPlaceholder, Icons } from '@headless-adminapp/icons';
 import { FC, Fragment } from 'react';
 
@@ -54,16 +55,7 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
   onOpenChange,
 }) => {
   const styles = useStyles();
-  const { app, schemaMetadataDic } = useAppContext();
-
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const selectedPath = pathname;
-  const { language } = useLocale();
-
-  const isRouteActive = useIsRouteActive();
-  const routeResolver = useRouteResolver();
+  const { app } = useAppContext();
 
   return (
     <div className={styles.root}>
@@ -81,47 +73,14 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
                   {!group.hideLabel && (
                     <NavSectionHeader>{group.label}</NavSectionHeader>
                   )}
-                  {group.items.map((item, index) => {
-                    const navItem = transformNavPageItem({
-                      item,
-                      schemaMetadataDic: schemaMetadataDic,
-                      language,
-                      routeResolver,
-                    });
-
-                    const Icon =
-                      navItem.icon ?? Icons.Entity ?? IconPlaceholder;
-
-                    const isActive = isRouteActive(selectedPath, item);
-
-                    return (
-                      <NavItem
-                        key={index}
-                        href={navItem.link}
-                        onClick={(event) => {
-                          if (type === 'overlay') {
-                            onOpenChange(false);
-                          }
-                          event.preventDefault();
-                          router.push(navItem.link);
-                        }}
-                        icon={
-                          <Icon
-                            size={20}
-                            filled={isActive}
-                            color={
-                              isActive
-                                ? 'var(--colorNeutralForeground2BrandSelected)'
-                                : undefined
-                            }
-                          />
-                        }
-                        value={isActive ? 'active' : ''}
-                      >
-                        {navItem.label}
-                      </NavItem>
-                    );
-                  })}
+                  {group.items.map((item, index) => (
+                    <Test
+                      key={index}
+                      item={item}
+                      drawerType={type}
+                      onOpenChange={onOpenChange}
+                    />
+                  ))}
                 </Fragment>
               ))}
             </Fragment>
@@ -129,5 +88,60 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
         </NavDrawerBody>
       </NavDrawer>
     </div>
+  );
+};
+
+interface TestProps {
+  item: NavPageItem;
+  drawerType: DrawerType;
+  onOpenChange: (open: boolean) => void;
+}
+
+const Test: FC<TestProps> = ({ item, onOpenChange, drawerType }) => {
+  const { schemaMetadataDic } = useAppContext();
+
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const selectedPath = pathname;
+  const { language } = useLocale();
+
+  const isRouteActive = useIsRouteActive();
+  const routeResolver = useRouteResolver();
+
+  const navItem = transformNavPageItem({
+    item,
+    schemaMetadataDic: schemaMetadataDic,
+    language,
+    routeResolver,
+  });
+
+  const Icon = navItem.icon ?? Icons.Entity ?? IconPlaceholder;
+
+  const isActive = isRouteActive(selectedPath, item);
+
+  return (
+    <NavItem
+      href={navItem.link}
+      onClick={(event) => {
+        if (drawerType === 'overlay') {
+          onOpenChange(false);
+        }
+        event.preventDefault();
+        router.push(navItem.link);
+      }}
+      icon={
+        <Icon
+          size={20}
+          filled={isActive}
+          color={
+            isActive ? 'var(--colorNeutralForeground2BrandSelected)' : undefined
+          }
+        />
+      }
+      value={isActive ? 'active' : ''}
+    >
+      {navItem.label}
+    </NavItem>
   );
 };

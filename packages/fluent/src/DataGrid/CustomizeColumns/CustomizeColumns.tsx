@@ -142,9 +142,7 @@ export function CustomizeColumns({ onClose, opened }: CustomizeColumnsProps) {
                 moveItem={moveItem}
                 isFirst={index === 0}
                 isLast={index === items.length - 1}
-                onRemove={() => {
-                  setItems((prev) => prev.filter((_, i) => i !== index));
-                }}
+                onRemove={() => onColumnRemove(item)}
                 stringSet={strings}
               />
             ))}
