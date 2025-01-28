@@ -1,3 +1,4 @@
+import { setFormDefaultParameters } from '@headless-adminapp/app/dataform/utils/defaultParameters';
 import { PageType } from '@headless-adminapp/core/experience/app';
 import { OpenFormOptions } from '@headless-adminapp/core/experience/command';
 import { useCallback } from 'react';
@@ -16,6 +17,10 @@ export function useOpenForm() {
         type: PageType.EntityForm,
         id: options.id,
       });
+
+      if (options.parameters) {
+        setFormDefaultParameters(options.logicalName, options.parameters);
+      }
 
       if (options.replace) {
         router.replace(path);

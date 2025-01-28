@@ -440,6 +440,9 @@ function renderCellContent({
       dateFormat: dateFormats.short,
       timeFormat: timeFormats.short,
       timezone,
+      currencyDisplay: currency.currencyDisplay,
+      currencySign: currency.currencySign,
+      locale: locale.locale,
     }) ?? '';
 
   if (column.plainText) {

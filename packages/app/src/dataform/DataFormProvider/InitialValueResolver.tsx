@@ -9,6 +9,7 @@ import {
   useSelectedForm,
 } from '../hooks';
 import { getInitialValues } from '../utils';
+import { getFormDefaultParameters } from '../utils/defaultParameters';
 
 export function InitialValueResolver() {
   const formConfig = useSelectedForm();
@@ -18,14 +19,14 @@ export function InitialValueResolver() {
   const formInstance = useFormInstance();
 
   const initialValues = useMemo(() => {
+    const defaultParameters = getFormDefaultParameters(schema) ?? {};
     return getInitialValues({
       cloneRecord: undefined,
       form: formConfig,
       record: record,
       recordId: recordId,
       schema: schema,
-      defaultParameters: {},
-      // defaultParameters,
+      defaultParameters,
     });
   }, [formConfig, record, recordId, schema]);
 
