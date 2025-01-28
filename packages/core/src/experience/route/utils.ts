@@ -9,7 +9,9 @@ export const defaultRouteInfo: RouteInfo = {
 
 export function createRouteResolver(routeInfo: RouteInfo): RouteResolver {
   const routeResolver: RouteResolver = (item, basePath) => {
-    basePath = basePath || '';
+    if (!basePath) {
+      basePath = ''; // Replace with default base path
+    }
 
     switch (item.type) {
       case PageType.Dashboard:
@@ -56,7 +58,9 @@ export function createRouteResolver(routeInfo: RouteInfo): RouteResolver {
 
 export function createIsRouteActive(routeInfo: RouteInfo): IsRouteActive {
   const isRouteActive: IsRouteActive = (path, item, basePath) => {
-    basePath = basePath || '';
+    if (!basePath) {
+      basePath = ''; // Replace with default base path
+    }
 
     switch (item.type) {
       case PageType.Dashboard:
@@ -72,7 +76,7 @@ export function createIsRouteActive(routeInfo: RouteInfo): IsRouteActive {
         );
       case PageType.Report:
         return path === `${basePath}/${routeInfo.report}/${item.reportId}`;
-      case PageType.Custom:
+      case PageType.Custom: {
         if (item.noBasePrefix) {
           return path === item.link;
         }
@@ -84,13 +88,12 @@ export function createIsRouteActive(routeInfo: RouteInfo): IsRouteActive {
         }
 
         return path === `${basePath}${link}`;
+      }
       case PageType.External:
         return path === item.link;
       default:
         return false;
     }
-
-    return false;
   };
 
   return isRouteActive;

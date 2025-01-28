@@ -914,7 +914,9 @@ export class MongoServerSdk<
     return { id: params.id, logicalName: params.logicalName };
   }
 
-  private async resolveAutoNumber({}: {}) {}
+  private async resolveAutoNumber() {
+    // TODO
+  }
 
   private transformRecords<SA extends SchemaAttributes>(
     records: any[],

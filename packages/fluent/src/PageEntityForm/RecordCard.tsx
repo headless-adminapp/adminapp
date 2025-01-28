@@ -11,6 +11,7 @@ import {
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
 import { isColorDark } from '@headless-adminapp/app/utils/color';
 import { CardView } from '@headless-adminapp/core/experience/view';
+import { CardViewSecondaryColumn } from '@headless-adminapp/core/experience/view/View';
 import {
   InferredSchemaType,
   Schema,
@@ -61,7 +62,7 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
   cardView,
   record,
   selected,
-}: RecordCardProps<S>) {
+}: Readonly<RecordCardProps<S>>) {
   const styles = useStyles();
 
   const _record = record as any;
@@ -79,7 +80,7 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
       avatarAttribute.type === 'attachment' &&
       avatarAttribute.format === 'image'
     ) {
-      avatarSrc = _record[cardView.avatarColumn];
+      avatarSrc = _record[cardView.avatarColumn]?.url;
     } else if (
       avatarAttribute.type === 'string' &&
       avatarAttribute.format === 'url'
@@ -110,108 +111,14 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
         <Body1 style={{ wordBreak: 'break-all' }}>
           {_record[cardView.primaryColumn]}
         </Body1>
-        {cardView.secondaryColumns?.map((column) => {
-          const value = _record[column.name];
-          if (!value) {
-            return null;
-          }
-
-          const attribute = schema.attributes[column.name];
-
-          let label = '';
-
-          if (column.label === true) {
-            label = attribute.label;
-          } else if (typeof column.label === 'string') {
-            label = column.label;
-          }
-
-          if (column.variant === 'choice') {
-            if (attribute.type === 'choice') {
-              const choice = attribute.options.find(
-                (option) => option.value === value
-              );
-
-              if (!choice) {
-                return null;
-              }
-
-              const bgColor = choice.color;
-              const color = bgColor
-                ? isColorDark(bgColor)
-                  ? '#FFFFFF'
-                  : '#000000'
-                : undefined;
-
-              return (
-                <Tag
-                  key={column.name as string}
-                  size="extra-small"
-                  appearance="filled"
-                  style={{
-                    background: bgColor,
-                    color: color,
-                    height: 16,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {choice.label}
-                </Tag>
-              );
-            }
-
-            if (attribute.type === 'choices') {
-              const choices = attribute.options.filter((option) =>
-                value.includes(option.value)
-              );
-
-              if (!choices.length) {
-                return null;
-              }
-
-              return (
-                <div
-                  key={column.name as string}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    gap: 4,
-                  }}
-                >
-                  {choices.map((choice) => (
-                    <Tag
-                      key={choice.value as string}
-                      size="extra-small"
-                      appearance="filled"
-                      style={{
-                        background: choice.color,
-                        color: 'white',
-                        height: 16,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      {choice.label}
-                    </Tag>
-                  ))}
-                </div>
-              );
-            }
-          }
-
-          return (
-            <Caption1
-              key={column.name as string}
-              style={{ color: tokens.colorNeutralForeground4 }}
-            >
-              {!!label && `${label}: `}
-              {getAttributeFormattedValue(attribute, value)}
-            </Caption1>
-          );
-        })}
+        {cardView.secondaryColumns?.map((column) => (
+          <SecondaryColumnContent
+            key={column.name as string}
+            record={_record}
+            column={column}
+            schema={schema}
+          />
+        ))}
       </div>
       {!!cardView.rightColumn?.length && (
         <div
@@ -267,15 +174,125 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
               );
             }
 
-            <Caption1
-              key={column.name as string}
-              style={{ color: tokens.colorNeutralForeground4 }}
-            >
-              {getAttributeFormattedValue(value, attribute)}
-            </Caption1>;
+            return (
+              <Caption1
+                key={column.name as string}
+                style={{ color: tokens.colorNeutralForeground4 }}
+              >
+                {getAttributeFormattedValue(value, attribute)}
+              </Caption1>
+            );
           })}
         </div>
       )}
     </div>
+  );
+}
+
+function SecondaryColumnContent<S extends SchemaAttributes = SchemaAttributes>({
+  record: _record,
+  column,
+  schema,
+}: Readonly<{
+  record: any;
+  column: CardViewSecondaryColumn<S>;
+  schema: Schema<S>;
+}>) {
+  const value = _record[column.name];
+  if (!value) {
+    return null;
+  }
+
+  const attribute = schema.attributes[column.name];
+
+  let label = '';
+
+  if (column.label === true) {
+    label = attribute.label;
+  } else if (typeof column.label === 'string') {
+    label = column.label;
+  }
+
+  if (column.variant === 'choice') {
+    if (attribute.type === 'choice') {
+      const choice = attribute.options.find((option) => option.value === value);
+
+      if (!choice) {
+        return null;
+      }
+
+      const bgColor = choice.color;
+      let color: string | undefined;
+      if (bgColor) {
+        color = isColorDark(bgColor) ? '#FFFFFF' : '#000000';
+      }
+
+      return (
+        <Tag
+          key={column.name as string}
+          size="extra-small"
+          appearance="filled"
+          style={{
+            background: bgColor,
+            color: color,
+            height: 16,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {choice.label}
+        </Tag>
+      );
+    }
+
+    if (attribute.type === 'choices') {
+      const choices = attribute.options.filter((option) =>
+        value.includes(option.value)
+      );
+
+      if (!choices.length) {
+        return null;
+      }
+
+      return (
+        <div
+          key={column.name as string}
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 4,
+          }}
+        >
+          {choices.map((choice) => (
+            <Tag
+              key={choice.value as string}
+              size="extra-small"
+              appearance="filled"
+              style={{
+                background: choice.color,
+                color: 'white',
+                height: 16,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {choice.label}
+            </Tag>
+          ))}
+        </div>
+      );
+    }
+  }
+
+  return (
+    <Caption1
+      key={column.name as string}
+      style={{ color: tokens.colorNeutralForeground4 }}
+    >
+      {!!label && `${label}: `}
+      {getAttributeFormattedValue(attribute, value)}
+    </Caption1>
   );
 }

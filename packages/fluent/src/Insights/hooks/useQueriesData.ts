@@ -1,4 +1,3 @@
-'use client';
 import { InsightsContext } from '@headless-adminapp/app/insights';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { useDataService } from '@headless-adminapp/app/transport';
@@ -8,7 +7,10 @@ import {
   DataSetItemAllowFunction,
 } from '@headless-adminapp/core/experience/insights';
 import {
+  AggregateAttribute,
   AggregateAttributeFunction,
+  AggregateQuery,
+  InferredAggregateQueryResult,
   InferredTransformedAggregateQueryResult,
 } from '@headless-adminapp/core/transport';
 import { useQueries } from '@tanstack/react-query';
@@ -54,45 +56,7 @@ export function useQueriesData(queries: DataSetItemAllowFunction[]) {
 
         const data = await dataService.retriveAggregate(query);
 
-        const transformedData =
-          data as unknown as InferredTransformedAggregateQueryResult<
-            typeof query.attributes
-          >[];
-
-        Object.entries(query.attributes).forEach(([key, attribute]) => {
-          let transformer: ((value: unknown) => unknown) | undefined =
-            undefined;
-
-          if (attribute.type === 'date') {
-            if (attribute.format) {
-              transformer = (value) =>
-                dayjs(value as string, attribute.format)
-                  .toDate()
-                  .getTime();
-            } else if (attribute.value.type === 'function') {
-              if (
-                attribute.value.value === AggregateAttributeFunction.YearMonth
-              ) {
-                transformer = (value) =>
-                  dayjs(value as string, 'YYYY-MM')
-                    .toDate()
-                    .getTime();
-              }
-            } else {
-              transformer = (value) =>
-                dayjs(value as string)
-                  .toDate()
-                  .getTime();
-            }
-          }
-
-          if (transformer) {
-            transformedData.forEach((item: Record<string, unknown>) => {
-              item[key] = transformer(item[key]);
-            });
-          }
-        });
-
+        const transformedData = transformAggregateData(data, query);
         return transformedData;
       },
     })),
@@ -107,4 +71,53 @@ export function useQueriesData(queries: DataSetItemAllowFunction[]) {
   }, [result]);
 
   return { isPending, isFetching, dataset: data, refetch };
+}
+
+function transformAggregateData(
+  data: InferredAggregateQueryResult<Record<string, AggregateAttribute>>[],
+  query: AggregateQuery<Record<string, AggregateAttribute>>
+) {
+  const transformedData =
+    data as unknown as InferredTransformedAggregateQueryResult<
+      typeof query.attributes
+    >[];
+
+  Object.entries(query.attributes).forEach(([key, attribute]) => {
+    const transformer = getAttributeValueTransformer(attribute);
+
+    if (transformer) {
+      transformedData.forEach((item: Record<string, unknown>) => {
+        item[key] = transformer(item[key]);
+      });
+    }
+  });
+
+  return transformedData;
+}
+
+function getAttributeValueTransformer(attribute: AggregateAttribute) {
+  let transformer: ((value: unknown) => unknown) | undefined = undefined;
+
+  if (attribute.type === 'date') {
+    if (attribute.format) {
+      transformer = (value) =>
+        dayjs(value as string, attribute.format)
+          .toDate()
+          .getTime();
+    } else if (attribute.value.type === 'function') {
+      if (attribute.value.value === AggregateAttributeFunction.YearMonth) {
+        transformer = (value) =>
+          dayjs(value as string, 'YYYY-MM')
+            .toDate()
+            .getTime();
+      }
+    } else {
+      transformer = (value) =>
+        dayjs(value as string)
+          .toDate()
+          .getTime();
+    }
+  }
+
+  return transformer;
 }

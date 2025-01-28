@@ -33,14 +33,18 @@ export type GridView<S extends SchemaAttributes = SchemaAttributes> = {
   columns: ViewColumn<S>[];
 };
 
+export type CardViewSecondaryColumn<
+  S extends SchemaAttributes = SchemaAttributes
+> = {
+  name: keyof S;
+  expandedKey?: string;
+  label?: false | true | string;
+  variant?: 'choice' | 'secondary';
+};
+
 export type CardView<S extends SchemaAttributes = SchemaAttributes> = {
   primaryColumn: keyof S;
-  secondaryColumns?: Array<{
-    name: keyof S;
-    expandedKey?: string;
-    label?: false | true | string;
-    variant?: 'choice' | 'secondary';
-  }>;
+  secondaryColumns?: CardViewSecondaryColumn<S>[];
   showAvatar?: boolean;
   avatarColumn?: keyof S;
   rightColumn?: Array<{
