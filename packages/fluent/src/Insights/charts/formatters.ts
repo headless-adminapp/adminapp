@@ -218,7 +218,7 @@ export function createAxisFormatter(tick: AllAxisTick) {
   }
 }
 
-type Formatter = (value: unknown) => string;
+export type Formatter = (value: unknown) => string;
 
 export function createLongAxisFormatter(tick: AllAxisTick): Formatter {
   switch (tick.type) {

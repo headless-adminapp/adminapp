@@ -10,6 +10,8 @@ import {
 } from '@fluentui/react-components';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
 import { isColorDark } from '@headless-adminapp/app/utils/color';
+import { ChoiceAttribute } from '@headless-adminapp/core/attributes';
+import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
 import { CardView } from '@headless-adminapp/core/experience/view';
 import { CardViewSecondaryColumn } from '@headless-adminapp/core/experience/view/View';
 import {
@@ -17,6 +19,7 @@ import {
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
+import { FC } from 'react';
 
 interface RecordCardProps<S extends SchemaAttributes = SchemaAttributes> {
   schema: Schema<S>;
@@ -215,35 +218,7 @@ function SecondaryColumnContent<S extends SchemaAttributes = SchemaAttributes>({
 
   if (column.variant === 'choice') {
     if (attribute.type === 'choice') {
-      const choice = attribute.options.find((option) => option.value === value);
-
-      if (!choice) {
-        return null;
-      }
-
-      const bgColor = choice.color;
-      let color: string | undefined;
-      if (bgColor) {
-        color = isColorDark(bgColor) ? '#FFFFFF' : '#000000';
-      }
-
-      return (
-        <Tag
-          key={column.name as string}
-          size="extra-small"
-          appearance="filled"
-          style={{
-            background: bgColor,
-            color: color,
-            height: 16,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          {choice.label}
-        </Tag>
-      );
+      return <ChoiceTag attribute={attribute} value={value} />;
     }
 
     if (attribute.type === 'choices') {
@@ -265,21 +240,11 @@ function SecondaryColumnContent<S extends SchemaAttributes = SchemaAttributes>({
           }}
         >
           {choices.map((choice) => (
-            <Tag
+            <ChoiceTag
               key={choice.value as string}
-              size="extra-small"
-              appearance="filled"
-              style={{
-                background: choice.color,
-                color: 'white',
-                height: 16,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              {choice.label}
-            </Tag>
+              attribute={attribute}
+              value={choice.value}
+            />
           ))}
         </div>
       );
@@ -296,3 +261,42 @@ function SecondaryColumnContent<S extends SchemaAttributes = SchemaAttributes>({
     </Caption1>
   );
 }
+
+interface ChoiceTagProps<T extends string | number> {
+  attribute: ChoiceAttribute<T> | ChoicesAttribute<T>;
+  value: T;
+}
+
+const ChoiceTag: FC<ChoiceTagProps<string | number>> = ({
+  attribute,
+  value,
+}) => {
+  const choice = attribute.options.find((option) => option.value === value);
+
+  if (!choice) {
+    return null;
+  }
+
+  const bgColor = choice.color;
+  let color: string | undefined;
+  if (bgColor) {
+    color = isColorDark(bgColor) ? '#FFFFFF' : '#000000';
+  }
+
+  return (
+    <Tag
+      size="extra-small"
+      appearance="filled"
+      style={{
+        background: bgColor,
+        color: color,
+        height: 16,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      {choice.label}
+    </Tag>
+  );
+};

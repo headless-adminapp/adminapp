@@ -3,8 +3,8 @@ import { CSSProperties, FC, MouseEventHandler, ReactNode } from 'react';
 
 export interface TableCellBaseProps {
   children?: ReactNode;
-  onClick?: MouseEventHandler | undefined;
-  style?: CSSProperties | undefined;
+  onClick?: MouseEventHandler;
+  style?: CSSProperties;
 }
 
 export const TableCellBase: FC<TableCellBaseProps> = ({

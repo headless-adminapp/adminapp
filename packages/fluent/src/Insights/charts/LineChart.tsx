@@ -13,11 +13,11 @@ import { renderGrid, renderLines, renderXAxis, renderYAxis } from './renderers';
 export function LineChart({
   dataset,
   chartInfo,
-}: {
+}: Readonly<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataset: any[];
   chartInfo: LineChartInfo;
-}) {
+}>) {
   const xAxis = chartInfo.xAxis;
   const yAxis = chartInfo.yAxis;
   const lines = chartInfo.lines;

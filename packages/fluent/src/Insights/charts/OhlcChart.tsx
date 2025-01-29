@@ -38,11 +38,11 @@ export const barSizeInTime = (interval: DateAxisTickInterval) => {
 export function OhlcChart({
   dataset,
   chartInfo,
-}: {
+}: Readonly<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataset: any[];
   chartInfo: OhlcChartInfo;
-}) {
+}>) {
   const bar = chartInfo.bars[0];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data: any[] = dataset[bar.dataIndex ?? 0];
@@ -119,57 +119,12 @@ export function OhlcChart({
           width={1}
           strokeWidth={1}
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          shape={(props: any) => {
-            const { x, width, payload, yAxis, xAxis } = props;
-
-            const xValue = payload[xAxis.dataKey!];
-            const open = payload[bar.open.dataKey];
-            const close = payload[bar.close.dataKey];
-            const high = payload[bar.high.dataKey];
-            const low = payload[bar.low.dataKey];
-
-            const color =
-              open < close
-                ? bar.colors?.[0] ?? tokens.colorPaletteGreenForeground1
-                : bar.colors?.[1] ?? tokens.colorPaletteRedForeground1;
-
-            const xPosition = xAxis.scale(xValue);
-
-            let xWidth = 30;
-
-            if (
-              chartInfo.xAxis.tick.type === 'time' &&
-              chartInfo.xAxis.tick.interval
-            ) {
-              xWidth =
-                xAxis.scale(
-                  xValue + barSizeInTime(chartInfo.xAxis.tick.interval)
-                ) - xPosition;
-            }
-
-            return (
-              <g>
-                <Rectangle
-                  x={x + width / 2}
-                  y={yAxis.scale(high)} // Adjust the y to position the bar correctly
-                  width={1}
-                  height={yAxis.scale(low) - yAxis.scale(high)}
-                  fill={color}
-                  stroke={color}
-                  strokeWidth={1}
-                />
-                <Rectangle
-                  x={xPosition - xWidth / 2}
-                  y={Math.min(yAxis.scale(open), yAxis.scale(close))} // Adjust the y to position the bar correctly
-                  width={xWidth}
-                  height={Math.abs(yAxis.scale(close) - yAxis.scale(open))}
-                  fill={color}
-                  stroke={color}
-                  strokeWidth={1}
-                />
-              </g>
-            );
-          }}
+          shape={(props: any) =>
+            renderShape(props, {
+              bar,
+              chartInfo,
+            })
+          }
         />
         <Tooltip
           cursor={{
@@ -177,7 +132,7 @@ export function OhlcChart({
             opacity: 0.5,
           }}
           content={({ active, payload }) => {
-            if (!active || !payload || !payload.length) {
+            if (!active || !payload?.length) {
               return <></>;
             }
 
@@ -201,13 +156,13 @@ function OhclTooltipContent({
   bar,
   xAxisFormatter,
   yAxisFormatter,
-}: {
+}: Readonly<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: any;
   bar: OhlcChartInfo['bars'][0];
   xAxisFormatter: (value: unknown) => string;
   yAxisFormatter: (value: unknown) => string;
-}) {
+}>) {
   const items: Array<{
     name: string;
     value: number;
@@ -263,5 +218,62 @@ function OhclTooltipContent({
         ))}
       </div>
     </div>
+  );
+}
+
+function renderShape(
+  props: any,
+  {
+    chartInfo,
+    bar,
+  }: {
+    chartInfo: OhlcChartInfo;
+    bar: OhlcChartInfo['bars'][0];
+  }
+) {
+  const { x, width, payload, yAxis, xAxis } = props;
+
+  const xValue = payload[xAxis.dataKey!];
+  const open = payload[bar.open.dataKey];
+  const close = payload[bar.close.dataKey];
+  const high = payload[bar.high.dataKey];
+  const low = payload[bar.low.dataKey];
+
+  const color =
+    open < close
+      ? bar.colors?.[0] ?? tokens.colorPaletteGreenForeground1
+      : bar.colors?.[1] ?? tokens.colorPaletteRedForeground1;
+
+  const xPosition = xAxis.scale(xValue);
+
+  let xWidth = 30;
+
+  if (chartInfo.xAxis.tick.type === 'time' && chartInfo.xAxis.tick.interval) {
+    xWidth =
+      xAxis.scale(xValue + barSizeInTime(chartInfo.xAxis.tick.interval)) -
+      xPosition;
+  }
+
+  return (
+    <g>
+      <Rectangle
+        x={x + width / 2}
+        y={yAxis.scale(high)} // Adjust the y to position the bar correctly
+        width={1}
+        height={yAxis.scale(low) - yAxis.scale(high)}
+        fill={color}
+        stroke={color}
+        strokeWidth={1}
+      />
+      <Rectangle
+        x={xPosition - xWidth / 2}
+        y={Math.min(yAxis.scale(open), yAxis.scale(close))} // Adjust the y to position the bar correctly
+        width={xWidth}
+        height={Math.abs(yAxis.scale(close) - yAxis.scale(open))}
+        fill={color}
+        stroke={color}
+        strokeWidth={1}
+      />
+    </g>
   );
 }

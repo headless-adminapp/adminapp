@@ -14,7 +14,7 @@ export const CustomTooltipContent = ({
   xAxisFormatter: (value: unknown) => string;
   yAxisFormatter: (value: unknown) => string;
 }) => {
-  if (!active || !payload || !payload.length) {
+  if (!active || !payload?.length) {
     return null;
   }
 

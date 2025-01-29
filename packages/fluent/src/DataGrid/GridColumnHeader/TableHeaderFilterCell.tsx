@@ -136,6 +136,7 @@ export const TableHeaderFilterCell: FC<
   const align = useMemo(() => {
     switch (attribute.type) {
       case 'money':
+      case 'number':
         return 'right';
       default:
         return 'left';
@@ -183,7 +184,7 @@ export const TableHeaderFilterCell: FC<
         <MenuItem
           icon={<Icons.FilterDismiss size={16} />}
           onClick={() => {
-            onChangeFilterCondition?.(undefined);
+            onChangeFilterCondition(undefined);
           }}
         >
           {strings.clearFilter}
@@ -262,13 +263,7 @@ export const TableHeaderFilterCell: FC<
       }}
       sortable={!disableSort}
       // sortDirection="ascending"
-      sortDirection={
-        sortDirection === 'asc'
-          ? 'ascending'
-          : sortDirection === 'desc'
-          ? 'descending'
-          : undefined
-      }
+      sortDirection={getSortDirection(sortDirection)}
     >
       {children}
       {!!filterCondition && (
@@ -284,38 +279,46 @@ export const TableHeaderFilterCell: FC<
   }
 
   return (
-    <Fragment>
-      <th>
-        <Menu positioning="below-start">
-          <MenuTrigger>{headerCell}</MenuTrigger>
-          <MenuPopover>
-            <MenuList>
-              {menuItems.map((x, i) => (
-                <Fragment key={i}>
-                  {i > 0 && <MenuDivider />}
-                  {x}
-                </Fragment>
-              ))}
-            </MenuList>
-          </MenuPopover>
-        </Menu>
-        <Dialog open={visible} onOpenChange={() => setVisible(false)}>
-          <DialogSurface style={{ maxWidth: 400 }}>
-            <DialogBody>
-              <DialogTitle>{strings.filterBy}</DialogTitle>
-              <FilterForm
-                attribute={attribute}
-                defaultValue={filterCondition}
-                onApply={(condition) => {
-                  onChangeFilterCondition?.(condition);
-                  setVisible(false);
-                }}
-                onCancel={() => setVisible(false)}
-              />
-            </DialogBody>
-          </DialogSurface>
-        </Dialog>
-      </th>
-    </Fragment>
+    <th>
+      <Menu positioning="below-start">
+        <MenuTrigger>{headerCell}</MenuTrigger>
+        <MenuPopover>
+          <MenuList>
+            {menuItems.map((x, i) => (
+              <Fragment key={i}>
+                {i > 0 && <MenuDivider />}
+                {x}
+              </Fragment>
+            ))}
+          </MenuList>
+        </MenuPopover>
+      </Menu>
+      <Dialog open={visible} onOpenChange={() => setVisible(false)}>
+        <DialogSurface style={{ maxWidth: 400 }}>
+          <DialogBody>
+            <DialogTitle>{strings.filterBy}</DialogTitle>
+            <FilterForm
+              attribute={attribute}
+              defaultValue={filterCondition}
+              onApply={(condition) => {
+                onChangeFilterCondition(condition);
+                setVisible(false);
+              }}
+              onCancel={() => setVisible(false)}
+            />
+          </DialogBody>
+        </DialogSurface>
+      </Dialog>
+    </th>
   );
+};
+
+const getSortDirection = (direction?: 'asc' | 'desc') => {
+  if (direction === 'asc') {
+    return 'ascending';
+  } else if (direction === 'desc') {
+    return 'descending';
+  } else {
+    return undefined;
+  }
 };

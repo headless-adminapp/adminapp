@@ -16,11 +16,11 @@ import { renderGrid, renderXAxis, renderYAxis } from './renderers';
 export function ScatterChart({
   dataset,
   chartInfo,
-}: {
+}: Readonly<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataset: any[];
   chartInfo: ScatterChartInfo;
-}) {
+}>) {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ScatterChartInternal>
@@ -46,7 +46,7 @@ export function ScatterChart({
         <Tooltip
           cursor={false}
           content={(props) => {
-            if (!props.active || !props.payload || !props.payload.length) {
+            if (!props.active || !props.payload?.length) {
               return <></>;
             }
 

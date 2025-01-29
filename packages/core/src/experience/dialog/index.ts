@@ -59,7 +59,7 @@ export interface PromptDialogOptions<
   onDismiss?: () => void;
 }
 
-export interface CustomDialogOptions<P extends any = any> {
+export interface CustomDialogOptions<P = any> {
   type: 'custom';
   Component: React.ComponentType<P & BasicDialogProps>;
   props: P;

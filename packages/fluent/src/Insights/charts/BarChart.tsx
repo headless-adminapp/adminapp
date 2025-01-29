@@ -13,19 +13,17 @@ import { renderBars, renderGrid, renderXAxis, renderYAxis } from './renderers';
 export function BarChart({
   dataset,
   chartInfo,
-}: {
+}: Readonly<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataset: any[];
   chartInfo: BarChartInfo;
-}) {
+}>) {
   const xAxis = chartInfo.xAxis;
   const yAxis = chartInfo.yAxis;
   const bars = chartInfo.bars;
 
   const xAxisFullFormatter = createLongAxisFormatter(xAxis.tick);
   const yAxisFullFormatter = createLongAxisFormatter(yAxis.tick);
-
-  console.log('temp.dataset', dataset);
 
   return (
     <ResponsiveContainer width="100%" height="100%">

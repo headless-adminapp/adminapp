@@ -10,16 +10,25 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
+import {
+  NameType,
+  Payload,
+  ValueType,
+} from 'recharts/types/component/DefaultTooltipContent';
 
-import { createAxisFormatter, createLongAxisFormatter } from './formatters';
+import {
+  createAxisFormatter,
+  createLongAxisFormatter,
+  Formatter,
+} from './formatters';
 
 export function RadarChart({
   dataset,
   chartInfo,
-}: {
+}: Readonly<{
   dataset: any[];
   chartInfo: RadarChartInfo;
-}) {
+}>) {
   const data = dataset[0];
   const radar = chartInfo.radar[0];
 
@@ -51,49 +60,61 @@ export function RadarChart({
             stroke: tokens.colorNeutralBackground6,
             opacity: 0.5,
           }}
-          content={({ payload }) => {
-            return (
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  boxShadow: tokens.shadow16,
-                  backgroundColor: tokens.colorNeutralBackground1,
-                  padding: 8,
-                  borderRadius: 4,
-                  gap: 4,
-                }}
-              >
-                <div
-                  style={{ display: 'flex', flexDirection: 'column', gap: 4 }}
-                >
-                  {payload?.map((item: any, index: number) => (
-                    <div
-                      key={index}
-                      style={{ display: 'flex', alignItems: 'center' }}
-                    >
-                      <Caption1
-                        style={{
-                          color: tokens.colorNeutralForeground4,
-                          marginLeft: 8,
-                        }}
-                      >
-                        {nameFormatter(item.payload[radar.nameKey])}
-                      </Caption1>
-                      <div style={{ flex: 1, minWidth: 50 }} />
-                      <Caption1
-                        style={{ color: tokens.colorNeutralForeground4 }}
-                      >
-                        {valueFormatter(item.value)}
-                      </Caption1>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          }}
+          content={({ payload }) =>
+            renderTooltipContent({
+              payload,
+              nameFormatter,
+              valueFormatter,
+              radar,
+            })
+          }
         />
       </RadarChartInternal>
     </ResponsiveContainer>
+  );
+}
+
+function renderTooltipContent({
+  payload,
+  nameFormatter,
+  valueFormatter,
+  radar,
+}: {
+  payload: Payload<ValueType, NameType>[] | undefined;
+  nameFormatter: Formatter;
+  valueFormatter: Formatter;
+  radar: RadarChartInfo['radar'][0];
+}) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: tokens.shadow16,
+        backgroundColor: tokens.colorNeutralBackground1,
+        padding: 8,
+        borderRadius: 4,
+        gap: 4,
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        {payload?.map((item: any, index: number) => (
+          <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+            <Caption1
+              style={{
+                color: tokens.colorNeutralForeground4,
+                marginLeft: 8,
+              }}
+            >
+              {nameFormatter(item.payload[radar.nameKey])}
+            </Caption1>
+            <div style={{ flex: 1, minWidth: 50 }} />
+            <Caption1 style={{ color: tokens.colorNeutralForeground4 }}>
+              {valueFormatter(item.value)}
+            </Caption1>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

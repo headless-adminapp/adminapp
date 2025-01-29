@@ -39,7 +39,7 @@ interface GridListContainerProps {
   noPadding?: boolean;
 }
 
-export const GridListContainer: FC<GridListContainerProps> = ({}) => {
+export const GridListContainer: FC<GridListContainerProps> = () => {
   const styles = useStyles();
   const data = useGridData();
   const dataState = useGridDataState();

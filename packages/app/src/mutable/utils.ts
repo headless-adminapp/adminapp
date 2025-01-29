@@ -18,20 +18,13 @@ export function createMutableValue<T>(
     value: storeValue,
     setValue: (value) => {
       if (typeof value === 'function') {
-        if (isArray) {
-          storeValue.current = value(storeValue.current) as T;
-        } else {
-          storeValue.current = {
-            ...storeValue.current,
-            ...value(storeValue.current),
-          };
-        }
+        value = value(storeValue.current);
+      }
+
+      if (isArray) {
+        storeValue.current = value as T;
       } else {
-        if (isArray) {
-          storeValue.current = value as T;
-        } else {
-          storeValue.current = { ...storeValue.current, ...value };
-        }
+        storeValue.current = { ...storeValue.current, ...value };
       }
 
       listeners.forEach((listener) => listener(storeValue.current));
