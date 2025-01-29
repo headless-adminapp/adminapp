@@ -1,7 +1,42 @@
+import { ChoiceAttribute } from '@headless-adminapp/core/attributes';
+import { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
+import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
 import { Schema } from '@headless-adminapp/core/schema';
 import { Model, model, models, Schema as MongoSchema } from 'mongoose';
 
 import { InferredDbSchemaType, MongoRequiredSchemaAttributes } from './types';
+
+function resolveChoiceAttribute(attribute: ChoiceAttribute<string | number>) {
+  if ('string' in attribute && attribute.string) {
+    return { type: MongoSchema.Types.String };
+  } else if ('number' in attribute && attribute.number) {
+    return { type: MongoSchema.Types.Number };
+  } else {
+    throw new Error('Invalid choice type');
+  }
+}
+
+function resolveChoicesAttribute(attribute: ChoicesAttribute<string | number>) {
+  if ('string' in attribute && attribute.string) {
+    return { type: [MongoSchema.Types.String] };
+  } else if ('number' in attribute && attribute.number) {
+    return { type: [MongoSchema.Types.Number] };
+  } else {
+    throw new Error('Invalid choice type');
+  }
+}
+
+function applyDefaultAttribute(attribute: AttributeBase, defination: any) {
+  if (attribute.default && typeof attribute.default !== 'function') {
+    defination.default = attribute.default;
+  }
+}
+
+function applyRequiredAttribute(attribute: AttributeBase, _defination: any) {
+  if (attribute.required) {
+    // acc[key].required = rest[key].required;
+  }
+}
 
 export function defineModel<S extends MongoRequiredSchemaAttributes>(
   schema: Schema<S>
@@ -36,22 +71,10 @@ export function defineModel<S extends MongoRequiredSchemaAttributes>(
             acc[key] = { type: MongoSchema.Types.Date };
             break;
           case 'choice':
-            if ('string' in attribute && attribute.string) {
-              acc[key] = { type: MongoSchema.Types.String };
-            } else if ('number' in attribute && attribute.number) {
-              acc[key] = { type: MongoSchema.Types.Number };
-            } else {
-              throw new Error('Invalid choice type');
-            }
+            acc[key] = resolveChoiceAttribute(attribute);
             break;
           case 'choices':
-            if ('string' in attribute && attribute.string) {
-              acc[key] = { type: [MongoSchema.Types.String] };
-            } else if ('number' in attribute && attribute.number) {
-              acc[key] = { type: [MongoSchema.Types.Number] };
-            } else {
-              throw new Error('Invalid choice type');
-            }
+            acc[key] = resolveChoicesAttribute(attribute);
             break;
           case 'lookup':
             acc[key] = {
@@ -74,13 +97,8 @@ export function defineModel<S extends MongoRequiredSchemaAttributes>(
             return acc;
         }
 
-        if (rest[key].default && typeof rest[key].default !== 'function') {
-          acc[key].default = rest[key].default;
-        }
-
-        if (rest[key].required) {
-          // acc[key].required = rest[key].required;
-        }
+        applyDefaultAttribute(attribute, acc[key]);
+        applyRequiredAttribute(attribute, acc[key]);
 
         return acc;
       }, {} as Record<string, any>),

@@ -40,6 +40,7 @@ import { transformFilter } from './conditions';
 import { getDependentRecordsToDelete } from './getDependentRecordsToDelete';
 import { MongoSchemaStore } from './MongoSchemaStore';
 import { MongoRequiredSchemaAttributes } from './types';
+import { transformRecord } from './utils/transform';
 
 export interface MongoDatabaseContext {
   session: ClientSession;
@@ -930,106 +931,15 @@ export class MongoServerSdk<
       expand?: RetriveRecordsParams['expand'];
     }
   ) {
-    return records.map((record) => {
-      const transformedRecord = {
-        $entity: schema.logicalName,
-      } as Record<string, any>;
-
-      let id = record[schema.idAttribute];
-
-      if (typeof id === 'object') {
-        id = id.toString();
-      }
-      transformedRecord[schema.idAttribute as string] = id;
-
-      if (columns) {
-        for (const column of columns) {
-          const attribute = schema.attributes[column];
-
-          if (!attribute) {
-            continue;
-          }
-
-          if (attribute.type === 'lookup') {
-            const lookupSchema = this.options.schemaStore.getSchema(
-              attribute.entity
-            );
-
-            const expandedValue = record['@expand']?.[column];
-
-            if (!record[column] || !expandedValue) {
-              transformedRecord[column] = null;
-            } else {
-              transformedRecord[column] = {
-                id: expandedValue[lookupSchema.idAttribute],
-                name: expandedValue[lookupSchema.primaryAttribute],
-                logicalName: attribute.entity,
-              };
-            }
-          } else {
-            transformedRecord[column] = record[column];
-          }
-        }
-      }
-
-      if (expand) {
-        transformedRecord['$expand'] = {};
-
-        for (const expandKey of Object.keys(expand)) {
-          const expandedColumns = expand[expandKey]!;
-          const expandedAttribute = schema.attributes[expandKey];
-
-          if (!expandedAttribute || expandedAttribute.type !== 'lookup') {
-            continue;
-          }
-
-          const expandedSchema = this.options.schemaStore.getSchema(
-            expandedAttribute.entity
-          );
-
-          const expandedRecord = record['@expand']?.[expandKey];
-
-          if (!expandedRecord) {
-            continue;
-          }
-
-          transformedRecord['$expand'][expandKey] = {
-            '@data:entity': expandedAttribute.entity,
-          };
-
-          Object.assign(
-            transformedRecord['$expand'][expandKey],
-            expandedColumns.reduce((acc, column) => {
-              const attribute = expandedSchema.attributes[column];
-              if (!attribute) {
-                return acc;
-              }
-
-              if (attribute.type === 'lookup') {
-                const nestedExpandedRecord =
-                  expandedRecord['@expand']?.[column];
-
-                if (!nestedExpandedRecord) {
-                  acc[column] = null;
-                } else {
-                  acc[column] = {
-                    id: nestedExpandedRecord[expandedSchema.idAttribute],
-                    name: nestedExpandedRecord[expandedSchema.primaryAttribute],
-                    logicalName: attribute.entity,
-                  };
-                }
-              } else {
-                acc[column] = expandedRecord[column];
-              }
-
-              return acc;
-            }, {} as Record<string, any>)
-          );
-        }
-      }
-
-      return transformedRecord;
-    });
+    return records.map((record) =>
+      transformRecord({
+        record,
+        schema: schema as unknown as Schema,
+        columns,
+        expand,
+        schemaStore: this.options.schemaStore as unknown as ISchemaStore,
+      })
+    );
   }
 
   /** @todo: unfinished code */

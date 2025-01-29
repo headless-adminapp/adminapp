@@ -37,6 +37,7 @@
     "lodash": "^4.17.21",
     "react-custom-scrollbars-2": "^4.5.0",
     "react-hook-form": "7.52.2",
+    "uuid": "11.0.3",
     "yup": "^1.4.0"
   },
   "gitHead": "e2723ae74a1800c33a6790204bb2d1ae114e5310"

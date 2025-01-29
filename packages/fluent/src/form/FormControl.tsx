@@ -1,7 +1,7 @@
 import { Label } from '@fluentui/react-components';
 import { JSX, useCallback, useMemo } from 'react';
+import { v4 as uuid } from 'uuid';
 
-// import { AttachmentControl } from './controls/AttachmentControl';
 import { CurrencyControl } from './controls/CurrencyControl';
 import { DateControl } from './controls/DateControl';
 import { DateTimeControl } from './controls/DateTimeControl';
@@ -97,26 +97,14 @@ function Control<T>(props: FormControlProps<T>): JSX.Element {
       return (
         <SwitchControl value={value} onChange={onChange} {...(rest as any)} />
       );
-    // case 'attachment':
-    //   return (
-    //     <AttachmentControl
-    //       value={value}
-    //       onChange={onChange}
-    //       {...(rest as any)}
-    //     />
-    //   );
     default:
       return <div />;
   }
 }
 
-function randomUUID() {
-  return Math.random().toString(36).substring(2, 15);
-}
-
 function FormControl<T>(props: FormControlProps<T>) {
   const { label, id, onChange } = props;
-  const _id = useMemo(() => id || randomUUID(), [id]);
+  const _id = useMemo(() => id ?? uuid(), [id]);
 
   const noop = useCallback(() => {}, []);
 

@@ -1,13 +1,10 @@
 import { DialogOptions } from '@headless-adminapp/core/experience/dialog';
 import { useCallback } from 'react';
+import { v4 as uuid } from 'uuid';
 
 import { useContextSetValue } from '../../mutable/context';
 import { DialogContext, DialogItemState } from '../context';
 import { useCloseDialog } from './useCloseDialog';
-
-function randomId() {
-  return Math.random().toString(36).substring(2);
-}
 
 export function useOpenDialog() {
   const setValue = useContextSetValue(DialogContext);
@@ -15,7 +12,7 @@ export function useOpenDialog() {
 
   const openDialog = useCallback(
     (options: DialogOptions) => {
-      const id = randomId();
+      const id = uuid();
 
       setValue((state) => {
         return {

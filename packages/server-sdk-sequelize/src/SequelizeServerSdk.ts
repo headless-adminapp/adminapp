@@ -1,5 +1,6 @@
 import { LookupAttribute } from '@headless-adminapp/core/attributes';
 import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import { ISchemaStore } from '@headless-adminapp/core/store';
 import {
   AggregateAttributeValue,
   AggregateQuery,
@@ -20,7 +21,6 @@ import {
   UpdateRecordParams,
   UpdateRecordResult,
 } from '@headless-adminapp/core/transport';
-import { urlToFileObject } from '@headless-adminapp/core/utils';
 import {
   DependentRecord,
   ExecutionStage,
@@ -44,6 +44,7 @@ import type { Col, Fn, Literal } from 'sequelize/types/utils';
 import { getLikeOperator, transformFilter } from './conditions';
 import { SequelizeSchemaStore } from './SequelizeSchemaStore';
 import { Id } from './types';
+import { transformRecord } from './utils/transform';
 
 export interface SequelizeDatabaseContext {
   session?: Transaction | null;
@@ -796,130 +797,16 @@ export class SequelizeServerSdk<
       expand?: RetriveRecordsParams['expand'];
     }
   ) {
-    return records.map((record) => {
-      const recordJson = record.toJSON();
-
-      const transformedRecord = {
-        $entity: schema.logicalName,
-      } as Record<string, any>;
-
-      transformedRecord[schema.idAttribute as string] =
-        recordJson[schema.idAttribute];
-
-      if (columns) {
-        for (const column of columns) {
-          const attribute = schema.attributes[column];
-
-          if (!attribute) {
-            continue;
-          }
-
-          if (attribute.type === 'lookup') {
-            const lookupSchema = this.options.schemaStore.getSchema(
-              attribute.entity
-            );
-
-            const expandedValue =
-              recordJson[
-                this.options.schemaStore.getRelationAlias(
-                  schema.logicalName,
-                  column,
-                  attribute.entity
-                )
-              ];
-
-            if (!recordJson[column] || !expandedValue) {
-              transformedRecord[column] = null;
-            } else {
-              transformedRecord[column] = {
-                id: expandedValue[lookupSchema.idAttribute],
-                name: expandedValue[lookupSchema.primaryAttribute],
-                logicalName: attribute.entity,
-              };
-            }
-          } else if (attribute.type === 'attachment') {
-            if (recordJson[column]) {
-              transformedRecord[column] = urlToFileObject(recordJson[column]);
-            } else {
-              transformedRecord[column] = null;
-            }
-          } else {
-            transformedRecord[column] = recordJson[column];
-          }
-        }
-      }
-
-      if (expand) {
-        transformedRecord['$expand'] = {};
-
-        for (const expandKey of Object.keys(expand)) {
-          const expandedColumns = expand[expandKey]!;
-          const expandedAttribute = schema.attributes[expandKey];
-
-          if (!expandedAttribute || expandedAttribute.type !== 'lookup') {
-            continue;
-          }
-
-          const expandedSchema = this.options.schemaStore.getSchema(
-            expandedAttribute.entity
-          );
-
-          const expandedRecord =
-            recordJson[
-              this.options.schemaStore.getRelationAlias(
-                schema.logicalName,
-                expandKey,
-                expandedAttribute.entity
-              )
-            ];
-
-          if (!expandedRecord) {
-            continue;
-          }
-
-          transformedRecord['$expand'][expandKey] = {
-            '@data:entity': expandedAttribute.entity,
-          };
-
-          Object.assign(
-            transformedRecord['$expand'][expandKey],
-            expandedColumns.reduce((acc, column) => {
-              const attribute = expandedSchema.attributes[column];
-              if (!attribute) {
-                return acc;
-              }
-
-              if (attribute.type === 'lookup') {
-                const nestedExpandedRecord =
-                  expandedRecord[
-                    this.options.schemaStore.getRelationAlias(
-                      expandedAttribute.entity,
-                      column,
-                      attribute.entity
-                    )
-                  ];
-
-                if (!nestedExpandedRecord) {
-                  acc[column] = null;
-                } else {
-                  acc[column] = {
-                    id: nestedExpandedRecord[expandedSchema.idAttribute],
-                    name: nestedExpandedRecord[expandedSchema.primaryAttribute],
-                    logicalName: attribute.entity,
-                  };
-                }
-              } else {
-                acc[column] = expandedRecord[column];
-              }
-
-              return acc;
-            }, {} as Record<string, any>)
-          );
-        }
-      }
-
-      return transformedRecord;
-    });
+    return records.map((record) =>
+      transformRecord({
+        record,
+        schema: schema as unknown as Schema,
+        schemaStore: this.options
+          .schemaStore as unknown as SequelizeSchemaStore,
+        columns,
+        expand,
+      })
+    );
   }
 
   protected async getDependentRecordsToDelete(logicalName: string, id: Id) {
