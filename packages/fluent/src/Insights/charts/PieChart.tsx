@@ -77,7 +77,7 @@ export function PieChart({
           {dataset[item.dataIndex ?? 0].map(
             (entry: Record<string, string>, index: number) => (
               <Cell
-                key={`cell-${index}`}
+                key={'cell-' + String(index)}
                 fill={
                   item.colorKey && entry[item.colorKey]
                     ? entry[item.colorKey]

@@ -16,7 +16,7 @@ export const MenuItems: React.FC<MenuItemsProps> = memo(({ items }) => {
           {index > 0 && <MenuDivider />}
           {group.map((item, index) => (
             <MenuItem
-              key={index}
+              key={(item.text ?? '') + index}
               Icon={item.Icon}
               onClick={item.onClick}
               text={item.text}

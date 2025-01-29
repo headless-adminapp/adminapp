@@ -84,12 +84,12 @@ export const FilterForm: FC<FilterFormProps> = ({
         >
           <OperatorSelect
             attribute={attribute}
-            onChange={(value) => handleChangeOperator(value as OperatorKey)}
+            onChange={(value) => handleChangeOperator(value)}
             value={operator}
           />
           {selectedOption?.controls.map((x, i) => (
             <ConditionValueControl
-              key={i}
+              key={x + String(i)}
               type={x}
               attribute={attribute}
               value={values[i] ?? null}

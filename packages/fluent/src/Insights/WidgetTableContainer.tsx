@@ -70,7 +70,7 @@ export const WidgetTableContainer: FC<WidgetTableContainerProps> = ({
 
                   return (
                     <TableHeaderCell
-                      key={index}
+                      key={column + String(index)}
                       style={{
                         minWidth: 32,
                         flexShrink: 0,

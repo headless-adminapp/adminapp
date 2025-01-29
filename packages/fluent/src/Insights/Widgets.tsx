@@ -43,9 +43,9 @@ const WidgetProvider: FC<PropsWithChildren<{ widget: WidgetExperience }>> = ({
 
 export function Widgets({
   widgets,
-}: {
+}: Readonly<{
   widgets: InsightExpereince['widgets'];
-}) {
+}>) {
   const isMobile = useIsMobile();
 
   return (
@@ -53,7 +53,7 @@ export function Widgets({
       {widgets.map((widget, index) => {
         return (
           <WidgetGridItem
-            key={index}
+            key={widget.title + String(index)}
             row={widget.rows}
             column={isMobile ? 12 : widget.columns}
           >

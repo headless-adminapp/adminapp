@@ -6,13 +6,19 @@ export function getDefaultOperator(
   operator: OperatorKey | undefined,
   attributeType: AttributeType
 ) {
-  return operator
-    ? operator
-    : attributeType === 'date'
-    ? 'on'
-    : attributeType === 'choice' || attributeType === 'lookup'
-    ? 'in'
-    : 'eq';
+  if (operator) {
+    return operator;
+  }
+
+  if (attributeType === 'date') {
+    return 'on';
+  }
+
+  if (attributeType === 'choice' || attributeType === 'lookup') {
+    return 'in';
+  }
+
+  return 'eq';
 }
 
 export function getDefaultValues(

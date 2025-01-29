@@ -206,7 +206,10 @@ function OhclTooltipContent({
         </Caption1>
         <Divider style={{ opacity: 0.2 }} />
         {items.map((item, index) => (
-          <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+          <div
+            key={item.name + String(index)}
+            style={{ display: 'flex', alignItems: 'center' }}
+          >
             <Caption1 style={{ color: tokens.colorNeutralForeground4 }}>
               {item.name}
             </Caption1>

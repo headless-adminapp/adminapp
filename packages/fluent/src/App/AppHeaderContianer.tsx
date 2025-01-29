@@ -15,7 +15,7 @@ import { Hamburger } from '@fluentui/react-nav-preview';
 import { useAppContext } from '@headless-adminapp/app/app';
 import { useAuthSession, useLogout } from '@headless-adminapp/app/auth/hooks';
 import { useIsSkipAuthCheck } from '@headless-adminapp/app/auth/hooks/useIsSkipAuthCheck';
-import { useIsMobile } from '@headless-adminapp/app/hooks';
+import { useIsMobile, useItemsWithKey } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { Icons } from '@headless-adminapp/icons';
 import { FC, useMemo } from 'react';
@@ -46,6 +46,9 @@ export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
       .slice(0, 2)
       .join('');
   }, [authSession?.fullName]);
+
+  const quickActionItems = useItemsWithKey(app.quickActionItems);
+  const accountMenuItems = useItemsWithKey(app.accountMenuItems);
 
   return (
     <div
@@ -93,10 +96,10 @@ export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
         }}
       >
         <div style={{ display: 'flex', gap: 8 }}>
-          {app.quickActionItems?.map((item, index) => {
+          {quickActionItems?.map((item) => {
             return (
               <QuickActionItem
-                key={index}
+                key={item.__key}
                 Icon={item.icon}
                 label={item.localizedLabel?.[language] ?? item.label}
                 onClick={() => item.onClick?.()}
@@ -105,7 +108,7 @@ export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
             );
           })}
         </div>
-        {(!isSkipAuthCheck || !!app.accountMenuItems?.length) && (
+        {(!isSkipAuthCheck || !!accountMenuItems?.length) && (
           <Popover>
             <PopoverTrigger disableButtonEnhancement>
               <Avatar
@@ -156,12 +159,12 @@ export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
               )}
               {!isSkipAuthCheck && <MenuDivider style={{ marginInline: 0 }} />}
               <MenuList style={{ width: 200, marginBottom: 4 }}>
-                {app.accountMenuItems?.map((item, index) => {
+                {accountMenuItems?.map((item) => {
                   const Icon = item.icon;
 
                   return (
                     <MenuItem
-                      key={index}
+                      key={item.__key}
                       icon={<Icon size="inherit" />}
                       onClick={() => item.onClick?.()}
                     >

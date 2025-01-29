@@ -40,7 +40,10 @@ export const CustomTooltipContent = ({
             item: { color: string; name: string; value: unknown },
             index: number
           ) => (
-            <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+            <div
+              key={item.name + String(index)}
+              style={{ display: 'flex', alignItems: 'center' }}
+            >
               <div
                 style={{
                   width: 8,

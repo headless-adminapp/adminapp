@@ -47,7 +47,7 @@ export const OverflowCommandBar: FC<OverflowCommandBarProps> = ({
                 case 'icon':
                   return (
                     <OverflowItem
-                      key={index}
+                      key={`${groupIndex}-${index}`}
                       id={`${groupIndex}-${index}`}
                       groupId={String(groupIndex)}
                     >

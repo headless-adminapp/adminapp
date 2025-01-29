@@ -51,7 +51,7 @@ export const OverflowMenu: React.FC<{ items: CommandItemState[][] }> = ({
                 const text = 'text' in item ? item.text ?? '' : '';
                 return (
                   <OverflowMenuItem
-                    key={index}
+                    key={`${groupIndex}-${index}`}
                     id={`${groupIndex}-${index}`}
                     Icon={item.Icon}
                     onClick={item.type !== 'label' ? item.onClick : undefined}

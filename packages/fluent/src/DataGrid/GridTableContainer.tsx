@@ -402,11 +402,11 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
                       alignItems: 'center',
                     }}
                   >
-                    {table.getAllColumns().map((column, index) => {
+                    {table.getAllColumns().map((column) => {
                       if (!column.getIsVisible()) return null;
                       return (
                         <TableCell
-                          key={index}
+                          key={column.id}
                           style={{
                             display: 'flex',
                             alignItems: 'center',

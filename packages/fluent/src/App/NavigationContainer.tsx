@@ -75,7 +75,7 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
                   )}
                   {group.items.map((item, index) => (
                     <Test
-                      key={index}
+                      key={(item.label ?? '') + String(index)}
                       item={item}
                       drawerType={type}
                       onOpenChange={onOpenChange}

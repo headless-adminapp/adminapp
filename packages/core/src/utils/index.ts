@@ -1,4 +1,7 @@
+import { v4 as uuid } from 'uuid';
+
 import { FileObject } from '../attributes/AttachmentAttribute';
+import { ItemWithKey } from '../types';
 
 export function typeSafeFn<T>() {
   return function <U extends T>(a: U): U {
@@ -45,4 +48,15 @@ export function urlToFileObject(url: string, name?: string): FileObject {
     type: '',
     url,
   };
+}
+
+export function createItemWithKey<T>(value: T): ItemWithKey<T> {
+  return {
+    ...value,
+    __key: uuid(),
+  };
+}
+
+export function createItemsWithKey<T>(value: T[]): ItemWithKey<T>[] {
+  return value.map((x) => createItemWithKey(x));
 }

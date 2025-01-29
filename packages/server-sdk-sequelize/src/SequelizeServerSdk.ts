@@ -1,6 +1,5 @@
 import { LookupAttribute } from '@headless-adminapp/core/attributes';
 import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
 import {
   AggregateAttributeValue,
   AggregateQuery,

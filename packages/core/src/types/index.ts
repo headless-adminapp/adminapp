@@ -32,3 +32,5 @@ export type AllowAsync<T> = T | (() => Promise<T>);
 export type Localized<T> = Record<string, T>;
 
 export type AllowArray<T> = T | T[];
+
+export type ItemWithKey<T> = T & { __key: string };
