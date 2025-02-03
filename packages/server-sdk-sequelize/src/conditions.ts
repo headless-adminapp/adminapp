@@ -28,7 +28,7 @@ export function getNotLikeOperator(sequelize: Sequelize): any {
 }
 
 function startOfFiscalYear(year: number, tz: string) {
-  return dayjs
+  return dayjs()
     .tz(tz)
     .startOf('day')
     .set('year', year)
@@ -37,7 +37,7 @@ function startOfFiscalYear(year: number, tz: string) {
 }
 
 function endOfFiscalYear(year: number, tz: string) {
-  return dayjs
+  return dayjs()
     .tz(tz)
     .set('year', year + 1)
     .set('month', 2)
