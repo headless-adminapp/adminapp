@@ -30,5 +30,6 @@
   "dependencies": {
     "dayjs": "^1.11.13",
     "mongoose": "^8.5.1"
-  }
+  },
+  "gitHead": "a28ee863fccb6157774e75b4cc421c6940cda469"
 }
