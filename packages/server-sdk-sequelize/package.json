@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
+  "type": "module",
   "publishConfig": {
     "access": "public",
     "directory": "dist"

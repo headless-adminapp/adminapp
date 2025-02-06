@@ -1,10 +1,12 @@
-import type { FluentIcon } from '@fluentui/react-icons';
+import type * as FluentIconTypes from '@fluentui/react-icons';
 import { bundleIcon } from '@headless-adminapp/icons/bundleIcon';
 import { lazy } from 'react';
 
 import { createIcon } from './createIcon';
 
-type FluentReactIconsResult = Awaited<ReturnType<typeof getFluentIconPromise>>;
+type FluentIcon = FluentIconTypes.FluentIcon;
+
+type FluentReactIconsResult = typeof FluentIconTypes;
 
 function getFluentIconPromise() {
   return import('@fluentui/react-icons');
