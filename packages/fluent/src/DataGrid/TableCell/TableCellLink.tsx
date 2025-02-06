@@ -1,9 +1,9 @@
-import { Link, TableCell } from '@fluentui/react-components';
+import { Link, TableCell, tokens } from '@fluentui/react-components';
 import { useRouter } from '@headless-adminapp/app/route/hooks';
 import { FC, memo } from 'react';
 
 export interface TableCellLinkProps {
-  value: string | undefined | null;
+  value: React.ReactNode | undefined | null;
   href?: string;
   onClick?: () => void;
   width: number;
@@ -50,6 +50,11 @@ export const TableCellLink: FC<TableCellLinkProps> = memo(
               router.push(href);
               event.preventDefault();
             }
+          }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: tokens.spacingHorizontalXS,
           }}
         >
           {value}

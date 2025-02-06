@@ -31,6 +31,7 @@ export function getInitialValues({
   form,
   record,
   recordId,
+  schema,
   defaultParameters,
 }: {
   cloneRecord: InferredSchemaType<SchemaAttributes> | undefined;
@@ -40,7 +41,7 @@ export function getInitialValues({
   schema: Schema<SchemaAttributes>;
   defaultParameters: Record<string, any>;
 }) {
-  const formColumns = getColumns(form);
+  const formColumns = getColumns(form, schema);
   const editableGridControls = getControls(form).filter(
     (control) => control.type === 'editablegrid'
   );

@@ -36,13 +36,13 @@ import { UrlControl } from '../form/controls/UrlControl';
 export interface StandardControlProps {
   attribute: Attribute;
   label?: string;
-  isError: boolean;
-  errorMessage: string | undefined;
+  isError?: boolean;
+  errorMessage?: string;
   name: string;
   value: any;
   placeholder?: string;
   onChange: (value: any) => void;
-  onBlur: () => void;
+  onBlur?: () => void;
   fileServiceContext?: Record<string, unknown>;
   disabled?: boolean;
   borderOnFocusOnly?: boolean;

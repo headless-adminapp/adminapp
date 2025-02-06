@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Body1,
   Combobox,
   Divider,
@@ -12,6 +13,7 @@ import {
   tokens,
   ToolbarButton,
 } from '@fluentui/react-components';
+import { useAppContext } from '@headless-adminapp/app/app';
 import { useDebouncedValue } from '@headless-adminapp/app/hooks';
 import {
   useRouter,
@@ -25,11 +27,12 @@ import {
 } from '@headless-adminapp/core/schema';
 import { ISchemaExperienceStore } from '@headless-adminapp/core/store';
 import { Data, IDataService } from '@headless-adminapp/core/transport';
-import { Icons } from '@headless-adminapp/icons';
+import { IconPlaceholder, Icons } from '@headless-adminapp/icons';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
 import { RecordCard } from '../../PageEntityForm/RecordCard';
+import { getAvatarColor } from '../../utils/avatar';
 import { ControlProps } from './types';
 import { useGetLookupView, useLookupData } from './useLookupData';
 
@@ -43,6 +46,7 @@ export type DataLookup = {
   id: string;
   name: string;
   logicalName: string;
+  avatar?: string;
 };
 
 export type LookupControlProps = ControlProps<DataLookup> & {
@@ -304,11 +308,33 @@ const LookupControlMd: FC<LookupControlProps> = ({
                   <Icons.Close size={16} />
                 </div>
               }
+              primaryText={{
+                style: {
+                  paddingBottom: 0,
+                },
+              }}
             >
               {allowNavigation && path ? (
-                <Link href={path} onClick={handleOpenRecord}>
+                <Link
+                  href={path}
+                  onClick={handleOpenRecord}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: tokens.spacingHorizontalXS,
+                  }}
+                >
+                  <LookupAvatar
+                    schema={schema}
+                    logicalName={schema.logicalName}
+                    value={value}
+                  />
                   <Body1
-                    style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+                    style={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
                   >
                     {value?.name}
                   </Body1>
@@ -323,5 +349,56 @@ const LookupControlMd: FC<LookupControlProps> = ({
         </div>
       )}
     </div>
+  );
+};
+
+interface LookupAvatarProps {
+  logicalName: string;
+  value?: DataLookup;
+  schema: Schema;
+}
+
+const LookupAvatar: FC<LookupAvatarProps> = ({
+  logicalName,
+  schema,
+  value,
+}) => {
+  const { schemaMetadataDic } = useAppContext();
+
+  if (!schema.avatarAttribute) {
+    const experienceSchema = schemaMetadataDic[logicalName];
+    const Icon = experienceSchema.icon ?? Icons.Entity ?? IconPlaceholder;
+
+    return (
+      <Avatar
+        style={{
+          width: 20,
+          height: 20,
+        }}
+        icon={{
+          style: {
+            background: 'transparent',
+            color: 'inherit',
+          },
+          children: <Icon size={20} />,
+        }}
+      />
+    );
+  }
+
+  return (
+    <Avatar
+      style={{
+        width: 20,
+        height: 20,
+        fontSize: tokens.fontSizeBase100,
+        backgroundColor: 'transparent',
+      }}
+      name={value?.name}
+      color={getAvatarColor(value?.name)}
+      image={{
+        src: value?.avatar,
+      }}
+    />
   );
 };

@@ -50,16 +50,18 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
 
   const [search] = useDebouncedValue(searchText, 500);
 
-  const columns = useMemo(
-    () =>
-      Array.from(
-        new Set([
-          ...gridColumns.filter((x) => !x.expandedKey).map((x) => x.name),
-          schema.primaryAttribute,
-        ])
-      ),
-    [gridColumns, schema.primaryAttribute]
-  );
+  const columns = useMemo(() => {
+    const set = new Set([
+      ...gridColumns.filter((x) => !x.expandedKey).map((x) => x.name),
+      schema.primaryAttribute,
+    ]);
+
+    if (schema.avatarAttribute) {
+      set.add(schema.avatarAttribute);
+    }
+
+    return Array.from(set);
+  }, [gridColumns, schema.primaryAttribute]);
 
   const expand = useMemo(() => collectExpandedKeys(gridColumns), [gridColumns]);
 
@@ -98,7 +100,7 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
 
   useEffect(() => {
     setState({
-      fetchNextPage: fetchNextPage,
+      fetchNextPage: () => fetchNextPage,
     });
   }, [fetchNextPage, setState]);
 

@@ -4,6 +4,7 @@ import type { Id } from './IdAttribute';
 export interface DataLookup<T extends Id> {
   id: T;
   name: string;
+  avatar?: string;
 }
 
 /** @todo move to expereince */

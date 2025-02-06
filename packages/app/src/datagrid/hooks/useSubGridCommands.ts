@@ -20,7 +20,7 @@ export function useSubGridCommandHandlerContext(): EntitySubGridCommandContext {
     GridContext,
     (state) => state.associated
   );
-  const recordTitle = useRecordTitle();
+  const [recordTitle] = useRecordTitle();
 
   return {
     ...baseHandlerContext,

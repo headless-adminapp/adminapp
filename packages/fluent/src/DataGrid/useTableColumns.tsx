@@ -1,4 +1,5 @@
 import {
+  Avatar,
   makeStyles,
   mergeClasses,
   TableHeaderCell,
@@ -56,12 +57,13 @@ import {
   createColumnHelper,
   HeaderContext,
 } from '@tanstack/react-table';
-import { FC, useEffect, useMemo, useRef } from 'react';
+import { FC, Fragment, useEffect, useMemo, useRef } from 'react';
 
 import { componentStore } from '../componentStore';
 import { TableHeaderFilterCell } from '../DataGrid/GridColumnHeader';
 import { TableCellText } from '../DataGrid/TableCell';
 import { TableCellLink } from '../DataGrid/TableCell/TableCellLink';
+import { getAvatarColor } from '../utils/avatar';
 import { ActionCell } from './ActionCell';
 import { TableCellChoice } from './TableCell/TableCellChoice';
 import { UniqueRecord } from './types';
@@ -486,23 +488,14 @@ function renderCellContent({
   }
 
   if (schema.primaryAttribute === column.name) {
-    const path = routeResolver({
-      logicalName: schema.logicalName,
-      type: PageType.EntityForm,
-      id: info.row.original[schema.idAttribute] as string,
+    return renderPrimaryAttribute({
+      info,
+      column,
+      routeResolver,
+      openRecord,
+      schema,
+      value: value as string,
     });
-
-    return (
-      <TableCellLink
-        key={column.id}
-        value={value as string}
-        width={info.column.getSize()}
-        href={path}
-        onClick={() => {
-          openRecord(info.row.original[schema.idAttribute] as string);
-        }}
-      />
-    );
   }
 
   switch (attribute?.type) {
@@ -516,33 +509,17 @@ function renderCellContent({
         />
       );
     case 'lookup': {
-      if (!value) {
-        return (
-          <TableCellText
-            key={column.id}
-            value=""
-            width={info.column.getSize()}
-          />
-        );
-      }
-      const path = routeResolver({
-        logicalName: attribute.entity,
-        type: PageType.EntityForm,
-        id: (value as unknown as DataLookup<Id>).id as string,
+      return renderLookupAttribute({
+        info,
+        column,
+        schemaStore,
+        routeResolver,
+        recordSetSetter,
+        router,
+        value,
+        attribute,
+        formattedValue,
       });
-
-      return (
-        <TableCellLink
-          key={column.id}
-          value={formattedValue}
-          width={info.column.getSize()}
-          href={path}
-          onClick={() => {
-            recordSetSetter('', []);
-            router.push(path);
-          }}
-        />
-      );
     }
     case 'attachment': {
       const url = (value as FileObject)?.url;
@@ -585,6 +562,155 @@ function renderCellContent({
       key={column.id}
       value={formattedValue}
       width={info.column.getSize()}
+    />
+  );
+}
+
+function renderPrimaryAttribute({
+  info,
+  column,
+  schema,
+  routeResolver,
+  openRecord,
+  value,
+}: {
+  info: CellContext<UniqueRecord, unknown>;
+  column: TransformedViewColumn<SchemaAttributes>;
+  schema: Schema;
+  routeResolver: InternalRouteResolver;
+  openRecord: (id: string) => void;
+  value: string;
+}) {
+  const path = routeResolver({
+    logicalName: schema.logicalName,
+    type: PageType.EntityForm,
+    id: info.row.original[schema.idAttribute] as string,
+  });
+
+  return (
+    <TableCellLink
+      key={column.id}
+      value={
+        <Fragment>
+          {renderPrimaryAttributeAvatar({
+            info,
+            schema,
+            value,
+          })}
+          {value}
+        </Fragment>
+      }
+      width={info.column.getSize()}
+      href={path}
+      onClick={() => {
+        openRecord(info.row.original[schema.idAttribute] as string);
+      }}
+    />
+  );
+}
+
+function renderPrimaryAttributeAvatar({
+  info,
+  schema,
+  value,
+}: {
+  info: CellContext<UniqueRecord, unknown>;
+  schema: Schema;
+  value: string;
+}) {
+  if (!schema.avatarAttribute) {
+    return null;
+  }
+
+  const avatarAttribute = schema.attributes[schema.avatarAttribute];
+
+  if (avatarAttribute.type !== 'attachment') {
+    return null;
+  }
+
+  const avatarValue = info.row.original[schema.avatarAttribute] as
+    | FileObject
+    | undefined;
+
+  return (
+    <Avatar
+      style={{
+        width: 24,
+        height: 24,
+        fontSize: tokens.fontSizeBase100,
+      }}
+      name={value}
+      color={getAvatarColor(value)}
+      image={{
+        src: avatarValue?.url,
+      }}
+    />
+  );
+}
+
+function renderLookupAttribute({
+  value,
+  info,
+  column,
+  schemaStore,
+  routeResolver,
+  recordSetSetter,
+  router,
+  attribute,
+  formattedValue,
+}: {
+  value: unknown;
+  info: CellContext<UniqueRecord, unknown>;
+  column: TransformedViewColumn<SchemaAttributes>;
+  schemaStore: ISchemaStore;
+  routeResolver: InternalRouteResolver;
+  recordSetSetter: (logicalName: string, ids: (string | number)[]) => void;
+  router: RouterInstance;
+  attribute: LookupAttribute;
+  formattedValue: string;
+}) {
+  if (!value) {
+    return (
+      <TableCellText key={column.id} value="" width={info.column.getSize()} />
+    );
+  }
+
+  const lookupSchema = schemaStore.getSchema(attribute.entity);
+
+  const path = routeResolver({
+    logicalName: attribute.entity,
+    type: PageType.EntityForm,
+    id: (value as unknown as DataLookup<Id>).id as string,
+  });
+
+  return (
+    <TableCellLink
+      key={column.id}
+      value={
+        <Fragment>
+          {!!lookupSchema.avatarAttribute && (
+            <Avatar
+              style={{
+                width: 24,
+                height: 24,
+                fontSize: tokens.fontSizeBase100,
+              }}
+              name={formattedValue}
+              color={getAvatarColor(formattedValue)}
+              image={{
+                src: (value as unknown as DataLookup<Id>).avatar as string,
+              }}
+            />
+          )}
+          {formattedValue}
+        </Fragment>
+      }
+      width={info.column.getSize()}
+      href={path}
+      onClick={() => {
+        recordSetSetter('', []);
+        router.push(path);
+      }}
     />
   );
 }

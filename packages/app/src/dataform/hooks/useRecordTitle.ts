@@ -2,7 +2,9 @@ import { useFormInstance } from './useFormInstance';
 import { useDataFormSchema } from './useFormSchema';
 import { useRecordId } from './useRecordId';
 
-export function useRecordTitle() {
+type UseRecordTitleResult = [string, boolean];
+
+export function useRecordTitle(): UseRecordTitleResult {
   const formInstance = useFormInstance();
   const schema = useDataFormSchema();
   const recordId = useRecordId();
@@ -17,16 +19,16 @@ export function useRecordTitle() {
   }
 
   if (primaryAttributeValue && typeof primaryAttributeValue !== 'string') {
-    return String(primaryAttributeValue);
+    return [String(primaryAttributeValue), false];
   }
 
   if (primaryAttributeValue) {
-    return primaryAttributeValue;
+    return [primaryAttributeValue, false];
   }
 
   if (recordId) {
-    return '(No name)';
+    return ['(No name)', true];
   }
 
-  return `New ${schema.label.toLowerCase()}`;
+  return [`New ${schema.label.toLowerCase()}`, true];
 }

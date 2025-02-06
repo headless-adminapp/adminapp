@@ -24,16 +24,20 @@ export function getControls(form: Form) {
   return controls;
 }
 
-export function getColumns(form: Form) {
-  const columns = Array.from(
-    new Set([
-      ...(form.experience.includeAttributes ?? []),
-      ...(form.experience.headerControls ?? []),
-      ...getControls(form)
-        .filter((control) => control.type === 'standard')
-        .map((control) => control.attributeName),
-    ])
-  );
+export function getColumns(form: Form, schema: Schema) {
+  const set = new Set([
+    ...(form.experience.includeAttributes ?? []),
+    ...(form.experience.headerControls ?? []),
+    ...getControls(form)
+      .filter((control) => control.type === 'standard')
+      .map((control) => control.attributeName),
+  ]);
+
+  if (schema.avatarAttribute) {
+    set.add(schema.avatarAttribute);
+  }
+
+  const columns = Array.from(set);
 
   return columns;
 }
@@ -132,7 +136,7 @@ export function DataResolver() {
 
   const setState = useContextSetValue(DataFormContext);
 
-  const columns = useMemo(() => getColumns(form), [form]);
+  const columns = useMemo(() => getColumns(form, schema), [form, schema]);
 
   const queryKey = useMemo(
     () => ['data', 'retriveRecord', schema.logicalName, recordId, columns],

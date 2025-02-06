@@ -47,6 +47,24 @@ export class SchemaStore<SA extends SchemaAttributes = SchemaAttributes>
         );
       }
 
+      if (schema.avatarAttribute) {
+        const avatarAttribute = schema.attributes[schema.avatarAttribute];
+
+        if (!avatarAttribute) {
+          throw new Error(
+            `Schema ${schema.logicalName} does not have avatar attribute`
+          );
+        }
+
+        if (avatarAttribute.type !== 'attachment') {
+          throw new Error(
+            `Avatar attribute ${schema.avatarAttribute as string} of schema ${
+              schema.logicalName
+            } must be of type image attachment`
+          );
+        }
+      }
+
       const lookupAttributes = Object.entries(schema.attributes).filter(
         ([_, attr]) => attr.type === 'lookup'
       ) as [string, LookupAttribute][];

@@ -21,7 +21,7 @@ interface PageBoardProps<S extends SchemaAttributes = SchemaAttributes> {
 }
 
 export function PageBoard<S extends SchemaAttributes = SchemaAttributes>(
-  props: PageBoardProps<S>
+  props: Readonly<PageBoardProps<S>>
 ) {
   const contextValue = useCreateContextStore<BoardContextState<S>>({
     config: props.config,

@@ -40,10 +40,16 @@ export function dataUrlToFile(dataUrl: string, name: string): File {
 }
 
 export function urlToFileObject(url: string, name?: string): FileObject {
-  const fileName = name || url.split('/').pop() || 'file';
+  if (!name) {
+    name = url.split('/').pop() ?? 'file';
+  }
+
+  if (name.includes('?')) {
+    name = name.split('?')[0];
+  }
 
   return {
-    name: fileName,
+    name,
     size: 0,
     type: '',
     url,
