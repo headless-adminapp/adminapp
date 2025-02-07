@@ -18,7 +18,7 @@
     "url": "https://github.com/headless-adminapp/adminapp/issues"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "clean": "rm -rf dist && rm -f tsconfig.tsbuildinfo",
     "ts-check": "tsc --noEmit",
     "copy-files": "cp package.json dist && cp src/index.css dist",
