@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/icons-fluent",
-  "version": "0.0.17-alpha.53",
+  "version": "0.0.17-alpha.55",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
@@ -29,7 +29,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@headless-adminapp/icons": "*",
-    "@fluentui/react-icons": "^2.0.247"
+    "@fluentui/react-icons": "^2.0.247",
+    "@headless-adminapp/icons": "*"
   }
 }
