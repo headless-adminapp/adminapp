@@ -13,8 +13,8 @@ import { useContextSelector } from '@headless-adminapp/app/mutable/context';
 import { Schema } from '@headless-adminapp/core/schema';
 import type { Identifier } from 'dnd-core';
 import { FC, useMemo, useRef } from 'react';
-import { useDrop } from 'react-dnd';
 
+import { useDndContext } from '../components/DndProvider';
 import { BoardColumnCard } from './BoardColumnCard';
 import { BoardingColumnCardLoading } from './BoardingColumnCardLoading';
 
@@ -31,6 +31,7 @@ export const BoardColumnUI: FC = () => {
   const { PreviewComponent, schema, columnConfigs } = useBoardConfig();
 
   const baseContext = useBaseCommandHandlerContext();
+  const { useDrop } = useDndContext();
 
   const ref = useRef<HTMLDivElement>(null);
   const [{ handlerId, over, canDrop }, drop] = useDrop<

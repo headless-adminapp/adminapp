@@ -10,9 +10,8 @@ import {
 } from '@headless-adminapp/app/mutable/context';
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { useEffect } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 
+import { DndProvider } from '../components/DndProvider';
 import { BoardColumn } from './BoardColumn';
 import { Header } from './Header';
 
@@ -39,7 +38,7 @@ export function PageBoard<S extends SchemaAttributes = SchemaAttributes>(
     <BoardContext.Provider
       value={contextValue as unknown as ContextValue<BoardContextState>}
     >
-      <DndProvider backend={HTML5Backend}>
+      <DndProvider>
         <div
           style={{
             display: 'flex',

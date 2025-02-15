@@ -12,7 +12,8 @@ import { TransformedViewColumn } from '@headless-adminapp/app/datagrid';
 import { Icons } from '@headless-adminapp/icons';
 import type { Identifier, XYCoord } from 'dnd-core';
 import { FC, useRef } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+
+import { useDndContext } from '../../components/DndProvider';
 
 export const ItemTypes = {
   CARD: 'column',
@@ -43,6 +44,8 @@ export const ColumnItem: FC<CardProps> = ({
   onRemove,
   stringSet = {}, // defaultCustomizeColumnStrings,
 }) => {
+  const { useDrag, useDrop } = useDndContext();
+
   const ref = useRef<HTMLDivElement>(null);
   const [{ handlerId }, drop] = useDrop<
     DragItem,

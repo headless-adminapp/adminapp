@@ -1,6 +1,6 @@
-import { useContextSelector } from '@headless-adminapp/app/mutable/context';
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
 
+import { useContextSelector } from '../../mutable/context';
 import { BoardContext } from '../context';
 import { BoardConfig } from '../types';
 

@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
-  "type": "module",
   "publishConfig": {
     "access": "public",
     "directory": "dist"
@@ -18,15 +17,19 @@
     "url": "https://github.com/headless-adminapp/adminapp/issues"
   },
   "scripts": {
-    "build": "tsc && tsc-alias",
+    "build:tsc": "tsc",
+    "build:package": "ts-node ../../scripts/buildPackageJson.ts",
+    "build": "pnpm run build:tsc && pnpm run build:package",
     "clean": "rm -rf dist && rm -f tsconfig.tsbuildinfo",
     "ts-check": "tsc --noEmit",
-    "copy-files": "cp package.json dist",
-    "prepublishOnly": "pnpm run build && pnpm run copy-files",
+    "prepublishOnly": "pnpm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "@headless-adminapp/core": "*"
+  },
   "gitHead": "e2723ae74a1800c33a6790204bb2d1ae114e5310"
 }

@@ -2,7 +2,8 @@ import { tokens } from '@fluentui/react-components';
 import { BoardColumnCardPreviewFC } from '@headless-adminapp/app/board/types';
 import { Schema } from '@headless-adminapp/core/schema';
 import { useRef } from 'react';
-import { useDrag } from 'react-dnd';
+
+import { useDndContext } from '../components/DndProvider';
 
 interface BoardColumnCardProps {
   record: Record<string, unknown>;
@@ -19,8 +20,9 @@ export function BoardColumnCard({
   columnId,
   PreviewComponent,
   schema,
-}: BoardColumnCardProps) {
+}: Readonly<BoardColumnCardProps>) {
   const ref = useRef<HTMLDivElement>(null);
+  const { useDrag } = useDndContext();
   const [{ isDragging }, drag] = useDrag({
     type: columnId,
     canDrag,

@@ -1,8 +1,8 @@
-import {
+import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { RetriveRecordsResult } from '@headless-adminapp/core/transport';
+import type { RetriveRecordsResult } from '@headless-adminapp/core/transport';
 
 import { createContext } from '../mutable';
 import { BoardColumnConfig, BoardConfig } from './types';

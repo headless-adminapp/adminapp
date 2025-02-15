@@ -1,12 +1,11 @@
-import {
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
-} from '@headless-adminapp/core/schema';
-import { Data } from '@headless-adminapp/core/transport';
-
-import { CommandContextBase } from '../command';
-import { Form } from './Form';
+} from '../../schema';
+import type { Data } from '../../transport';
+import type { CommandContextBase } from '../command';
+import type { Form } from './Form';
 
 export interface ProcessFlowInfoContext extends CommandContextBase {
   primaryControl: {

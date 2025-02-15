@@ -1,5 +1,4 @@
-import { useContextSelector } from '@headless-adminapp/app/mutable/context';
-
+import { useContextSelector } from '../../mutable/context';
 import { BoardColumnContext } from '../context';
 
 export function useBoardColumnDataState() {

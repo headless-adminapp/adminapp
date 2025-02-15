@@ -1,9 +1,6 @@
-import {
-  useContextSelector,
-  useContextSetValue,
-} from '@headless-adminapp/app/mutable/context';
 import { useCallback } from 'react';
 
+import { useContextSelector, useContextSetValue } from '../../mutable/context';
 import { BoardContext } from '../context';
 
 export function useSearchText() {

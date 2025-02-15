@@ -9,7 +9,9 @@
     "preinstall": "npx only-allow pnpm",
     "clean": "lerna run clean",
     "build": "lerna run build",
+    "validate:bundle": "ts-node --project=tsconfig.script.json scripts/validateBundles.ts",
     "publish": "lerna publish",
+    "publish:pre": "lerna publish prerelease",
     "lint": "eslint . --ext .ts,.tsx",
     "lint.fix": "eslint .  --fix --ext .ts,.tsx",
     "ts-check": "lerna run ts-check",
@@ -19,7 +21,9 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "react": "18.3.1"
+    "ora": "^8.2.0",
+    "react": "18.3.1",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.11",
@@ -35,7 +39,6 @@
     "eslint-plugin-simple-import-sort": "^12.0.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "lerna": "^8.1.8",
-    "tsc-alias": "^1.8.10",
     "typescript": "^5.5.2"
   }
 }

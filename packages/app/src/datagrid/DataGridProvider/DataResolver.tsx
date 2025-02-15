@@ -61,7 +61,7 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
     }
 
     return Array.from(set);
-  }, [gridColumns, schema.primaryAttribute]);
+  }, [gridColumns, schema.avatarAttribute, schema.primaryAttribute]);
 
   const expand = useMemo(() => collectExpandedKeys(gridColumns), [gridColumns]);
 

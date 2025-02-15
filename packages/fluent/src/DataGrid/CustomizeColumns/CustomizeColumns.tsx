@@ -16,9 +16,8 @@ import { useContextSetValue } from '@headless-adminapp/app/mutable';
 import { Icons } from '@headless-adminapp/icons';
 import update from 'immutability-helper';
 import { useCallback, useMemo, useState } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 
+import { DndProvider } from '../../components/DndProvider';
 import { usePageEntityViewStrings } from '../../PageEntityView/PageEntityViewStringContext';
 import { AddColumns } from './AddColumns';
 import { ColumnItem } from './ColumnItem';
@@ -123,7 +122,7 @@ export function CustomizeColumns({ onClose, opened }: CustomizeColumnsProps) {
         <Divider />
       </div>
       <DrawerBody style={{ paddingInline: tokens.spacingHorizontalS }}>
-        <DndProvider backend={HTML5Backend}>
+        <DndProvider>
           <div
             style={{
               display: 'flex',

@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
-  "type": "module",
   "publishConfig": {
     "access": "public",
     "directory": "dist"
@@ -18,17 +17,22 @@
     "url": "https://github.com/headless-adminapp/adminapp/issues"
   },
   "scripts": {
-    "build": "tsc && tsc-alias && sass src/styles/index.scss dist/styles.css --no-source-map",
+    "build:tsc": "tsc",
+    "build:scss": "sass src/styles/index.scss dist/styles.css --no-source-map",
+    "build:package": "ts-node ../../scripts/buildPackageJson.ts",
+    "build": "pnpm run build:tsc && pnpm run build:scss && pnpm run build:package",
     "clean": "rm -rf dist && rm -f tsconfig.tsbuildinfo",
     "ts-check": "tsc --noEmit",
-    "copy-files": "cp package.json dist",
-    "prepublishOnly": "pnpm run build && pnpm run copy-files",
+    "prepublishOnly": "pnpm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@headless-adminapp/core": "*",
+    "@headless-adminapp/icons": "*",
+    "@headless-adminapp/icons-fluent": "*",
     "@fluentui/react-components": "9.54.4",
     "@fluentui/react-datepicker-compat": "0.4.43",
     "@fluentui/react-nav-preview": "0.5.1",
