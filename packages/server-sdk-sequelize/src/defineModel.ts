@@ -1,11 +1,13 @@
 import {
   ChoiceAttribute,
   DateAttribute,
+  IdAttribute,
 } from '@headless-adminapp/core/attributes';
 import { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
 import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
 import { Schema } from '@headless-adminapp/core/schema';
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes, ModelAttributeColumnOptions, Sequelize } from 'sequelize';
+import { v4 as uuid } from 'uuid';
 
 import { SequelizeRequiredSchemaAttributes } from './types';
 
@@ -35,6 +37,36 @@ function resolveChoicesAttribute(attribute: ChoicesAttribute<string | number>) {
   }
 
   throw new Error('Invalid choice type');
+}
+
+function resolveIdAttribute(
+  attribute: IdAttribute<string | number>,
+  isSchemaIdAttribute: boolean
+): ModelAttributeColumnOptions {
+  const modelAttribute = {
+    primaryKey: isSchemaIdAttribute,
+  } as ModelAttributeColumnOptions;
+
+  if ('number' in attribute && attribute.number) {
+    modelAttribute.type = DataTypes.NUMBER;
+
+    if (isSchemaIdAttribute) {
+      modelAttribute.autoIncrement = true;
+    }
+  } else {
+    modelAttribute.type = DataTypes.STRING;
+
+    if (isSchemaIdAttribute) {
+      if ('guid' in attribute && attribute.guid) {
+        modelAttribute.type = DataTypes.UUID;
+        modelAttribute.defaultValue = () => uuid();
+      } else {
+        throw new Error('Invalid type for id attribute');
+      }
+    }
+  }
+
+  return modelAttribute;
 }
 
 function shouldSkipAttribute<S extends SequelizeRequiredSchemaAttributes>(
@@ -79,10 +111,7 @@ function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
 
     switch (attribute.type) {
       case 'id':
-        acc[key] = {
-          type: DataTypes.STRING,
-          primaryKey: schema.idAttribute === key,
-        };
+        acc[key] = resolveIdAttribute(attribute, schema.idAttribute === key);
         break;
       case 'attachment':
       case 'string':

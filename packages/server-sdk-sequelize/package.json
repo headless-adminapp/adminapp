@@ -32,7 +32,8 @@
     "@headless-adminapp/core": "*",
     "@headless-adminapp/server-sdk": "*",
     "dayjs": "^1.11.13",
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.3",
+    "uuid": "11.0.3"
   },
   "gitHead": "a28ee863fccb6157774e75b4cc421c6940cda469"
 }

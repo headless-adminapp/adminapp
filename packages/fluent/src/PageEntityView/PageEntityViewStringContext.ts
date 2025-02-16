@@ -21,6 +21,7 @@ export interface PageEntityViewStringSet {
   clearFilter: string;
   filterBy: string;
   noRecordsFound: string;
+  subgridNotAvailable: string;
 }
 
 export const defaultPageEntityViewStrings: PageEntityViewStringSet = {
@@ -43,6 +44,7 @@ export const defaultPageEntityViewStrings: PageEntityViewStringSet = {
   sortByDescending: 'Sort by descending',
   filterBy: 'Filter by',
   noRecordsFound: "We didn't find anything to show here",
+  subgridNotAvailable: 'Save the record to view associated records.',
 };
 
 export const PageEntityViewStringContext =

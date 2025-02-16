@@ -217,6 +217,36 @@ export abstract class ServerSdk<
     return changes;
   }
 
+  protected getSchemaDefaultValues<T extends SchemaAttributes>(
+    schema: Schema<T>
+  ): Record<string, unknown> {
+    return Object.entries(schema.attributes).reduce((acc, [key, attribute]) => {
+      if (
+        key === schema.idAttribute ||
+        key === schema.createdAtAttribute ||
+        key === schema.updatedAtAttribute
+      ) {
+        return acc;
+      }
+
+      if (!('default' in attribute)) {
+        return acc;
+      }
+
+      if (typeof attribute.default === 'function') {
+        acc[key] = attribute.default();
+      }
+
+      if (attribute.type === 'date' && attribute.default === '@now') {
+        acc[key] = new Date().toISOString();
+      }
+
+      acc[key] = attribute.default;
+
+      return acc;
+    }, {} as Record<string, unknown>);
+  }
+
   protected getDependedAttributes(schema: Schema<SA>) {
     const allSchemas = Object.values(this.options.schemaStore.getAllSchema());
 

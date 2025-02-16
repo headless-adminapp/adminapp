@@ -580,6 +580,10 @@ export class SequelizeServerSdk<
       return acc;
     }, {} as Record<string, any>);
 
+    const schemaDefaultValues = this.getSchemaDefaultValues(schema);
+
+    data = { ...schemaDefaultValues, ...data };
+
     if (this.options.defaultValueProvider) {
       const [defaultValues, overrideValues] =
         this.options.defaultValueProvider.getDefaultValues({

@@ -23,6 +23,7 @@ interface UseRetriveRecordProps<S extends SchemaAttributes = SchemaAttributes> {
   columns: string[];
   expand?: Partial<Record<string, string[]>>;
   maxRecords: number;
+  disabled?: boolean;
 }
 
 export function useRetrieveRecordsKey<
@@ -93,6 +94,7 @@ export function useRetriveRecords<
     schema,
     search,
     sorting,
+    disabled,
   }: UseRetriveRecordProps
 ) {
   const dataService = useDataService();
@@ -151,6 +153,7 @@ export function useRetriveRecords<
       initialPageParam: {
         pageIndex: 0,
       },
+      enabled: !disabled,
     });
 
   const finalData = useMemo(() => {

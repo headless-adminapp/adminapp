@@ -273,6 +273,14 @@ const LookupControlMd: FC<LookupControlProps> = ({
               <ToolbarButton
                 style={{ fontWeight: 'normal' }}
                 icon={<Icons.Add />}
+                onClick={() => {
+                  router.push(
+                    routeResolver({
+                      logicalName: schema.logicalName,
+                      type: PageType.EntityForm,
+                    })
+                  );
+                }}
               >
                 {loockupStrings.newRecord}
               </ToolbarButton>

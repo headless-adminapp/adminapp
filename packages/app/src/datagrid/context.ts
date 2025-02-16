@@ -36,6 +36,7 @@ export interface GridContextState<
   extraFilter?: Filter;
   commands?: CommandItemExperience<CommandContext>[][];
   maxRecords?: number;
+  disabled?: boolean;
 
   associated?:
     | false

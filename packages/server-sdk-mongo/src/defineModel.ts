@@ -39,9 +39,10 @@ function applyRequiredAttribute(attribute: AttributeBase, _defination: any) {
 }
 
 export function defineModel<S extends MongoRequiredSchemaAttributes>(
+  name: string,
   schema: Schema<S>
 ) {
-  if (!models[schema.logicalName]) {
+  if (!models[name]) {
     const { _id, ...rest } = schema.attributes;
 
     const mongoSchema = new MongoSchema(
@@ -110,18 +111,12 @@ export function defineModel<S extends MongoRequiredSchemaAttributes>(
       }
     );
 
-    models[schema.logicalName] = model<InferredDbSchemaType<S>>(
-      schema.logicalName,
+    models[name] = model<InferredDbSchemaType<S>>(
+      name,
       mongoSchema,
       schema.logicalName
     );
   }
 
-  return models[schema.logicalName] as Model<
-    InferredDbSchemaType<S>,
-    {},
-    {},
-    {},
-    any
-  >;
+  return models[name] as Model<InferredDbSchemaType<S>, {}, {}, {}, any>;
 }

@@ -51,5 +51,7 @@ declare module '@headless-adminapp/icons/types' {
     Document: Icon;
     Image: Icon;
     Checkmark: Icon;
+    Block: Icon;
+    Grid: Icon;
   }
 }

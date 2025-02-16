@@ -9,7 +9,8 @@
 // Wrapper - Loader, response message
 // Core - Extract modified fields, prepare operations, perform operations
 
-import { useRouter } from '@headless-adminapp/app/route';
+import { useRouter, useRouteResolver } from '@headless-adminapp/app/route';
+import { PageType } from '@headless-adminapp/core/experience/app';
 import { SaveMode } from '@headless-adminapp/core/experience/form';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useRef } from 'react';
@@ -41,6 +42,7 @@ export function useFormSave() {
   const { showProgressIndicator, hideProgressIndicator } =
     useProgressIndicator();
   const openToastNotification = useOpenToastNotification();
+  const routeResolver = useRouteResolver();
 
   const client = useQueryClient();
   const router = useRouter();
@@ -93,13 +95,18 @@ export function useFormSave() {
           return;
         }
 
-        // invalidateQueriesAfterSave({
-        //   client,
-        // });
-
-        if (mode === 'save' && record) {
-          await refresh();
-          // client.invalidateQueries({ queryKey: ['data', 'retriveRecord'] });
+        if (mode === 'save') {
+          if (record) {
+            await refresh();
+          } else {
+            router.replace(
+              routeResolver({
+                type: PageType.EntityForm,
+                logicalName: schema.logicalName,
+                id: result.recordId,
+              })
+            );
+          }
         } else {
           await client.invalidateQueries({
             queryKey: ['data', 'retriveRecord'],
@@ -112,15 +119,6 @@ export function useFormSave() {
         await client.invalidateQueries({
           queryKey: ['data', 'retriveRecords'],
         });
-
-        // redirectAfterSave({
-        //   navigation,
-        //   isCreatedMode: !context.state.record,
-        //   recordId: result.recordId,
-        //   reset: form.reset,
-        //   logicalName: schema.logicalName,
-        //   mode,
-        // });
 
         showMessageAfterSave({
           isCreatedMode: !record,

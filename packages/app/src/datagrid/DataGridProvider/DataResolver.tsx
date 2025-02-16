@@ -25,6 +25,7 @@ import {
   useSearchText,
   useSelectedView,
 } from '../hooks';
+import { useGridDisabled } from '../hooks/useGridDisabled';
 import { collectExpandedKeys, mergeConditions } from './utils';
 
 const MAX_RECORDS = 10000;
@@ -40,6 +41,7 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
   const gridColumns = useGridColumns();
   const maxRecords = useMaxRecords() ?? MAX_RECORDS;
   const [selectedIds] = useGridSelection();
+  const disabled = useGridDisabled();
 
   const { schemaStore } = useMetadata();
 
@@ -96,6 +98,7 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
       schema,
       search,
       sorting,
+      disabled,
     });
 
   useEffect(() => {

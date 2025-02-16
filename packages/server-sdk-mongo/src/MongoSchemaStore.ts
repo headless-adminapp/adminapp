@@ -13,10 +13,14 @@ export class MongoSchemaStore<
     Model<InferredDbSchemaType<MongoRequiredSchemaAttributes>>
   > = {};
 
+  constructor(private readonly key: string = 'MongoSchemaStore') {
+    super();
+  }
+
   public override register<S extends SA>(schema: Schema<S>) {
     super.register(schema);
 
-    const model = defineModel(schema);
+    const model = defineModel(`${this.key}:${schema.logicalName}`, schema);
 
     this.models[schema.logicalName] = model as unknown as Model<
       InferredDbSchemaType<MongoRequiredSchemaAttributes>

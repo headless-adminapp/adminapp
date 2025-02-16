@@ -11,6 +11,7 @@ import { Filter } from '@headless-adminapp/core/transport';
 import { useMemo, useState } from 'react';
 
 import { FormSubgridContainer } from '../PageEntityView/FormSubgridContainer';
+import { FormSubgridNotAvailableContainer } from '../PageEntityView/FormSubgridNotAvailableContainer';
 
 interface SubgridControlProps {
   logicalName: string;
@@ -117,6 +118,7 @@ export function SubgridControl(props: SubgridControlProps) {
   }
 
   const ContainerComponent = props.ContainerComponent ?? FormSubgridContainer;
+  const disabled = !!props.associated && !props.associated.id;
 
   return (
     <DataGridProvider
@@ -129,8 +131,9 @@ export function SubgridControl(props: SubgridControlProps) {
       associated={props.associated}
       extraFilter={extraFilter}
       allowViewSelection={props.allowViewSelection ?? false}
+      disabled={disabled}
     >
-      <ContainerComponent />
+      {disabled ? <FormSubgridNotAvailableContainer /> : <ContainerComponent />}
     </DataGridProvider>
   );
 }

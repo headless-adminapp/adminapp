@@ -9,6 +9,8 @@ const ExcelRegular = lazy(() => import('./ExcelRegular'));
 const ExcelFilled = lazy(() => import('./ExcelFilled'));
 const CsvRegular = lazy(() => import('./CsvRegular'));
 const CsvFilled = lazy(() => import('./CsvFilled'));
+const BlockRegular = lazy(() => import('./BlockRegular'));
+const BlockFilled = lazy(() => import('./BlockFilled'));
 
 export const iconSet = defineIconSet({
   // controls
@@ -83,4 +85,9 @@ export const iconSet = defineIconSet({
   Document: bundleLazyIcon('Document24Regular', 'Document24Filled'),
   Image: bundleLazyIcon('Image24Regular', 'Image24Filled'),
   Checkmark: bundleLazyIcon('Checkmark24Regular', 'Checkmark24Filled'),
+  Block: bundleIcon(
+    createIcon(BlockRegular, true),
+    createIcon(BlockFilled, true)
+  ),
+  Grid: bundleLazyIcon('Grid24Regular', 'Grid24Regular'),
 });

@@ -38,6 +38,7 @@ export interface DataGridProviderProps<
       };
   allowViewSelection?: boolean;
   maxRecords?: number;
+  disabled?: boolean;
 }
 
 export function DataGridProvider<
@@ -89,6 +90,7 @@ export function DataGridProvider<
     allowViewSelection: props.allowViewSelection ?? false,
     maxRecords: props.maxRecords,
     associated: props.associated,
+    disabled: props.disabled ?? false,
   });
 
   useEffect(() => {
@@ -133,6 +135,12 @@ export function DataGridProvider<
       associated: props.associated,
     });
   }, [props.isSubGrid, props.associated, contextValue]);
+
+  useEffect(() => {
+    contextValue.setValue({
+      disabled: props.disabled ?? false,
+    });
+  }, [props.disabled, contextValue]);
 
   return (
     <GridContext.Provider

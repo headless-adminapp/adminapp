@@ -29,7 +29,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@fluentui/react-icons": "^2.0.247",
+    "@fluentui/react-icons": "^2.0.274",
     "@headless-adminapp/icons": "*"
   }
 }
