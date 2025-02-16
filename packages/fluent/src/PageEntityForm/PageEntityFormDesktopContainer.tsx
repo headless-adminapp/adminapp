@@ -38,6 +38,7 @@ import { CommandContainer } from './CommandContainer';
 import { FormTabRelated } from './FormTabRelated';
 import { usePageEntityFormStrings } from './PageEntityFormStringContext';
 import { ProcessFlow } from './ProcessFlow';
+import { RecordAvatar } from './RecordAvatar';
 import { RelatedItemInfo, RelatedViewSelector } from './RelatedViewSelector';
 import { SectionContainer } from './SectionContainer';
 
@@ -94,7 +95,7 @@ export const PageEntityFormDesktopContainer: FC = () => {
     }
   }, [setActiveTab, formConfig, schema]);
 
-  const recordTitle = useRecordTitle();
+  const [recordTitle] = useRecordTitle();
 
   // const readonly = useIsFormReadonly();
 
@@ -183,6 +184,7 @@ export const PageEntityFormDesktopContainer: FC = () => {
               marginBottom: tokens.spacingVerticalS,
             }}
           >
+            <RecordAvatar />
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
               <div
                 style={{

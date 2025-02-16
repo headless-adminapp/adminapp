@@ -9,16 +9,11 @@ export function typeSafeFn<T>() {
   };
 }
 
-export function fileToObject(file: File): Promise<FileObject> {
+export function readFileAsDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
-      resolve({
-        name: file.name,
-        type: file.type,
-        size: file.size,
-        url: reader.result as string,
-      });
+      resolve(reader.result as string);
     };
     reader.onerror = (error) => {
       console.error(error);
@@ -26,6 +21,17 @@ export function fileToObject(file: File): Promise<FileObject> {
     };
     reader.readAsDataURL(file);
   });
+}
+
+export async function fileToObject(file: File): Promise<FileObject> {
+  const dataUrl = await readFileAsDataURL(file);
+
+  return {
+    name: file.name,
+    type: file.type,
+    size: file.size,
+    url: dataUrl,
+  };
 }
 
 export function dataUrlToFile(dataUrl: string, name: string): File {

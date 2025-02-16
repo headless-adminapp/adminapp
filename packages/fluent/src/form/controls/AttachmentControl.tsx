@@ -27,13 +27,13 @@ import { FC, useMemo } from 'react';
 import { ControlProps } from './types';
 
 interface UseAttachmentSelectorOptions {
-  fileService: IFileService;
+  fileService: IFileService | null; // required for remote location
   fileServiceContext?: Record<string, unknown>;
   location: AttachmentAttribute['location'];
   onChange?: (fileObject: FileObject) => void;
 }
 
-function useAttachmentSelector({
+export function useAttachmentSelector({
   fileService,
   fileServiceContext,
   location,
@@ -46,6 +46,10 @@ function useAttachmentSelector({
       if (location === 'local') {
         return fileToObject(file);
       } else {
+        if (!fileService) {
+          throw new Error('File service is not provided');
+        }
+
         const url = await fileService.uploadFile(file, {
           context: fileServiceContext,
         });
