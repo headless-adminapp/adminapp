@@ -1,6 +1,7 @@
 import { Schema } from '@headless-adminapp/core/schema';
 import { ISchemaStore } from '@headless-adminapp/core/store';
 import { RetriveRecordsParams } from '@headless-adminapp/core/transport';
+import { urlToFileObject } from '@headless-adminapp/core/utils';
 
 function transformColumns({
   record,
@@ -35,6 +36,12 @@ function transformColumns({
           name: expandedValue[lookupSchema.primaryAttribute],
           logicalName: attribute.entity,
         };
+      }
+    } else if (attribute.type === 'attachment') {
+      if (record[column]) {
+        transformedRecord[column] = urlToFileObject(record[column]);
+      } else {
+        transformedRecord[column] = null;
       }
     } else {
       transformedRecord[column] = record[column];
