@@ -2,6 +2,9 @@ import {
   ChoiceAttribute,
   DateAttribute,
   IdAttribute,
+  LookupAttribute,
+  NumberAttribute,
+  StringAttribute,
 } from '@headless-adminapp/core/attributes';
 import { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
 import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
@@ -19,11 +22,19 @@ function resolveDateAttribute(attribute: DateAttribute) {
   }
 }
 
+function resolveNumberAttribute(attribute: NumberAttribute) {
+  if (attribute.format === 'decimal') {
+    return { type: DataTypes.FLOAT };
+  }
+
+  return { type: DataTypes.INTEGER };
+}
+
 function resolveChoiceAttribute(attribute: ChoiceAttribute<string | number>) {
   if ('string' in attribute && attribute.string) {
     return { type: DataTypes.STRING };
   } else if ('number' in attribute && attribute.number) {
-    return { type: DataTypes.NUMBER };
+    return { type: DataTypes.INTEGER };
   }
 
   throw new Error('Invalid choice type');
@@ -33,7 +44,7 @@ function resolveChoicesAttribute(attribute: ChoicesAttribute<string | number>) {
   if ('string' in attribute && attribute.string) {
     return { type: [DataTypes.STRING] };
   } else if ('number' in attribute && attribute.number) {
-    return { type: [DataTypes.NUMBER] };
+    return { type: [DataTypes.INTEGER] };
   }
 
   throw new Error('Invalid choice type');
@@ -48,7 +59,7 @@ function resolveIdAttribute(
   } as ModelAttributeColumnOptions;
 
   if ('number' in attribute && attribute.number) {
-    modelAttribute.type = DataTypes.NUMBER;
+    modelAttribute.type = DataTypes.INTEGER;
 
     if (isSchemaIdAttribute) {
       modelAttribute.autoIncrement = true;
@@ -67,6 +78,32 @@ function resolveIdAttribute(
   }
 
   return modelAttribute;
+}
+
+function resolveLookupAttribute(attribute: LookupAttribute) {
+  const modelAttribute = {} as ModelAttributeColumnOptions;
+
+  if ('number' in attribute && attribute.number) {
+    modelAttribute.type = DataTypes.INTEGER;
+  } else {
+    modelAttribute.type = DataTypes.STRING;
+
+    if ('guid' in attribute && attribute.guid) {
+      modelAttribute.type = DataTypes.UUID;
+    } else {
+      modelAttribute.type = DataTypes.STRING;
+    }
+  }
+
+  return modelAttribute;
+}
+
+function resolveStringAttribute(attribute: StringAttribute) {
+  if (attribute.format === 'textarea' || attribute.format === 'richtext') {
+    return { type: DataTypes.TEXT };
+  }
+
+  return { type: DataTypes.STRING };
 }
 
 function shouldSkipAttribute<S extends SequelizeRequiredSchemaAttributes>(
@@ -114,8 +151,10 @@ function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
         acc[key] = resolveIdAttribute(attribute, schema.idAttribute === key);
         break;
       case 'attachment':
-      case 'string':
         acc[key] = { type: DataTypes.STRING };
+        break;
+      case 'string':
+        acc[key] = resolveStringAttribute(attribute);
         break;
       case 'boolean':
         acc[key] = { type: DataTypes.BOOLEAN };
@@ -124,10 +163,10 @@ function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
         acc[key] = resolveDateAttribute(attribute);
         break;
       case 'number':
-        acc[key] = { type: DataTypes.NUMBER };
+        acc[key] = resolveNumberAttribute(attribute);
         break;
       case 'money':
-        acc[key] = { type: DataTypes.NUMBER };
+        acc[key] = { type: DataTypes.FLOAT };
         break;
       case 'choice':
         acc[key] = resolveChoiceAttribute(attribute);
@@ -136,9 +175,7 @@ function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
         acc[key] = resolveChoicesAttribute(attribute);
         break;
       case 'lookup':
-        acc[key] = {
-          type: DataTypes.STRING,
-        };
+        acc[key] = resolveLookupAttribute(attribute);
         break;
       case 'mixed':
         acc[key] = { type: DataTypes.JSONB };
