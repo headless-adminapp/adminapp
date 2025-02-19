@@ -39,14 +39,19 @@ interface PromptDialogProps<SA extends SchemaAttributes = SchemaAttributes> {
 }
 
 export function PromptDialog(props: PromptDialogProps) {
-  const { language } = useLocale();
+  const { language, region } = useLocale();
   const formValidationStrings = useFormValidationStrings();
 
   const form = useForm({
     mode: 'all',
     defaultValues: props.defaultValues,
     shouldUnregister: false,
-    resolver: formValidator(props.attributes, language, formValidationStrings),
+    resolver: formValidator({
+      attributes: props.attributes,
+      language,
+      strings: formValidationStrings,
+      region,
+    }),
   });
 
   return (
@@ -143,13 +148,24 @@ export function PromptDialog(props: PromptDialogProps) {
 }
 
 export const formValidator = memoize(
-  function formValidator<A extends SchemaAttributes = SchemaAttributes>(
-    attributes: A,
-    language: string,
-    strings: FormValidationStringSet
-  ) {
+  function formValidator<A extends SchemaAttributes = SchemaAttributes>({
+    attributes,
+    language,
+    strings,
+    region,
+  }: {
+    attributes: A;
+    language: string;
+    strings: FormValidationStringSet;
+    region: string;
+  }) {
     return async (values: Record<string, any>, context: any, options: any) => {
-      const validator = generateValidationSchema(attributes, language, strings);
+      const validator = generateValidationSchema({
+        attributes,
+        language,
+        strings,
+        region,
+      });
 
       const resolver = yupResolver(validator);
 
@@ -158,13 +174,23 @@ export const formValidator = memoize(
       return result;
     };
   },
-  (attributes) => JSON.stringify({ attributes })
+  (options) => JSON.stringify(options)
 );
 
 export const generateValidationSchema = memoize(
   function generateValidationSchema<
     A extends SchemaAttributes = SchemaAttributes
-  >(attributes: A, language: string, strings: FormValidationStringSet) {
+  >({
+    attributes,
+    language,
+    strings,
+    region,
+  }: {
+    attributes: A;
+    language: string;
+    strings: FormValidationStringSet;
+    region: string;
+  }) {
     const columns = Object.keys(attributes);
     return yup.object().shape({
       ...(columns.reduce((acc, column) => {
@@ -173,7 +199,8 @@ export const generateValidationSchema = memoize(
         const validationSchema = generateAttributeValidationSchema(
           attribute,
           language,
-          strings
+          strings,
+          region
         );
 
         return {
@@ -183,5 +210,5 @@ export const generateValidationSchema = memoize(
       }, {} as Record<string, yup.Schema<any>>) as any),
     });
   },
-  (attributes) => JSON.stringify({ attributes })
+  (options) => JSON.stringify(options)
 );

@@ -40,6 +40,7 @@ import {
   calculateColumnWidths,
   getAttributeFormattedValue,
 } from '@headless-adminapp/app/utils';
+import { parsePhoneNumber } from '@headless-adminapp/app/utils/phone';
 import {
   Attribute,
   DataLookup,
@@ -445,6 +446,7 @@ function renderCellContent({
       currencyDisplay: currency.currencyDisplay,
       currencySign: currency.currencySign,
       locale: locale.locale,
+      region: locale.region,
     }) ?? '';
 
   if (column.plainText) {
@@ -555,6 +557,37 @@ function renderCellContent({
           width={info.column.getSize()}
         />
       );
+  }
+
+  if (attribute.type === 'string' && attribute.format === 'phone') {
+    const parsedNumber = parsePhoneNumber(value as string, locale.region);
+
+    if (parsedNumber.isValid && parsedNumber.uri) {
+      return (
+        <TableCellLink
+          key={column.id}
+          value={formattedValue}
+          width={info.column.getSize()}
+          href={parsedNumber.uri}
+        />
+      );
+    }
+  }
+
+  if (
+    attribute.type === 'string' &&
+    attribute.format === 'email' &&
+    value &&
+    typeof value === 'string'
+  ) {
+    return (
+      <TableCellLink
+        key={column.id}
+        value={formattedValue}
+        width={info.column.getSize()}
+        href={`mailto:${value}`}
+      />
+    );
   }
 
   return (

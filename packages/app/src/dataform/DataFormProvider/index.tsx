@@ -34,7 +34,7 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
   props: PropsWithChildren<DataFormProviderProps<S>>
 ) {
   const { schemaStore } = useMetadata();
-  const { language } = useLocale();
+  const { language, region } = useLocale();
   const formValidationStrings = useFormValidationStrings();
 
   const [formReadOnly, setFormReadOnly] = useState(false); // A trick to provide readOnly info to formInstance
@@ -49,6 +49,7 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
       schema: props.schema,
       strings: formValidationStrings,
       formReadOnly,
+      region,
     }),
     shouldUnregister: false,
   });

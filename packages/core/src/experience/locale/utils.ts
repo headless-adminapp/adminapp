@@ -20,6 +20,7 @@ export function getLocale(
 
   return {
     locale,
+    region: localeInfo.region ?? 'US',
     direction: direction ?? 'ltr',
     language,
     timezone,

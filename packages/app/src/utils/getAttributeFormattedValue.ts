@@ -12,6 +12,8 @@ import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 
+import { parsePhoneNumber } from './phone';
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -188,6 +190,7 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
     currencySign?: 'accounting' | 'standard';
     currencyDisplay?: 'symbol' | 'narrowSymbol' | 'code';
     timezone?: string;
+    region?: string;
   }
 ): string | null {
   if (value === null || value === undefined) {
@@ -195,6 +198,7 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
   }
 
   const locale = options?.locale ?? defaultLocale;
+  const region = options?.region ?? 'US';
 
   switch (attribute.type) {
     case 'boolean':
@@ -217,6 +221,13 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
       return new Intl.NumberFormat(locale).format(value as number);
     case 'attachment':
       return getAttributeAttachmentFormattedValue(value);
+    case 'string':
+      if (attribute.format === 'phone' && typeof value === 'string') {
+        return parsePhoneNumber(value, region).formattedNationalValue;
+      }
+      return typeof value === 'object'
+        ? JSON.stringify(value)
+        : (value as string);
     default:
       return typeof value === 'object'
         ? JSON.stringify(value)

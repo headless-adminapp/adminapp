@@ -1,3 +1,4 @@
+import { parsePhoneNumber } from '@headless-adminapp/app/utils/phone';
 import type {
   AttachmentsAttribute,
   Attribute,
@@ -13,6 +14,7 @@ import {
 import { ISchemaStore } from '@headless-adminapp/core/store';
 import { Nullable } from '@headless-adminapp/core/types';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { type CountryCode } from 'libphonenumber-js';
 import { memoize, MemoizedFunction } from 'lodash';
 import { ResolverResult } from 'react-hook-form';
 import * as yup from 'yup';
@@ -128,6 +130,7 @@ interface FormValidatorOptions<A extends SchemaAttributes = SchemaAttributes> {
   readonlyAttributes?: string[];
   strings: FormValidationStringSet;
   schemaStore: ISchemaStore;
+  region: string;
 }
 
 type FormValidator = (<A extends SchemaAttributes = SchemaAttributes>(
@@ -148,6 +151,7 @@ export const formValidator: FormValidator = memoize(
     schemaStore,
     language,
     strings,
+    region,
   }: FormValidatorOptions<A>) {
     return async (values: Record<string, any>, context: any, options: any) => {
       let validator = yup.object().shape({});
@@ -202,6 +206,7 @@ export const formValidator: FormValidator = memoize(
           language,
           strings,
           readonlyAttributes,
+          region,
         });
       }
 
@@ -233,6 +238,7 @@ export const generateValidationSchema = memoize(
     schema,
     strings,
     readonlyAttributes,
+    region,
   }: {
     schema: Schema<A>;
     columns: string[];
@@ -247,6 +253,7 @@ export const generateValidationSchema = memoize(
       | undefined;
     language: string;
     strings: FormValidationStringSet;
+    region: string;
   }) {
     return yup.object().shape({
       ...(columns.reduce((acc, column) => {
@@ -259,7 +266,8 @@ export const generateValidationSchema = memoize(
         const validationSchema = generateAttributeValidationSchema(
           attribute,
           language,
-          strings
+          strings,
+          region
         );
 
         return {
@@ -278,7 +286,8 @@ export const generateValidationSchema = memoize(
                 const validationSchema = generateAttributeValidationSchema(
                   attribute,
                   language,
-                  strings
+                  strings,
+                  region
                 );
 
                 return {
@@ -302,7 +311,15 @@ export const generateValidationSchema = memoize(
       }, {} as Record<string, yup.Schema<any>>),
     });
   },
-  ({ columns, editableGrids, language, schema, strings, readonlyAttributes }) =>
+  ({
+    columns,
+    editableGrids,
+    language,
+    schema,
+    strings,
+    readonlyAttributes,
+    region,
+  }) =>
     JSON.stringify({
       schema,
       columns,
@@ -310,6 +327,7 @@ export const generateValidationSchema = memoize(
       language,
       strings,
       readonlyAttributes,
+      region,
     })
 );
 
@@ -361,11 +379,13 @@ function extendAttributeValidationSchema({
   validationSchema,
   label,
   strings,
+  region,
 }: {
   attribute: Attribute;
   validationSchema: yup.Schema;
   strings: FormValidationStringSet;
   label: string;
+  region: string;
 }): yup.Schema {
   switch (attribute.type) {
     case 'string':
@@ -374,6 +394,7 @@ function extendAttributeValidationSchema({
         validationSchema: validationSchema as yup.StringSchema,
         label,
         strings,
+        region,
       });
 
       break;
@@ -397,11 +418,13 @@ function extendAttributeStringValidationSchema({
   validationSchema,
   label,
   strings,
+  region,
 }: {
   attribute: StringAttribute;
   validationSchema: yup.StringSchema;
   strings: FormValidationStringSet;
   label: string;
+  region: string;
 }): yup.Schema {
   if (attribute.maxLength) {
     // extend the validation schema with the max length
@@ -434,10 +457,17 @@ function extendAttributeStringValidationSchema({
     );
   } else if (attribute.format === 'phone') {
     // extend the validation schema with the phone format
-    validationSchema = validationSchema.matches(
-      /^(\+\d{1,2}\s?)?\d{10}$/,
-      `${label}: ${strings.invalidPhoneNumber}`
-    );
+    validationSchema = validationSchema.test({
+      message: `${label}: ${strings.invalidPhoneNumber}`,
+      test: (value) => {
+        if (!value) {
+          return true;
+        }
+
+        const phoneNumber = parsePhoneNumber(value, region as CountryCode);
+        return phoneNumber.isValid;
+      },
+    });
   }
 
   return validationSchema;
@@ -483,7 +513,8 @@ export const generateAttributeValidationSchema = memoize(
   function generateAttributeValidationSchema(
     attribute: Attribute,
     language: string,
-    strings: FormValidationStringSet
+    strings: FormValidationStringSet,
+    region: string
   ) {
     let validationSchema = createAttributeValidationSchema(attribute);
 
@@ -501,6 +532,7 @@ export const generateAttributeValidationSchema = memoize(
       validationSchema,
       label,
       strings,
+      region,
     });
 
     validationSchema = validationSchema.transform((value) => {

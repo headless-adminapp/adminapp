@@ -4,6 +4,7 @@ export type Locale = {
   // language and direction are derived from locale
   direction: 'ltr' | 'rtl';
   language: string;
+  region: string;
 
   // date formats
   timezone: string;

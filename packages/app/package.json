@@ -38,6 +38,7 @@
     "dayjs": "^1.11.13",
     "exceljs": "^4.4.0",
     "json-to-csv-export": "^2.1.1",
+    "libphonenumber-js": "1.11.20",
     "lodash": "^4.17.21",
     "react-custom-scrollbars-2": "^4.5.0",
     "react-hook-form": "7.52.2",

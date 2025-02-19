@@ -1,5 +1,8 @@
 import { Button, Input, tokens } from '@fluentui/react-components';
+import { useLocale } from '@headless-adminapp/app/locale';
+import { parsePhoneNumber } from '@headless-adminapp/app/utils/phone';
 import { Icons } from '@headless-adminapp/icons';
+import { useEffect, useMemo, useState } from 'react';
 
 import { ControlProps } from './types';
 
@@ -18,7 +21,29 @@ export function TelephoneControl({
   disabled,
   readOnly,
   autoComplete,
-}: TelephoneControlProps) {
+}: Readonly<TelephoneControlProps>) {
+  const [internalValue, setInternalValue] = useState<string>('');
+  const { region } = useLocale();
+
+  const number = useMemo(() => {
+    if (!value) {
+      return null;
+    }
+
+    return parsePhoneNumber(value, region);
+  }, [value, region]);
+
+  useEffect(() => {
+    setInternalValue(number?.formattedInternationalValue ?? '');
+  }, [number]);
+
+  const handleChange = () => {
+    const parsedPhoneNumber = parsePhoneNumber(internalValue, region);
+
+    setInternalValue(parsedPhoneNumber.formattedInternationalValue);
+    onChange?.(parsedPhoneNumber.rawValue);
+  };
+
   return (
     <Input
       type="tel"
@@ -26,9 +51,12 @@ export function TelephoneControl({
       id={id}
       appearance="filled-darker"
       name={name}
-      value={value || ''}
-      onChange={(e) => onChange?.(e.target.value)}
-      onBlur={() => onBlur?.()}
+      value={internalValue}
+      onChange={(e) => setInternalValue?.(e.target.value)}
+      onBlur={() => {
+        handleChange();
+        onBlur?.();
+      }}
       onFocus={() => onFocus?.()}
       // invalid={error}
       readOnly={disabled || readOnly}
@@ -39,11 +67,12 @@ export function TelephoneControl({
       }}
       // size="sm"
       contentAfter={
-        !!value ? (
+        !!number?.uri ? (
           <Button
             appearance="transparent"
             size="small"
-            onClick={() => window.open(`tel:${value}`, '_blank')}
+            onClick={() => window.open(number.uri, '_blank')}
+            title={number.uri}
             icon={<Icons.Phone />}
           />
         ) : undefined
