@@ -1,4 +1,6 @@
 import { tokens } from '@fluentui/react-components';
+import { RetriveRecordFn } from '@headless-adminapp/app/dataform/DataFormProvider/types';
+import { SaveRecordFn } from '@headless-adminapp/app/dataform/utils/saveRecord';
 import { PageEntityFormProvider } from '@headless-adminapp/app/providers/PageEntityFormProvider';
 import {
   EntityMainFormCommandItemExperience,
@@ -16,6 +18,8 @@ interface PageCustomEntityFormProps<
   schema: Schema<SA>;
   form: Form<SA>;
   commands: EntityMainFormCommandItemExperience[][];
+  retriveRecordFn?: RetriveRecordFn<SA>;
+  saveRecordFn?: SaveRecordFn;
 }
 
 export const PageCustomEntityForm: FC<PageCustomEntityFormProps> = ({
@@ -23,6 +27,8 @@ export const PageCustomEntityForm: FC<PageCustomEntityFormProps> = ({
   commands,
   form,
   schema,
+  retriveRecordFn,
+  saveRecordFn,
 }) => {
   return (
     <PageEntityFormProvider
@@ -30,6 +36,8 @@ export const PageCustomEntityForm: FC<PageCustomEntityFormProps> = ({
       form={form}
       recordId={recordId}
       commands={commands}
+      retriveRecordFn={retriveRecordFn}
+      saveRecordFn={saveRecordFn}
     >
       <div
         style={{
