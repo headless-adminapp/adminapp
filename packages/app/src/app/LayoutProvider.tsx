@@ -18,7 +18,7 @@ import { RouteProvider } from '../route';
 import { RouteProviderProps } from '../route/RouteProvider';
 import { ToastNotificationProvider } from '../toast-notification';
 import { DataServiceContext } from '../transport';
-import { FileServiceContext, noopFileService } from '../transport/context';
+import { FileServiceContext } from '../transport/context';
 import { AuthWrapper } from './AuthWrapper';
 
 export interface LayoutProviderProps {
@@ -85,9 +85,7 @@ export const LayoutProvider: FC<PropsWithChildren<LayoutProviderProps>> = ({
         <LocaleProvider {...localeProps}>
           <MetadataProvider {...metadataProps}>
             <DataServiceContext.Provider value={dataService}>
-              <FileServiceContext.Provider
-                value={fileService ?? noopFileService}
-              >
+              <FileServiceContext.Provider value={fileService ?? null}>
                 <DialogProvider>
                   <ProgressIndicatorProvider>
                     <ToastNotificationProvider>

@@ -1,11 +1,4 @@
-import { Form } from '@headless-adminapp/core/experience/form';
-import {
-  InferredSchemaType,
-  Schema,
-  SchemaAttributes,
-} from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
-import { HttpError, IDataService } from '@headless-adminapp/core/transport';
+import { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 
@@ -14,119 +7,17 @@ import { useContextSetValue } from '../../mutable';
 import { useDataService } from '../../transport';
 import { DataFormContext } from '../context';
 import { useDataFormSchema, useRecordId, useSelectedForm } from '../hooks';
+import { RetriveRecordFn } from './types';
+import { getColumns } from './utils';
 
-export function getControls(form: Form) {
-  const controls = form.experience.tabs
-    .flatMap((tab) => tab.tabColumns)
-    .flatMap((tabColumn) => tabColumn.sections)
-    .flatMap((section) => section.controls);
-
-  return controls;
+interface DataResolverProps<SA extends SchemaAttributes> {
+  retriveRecordFn: RetriveRecordFn<SA>;
 }
 
-export function getColumns(form: Form, schema: Schema) {
-  const set = new Set([
-    ...(form.experience.includeAttributes ?? []),
-    ...(form.experience.headerControls ?? []),
-    ...getControls(form)
-      .filter((control) => control.type === 'standard')
-      .map((control) => control.attributeName),
-  ]);
-
-  if (schema.avatarAttribute) {
-    set.add(schema.avatarAttribute);
-  }
-
-  const columns = Array.from(set);
-
-  return columns;
-}
-
-async function getRecord({
-  recordId,
-  dataService,
-  form,
-  schema,
-  columns,
-  schemaStore,
-}: {
-  recordId: string;
-  dataService: IDataService;
-  form: Form;
-  schema: Schema;
-  columns: string[];
-  schemaStore: ISchemaStore;
-}) {
-  let record = null;
-
-  try {
-    record = await dataService.retriveRecord(
-      schema.logicalName,
-      recordId,
-      columns
-    );
-  } catch (error) {
-    if (error instanceof HttpError && error.status === 404) {
-      return null;
-    }
-
-    throw error;
-  }
-
-  if (!record) {
-    return null;
-  }
-
-  const controls = getControls(form);
-
-  const editableGridControls = controls.filter(
-    (control) => control.type === 'editablegrid'
-  );
-
-  for (const control of editableGridControls) {
-    if (control.type !== 'editablegrid') {
-      continue;
-    }
-
-    const controlSchema = schemaStore.getSchema(control.logicalName);
-
-    const records = await dataService.retriveRecords<
-      InferredSchemaType<SchemaAttributes>
-    >({
-      logicalName: controlSchema.logicalName,
-      filter: {
-        type: 'and',
-        conditions: [
-          {
-            field: control.referenceAttribute,
-            operator: 'eq',
-            value: recordId,
-          },
-        ],
-      },
-      sort: [
-        {
-          field: controlSchema.createdAtAttribute ?? controlSchema.idAttribute,
-          order: 'asc',
-        },
-      ],
-      limit: 5000,
-      search: '',
-      columns: [
-        controlSchema.idAttribute,
-        control.referenceAttribute,
-        ...control.attributes,
-      ],
-    });
-
-    (record as any)[control.attributeName] = records.records;
-  }
-
-  return record;
-}
-
-export function DataResolver() {
-  const schema = useDataFormSchema();
+export function DataResolver<SA extends SchemaAttributes>({
+  retriveRecordFn,
+}: DataResolverProps<SA>) {
+  const schema = useDataFormSchema<SA>();
   const form = useSelectedForm();
 
   const dataService = useDataService();
@@ -150,7 +41,7 @@ export function DataResolver() {
         return null;
       }
 
-      const record = getRecord({
+      const record = retriveRecordFn({
         columns,
         dataService,
         form,

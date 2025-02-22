@@ -19,10 +19,7 @@ import { memoize, MemoizedFunction } from 'lodash';
 import { ResolverResult } from 'react-hook-form';
 import * as yup from 'yup';
 
-import {
-  getColumns,
-  getControls,
-} from '../../dataform/DataFormProvider/DataResolver';
+import { getColumns, getControls } from '../../dataform/DataFormProvider/utils';
 import { FormValidationStringSet } from '../../form/FormValidationStringContext';
 import { localizedLabel } from '../../locale/utils';
 

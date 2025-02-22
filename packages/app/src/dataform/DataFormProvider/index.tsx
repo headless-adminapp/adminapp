@@ -1,3 +1,4 @@
+import { EventManager } from '@headless-adminapp/app/store';
 import {
   EntityMainFormCommandItemExperience,
   Form,
@@ -8,7 +9,14 @@ import {
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
 import { Nullable } from '@headless-adminapp/core/types';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useFormValidationStrings } from '../../form/FormValidationStringContext';
@@ -17,9 +25,18 @@ import { useMetadata } from '../../metadata/hooks/useMetadata';
 import { ContextValue, useCreateContextStore } from '../../mutable';
 import { DataFormContext, DataFormContextState } from '../context';
 import { formValidator } from '../utils';
+import {
+  saveRecord,
+  SaveRecordFn,
+  SaveRecordFnOptions,
+} from '../utils/saveRecord';
+import { CustomHookExecuter } from './CustomHookExecuter';
 import { DataResolver } from './DataResolver';
+import { getRecord } from './getRecord';
 import { InitialValueResolver } from './InitialValueResolver';
 import { ReadonlyInfoResolver } from './ReadonlyInfoResolver';
+import { RetriveRecordFn } from './types';
+import { transformFormInternal } from './utils';
 
 export interface DataFormProviderProps<
   S extends SchemaAttributes = SchemaAttributes
@@ -28,6 +45,8 @@ export interface DataFormProviderProps<
   form: Form<S>;
   recordId?: string;
   commands: EntityMainFormCommandItemExperience[][];
+  retriveRecordFn?: RetriveRecordFn<S>;
+  saveRecordFn?: SaveRecordFn;
 }
 
 export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
@@ -36,6 +55,8 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
   const { schemaStore } = useMetadata();
   const { language, region } = useLocale();
   const formValidationStrings = useFormValidationStrings();
+  const eventManager = useMemo(() => new EventManager(), []);
+  const contextKey = useRef(0);
 
   const [formReadOnly, setFormReadOnly] = useState(false); // A trick to provide readOnly info to formInstance
 
@@ -54,7 +75,22 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
     shouldUnregister: false,
   });
 
+  const saveRecordFnRef = useRef<SaveRecordFn | null | undefined>(
+    props.saveRecordFn
+  );
+  saveRecordFnRef.current = props.saveRecordFn;
+
+  const saveRecordFnInternal: SaveRecordFn = useCallback(
+    async (options: SaveRecordFnOptions) => {
+      return saveRecordFnRef.current
+        ? saveRecordFnRef.current(options)
+        : saveRecord(options);
+    },
+    []
+  );
+
   const contextValue = useCreateContextStore<DataFormContextState<S>>({
+    contextKey: contextKey.current,
     schema: props.schema,
     form: props.form,
     commands: props.commands,
@@ -65,15 +101,30 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
     // formInstance,
     // formInstanceRenderCount: 0,
     initialValues: {} as Nullable<InferredSchemaType<S>>,
+    saveRecordFn: saveRecordFnInternal,
+    eventManager,
+    disabledControls: {},
+    requiredFields: {},
+    hiddenControls: {},
+    hiddenSections: {},
+    hiddenTabs: {},
+    formInternal: transformFormInternal(props.form),
   });
 
   useEffect(() => {
     contextValue.setValue({
+      contextKey: ++contextKey.current,
       form: props.form,
       schema: props.schema,
       recordId: props.recordId,
       cloneId: undefined,
       commands: props.commands,
+      disabledControls: {},
+      requiredFields: {},
+      hiddenControls: {},
+      hiddenSections: {},
+      hiddenTabs: {},
+      formInternal: transformFormInternal(props.form),
     });
   }, [
     props.form,
@@ -93,9 +144,14 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
       }
     >
       <FormProvider {...formInstance}>
-        <DataResolver />
+        <DataResolver
+          retriveRecordFn={
+            props.retriveRecordFn ?? (getRecord as RetriveRecordFn<S>)
+          }
+        />
         <InitialValueResolver />
         <ReadonlyInfoResolver setFormReadOnly={setFormReadOnly} />
+        <CustomHookExecuter useHookFn={props.form.experience.useHookFn} />
         {props.children}
       </FormProvider>
     </DataFormContext.Provider>

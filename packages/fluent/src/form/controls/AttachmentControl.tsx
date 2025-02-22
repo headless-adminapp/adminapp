@@ -99,7 +99,7 @@ export function useAttachmentSelector({
 }
 
 export interface AttachmentImageControlProps extends ControlProps<FileObject> {
-  fileService: IFileService;
+  fileService: IFileService | null;
   fileServiceContext?: Record<string, unknown>;
   location: AttachmentAttribute['location'];
 }
@@ -202,7 +202,7 @@ const AttachmentImageControl: FC<AttachmentImageControlProps> = ({
 };
 
 interface AttachmentControlProps extends ControlProps<FileObject> {
-  fileService: IFileService;
+  fileService: IFileService | null;
   fileServiceContext?: Record<string, unknown>;
   location: AttachmentAttribute['location'];
   format: AttachmentAttribute['format'];

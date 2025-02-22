@@ -9,7 +9,10 @@ import {
 import { useOpenErrorDialog } from '@headless-adminapp/app/dialog';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { useProgressIndicator } from '@headless-adminapp/app/progress-indicator';
-import { useDataService } from '@headless-adminapp/app/transport';
+import {
+  useDataService,
+  useFileService,
+} from '@headless-adminapp/app/transport';
 import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
 import { IconPlaceholder, Icons } from '@headless-adminapp/icons';
 import { FC, useState } from 'react';
@@ -26,6 +29,8 @@ export const RecordAvatar: FC = () => {
   const dataService = useDataService();
   const refresh = useContextSelector(DataFormContext, (state) => state.refresh);
   const [showAvatarChangeDialog, setShowAvatarChangeDialog] = useState(false);
+
+  const fileService = useFileService();
 
   const { showProgressIndicator, hideProgressIndicator } =
     useProgressIndicator();
@@ -103,10 +108,14 @@ export const RecordAvatar: FC = () => {
           src: value?.url,
         }}
         onClick={() => {
+          if (!fileService) {
+            return;
+          }
+
           setShowAvatarChangeDialog(true);
         }}
       />
-      {!!recordId && (
+      {!!recordId && !!fileService && (
         <UploadImageDialog
           recordTitle={recordTitle}
           currentImage={value}

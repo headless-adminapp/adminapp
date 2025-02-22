@@ -107,6 +107,7 @@ export function PromptDialog(props: PromptDialogProps) {
                               onBlur={field.onBlur}
                               errorMessage={errorMessage}
                               isError={isError}
+                              readOnly={attribute.readonly}
                             />
                           </SectionControlWrapper>
                         );

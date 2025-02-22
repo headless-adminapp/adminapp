@@ -6,12 +6,16 @@ import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import { PropsWithChildren } from 'react';
 
 import { DataFormProvider } from '../../dataform/DataFormProvider';
+import { RetriveRecordFn } from '../../dataform/DataFormProvider/types';
+import { SaveRecordFn } from '../../dataform/utils/saveRecord';
 
 interface PageEntityFormProviderProps<S extends SchemaAttributes> {
   schema: Schema<S>;
   form: Form<S>;
   recordId?: string;
   commands: EntityMainFormCommandItemExperience[][];
+  retriveRecordFn?: RetriveRecordFn<S>;
+  saveRecordFn?: SaveRecordFn;
 }
 
 export function PageEntityFormProvider<S extends SchemaAttributes>({
@@ -20,6 +24,8 @@ export function PageEntityFormProvider<S extends SchemaAttributes>({
   recordId,
   children,
   commands,
+  retriveRecordFn,
+  saveRecordFn,
 }: PropsWithChildren<PageEntityFormProviderProps<S>>) {
   return (
     <DataFormProvider
@@ -27,6 +33,8 @@ export function PageEntityFormProvider<S extends SchemaAttributes>({
       form={form}
       recordId={recordId}
       commands={commands}
+      retriveRecordFn={retriveRecordFn}
+      saveRecordFn={saveRecordFn}
     >
       {children}
     </DataFormProvider>

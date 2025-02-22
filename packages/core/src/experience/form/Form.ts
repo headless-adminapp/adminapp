@@ -1,4 +1,4 @@
-import { SchemaAttributes } from '../../schema';
+import { InferredSchemaType, SchemaAttributes } from '../../schema';
 import { AllowAsync, Localized } from '../../types';
 import { Metadata } from '../types';
 import { EditableGridCloneAttribute } from './EditableGridCloneAttribute';
@@ -24,6 +24,10 @@ export interface FormExperience<S extends SchemaAttributes = SchemaAttributes> {
   includeAttributes?: Array<keyof S>; // additional attributes to include in the form which is not included by any controls
   relatedItems?: FormRelatedItemInfo[] | null; // undefined will use default related items // null will hide related items
   processFlow?: ProcessFlowInfo;
+  useHookFn?: () => void;
+  defaultValues?:
+    | Partial<InferredSchemaType<S>>
+    | (() => Partial<InferredSchemaType<S>>);
 }
 
 export interface FormRelatedItemInfo {

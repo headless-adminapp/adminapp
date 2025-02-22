@@ -22,7 +22,6 @@ import { useProgressIndicator } from '../../progress-indicator/hooks/useProgress
 import { useOpenToastNotification } from '../../toast-notification/hooks/useOpenToastNotification';
 import { useDataService } from '../../transport';
 import { DataFormContext } from '../context';
-import { saveRecord } from '../utils';
 import { useFormRecord } from './useFormRecord';
 import { useDataFormSchema } from './useFormSchema';
 import { useSelectedForm } from './useSelectedForm';
@@ -43,6 +42,10 @@ export function useFormSave() {
     useProgressIndicator();
   const openToastNotification = useOpenToastNotification();
   const routeResolver = useRouteResolver();
+  const saveRecord = useContextSelector(
+    DataFormContext,
+    (state) => state.saveRecordFn
+  );
 
   const client = useQueryClient();
   const router = useRouter();

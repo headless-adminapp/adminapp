@@ -20,7 +20,7 @@ export function EmailControl({
   autoComplete,
   textTransform,
   readOnly,
-}: EmailControlProps) {
+}: Readonly<EmailControlProps>) {
   return (
     <Input
       type="email"
@@ -40,8 +40,7 @@ export function EmailControl({
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}
       // invalid={error}
-      disabled={disabled}
-      readOnly={readOnly}
+      readOnly={disabled || readOnly}
       autoComplete={autoComplete}
       style={{
         flex: 1,

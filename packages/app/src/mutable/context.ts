@@ -23,6 +23,16 @@ export function useCreateContextStore<T>(initialValue: T) {
   return state;
 }
 
+export function useContextValue<T>(context: React.Context<ContextValue<T>>) {
+  const contextValue = useContext(context);
+
+  if (!contextValue) {
+    throw new Error('useContextValue must be used within a Provider');
+  }
+
+  return contextValue.value;
+}
+
 export function useContextSelector<T, R>(
   context: React.Context<ContextValue<T>>,
   selector: (state: T) => R

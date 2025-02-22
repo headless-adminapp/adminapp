@@ -19,7 +19,8 @@ export function InitialValueResolver() {
   const formInstance = useFormInstance();
 
   const initialValues = useMemo(() => {
-    const defaultParameters = getFormDefaultParameters(schema) ?? {};
+    const defaultParameters =
+      getFormDefaultParameters(schema, formConfig.experience) ?? {};
     return getInitialValues({
       cloneRecord: undefined,
       form: formConfig,

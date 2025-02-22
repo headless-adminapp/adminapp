@@ -1,14 +1,23 @@
+import { DataFormContext } from '@headless-adminapp/app/dataform';
+import { EVENT_KEY_ON_FIELD_CHANGE } from '@headless-adminapp/app/dataform/constants';
+import {
+  getIsControlHidden,
+  getIsFieldDisabled,
+  getIsFieldRequired,
+} from '@headless-adminapp/app/dataform/DataFormProvider/utils';
 import {
   useDataFormSchema,
   useFormInstance,
   useFormIsReadonly,
   useRecordId,
 } from '@headless-adminapp/app/dataform/hooks';
+import { useEventManager } from '@headless-adminapp/app/dataform/hooks/useEventManager';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { localizedLabel } from '@headless-adminapp/app/locale/utils';
+import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { Section } from '@headless-adminapp/core/experience/form';
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 
 import { componentStore } from '../componentStore';
@@ -24,8 +33,41 @@ export function SectionContainer<
 
   const formInstance = useFormInstance();
   const recordId = useRecordId();
-  const readonly = useFormIsReadonly();
+  const isFormReadonly = useFormIsReadonly();
   const { language } = useLocale();
+  const eventManager = useEventManager();
+
+  const disabledControls = useContextSelector(
+    DataFormContext,
+    (state) => state.disabledControls
+  );
+  const hiddenControls = useContextSelector(
+    DataFormContext,
+    (state) => state.hiddenControls
+  );
+  const requiredFields = useContextSelector(
+    DataFormContext,
+    (state) => state.requiredFields
+  );
+  const hiddenSections = useContextSelector(
+    DataFormContext,
+    (state) => state.hiddenSections
+  );
+
+  const visibleControls = useMemo(
+    () =>
+      section.controls.filter((control) => {
+        return !getIsControlHidden({
+          control,
+          hiddenControls,
+        });
+      }),
+    [section.controls, hiddenControls]
+  );
+
+  if (hiddenSections[section.name] || visibleControls.length === 0) {
+    return null;
+  }
 
   return (
     <FormSection
@@ -35,7 +77,7 @@ export function SectionContainer<
       noPadding={section.noPadding}
       hideLabel={section.hideLabel}
     >
-      {section.controls.map((control, index) => {
+      {visibleControls.map((control, index) => {
         switch (control.type) {
           case 'standard': {
             const attribute = schema.attributes[control.attributeName];
@@ -50,6 +92,20 @@ export function SectionContainer<
                 Control = OverrideControl;
               }
             }
+
+            const disabled = getIsFieldDisabled({
+              isFormReadonly,
+              disabledFields: disabledControls,
+              attribute,
+              control,
+            });
+
+            const required = getIsFieldRequired({
+              attribute,
+              requiredFields,
+              control,
+            });
+
             return (
               <div
                 key={control.attributeName as string}
@@ -82,7 +138,7 @@ export function SectionContainer<
                       <SectionControlWrapper
                         label={label}
                         labelPosition={section.labelPosition}
-                        required={attribute.required}
+                        required={required}
                         isError={isError}
                         errorMessage={errorMessage}
                       >
@@ -90,11 +146,18 @@ export function SectionContainer<
                           attribute={attribute}
                           name={control.attributeName as string}
                           value={field.value}
-                          onChange={field.onChange}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            eventManager.emit(
+                              EVENT_KEY_ON_FIELD_CHANGE,
+                              control.attributeName,
+                              value
+                            );
+                          }}
                           onBlur={field.onBlur}
                           errorMessage={errorMessage}
                           isError={isError}
-                          disabled={readonly}
+                          readOnly={disabled}
                           label={label}
                           placeholder={label}
                           allowNavigation={true}

@@ -44,7 +44,6 @@ export interface StandardControlProps {
   onChange: (value: any) => void;
   onBlur?: () => void;
   fileServiceContext?: Record<string, unknown>;
-  disabled?: boolean;
   borderOnFocusOnly?: boolean;
   hideLabel?: boolean;
   hidePlaceholder?: boolean;
@@ -67,7 +66,6 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     onChange,
     // dataService,
     // fileService,
-    disabled,
     borderOnFocusOnly,
     placeholder: _placeholder,
     // hideLabel,
@@ -77,7 +75,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     allowNavigation,
     allowNewRecord,
   } = props;
-  const isDisabled = attribute.readonly || disabled;
+  const isDisabled = readOnly;
   // const label = hideLabel ? undefined : _label ?? attribute.label;
   const placeholder = hidePlaceholder
     ? undefined
@@ -91,7 +89,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
   // const { openQuickCreate } = useQuickCreateForm();
 
   switch (attribute.type) {
-    case 'string':
+    case 'string': {
       const controlProps = {
         name,
         placeholder,
@@ -99,7 +97,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         onChange,
         onBlur,
         error: isError,
-        disabled: isDisabled,
+        disabled: readOnly,
         readOnly,
       };
 
@@ -153,6 +151,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         default:
           return <Fragment />;
       }
+    }
     case 'number': {
       switch (attribute.format) {
         case 'decimal': {

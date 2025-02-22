@@ -69,6 +69,10 @@ export const UploadImageDialog: FC<UploadImageDialogProps> = ({
 
   const { isPending, mutate: handleApply } = useMutation({
     mutationFn: async () => {
+      if (!fileService) {
+        throw new Error('File service is not available');
+      }
+
       if (file) {
         const url = await fileService.uploadFile(file, {
           context: {

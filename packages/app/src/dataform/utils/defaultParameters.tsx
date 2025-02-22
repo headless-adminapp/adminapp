@@ -1,3 +1,4 @@
+import { FormExperience } from '@headless-adminapp/core/experience/form';
 import { Schema } from '@headless-adminapp/core/schema';
 
 let formDefaultParameters: {
@@ -5,7 +6,10 @@ let formDefaultParameters: {
   values: Record<string, any>;
 } | null = null;
 
-export function getFormDefaultParameters(schema: Schema) {
+export function getFormDefaultParameters(
+  schema: Schema,
+  formExperience: FormExperience
+) {
   const _values = formDefaultParameters?.values;
   const _logicalName = formDefaultParameters?.logicalName;
 
@@ -31,9 +35,18 @@ export function getFormDefaultParameters(schema: Schema) {
     {} as Record<string, any>
   );
 
+  let formDefaultValues: Record<string, any> = {};
+
+  if (typeof formExperience.defaultValues === 'function') {
+    formDefaultValues = formExperience.defaultValues();
+  } else if (typeof formExperience.defaultValues === 'object') {
+    formDefaultValues = formExperience.defaultValues;
+  }
+
   if (_logicalName === schema.logicalName) {
     return {
       ...schemaDefaultValues,
+      ...formDefaultValues,
       ..._values,
     };
   }

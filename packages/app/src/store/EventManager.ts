@@ -5,7 +5,7 @@ type EventHandler = (...args: any[]) => any | Promise<any>;
 export class EventManager implements IEventManager {
   private handlers: Record<string, unknown[]> = {};
 
-  public async on<T>(key: string, handler: T): Promise<void> {
+  public on<T>(key: string, handler: T): void {
     if (!this.handlers[key]) {
       this.handlers[key] = [];
     }
@@ -13,7 +13,7 @@ export class EventManager implements IEventManager {
     this.handlers[key].push(handler);
   }
 
-  public async off<T>(key: string, handler: T): Promise<void> {
+  public off<T>(key: string, handler: T): void {
     if (!this.handlers[key]) {
       return;
     }

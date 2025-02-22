@@ -1,8 +1,10 @@
 import { SchemaAttributes } from '../../schema';
 import { Localized } from '../../types';
 import { QuickViewForm } from './QuickViewForm';
+import { SectionEditableGridControl } from './SectionEditableGridControl';
 
 export interface BaseSectionControl {
+  key?: string;
   span?: number;
   hidden?: boolean;
   label?: string;
@@ -45,3 +47,10 @@ export interface SectionQuickViewControl<
   attributeName: string;
   form: QuickViewForm<S>;
 }
+
+export type SectionControl<S extends SchemaAttributes = SchemaAttributes> =
+  | SectionStatndardControl<S>
+  | SectionSubgridControl
+  | SectionQuickViewControl
+  | SectionEditableGridControl
+  | SectionSpacerControl;

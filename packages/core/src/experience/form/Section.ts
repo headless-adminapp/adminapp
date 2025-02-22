@@ -1,12 +1,6 @@
 import { SchemaAttributes } from '../../schema';
 import { Localized } from '../../types';
-import {
-  SectionQuickViewControl,
-  SectionSpacerControl,
-  SectionStatndardControl,
-  SectionSubgridControl,
-} from './SectionControl';
-import { SectionEditableGridControl } from './SectionEditableGridControl';
+import { SectionControl } from './SectionControl';
 
 export interface Section<S extends SchemaAttributes = SchemaAttributes> {
   name: string;
@@ -17,11 +11,5 @@ export interface Section<S extends SchemaAttributes = SchemaAttributes> {
   hidden?: boolean;
   columnCount?: 1 | 2 | 3 | 4;
   labelPosition?: 'top' | 'left';
-  controls: (
-    | SectionStatndardControl<S>
-    | SectionSubgridControl
-    | SectionQuickViewControl
-    | SectionEditableGridControl
-    | SectionSpacerControl
-  )[];
+  controls: SectionControl<S>[];
 }

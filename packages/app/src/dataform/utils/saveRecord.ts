@@ -11,7 +11,7 @@ import { ISchemaStore } from '@headless-adminapp/core/store';
 import { IDataService } from '@headless-adminapp/core/transport';
 import { Nullable } from '@headless-adminapp/core/types';
 
-import { getControls } from '../../dataform/DataFormProvider/DataResolver';
+import { getControls } from '../../dataform/DataFormProvider/utils';
 
 export function getModifiedValues(
   initialValues: any,
@@ -203,7 +203,7 @@ async function updateRecord({
   schema: Schema<SchemaAttributes>;
   dataService: IDataService;
   schemaStore: ISchemaStore;
-}) {
+}): Promise<SaveRecordResult> {
   const controls = getControls(form);
 
   const editableGridControls = controls.filter(
@@ -251,7 +251,26 @@ async function updateRecord({
   for (const operation of operations) {
     await executeOperation(operation, dataService);
   }
+
+  return {
+    success: true,
+    recordId,
+  };
 }
+
+export interface SaveRecordFnOptions {
+  values: any;
+  form: Form<SchemaAttributes>;
+  record: InferredSchemaType<SchemaAttributes> | undefined;
+  initialValues: Nullable<InferredSchemaType<SchemaAttributes>>;
+  schema: Schema<SchemaAttributes>;
+  dataService: IDataService;
+  schemaStore: ISchemaStore;
+}
+
+export type SaveRecordFn = (
+  options: SaveRecordFnOptions
+) => Promise<SaveRecordResult>;
 
 export async function saveRecord({
   values,
@@ -261,20 +280,12 @@ export async function saveRecord({
   initialValues,
   record,
   schemaStore,
-}: {
-  values: any;
-  form: Form<SchemaAttributes>;
-  record: InferredSchemaType<SchemaAttributes> | undefined;
-  initialValues: Nullable<InferredSchemaType<SchemaAttributes>>;
-  schema: Schema<SchemaAttributes>;
-  dataService: IDataService;
-  schemaStore: ISchemaStore;
-}): Promise<SaveRecordResult> {
+}: SaveRecordFnOptions): Promise<SaveRecordResult> {
   let recordId: string;
 
   if (record) {
     recordId = record[schema.idAttribute] as string;
-    await updateRecord({
+    const updateResult = await updateRecord({
       recordId,
       values,
       form,
@@ -283,6 +294,8 @@ export async function saveRecord({
       initialValues,
       schemaStore,
     });
+
+    return updateResult;
   } else {
     recordId = await createRecord({
       dataService,
