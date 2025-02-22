@@ -43,15 +43,19 @@ export function getFormDefaultParameters(
     formDefaultValues = formExperience.defaultValues;
   }
 
+  let defaultValues = {
+    ...schemaDefaultValues,
+    ...formDefaultValues,
+  };
+
   if (_logicalName === schema.logicalName) {
-    return {
-      ...schemaDefaultValues,
-      ...formDefaultValues,
+    defaultValues = {
+      ...defaultValues,
       ..._values,
     };
   }
 
-  return schemaDefaultValues;
+  return defaultValues;
 }
 
 let defaultParamsTimeout: NodeJS.Timeout | null = null;

@@ -8,6 +8,7 @@ import {
 } from '@fluentui/react-components';
 import {
   useDataFormSchema,
+  useRecordId,
   useSelectedForm,
 } from '@headless-adminapp/app/dataform/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
@@ -118,6 +119,7 @@ interface RelatedViewSelectorProps {
 
 export function RelatedViewSelector(props: RelatedViewSelectorProps) {
   const schema = useDataFormSchema();
+  const recordId = useRecordId();
   const formConfig = useSelectedForm();
   const { schemas } = useMetadata();
   const strings = usePageEntityFormStrings();
@@ -128,7 +130,7 @@ export function RelatedViewSelector(props: RelatedViewSelectorProps) {
     [formConfig.experience.relatedItems, schema, schemas]
   );
 
-  if (!data.length) {
+  if (!data.length || !recordId) {
     return null;
   }
 

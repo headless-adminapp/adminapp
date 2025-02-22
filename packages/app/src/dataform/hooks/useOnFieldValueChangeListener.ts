@@ -5,7 +5,7 @@ import { useEventManager } from './useEventManager';
 
 export function useOnFieldValueChangeListener(
   key: string,
-  callback: (value: unknown) => any
+  callback: (value: any) => any
 ) {
   const eventManager = useEventManager();
 

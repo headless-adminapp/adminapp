@@ -82,8 +82,7 @@ export function CurrencyControl({
       appearance="filled-darker"
       onFocus={() => onFocus?.()}
       contentBefore={<div>{symbol}</div>}
-      disabled={disabled}
-      readOnly={readOnly}
+      readOnly={readOnly || disabled}
       style={{
         width: '100%',
       }}

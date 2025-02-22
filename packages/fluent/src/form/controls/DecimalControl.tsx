@@ -88,8 +88,7 @@ export function DecimalControl({
       onChange={handleChange}
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}
-      disabled={disabled}
-      readOnly={readOnly}
+      readOnly={readOnly || disabled}
       style={{
         width: '100%',
       }}
