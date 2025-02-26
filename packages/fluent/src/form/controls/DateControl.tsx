@@ -27,7 +27,7 @@ export function DateControl({
   placeholder,
   disabled,
   readOnly,
-}: DateControlProps) {
+}: Readonly<DateControlProps>) {
   const { dateFormats, timezone } = useLocale();
   const { datePickerStrings } = useAppStrings();
   return (

@@ -14,6 +14,9 @@ import {
 import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import { Localized } from '@headless-adminapp/core/types';
 
+import { DefineFormExperience } from './DefineFormExperience';
+import { DefineViewExperience } from './DefineViewExperience';
+
 abstract class BaseSchemaExperienceBuilder<S extends SchemaAttributes> {
   protected views: View<S>[] = [];
   protected forms: Form<S>[] = [];
@@ -85,12 +88,6 @@ abstract class BaseSchemaExperienceBuilder<S extends SchemaAttributes> {
       quickCreateForms: this.quickCreateForms,
     };
   }
-
-  public defineFormExperience(
-    formExperience: FormExperience<S>
-  ): FormExperience<S> {
-    return formExperience;
-  }
 }
 
 export interface SchemaExperienceBuilderDefaults {
@@ -115,19 +112,28 @@ export class SchemaExperienceBuilder<
   }
 
   public defineViewExperience(
-    viewExperience: Pick<ViewExperience<S>, 'filter' | 'defaultSorting'> & {
-      card?: ViewExperience<S>['card'];
-      grid?: ViewExperience<S>['grid'];
+    viewExperience: Pick<
+      DefineViewExperience.Experience<S>,
+      'filter' | 'defaultSorting'
+    > & {
+      grid?: DefineViewExperience.Experience<S>['grid'];
+      card?: DefineViewExperience.Experience<S>['card'];
     }
   ): ViewExperience<S> {
     const cardView = viewExperience.card ?? this.defineDefaultViewCard();
     const gridView = viewExperience.grid ?? this.defineDefaultViewGrid();
 
-    return {
+    return DefineViewExperience.resolveExperience({
       ...viewExperience,
       grid: gridView,
       card: cardView,
-    };
+    });
+  }
+
+  public defineFormExperience(
+    formExperience: DefineFormExperience.Experience<S>
+  ): FormExperience<S> {
+    return DefineFormExperience.resolveExperience(formExperience);
   }
 
   public defineDefaultViewGrid(): ViewExperience<S>['grid'] {

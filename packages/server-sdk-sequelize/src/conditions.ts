@@ -562,9 +562,9 @@ export function transformFilter<SA extends SchemaAttributes>(
           return transformCondition(
             {
               field: `$${schemaStore.getRelationAlias(
-                schema.logicalName,
+                schema.collectionName ?? schema.logicalName,
                 condition.field,
-                _attribute.entity
+                lookupSchema.collectionName ?? lookupSchema.logicalName
               )}.${condition.extendedKey as string}$`,
               operator: condition.operator,
               value: condition.value,

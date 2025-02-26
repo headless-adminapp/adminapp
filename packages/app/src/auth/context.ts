@@ -32,6 +32,7 @@ export type AuthState = (
 };
 
 export interface AuthSession {
+  id: string;
   exp: number;
   fullName: string;
   email: string;

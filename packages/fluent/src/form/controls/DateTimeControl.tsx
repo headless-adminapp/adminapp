@@ -115,8 +115,18 @@ export function DateTimeControl({
           style: { minWidth: 0 },
         }}
         readOnly={readOnly || disabled || !value}
-        selectedTime={value ? new Date(value) : null}
+        // selectedTime={value ? new Date(value) : null}
+        selectedTime={
+          value
+            ? dayjs(
+                dayjs(value).tz(timezone).format('YYYY-MM-DD HH:mm:ss')
+              ).toDate()
+            : null
+        }
         freeform
+        // formatDateToTimeString={(date) => {
+        //   return dayjs(date).tz(timezone).format(timeFormat);
+        // }}
         value={internalTimeValue}
         onTimeChange={(_, data) => {
           const dateValue = value
@@ -125,8 +135,11 @@ export function DateTimeControl({
           if (data.selectedTime) {
             onChange?.(
               dateValue
-                .set('hour', data.selectedTime.getHours())
-                .set('minute', data.selectedTime.getMinutes())
+                .set('hour', dayjs(data.selectedTime).tz(timezone, true).hour())
+                .set(
+                  'minute',
+                  dayjs(data.selectedTime).tz(timezone, true).minute()
+                )
                 .toISOString()
             );
           } else if (data.selectedTimeText) {

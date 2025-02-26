@@ -189,9 +189,9 @@ export class SequelizeServerSdk<
 
             return {
               [`$${this.options.schemaStore.getRelationAlias(
-                schema.logicalName,
+                schema.collectionName ?? schema.logicalName,
                 x as string,
-                attribute.entity
+                lookupSchema.collectionName ?? lookupSchema.logicalName
               )}.${lookupSchema.primaryAttribute as string}$`]: {
                 [getLikeOperator(this.options.sequelize)]: `%${search}%`,
               },
@@ -262,9 +262,9 @@ export class SequelizeServerSdk<
                   expandedAttribute.entity
                 ),
                 as: this.options.schemaStore.getRelationAlias(
-                  lookupSchema.logicalName,
+                  lookupSchema.collectionName ?? lookupSchema.logicalName,
                   key,
-                  expandedAttribute.entity
+                  nestedSchema.collectionName ?? nestedSchema.logicalName
                 ),
                 attributes: [
                   nestedSchema.idAttribute,
@@ -277,9 +277,9 @@ export class SequelizeServerSdk<
           includes.push({
             model: this.options.schemaStore.getModel(attribute.entity),
             as: this.options.schemaStore.getRelationAlias(
-              schema.logicalName,
+              schema.collectionName ?? schema.logicalName,
               key,
-              attribute.entity
+              lookupSchema.collectionName ?? lookupSchema.logicalName
             ),
             includes: nestedIncludes,
           });
@@ -371,9 +371,9 @@ export class SequelizeServerSdk<
             {
               model: this.options.schemaStore.getModel(attribute.entity),
               as: this.options.schemaStore.getRelationAlias(
-                schema.logicalName,
+                schema.collectionName ?? schema.logicalName,
                 x.field,
-                attribute.entity
+                lookupSchema.collectionName ?? lookupSchema.logicalName
               ),
             },
             lookupSchema.primaryAttribute as string,
@@ -922,7 +922,7 @@ export class SequelizeServerSdk<
     switch (value.type) {
       case 'constant':
         return Sequelize.literal(value.value.toString());
-      case 'column':
+      case 'column': {
         if (!value.expandedKey) {
           return Sequelize.col(`${schema.logicalName}.${value.value}`);
         }
@@ -940,10 +940,14 @@ export class SequelizeServerSdk<
         //   attribute.entity
         // );
 
-        const alias = this.options.schemaStore.getRelationAlias(
-          schema.logicalName,
-          value.value,
+        const lookupSchema = this.options.schemaStore.getSchema(
           attribute.entity
+        );
+
+        const alias = this.options.schemaStore.getRelationAlias(
+          schema.collectionName ?? schema.logicalName,
+          value.value,
+          lookupSchema.collectionName ?? lookupSchema.logicalName
         );
 
         if (!includes[alias]) {
@@ -955,6 +959,7 @@ export class SequelizeServerSdk<
         }
 
         return Sequelize.col(`${alias}.${value.expandedKey}`);
+      }
       case 'function':
         switch (value.value) {
           case 'week_day':

@@ -3,6 +3,8 @@ import { SchemaAttributes } from './SchemaAttributes';
 
 export interface SchemaMetadata {
   logicalName: string;
+  collectionName?: string; // Collection name in the database (if different from logical name)
+  collectionSetName?: string; // Collection set name in the database
   label: string;
   pluralLabel: string;
   description?: string;

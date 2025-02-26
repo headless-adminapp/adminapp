@@ -22,7 +22,11 @@ export class SequelizeSchemaStore<
   public override register<S extends SA>(schema: Schema<S>) {
     super.register(schema);
 
-    const model = defineModel(schema, this.options.sequelize);
+    const model = defineModel(
+      schema.collectionName ?? schema.logicalName,
+      schema,
+      this.options.sequelize
+    );
 
     this.models[schema.logicalName] = model as unknown as ModelStatic<
       Model<any, any>
@@ -40,18 +44,18 @@ export class SequelizeSchemaStore<
   }
 
   public getRelationAlias(
-    logicalName: string,
+    collectionName: string,
     field: string,
-    targetLogicalName: string
+    targetCollectionName: string
   ) {
-    return `${RELATION_ALIAS_PREFIX}:${logicalName}:${field}:${targetLogicalName}`;
+    return `${RELATION_ALIAS_PREFIX}:${collectionName}:${field}:${targetCollectionName}`;
   }
 
   public ensureRelations() {
-    const models = Object.values(this.models);
+    const models = Object.entries(this.models);
 
-    for (const model of models) {
-      const schema = this.getSchema(model.name);
+    for (const [logicalName, model] of models) {
+      const schema = this.getSchema(logicalName);
 
       const attributes = schema.attributes;
 
@@ -66,9 +70,9 @@ export class SequelizeSchemaStore<
 
         model.belongsTo(targetModel, {
           as: this.getRelationAlias(
-            schema.logicalName,
+            schema.collectionName ?? schema.logicalName,
             key,
-            targetSchema.logicalName
+            targetSchema.collectionName ?? targetSchema.logicalName
           ),
           foreignKey: key,
           onDelete: attribute.behavior === 'dependent' ? 'RESTRICT' : undefined,

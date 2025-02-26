@@ -29,6 +29,8 @@ export const iconSet = defineIconSet({
   ArrowUp: bundleLazyIcon('ArrowUp24Regular', 'ArrowUp24Filled'),
   ChevronDown: bundleLazyIcon('ChevronDown24Regular', 'ChevronDown24Filled'),
   ChevronUp: bundleLazyIcon('ChevronUp24Regular', 'ChevronUp24Filled'),
+  ChevronLeft: bundleLazyIcon('ChevronLeft24Regular', 'ChevronLeft24Filled'),
+  ChevronRight: bundleLazyIcon('ChevronRight24Regular', 'ChevronRight24Filled'),
 
   // general actions
   Close: bundleLazyIcon('Dismiss24Regular', 'Dismiss24Filled'),

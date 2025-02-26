@@ -114,7 +114,7 @@ export function defineModel<S extends MongoRequiredSchemaAttributes>(
     models[name] = model<InferredDbSchemaType<S>>(
       name,
       mongoSchema,
-      schema.logicalName
+      schema.collectionName ?? schema.logicalName
     );
   }
 

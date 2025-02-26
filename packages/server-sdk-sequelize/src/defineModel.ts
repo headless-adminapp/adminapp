@@ -133,6 +133,7 @@ function applyRequiredAttribute(attribute: AttributeBase, defination: any) {
 }
 
 function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
+  name: string,
   schema: Schema<S>,
   sequelize: Sequelize
 ) {
@@ -190,7 +191,7 @@ function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
     return acc;
   }, {} as Record<string, any>);
 
-  return sequelize.define(schema.logicalName, sequelizeSchema, {
+  return sequelize.define(name, sequelizeSchema, {
     createdAt: schema.createdAtAttribute
       ? (schema.createdAtAttribute as string)
       : false,
@@ -198,17 +199,18 @@ function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
       ? (schema.updatedAtAttribute as string)
       : false,
     freezeTableName: true,
-    tableName: schema.logicalName,
+    tableName: schema.collectionName ?? schema.logicalName,
   });
 }
 
 export function defineModel<S extends SequelizeRequiredSchemaAttributes>(
+  name: string,
   schema: Schema<S>,
   sequelize: Sequelize
 ) {
-  if (!sequelize.models[schema.logicalName]) {
-    sequelize.models[schema.logicalName] = _defineModel(schema, sequelize);
+  if (!sequelize.models[name]) {
+    sequelize.models[name] = _defineModel(name, schema, sequelize);
   }
 
-  return sequelize.models[schema.logicalName];
+  return sequelize.models[name];
 }

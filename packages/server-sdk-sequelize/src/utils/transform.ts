@@ -30,9 +30,9 @@ function transformColumns({
       const expandedValue =
         recordJson[
           schemaStore.getRelationAlias(
-            schema.logicalName,
+            schema.collectionName ?? schema.logicalName,
             column,
-            attribute.entity
+            lookupSchema.collectionName ?? lookupSchema.logicalName
           )
         ];
 
@@ -88,9 +88,9 @@ const transformExpandedRecord = ({
     const expandedRecord =
       recordJson[
         schemaStore.getRelationAlias(
-          schema.logicalName,
+          schema.collectionName ?? schema.logicalName,
           expandKey,
-          expandedAttribute.entity
+          expandedSchema.collectionName ?? expandedSchema.logicalName
         )
       ];
 
@@ -111,12 +111,14 @@ const transformExpandedRecord = ({
         }
 
         if (attribute.type === 'lookup') {
+          const nestedExpandedSchema = schemaStore.getSchema(attribute.entity);
           const nestedExpandedRecord =
             expandedRecord[
               schemaStore.getRelationAlias(
-                expandedAttribute.entity,
+                expandedSchema.collectionName ?? expandedSchema.logicalName,
                 column,
-                attribute.entity
+                nestedExpandedSchema.collectionName ??
+                  nestedExpandedSchema.logicalName
               )
             ];
 

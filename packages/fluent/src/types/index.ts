@@ -18,6 +18,8 @@ declare module '@headless-adminapp/icons/types' {
     ArrowUp: Icon;
     ChevronDown: Icon;
     ChevronUp: Icon;
+    ChevronLeft: Icon;
+    ChevronRight: Icon;
 
     // general actions
     Close: Icon;
