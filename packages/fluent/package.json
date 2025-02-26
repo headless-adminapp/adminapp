@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/fluent",
-  "version": "0.0.17-alpha.64",
+  "version": "0.0.17-alpha.65",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
@@ -30,9 +30,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fluentui/react-calendar-compat": "0.1.20",
     "@fluentui/react-components": "9.54.4",
     "@fluentui/react-datepicker-compat": "0.4.43",
-    "@fluentui/react-calendar-compat": "0.1.20",
     "@fluentui/react-nav-preview": "0.5.1",
     "@fluentui/react-timepicker-compat": "0.2.46",
     "@fullcalendar/core": "6.1.15",

@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/server-sdk-mongo",
-  "version": "0.0.17-alpha.58",
+  "version": "0.0.17-alpha.65",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
