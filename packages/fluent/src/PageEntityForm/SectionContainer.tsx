@@ -16,14 +16,15 @@ import { useLocale } from '@headless-adminapp/app/locale';
 import { localizedLabel } from '@headless-adminapp/app/locale/utils';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { Section } from '@headless-adminapp/core/experience/form';
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
-import { FC, useMemo } from 'react';
+import type { StandardControlProps } from '@headless-adminapp/core/experience/form/SectionControl';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
+import { type FC, useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 
 import { componentStore } from '../componentStore';
 import { SectionControlWrapper } from '../DataForm/SectionControl';
 import { FormSection } from '../form/layout';
-import { StandardControl, StandardControlProps } from './StandardControl';
+import { StandardControl } from './StandardControl';
 import { SubgridControl } from './SubgridControl';
 
 export function SectionContainer<
@@ -84,12 +85,16 @@ export function SectionContainer<
             let Control = StandardControl;
 
             if (control.component) {
-              const OverrideControl = componentStore.getComponent<
-                FC<StandardControlProps>
-              >(control.component);
+              if (typeof control.component === 'function') {
+                Control = control.component;
+              } else if (typeof control.component === 'string') {
+                const OverrideControl = componentStore.getComponent<
+                  FC<StandardControlProps>
+                >(control.component);
 
-              if (OverrideControl) {
-                Control = OverrideControl;
+                if (OverrideControl) {
+                  Control = OverrideControl;
+                }
               }
             }
 
@@ -181,14 +186,19 @@ export function SectionContainer<
           }
           case 'quickview':
             return null;
-          case 'subgrid':
+          case 'subgrid': {
             let ContainerComponent: FC | null = null;
 
             if (control.component) {
-              ContainerComponent = componentStore.getComponent<FC>(
-                control.component
-              );
+              if (typeof control.component === 'function') {
+                ContainerComponent = control.component;
+              } else if (typeof control.component === 'string') {
+                ContainerComponent = componentStore.getComponent<FC>(
+                  control.component
+                );
+              }
             }
+
             return (
               <SubgridControl
                 key={index}
@@ -208,6 +218,7 @@ export function SectionContainer<
                 }
               />
             );
+          }
           case 'spacer':
             return (
               <div

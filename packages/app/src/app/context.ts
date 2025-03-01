@@ -3,7 +3,7 @@ import { SchemaExperienceMetadata } from '@headless-adminapp/core/experience/sch
 import { createContext } from 'react';
 
 export interface AppContextState {
-  app: AppExperience;
+  appExperience: AppExperience;
   schemaMetadataList: SchemaExperienceMetadata[];
   schemaMetadataDic: Record<string, SchemaExperienceMetadata>;
 }

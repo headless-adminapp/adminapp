@@ -3,7 +3,7 @@ import {
   useDataService,
   useFileService,
 } from '@headless-adminapp/app/transport';
-import type { Attribute } from '@headless-adminapp/core/attributes';
+import type { StandardControlProps } from '@headless-adminapp/core/experience/form/SectionControl';
 import { FC, Fragment } from 'react';
 
 import { componentStore } from '../componentStore';
@@ -32,27 +32,6 @@ import { UrlControl } from '../form/controls/UrlControl';
 
 // TextControl
 // TextInput
-
-export interface StandardControlProps {
-  attribute: Attribute;
-  label?: string;
-  isError?: boolean;
-  errorMessage?: string;
-  name: string;
-  value: any;
-  placeholder?: string;
-  onChange: (value: any) => void;
-  onBlur?: () => void;
-  fileServiceContext?: Record<string, unknown>;
-  borderOnFocusOnly?: boolean;
-  hideLabel?: boolean;
-  hidePlaceholder?: boolean;
-  allowQuickCreate?: boolean;
-  readOnly?: boolean;
-  quickViewControl?: boolean;
-  allowNavigation?: boolean;
-  allowNewRecord?: boolean;
-}
 
 export const StandardControl: FC<StandardControlProps> = (props) => {
   const {

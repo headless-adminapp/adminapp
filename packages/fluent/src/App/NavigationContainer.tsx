@@ -55,7 +55,7 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
   onOpenChange,
 }) => {
   const styles = useStyles();
-  const { app } = useAppContext();
+  const { appExperience: app } = useAppContext();
 
   return (
     <div className={styles.root}>

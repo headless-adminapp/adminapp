@@ -51,7 +51,7 @@ function useGridCommands() {
         | undefined
   );
   const {
-    app: { subgridCommands: defaultCommands },
+    appExperience: { subgridCommands: defaultCommands },
   } = useAppContext();
 
   return commands ?? defaultCommands ?? emptyCommands;

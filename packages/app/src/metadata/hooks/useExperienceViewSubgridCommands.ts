@@ -7,7 +7,7 @@ import { useExperienceStore } from './useExperienceStore';
 export function useExperienceViewSubgridCommands(logicalName: string) {
   const experienceStore = useExperienceStore();
   const {
-    app: { subgridCommands },
+    appExperience: { subgridCommands },
   } = useAppContext();
 
   const { data: commands } = useQuery({

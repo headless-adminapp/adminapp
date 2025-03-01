@@ -1,6 +1,8 @@
-import { PageType } from '@headless-adminapp/core/experience/app';
 import {
-  IClientAppStore,
+  AppExperience,
+  PageType,
+} from '@headless-adminapp/core/experience/app';
+import {
   ISchemaExperienceStore,
   ISchemaStore,
   SchemaStore,
@@ -9,22 +11,21 @@ import { IconPlaceholder } from '@headless-adminapp/icons';
 import { FC, PropsWithChildren } from 'react';
 
 import { useCreateContextStore } from '../mutable/context';
-import { ClientAppStore, SchemaExperienceStore } from '../store';
+import { SchemaExperienceStore } from '../store';
 import { MetadataContext, MetadataContextState } from './context';
 
 export interface MetadataProviderProps {
   schemaStore?: ISchemaStore;
   experienceStore?: ISchemaExperienceStore;
-  appStore?: IClientAppStore;
+  appExperience?: AppExperience;
 }
 
-export const defaultAppStore = new ClientAppStore();
 export const defaultSchemaStore = new SchemaStore();
 export const defaultExperienceStore = new SchemaExperienceStore({
   schemaStore: defaultSchemaStore,
 });
 
-defaultAppStore.register({
+const defaultApp: AppExperience = {
   id: 'default',
   title: 'Demo App',
   navItems: [],
@@ -35,18 +36,18 @@ defaultAppStore.register({
     icon: IconPlaceholder,
   },
   logo: {},
-});
+};
 
 export const MetadataProvider: FC<PropsWithChildren<MetadataProviderProps>> = ({
   children,
   experienceStore = defaultExperienceStore,
   schemaStore = defaultSchemaStore,
-  appStore = defaultAppStore,
+  appExperience = defaultApp,
 }) => {
   const contextValue = useCreateContextStore<MetadataContextState>({
     experienceStore,
     schemaStore,
-    appStore,
+    appExperience,
   });
 
   return (

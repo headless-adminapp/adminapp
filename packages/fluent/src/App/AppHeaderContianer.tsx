@@ -32,7 +32,7 @@ interface AppHeaderContainerProps {
 export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
   onNavToggle,
 }) => {
-  const { app } = useAppContext();
+  const { appExperience: app } = useAppContext();
   const authSession = useAuthSession();
   const isSkipAuthCheck = useIsSkipAuthCheck();
   const logout = useLogout();

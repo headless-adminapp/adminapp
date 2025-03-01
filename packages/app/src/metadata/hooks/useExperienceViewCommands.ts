@@ -7,7 +7,7 @@ import { useExperienceStore } from './useExperienceStore';
 export function useExperienceViewCommands(logicalName: string) {
   const experienceStore = useExperienceStore();
   const {
-    app: { viewCommands },
+    appExperience: { viewCommands },
   } = useAppContext();
 
   const { data: commands } = useQuery({

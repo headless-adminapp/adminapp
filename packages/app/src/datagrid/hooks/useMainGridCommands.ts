@@ -138,7 +138,7 @@ function useGridCommands() {
         | undefined
   );
   const {
-    app: { viewCommands: defaultCommands },
+    appExperience: { viewCommands: defaultCommands },
   } = useAppContext();
 
   return commands ?? defaultCommands ?? emptyCommands;

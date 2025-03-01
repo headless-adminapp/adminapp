@@ -1,12 +1,8 @@
 import type { QueryClient } from '@tanstack/react-query';
 
-import { InferredSchemaType, SchemaAttributes } from '../../schema';
-import {
-  IClientAppStore,
-  ISchemaExperienceStore,
-  ISchemaStore,
-} from '../../store';
-import { IDataService } from '../../transport';
+import type { InferredSchemaType, SchemaAttributes } from '../../schema';
+import type { ISchemaExperienceStore, ISchemaStore } from '../../store';
+import type { IDataService } from '../../transport';
 import {
   ConfirmDialogOptions,
   ConfirmResult,
@@ -61,7 +57,6 @@ interface Utiltity {
 }
 
 interface Store {
-  appStore: IClientAppStore;
   schemaStore: ISchemaStore;
   experienceStore: ISchemaExperienceStore;
 }

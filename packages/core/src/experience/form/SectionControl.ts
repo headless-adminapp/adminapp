@@ -1,7 +1,31 @@
-import { SchemaAttributes } from '../../schema';
-import { Localized } from '../../types';
-import { QuickViewForm } from './QuickViewForm';
-import { SectionEditableGridControl } from './SectionEditableGridControl';
+import type { Attribute } from '@headless-adminapp/core/attributes';
+import type { JSX } from 'react';
+
+import type { SchemaAttributes } from '../../schema';
+import type { Localized } from '../../types';
+import type { QuickViewForm } from './QuickViewForm';
+import type { SectionEditableGridControl } from './SectionEditableGridControl';
+
+export interface StandardControlProps {
+  attribute: Attribute;
+  label?: string;
+  isError?: boolean;
+  errorMessage?: string;
+  name: string;
+  value: any;
+  placeholder?: string;
+  onChange: (value: any) => void;
+  onBlur?: () => void;
+  fileServiceContext?: Record<string, unknown>;
+  borderOnFocusOnly?: boolean;
+  hideLabel?: boolean;
+  hidePlaceholder?: boolean;
+  allowQuickCreate?: boolean;
+  readOnly?: boolean;
+  quickViewControl?: boolean;
+  allowNavigation?: boolean;
+  allowNewRecord?: boolean;
+}
 
 export interface BaseSectionControl {
   key?: string;
@@ -19,7 +43,7 @@ export interface SectionStatndardControl<
 > extends BaseSectionControl {
   type: 'standard';
   attributeName: keyof S;
-  component?: string; // unique name of component from registry to override default component
+  component?: string | ((props: StandardControlProps) => JSX.Element | null); // Component or unique name of component from registry to override default component
 }
 
 export interface SectionSpacerControl extends BaseSectionControl {
@@ -36,7 +60,7 @@ export interface SectionSubgridControl extends BaseSectionControl {
   // noAssociateFilter?: boolean;
   // relatedRecordsOnly: boolean;
   associatedAttribute: false | string; // false if no associated attribute // local attirubte for the subgrid
-  component?: string; // unique name of component from registry to override default component
+  component?: string | (() => JSX.Element | null); // Component or unique name of component from registry to override default component
 }
 
 export interface SectionQuickViewControl<

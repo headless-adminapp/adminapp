@@ -1,38 +1,44 @@
+import type { AppExperience } from '@headless-adminapp/core/experience/app';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type {
+  ISchemaExperienceStore,
+  ISchemaStore,
+} from '@headless-adminapp/core/store';
 import { useMemo } from 'react';
 
 import { useContextSelector } from '../../mutable/context';
 import { MetadataContext } from '../context';
 
-export function useMetadata() {
+interface UseMetadataResult {
+  schemas: Record<string, Schema<SchemaAttributes>>;
+  schemaStore: ISchemaStore<SchemaAttributes>;
+  appExperience: AppExperience;
+  experienceStore: ISchemaExperienceStore;
+}
+
+export function useMetadata(): UseMetadataResult {
   const schemaStore = useContextSelector(
     MetadataContext,
     (state) => state.schemaStore
   );
-  const appStore = useContextSelector(
+  const appExperience = useContextSelector(
     MetadataContext,
-    (state) => state.appStore
+    (state) => state.appExperience
   );
   const experienceStore = useContextSelector(
     MetadataContext,
     (state) => state.experienceStore
   );
-  // const schemaLoading = useContextSelector(
-  //   MetadataContext,
-  //   (state) => state.schemaLoading
-  // );
-
-  const schemaLoading = false;
 
   const schemas = schemaStore.getAllSchema();
 
   return useMemo(
     () => ({
       schemas,
-      schemaLoading,
       schemaStore,
-      appStore,
+      appExperience,
       experienceStore,
     }),
-    [schemas, schemaLoading, schemaStore, appStore, experienceStore]
+    [schemas, schemaStore, appExperience, experienceStore]
   );
 }
