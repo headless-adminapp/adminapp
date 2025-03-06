@@ -80,9 +80,11 @@ export function DateTimeControl({
           } else if (!value) {
             onChange?.(dayjs(date).tz(timezone, true).toISOString());
           } else {
+            const dateISOString = dayjs(date).tz(timezone, true).toISOString();
+
             onChange?.(
-              dayjs(date)
-                .tz(timezone, true)
+              dayjs(dateISOString)
+                .tz(timezone)
                 .set('hour', dayjs(value).tz(timezone).hour())
                 .set('minute', dayjs(value).tz(timezone).minute())
                 .toISOString()

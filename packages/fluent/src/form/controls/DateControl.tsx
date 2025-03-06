@@ -30,6 +30,7 @@ export function DateControl({
 }: Readonly<DateControlProps>) {
   const { dateFormats, timezone } = useLocale();
   const { datePickerStrings } = useAppStrings();
+
   return (
     <DatePicker
       id={id}
@@ -38,21 +39,19 @@ export function DateControl({
       onBlur={() => onBlur?.()}
       placeholder={placeholder}
       appearance="filled-darker"
-      // size="sm"
-      // error={error}
-      // maxDate={maxDate}
-      // minDate={minDate}
       disabled={disabled}
       readOnly={readOnly}
       formatDate={(date) =>
         date ? dayjs(date).tz(timezone).format(dateFormats.short) : ''
       }
       value={value ? new Date(value) : null}
-      onSelectDate={(date) =>
+      onSelectDate={(date) => {
         onChange?.(
-          date ? dayjs(date).tz(timezone).startOf('day').toISOString() : null
-        )
-      }
+          date
+            ? dayjs(date).tz(timezone, true).startOf('day').toISOString()
+            : null
+        );
+      }}
       strings={datePickerStrings}
       contentAfter={
         <div

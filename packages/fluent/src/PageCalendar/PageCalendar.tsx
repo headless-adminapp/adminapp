@@ -275,8 +275,8 @@ export function PageCalendar<
           flexDirection: 'column',
           flex: 1,
           gap: tokens.spacingVerticalM,
-          padding: tokens.spacingHorizontalL,
-          background: tokens.colorNeutralBackground3,
+          padding: tokens.spacingHorizontalM,
+          background: tokens.colorNeutralBackground2,
         }}
       >
         <Header

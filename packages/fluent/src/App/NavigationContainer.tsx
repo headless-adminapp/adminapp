@@ -24,6 +24,8 @@ const useStyles = makeStyles({
     overflow: 'hidden',
     display: 'flex',
     flexShrink: 0,
+    boxShadow: tokens.shadow4,
+    zIndex: 1,
   },
   content: {
     flex: '1',
@@ -65,7 +67,12 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
         type={type}
         onOpenChange={(value, data) => onOpenChange(data.open)}
       >
-        <NavDrawerBody style={{ paddingTop: 8 }}>
+        <NavDrawerBody
+          style={{
+            paddingTop: 8,
+            // borderRight: `1px solid ${tokens.colorNeutralStroke1}`,
+          }}
+        >
           {app.navItems.map((area) => (
             <Fragment key={area.label}>
               {area.groups.map((group) => (

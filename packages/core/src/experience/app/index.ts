@@ -64,7 +64,7 @@ export interface PageEntiyForm extends BasePageItem, BasePageEntiyForm {}
 
 interface PageExternalLink extends BasePageItem, BasePageExternalLink {
   icon: Icon;
-  lable: string;
+  label: string;
 }
 
 interface PageCustom extends BasePageItem, BasePageCustom {

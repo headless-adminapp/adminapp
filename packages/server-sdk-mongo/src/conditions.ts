@@ -204,29 +204,38 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
           : endOfFiscalYear(dayjs().year() + 1, timezone).toDate(),
     },
   }),
-  'next-x-hours': (condition) => ({
+  'next-x-hours': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().add(condition.value, 'hour').toDate(),
+      $gte: dayjs().tz(timezone).toDate(),
+      $lte: dayjs().add(condition.value, 'hour').toDate(),
     },
   }),
-  'next-x-days': (condition) => ({
+  'next-x-days': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().add(condition.value, 'day').toDate(),
+      $gte: dayjs().tz(timezone).startOf('day').toDate(),
+      $lte: dayjs().add(condition.value, 'day').toDate(),
     },
   }),
-  'next-x-weeks': (condition) => ({
+  'next-x-weeks': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().add(condition.value, 'week').toDate(),
+      $gte: dayjs().tz(timezone).startOf('day').toDate(),
+      $lte: dayjs()
+        .tz(timezone)
+        .add(condition.value, 'week')
+        .endOf('week')
+        .toDate(),
     },
   }),
-  'next-x-months': (condition) => ({
+  'next-x-months': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().add(condition.value, 'month').toDate(),
+      $gte: dayjs().tz(timezone).startOf('day').toDate(),
+      $lte: dayjs().add(condition.value, 'month').toDate(),
     },
   }),
-  'next-x-years': (condition) => ({
+  'next-x-years': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().add(condition.value, 'year').toDate(),
+      $gte: dayjs().tz(timezone).startOf('day').toDate(),
+      $lte: dayjs().add(condition.value, 'year').toDate(),
     },
   }),
   'last-week': (condition, attribute, { timezone }) => ({

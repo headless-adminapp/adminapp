@@ -1,4 +1,4 @@
-import { Tag } from '@fluentui/react-components';
+import { Badge, tokens } from '@fluentui/react-components';
 import { isColorDark } from '@headless-adminapp/app/utils/color';
 import { ChoiceAttribute } from '@headless-adminapp/core/attributes';
 import { ViewColumn } from '@headless-adminapp/core/experience/view';
@@ -48,9 +48,15 @@ export function TableCellChoice(props: TableCellChoiceProps) {
         maxWidth: props.width,
       }}
     >
-      <Tag size="small" style={{ backgroundColor: bgColor, color }}>
+      <Badge
+        style={{
+          backgroundColor: bgColor,
+          color,
+          fontWeight: tokens.fontWeightRegular,
+        }}
+      >
         {props.formattedValue}
-      </Tag>
+      </Badge>
     </TableCellBase>
   );
 }
