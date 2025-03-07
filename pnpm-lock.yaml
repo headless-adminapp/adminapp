@@ -64,11 +64,11 @@ importers:
   packages/app:
     dependencies:
       '@headless-adminapp/core':
-        specifier: '*'
-        version: 0.0.17-alpha.61(react@18.3.1)
+        specifier: workspace:*
+        version: link:../core/dist
       '@headless-adminapp/icons':
-        specifier: '*'
-        version: 0.0.17-alpha.56
+        specifier: workspace:*
+        version: link:../icons/dist
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.52.2(react@18.3.1))
@@ -110,8 +110,8 @@ importers:
   packages/core:
     dependencies:
       '@headless-adminapp/icons':
-        specifier: '*'
-        version: 0.0.17-alpha.56
+        specifier: workspace:*
+        version: link:../icons/dist
       '@tanstack/react-query':
         specifier: 5.51.1
         version: 5.51.1(react@18.3.1)
@@ -153,14 +153,14 @@ importers:
         specifier: 6.1.15
         version: 6.1.15(@fullcalendar/core@6.1.15)
       '@headless-adminapp/core':
-        specifier: '*'
-        version: 0.0.17-alpha.61(react@18.3.1)
+        specifier: workspace:*
+        version: link:../core/dist
       '@headless-adminapp/icons':
-        specifier: '*'
-        version: 0.0.17-alpha.56
+        specifier: workspace:*
+        version: link:../icons/dist
       '@headless-adminapp/icons-fluent':
-        specifier: '*'
-        version: 0.0.17-alpha.57(react@18.3.1)
+        specifier: workspace:*
+        version: link:../icons-fluent/dist
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.52.2(react@18.3.1))
@@ -225,24 +225,24 @@ importers:
         version: 2.0.274(react@18.3.1)
       '@headless-adminapp/icons':
         specifier: '*'
-        version: 0.0.17-alpha.56
+        version: 1.0.0
     publishDirectory: dist
 
   packages/server-sdk:
     dependencies:
       '@headless-adminapp/core':
-        specifier: '*'
-        version: 0.0.17-alpha.61(react@18.3.1)
+        specifier: workspace:*
+        version: link:../core/dist
     publishDirectory: dist
 
   packages/server-sdk-mongo:
     dependencies:
       '@headless-adminapp/core':
-        specifier: '*'
-        version: 0.0.17-alpha.61(react@18.3.1)
+        specifier: workspace:*
+        version: link:../core/dist
       '@headless-adminapp/server-sdk':
-        specifier: '*'
-        version: 0.0.17-alpha.57
+        specifier: workspace:*
+        version: link:../server-sdk/dist
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -254,11 +254,11 @@ importers:
   packages/server-sdk-sequelize:
     dependencies:
       '@headless-adminapp/core':
-        specifier: '*'
-        version: 0.0.17-alpha.61(react@18.3.1)
+        specifier: workspace:*
+        version: link:../core/dist
       '@headless-adminapp/server-sdk':
-        specifier: '*'
-        version: 0.0.17-alpha.57
+        specifier: workspace:*
+        version: link:../server-sdk/dist
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -993,17 +993,8 @@ packages:
   '@griffel/style-types@1.2.0':
     resolution: {integrity: sha512-x166MNw0vWe5l5qhinfNT4eyWOaP48iFzPyFOfIB0/BVidKTWsEe5PmqRJDDtrJFS3VHhd/tE0oM6tkEMh2tsg==}
 
-  '@headless-adminapp/core@0.0.17-alpha.61':
-    resolution: {integrity: sha512-Hk2uupQjfIpxTrfpLFmhXvacGk+DOS6n5w7iEtLss58e3VQ6TB1O4KuXaYF10C3anv5YOipj0DPO4DAyvCh9sw==}
-
-  '@headless-adminapp/icons-fluent@0.0.17-alpha.57':
-    resolution: {integrity: sha512-lfamN80ul9zGQNAp9jVpDFMqUt1AoCDPETsC7J5rorvxHfwLdNvmKt7AI1/mAySNza3e1Pudpi/m+sVKSh5H1A==}
-
-  '@headless-adminapp/icons@0.0.17-alpha.56':
-    resolution: {integrity: sha512-8TCsK/VIUgVJ3tWPYx8vdlpdloAaoO7SEb96+6OVb5RPdhezhNVJvjNQ9km0N5rmQbpmZbZeX1qdTvRUjsOoLQ==}
-
-  '@headless-adminapp/server-sdk@0.0.17-alpha.57':
-    resolution: {integrity: sha512-SFLoJDFIfJ9MY6Ky7CliOh6ne4aTOC6QCvsQYM072Cv5vvAkwG7MMvGr+APsr2W7NBYwzRwd+SecDjdNu/o8YQ==}
+  '@headless-adminapp/icons@1.0.0':
+    resolution: {integrity: sha512-mCS/ingmsa2dVH2Ym8KGTT+K9+ioBWbawUDq77D3RolxA1lj/+Ar1fmReVhjj6qTAeK40Cs108nY8cBWJIlqJw==}
 
   '@hookform/resolvers@3.9.0':
     resolution: {integrity: sha512-bU0Gr4EepJ/EQsH/IwEzYLsT/PEj5C0ynLQ4m+GSHS+xKH4TfSelhluTgOaoc4kA5s7eCsQbM4wvZLzELmWzUg==}
@@ -6272,24 +6263,9 @@ snapshots:
     dependencies:
       csstype: 3.1.3
 
-  '@headless-adminapp/core@0.0.17-alpha.61(react@18.3.1)':
-    dependencies:
-      '@tanstack/react-query': 5.51.1(react@18.3.1)
-      uuid: 11.0.3
-    transitivePeerDependencies:
-      - react
-
-  '@headless-adminapp/icons-fluent@0.0.17-alpha.57(react@18.3.1)':
-    dependencies:
-      '@fluentui/react-icons': 2.0.274(react@18.3.1)
-    transitivePeerDependencies:
-      - react
-
-  '@headless-adminapp/icons@0.0.17-alpha.56':
+  '@headless-adminapp/icons@1.0.0':
     dependencies:
       clsx: 2.1.1
-
-  '@headless-adminapp/server-sdk@0.0.17-alpha.57': {}
 
   '@hookform/resolvers@3.9.0(react-hook-form@7.52.2(react@18.3.1))':
     dependencies:

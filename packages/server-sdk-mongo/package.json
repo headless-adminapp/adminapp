@@ -29,8 +29,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@headless-adminapp/core": "*",
-    "@headless-adminapp/server-sdk": "*",
+    "@headless-adminapp/core": "workspace:*",
+    "@headless-adminapp/server-sdk": "workspace:*",
     "dayjs": "^1.11.13",
     "mongoose": "^8.5.1"
   },
