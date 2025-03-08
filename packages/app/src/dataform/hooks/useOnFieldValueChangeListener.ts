@@ -5,7 +5,7 @@ import { useEventManager } from './useEventManager';
 
 export function useOnFieldValueChangeListener(
   key: string,
-  callback: (value: any) => any
+  callback: (value: any, previousValue: any) => any
 ) {
   const eventManager = useEventManager();
 
@@ -13,7 +13,7 @@ export function useOnFieldValueChangeListener(
   callbackRef.current = callback;
 
   useEffect(() => {
-    const listener = (_key: string, value: unknown) => {
+    const listener = (_key: string, value: unknown, previousValue: unknown) => {
       const _path = _key.split('.');
       const path = key.split('.');
 
@@ -27,7 +27,7 @@ export function useOnFieldValueChangeListener(
         }
       }
 
-      callbackRef.current(value);
+      callbackRef.current(value, previousValue);
     };
 
     eventManager.on(EVENT_KEY_ON_FIELD_CHANGE, listener);

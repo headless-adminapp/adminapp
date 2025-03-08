@@ -152,11 +152,13 @@ export function SectionContainer<
                           name={control.attributeName as string}
                           value={field.value}
                           onChange={(value) => {
+                            const previousValue = field.value;
                             field.onChange(value);
                             eventManager.emit(
                               EVENT_KEY_ON_FIELD_CHANGE,
                               control.attributeName,
-                              value
+                              value,
+                              previousValue
                             );
                           }}
                           onBlur={field.onBlur}
