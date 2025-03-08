@@ -34,6 +34,9 @@ function transformColumns({
         transformedRecord[column] = {
           id: expandedValue[lookupSchema.idAttribute],
           name: expandedValue[lookupSchema.primaryAttribute],
+          avatar: lookupSchema.avatarAttribute
+            ? expandedValue[lookupSchema.avatarAttribute]
+            : null,
           logicalName: attribute.entity,
         };
       }
