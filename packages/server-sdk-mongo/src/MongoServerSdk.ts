@@ -175,7 +175,10 @@ export class MongoServerSdk<
 
     Object.entries(schema.attributes).forEach(([key, attribute]) => {
       if (attribute.type === 'lookup') {
-        if (params?.columns?.includes(key)) {
+        if (
+          params?.columns?.includes(key) ||
+          (params?.expand as Record<string, string[]>)?.[key]?.length
+        ) {
           const lookupSchema = this.options.schemaStore.getSchema(
             attribute.entity
           );
@@ -341,8 +344,6 @@ export class MongoServerSdk<
       return {
         _id: 1,
         [params.schema.primaryAttribute]: 1,
-        statecode: 1,
-        statuscode: 1,
       };
     }
   }
@@ -406,7 +407,7 @@ export class MongoServerSdk<
         // either expand included
         if (
           params?.columns?.includes(key) ||
-          params?.expand?.[key] ||
+          params?.expand?.[key]?.length ||
           (!!params?.search && attribute.searchable)
         ) {
           const lookupSchema = this.options.schemaStore.getSchema(

@@ -9,14 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@headless-adminapp/app": "^0.0.17-alpha.54",
-    "@headless-adminapp/core": "^0.0.17-alpha.53",
-    "@headless-adminapp/fluent": "^0.0.17-alpha.53",
-    "@headless-adminapp/icons": "^0.0.17-alpha.53",
-    "@headless-adminapp/icons-fluent": "^0.0.17-alpha.53",
-    "@headless-adminapp/server-sdk": "^0.0.17-alpha.53",
-    "@headless-adminapp/server-sdk-mongo": "^0.0.17-alpha.53",
-    "@tanstack/react-query": "^5.59.15",
     "@types/jsonwebtoken": "^9.0.7",
     "csvtojson": "^2.0.10",
     "dayjs": "^1.11.13",

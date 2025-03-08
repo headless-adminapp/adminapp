@@ -87,6 +87,8 @@ export function DateTimeControl({
                 .tz(timezone)
                 .set('hour', dayjs(value).tz(timezone).hour())
                 .set('minute', dayjs(value).tz(timezone).minute())
+                .set('second', 0)
+                .set('millisecond', 0)
                 .toISOString()
             );
           }
@@ -142,6 +144,8 @@ export function DateTimeControl({
                   'minute',
                   dayjs(data.selectedTime).tz(timezone, true).minute()
                 )
+                .set('second', 0)
+                .set('millisecond', 0)
                 .toISOString()
             );
           } else if (data.selectedTimeText) {

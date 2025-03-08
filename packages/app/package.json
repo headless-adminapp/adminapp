@@ -29,11 +29,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.51.1"
+  },
   "dependencies": {
     "@headless-adminapp/core": "workspace:*",
     "@headless-adminapp/icons": "workspace:*",
     "@hookform/resolvers": "^3.9.0",
-    "@tanstack/react-query": "5.51.1",
     "clsx": "2.1.1",
     "dayjs": "^1.11.13",
     "exceljs": "^4.4.0",

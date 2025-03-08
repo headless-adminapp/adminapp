@@ -10,6 +10,7 @@ import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import { FC } from 'react';
 
 import { PageEntityFormDesktopContainer } from './PageEntityFormDesktopContainer';
+import { RecordSetNavigatorContainer } from './RecordSetNavigatorContainer';
 
 interface PageCustomEntityFormProps<
   SA extends SchemaAttributes = SchemaAttributes
@@ -48,6 +49,7 @@ export const PageCustomEntityForm: FC<PageCustomEntityFormProps> = ({
           overflow: 'hidden',
         }}
       >
+        <RecordSetNavigatorContainer />
         <PageEntityFormDesktopContainer />
       </div>
     </PageEntityFormProvider>

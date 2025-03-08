@@ -37,6 +37,21 @@ export function TableCellChoice(props: TableCellChoiceProps) {
     return isColorDark(bgColor) ? '#FFFFFF' : '#000000';
   }, [bgColor]);
 
+  if (!props.formattedValue) {
+    return (
+      <TableCellBase
+        style={{
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          width: props.width,
+          minWidth: props.width,
+          maxWidth: props.width,
+        }}
+      />
+    );
+  }
+
   return (
     <TableCellBase
       style={{
@@ -50,8 +65,8 @@ export function TableCellChoice(props: TableCellChoiceProps) {
     >
       <Badge
         style={{
-          backgroundColor: bgColor,
-          color,
+          backgroundColor: bgColor ?? tokens.colorNeutralBackground3,
+          color: color ?? tokens.colorNeutralForeground2,
           fontWeight: tokens.fontWeightRegular,
         }}
       >

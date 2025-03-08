@@ -28,11 +28,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "peerDependencies": {
+    "sequelize": "^6.37.3"
+  },
   "dependencies": {
     "@headless-adminapp/core": "workspace:*",
     "@headless-adminapp/server-sdk": "workspace:*",
     "dayjs": "^1.11.13",
-    "sequelize": "^6.37.3",
     "uuid": "11.0.3"
   },
   "gitHead": "a28ee863fccb6157774e75b4cc421c6940cda469"

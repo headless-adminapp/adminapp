@@ -32,6 +32,8 @@ export function getColumns<SA extends SchemaAttributes>(
       .map((control) => control.attributeName),
   ]);
 
+  set.add(schema.primaryAttribute);
+
   if (schema.avatarAttribute) {
     set.add(schema.avatarAttribute);
   }

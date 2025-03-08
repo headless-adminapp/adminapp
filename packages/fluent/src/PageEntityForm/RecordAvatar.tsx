@@ -73,8 +73,13 @@ export const RecordAvatar: FC = () => {
     }
   };
 
+  const experienceSchema = schemaMetadataDic[schema.logicalName];
+
+  if (!experienceSchema) {
+    return null;
+  }
+
   if (isPlaceholder && !value) {
-    const experienceSchema = schemaMetadataDic[schema.logicalName];
     const Icon = experienceSchema.icon ?? Icons.Entity ?? IconPlaceholder;
 
     return (

@@ -25,9 +25,11 @@
     "prepublishOnly": "pnpm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.51.1"
+  },
   "dependencies": {
     "@headless-adminapp/icons": "workspace:*",
-    "@tanstack/react-query": "5.51.1",
     "uuid": "11.0.3"
   },
   "keywords": [],
