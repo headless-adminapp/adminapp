@@ -1,10 +1,6 @@
 /** @type {import('next').NextConfig} */
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
-
-const nextConfig = withBundleAnalyzer({
+const nextConfig = {
   reactStrictMode: true,
   experimental: {
     appDir: true,
@@ -12,6 +8,6 @@ const nextConfig = withBundleAnalyzer({
   eslint: {
     dirs: ['pages', 'app', 'components', 'entity'],
   },
-});
+};
 
 module.exports = nextConfig;
