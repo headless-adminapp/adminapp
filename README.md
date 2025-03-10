@@ -2,7 +2,7 @@
 
 Headless AdminApp is a web-based application designed to manage administrative tasks efficiently. This project is built using modern web technologies to provide a seamless user experience. By leveraging a headless architecture, it allows for greater flexibility and scalability in integrating with various frontend frameworks and third-party services.
 
-[Documentation](https://headless-adminapp.github.io/) | [Demo](https://headless-adminapp-examples.vercel.app) | [Examples](https://github.com/kishanmundha/headless-adminapp-examples)
+[Documentation](https://headless-adminapp.github.io/) | [Demo](https://headless-adminapp-examples.vercel.app) | [Examples](https://github.com/kishanmundha/headless-adminapp-examples) | [Boilerplate](https://github.com/headless-adminapp/boilerplate)
 
 ![Board](screenshots/board.png)
 ![DataGrid](screenshots/datagrid.png)
