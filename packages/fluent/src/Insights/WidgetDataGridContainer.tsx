@@ -7,7 +7,10 @@ import {
   useExperienceView,
   useSchema,
 } from '@headless-adminapp/app/metadata/hooks';
-import { useContextSetValue } from '@headless-adminapp/app/mutable';
+import {
+  useContextSelector,
+  useContextSetValue,
+} from '@headless-adminapp/app/mutable';
 import { WidgetContext } from '@headless-adminapp/app/widget';
 import { DataGridWidgetExperience } from '@headless-adminapp/core/experience/insights';
 import { useCallback } from 'react';
@@ -17,9 +20,9 @@ import { WidgetTitleBar } from './WidgetTitleBar';
 
 export function WidgetDataGridContainer({
   content,
-}: {
+}: Readonly<{
   content: DataGridWidgetExperience;
-}) {
+}>) {
   const logicalName = content.logicalName;
   const schema = useSchema(logicalName);
   const { view } = useExperienceView(logicalName);
@@ -67,6 +70,7 @@ const FormSubgridContainer = ({
 }) => {
   const baseCommandHandleContext = useBaseCommandHandlerContext();
   const primaryControl = useGridControlContext();
+  const widgetState = useContextSelector(WidgetContext, (state) => state);
 
   const widgetSetValue = useContextSetValue(WidgetContext);
 
@@ -102,7 +106,7 @@ const FormSubgridContainer = ({
       }}
     >
       <WidgetTitleBar
-        title="Recent transactions"
+        title={widgetState.widget.title}
         commands={transformedCommands}
       />
       <div

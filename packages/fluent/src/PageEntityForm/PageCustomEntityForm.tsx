@@ -7,7 +7,6 @@ import {
   Form,
 } from '@headless-adminapp/core/experience/form';
 import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
-import { FC } from 'react';
 
 import { PageEntityFormDesktopContainer } from './PageEntityFormDesktopContainer';
 import { RecordSetNavigatorContainer } from './RecordSetNavigatorContainer';
@@ -23,14 +22,16 @@ interface PageCustomEntityFormProps<
   saveRecordFn?: SaveRecordFn;
 }
 
-export const PageCustomEntityForm: FC<PageCustomEntityFormProps> = ({
+export function PageCustomEntityForm<
+  SA extends SchemaAttributes = SchemaAttributes
+>({
   recordId,
   commands,
   form,
   schema,
   retriveRecordFn,
   saveRecordFn,
-}) => {
+}: Readonly<PageCustomEntityFormProps<SA>>) {
   return (
     <PageEntityFormProvider
       schema={schema}
@@ -54,4 +55,4 @@ export const PageCustomEntityForm: FC<PageCustomEntityFormProps> = ({
       </div>
     </PageEntityFormProvider>
   );
-};
+}
