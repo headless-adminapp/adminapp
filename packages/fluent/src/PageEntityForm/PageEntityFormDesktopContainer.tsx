@@ -211,6 +211,11 @@ export const PageEntityFormDesktopContainer: FC = () => {
                 (controlName, index) => {
                   const attribute = schema.attributes[controlName];
 
+                  if (!attribute) {
+                    console.warn(`Attribute ${controlName} not found`);
+                    return null;
+                  }
+
                   return (
                     <Fragment key={controlName}>
                       {index > 0 && (

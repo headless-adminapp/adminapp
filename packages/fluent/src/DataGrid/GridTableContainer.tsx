@@ -50,6 +50,7 @@ const useStyles = makeStyles({
 
       '& .tableCellAction': {
         background: 'inherit',
+        opacity: 1,
       },
     },
     '&:hover': {
@@ -59,11 +60,25 @@ const useStyles = makeStyles({
       },
       '& .tableCellAction': {
         background: 'inherit !important',
+        opacity: 1,
+
+        '& > button': {
+          opacity: 1,
+        },
       },
     },
 
     '& .tableCellAction': {
       background: tokens.colorNeutralBackground1,
+      opacity: 0,
+
+      '& > button': {
+        opacity: 0,
+
+        '[aria-expanded="true"],&:hover': {
+          opacity: 1,
+        },
+      },
     },
 
     borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,

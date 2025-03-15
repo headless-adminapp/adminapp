@@ -82,6 +82,14 @@ export function SectionContainer<
         switch (control.type) {
           case 'standard': {
             const attribute = schema.attributes[control.attributeName];
+
+            if (!attribute) {
+              console.warn(
+                `Attribute ${control.attributeName as string} not found`
+              );
+              return null;
+            }
+
             let Control = StandardControl;
 
             if (control.component) {
