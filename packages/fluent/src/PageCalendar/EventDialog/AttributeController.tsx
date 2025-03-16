@@ -9,12 +9,14 @@ interface AttributeControllerProps {
   attribute: Attribute;
   attributeName: Path<BaseFieldValues>;
   form: UseFormReturn<BaseFieldValues>;
+  readOnly?: boolean;
 }
 
 export function AttributeController({
   attribute,
   attributeName,
   form,
+  readOnly,
 }: Readonly<AttributeControllerProps>) {
   return (
     <Controller
@@ -45,7 +47,7 @@ export function AttributeController({
               onBlur={field.onBlur}
               errorMessage={errorMessage}
               isError={isError}
-              readOnly={attribute.readonly}
+              readOnly={readOnly || attribute.readonly}
             />
           </SectionControlWrapper>
         );

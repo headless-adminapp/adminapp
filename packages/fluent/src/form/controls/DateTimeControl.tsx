@@ -53,6 +53,10 @@ export function DateTimeControl({
     }
   }, [value, timezone, timeFormat]);
 
+  const isReadonly = readOnly || disabled;
+
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+
   return (
     <div
       style={{
@@ -64,6 +68,17 @@ export function DateTimeControl({
       <DatePicker
         id={id}
         name={name}
+        open={isDatePickerOpen}
+        onOpenChange={(isOpen) => {
+          if (isOpen && isReadonly) {
+            return;
+          }
+
+          setIsDatePickerOpen(isOpen);
+          if (!isOpen) {
+            onBlur?.();
+          }
+        }}
         onFocus={() => onFocus?.()}
         onBlur={() => onBlur?.()}
         placeholder={placeholder}
@@ -71,8 +86,7 @@ export function DateTimeControl({
         formatDate={(date) =>
           date ? dayjs(date).tz(timezone).format(dateFormat) : ''
         }
-        disabled={disabled}
-        readOnly={readOnly}
+        readOnly={isReadonly}
         value={value ? new Date(value) : null}
         onSelectDate={(date) => {
           if (!date) {
@@ -114,11 +128,15 @@ export function DateTimeControl({
       />
       <TimePicker
         appearance="filled-darker"
-        style={{ flex: 1, minWidth: 0 }}
+        style={{
+          flex: 1,
+          minWidth: 0,
+          pointerEvents: isReadonly ? 'none' : 'auto',
+        }}
         input={{
           style: { minWidth: 0 },
         }}
-        readOnly={readOnly || disabled || !value}
+        readOnly={isReadonly || !value}
         // selectedTime={value ? new Date(value) : null}
         selectedTime={
           value

@@ -77,4 +77,8 @@ export interface CalendarConfig<
   title: string;
   description: string;
   eventLabel: string;
+  disableCreate?: boolean;
+  disableEdit?: boolean;
+  disableDelete?: boolean;
+  disableAllDay?: boolean;
 }

@@ -66,14 +66,16 @@ export function Header<SA extends SchemaAttributes = SchemaAttributes>({
             gap: tokens.spacingHorizontalS,
           }}
         >
-          <Button
-            style={{ fontWeight: tokens.fontWeightMedium }}
-            icon={<iconSet.Add />}
-            appearance="primary"
-            onClick={onCreateButtonClick}
-          >
-            Create
-          </Button>
+          {!config.disableCreate && (
+            <Button
+              style={{ fontWeight: tokens.fontWeightMedium }}
+              icon={<iconSet.Add />}
+              appearance="primary"
+              onClick={onCreateButtonClick}
+            >
+              Create
+            </Button>
+          )}
         </div>
       </div>
       {!!config.filterAttributes && (

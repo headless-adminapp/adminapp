@@ -101,11 +101,49 @@ export function EventFormBody(props: Readonly<EventFormBodyProps>) {
     formRef.current.reset(defaultValues);
   }, [defaultValues]);
 
+  const menuItems = [];
+
+  if (props.allowOpenRecord) {
+    menuItems.push(
+      <MenuItem
+        key="open"
+        icon={<iconSet.OpenInNew size={20} />}
+        onClick={() => props.onOpenRecord?.(props.values.id as string)}
+      >
+        Open
+      </MenuItem>
+    );
+  }
+
+  if (!props.config.disableEdit) {
+    menuItems.push(
+      <MenuItem
+        key="delete"
+        icon={<iconSet.Delete size={20} />}
+        onClick={() => props.onDelete?.(props.values.id as string)}
+      >
+        Delete
+      </MenuItem>
+    );
+  }
+
+  let title = props.values.id
+    ? 'Edit'
+    : 'New' + ` ${props.config.eventLabel.toLowerCase()}`;
+
+  if (props.values.id && props.config.disableEdit) {
+    title = props.config.eventLabel;
+  }
+
+  let readOnly = props.values.id
+    ? props.config.disableEdit
+    : props.config.disableCreate;
+
   return (
     <DialogBody>
       <DialogTitle
         action={
-          props.values.id ? (
+          props.values.id && menuItems.length > 0 ? (
             <Menu positioning="below-end">
               <MenuTrigger>
                 <Button
@@ -115,54 +153,40 @@ export function EventFormBody(props: Readonly<EventFormBodyProps>) {
                 />
               </MenuTrigger>
               <MenuPopover>
-                <MenuList>
-                  {props.allowOpenRecord && (
-                    <MenuItem
-                      icon={<iconSet.OpenInNew size={20} />}
-                      onClick={() =>
-                        props.onOpenRecord?.(props.values.id as string)
-                      }
-                    >
-                      Open
-                    </MenuItem>
-                  )}
-                  <MenuItem
-                    icon={<iconSet.Delete size={20} />}
-                    onClick={() => props.onDelete?.(props.values.id as string)}
-                  >
-                    Delete
-                  </MenuItem>
-                </MenuList>
+                <MenuList>{menuItems}</MenuList>
               </MenuPopover>
             </Menu>
           ) : null
         }
       >
-        {props.values.id ? 'Edit' : 'New'}{' '}
-        {props.config.eventLabel.toLowerCase()}
+        {title}
       </DialogTitle>
       <EventFormContent
         form={form}
         afterDescriptionAttributes={props.config.afterDescriptionAttributes}
         beforeDescriptionAttributes={props.config.beforeDescriptionAttributes}
+        readOnly={readOnly}
+        config={props.config}
       />
       <DialogActions>
-        <Button
-          appearance="primary"
-          disabled={form.formState.submitCount > 0 && !form.formState.isValid}
-          onClick={async () => {
-            await form.handleSubmit(async (values) => {
-              await props.onSubmit?.({
-                modifiedValues: values.id
-                  ? getModifiedValues(defaultValues, values)
-                  : values,
-                values,
-              });
-            })();
-          }}
-        >
-          {props.values.id ? 'Save' : 'Create'}
-        </Button>
+        {!readOnly && (
+          <Button
+            appearance="primary"
+            disabled={form.formState.submitCount > 0 && !form.formState.isValid}
+            onClick={async () => {
+              await form.handleSubmit(async (values) => {
+                await props.onSubmit?.({
+                  modifiedValues: values.id
+                    ? getModifiedValues(defaultValues, values)
+                    : values,
+                  values,
+                });
+              })();
+            }}
+          >
+            {props.values.id ? 'Save' : 'Create'}
+          </Button>
+        )}
         <Button
           appearance="secondary"
           type="button"

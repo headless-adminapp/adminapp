@@ -213,6 +213,10 @@ export function PageCalendar<
   }
 
   function handleDateSelect(selectInfo: DateSelectArg) {
+    if (config.disableCreate) {
+      return;
+    }
+
     openEventDetailModel({
       title: '',
       start: selectInfo.start.toISOString(),

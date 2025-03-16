@@ -1,5 +1,6 @@
 import { DialogContent, tokens } from '@fluentui/react-components';
 import { baseEventAttributes } from '@headless-adminapp/app/calendar/baseEventAttributes';
+import { CalendarConfig } from '@headless-adminapp/app/calendar/types';
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { Path, UseFormReturn } from 'react-hook-form';
 
@@ -13,6 +14,8 @@ interface EventFormContentProps<
   form: UseFormReturn<BaseFieldValues>;
   beforeDescriptionAttributes?: SA1;
   afterDescriptionAttributes?: SA2;
+  readOnly?: boolean;
+  config: CalendarConfig;
 }
 
 export function EventFormContent<
@@ -22,6 +25,8 @@ export function EventFormContent<
   form,
   afterDescriptionAttributes,
   beforeDescriptionAttributes,
+  readOnly,
+  config,
 }: Readonly<EventFormContentProps<SA1, SA2>>) {
   const allDay = form.watch('allDay');
 
@@ -40,6 +45,7 @@ export function EventFormContent<
           form={form}
           attributeName="title"
           attribute={baseEventAttributes.title}
+          readOnly={readOnly}
         />
         <AttributeController
           form={form}
@@ -48,6 +54,7 @@ export function EventFormContent<
             ...baseEventAttributes.start,
             ...(allDay ? { format: 'date' } : { format: 'datetime' }),
           }}
+          readOnly={readOnly}
         />
         <AttributeController
           form={form}
@@ -56,12 +63,16 @@ export function EventFormContent<
             ...baseEventAttributes.end,
             ...(allDay ? { format: 'date' } : { format: 'datetime' }),
           }}
+          readOnly={readOnly}
         />
-        <AttributeController
-          form={form}
-          attributeName="allDay"
-          attribute={baseEventAttributes.allDay}
-        />
+        {!config.disableAllDay && (
+          <AttributeController
+            form={form}
+            attributeName="allDay"
+            attribute={baseEventAttributes.allDay}
+            readOnly={readOnly}
+          />
+        )}
         {Object.entries(beforeDescriptionAttributes ?? {}).map(
           ([attributeName, attribute]) => {
             return (
@@ -70,6 +81,7 @@ export function EventFormContent<
                 form={form}
                 attributeName={attributeName as Path<BaseFieldValues>}
                 attribute={attribute}
+                readOnly={readOnly}
               />
             );
           }
@@ -78,6 +90,7 @@ export function EventFormContent<
           form={form}
           attributeName="description"
           attribute={baseEventAttributes.description}
+          readOnly={readOnly}
         />
         {Object.entries(afterDescriptionAttributes ?? {}).map(
           ([attributeName, attribute]) => {
@@ -87,6 +100,7 @@ export function EventFormContent<
                 form={form}
                 attributeName={attributeName as Path<BaseFieldValues>}
                 attribute={attribute}
+                readOnly={readOnly}
               />
             );
           }
