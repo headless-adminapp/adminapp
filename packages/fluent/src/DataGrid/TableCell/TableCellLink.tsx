@@ -25,6 +25,7 @@ export const TableCellLink: FC<TableCellLinkProps> = memo(
           maxWidth: width,
           display: 'flex',
           alignItems: 'center',
+          height: '100%',
         }}
       >
         <Link

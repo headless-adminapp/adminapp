@@ -50,4 +50,8 @@ export interface BoardConfig<S extends SchemaAttributes = SchemaAttributes> {
   };
   columnConfigs: BoardColumnConfig[];
   PreviewComponent: BoardColumnCardPreviewFC;
+  HeaderComponent?: FC;
+  emptyMessage?: string;
+  minColumnWidth?: number;
+  maxColumnWidth?: number;
 }

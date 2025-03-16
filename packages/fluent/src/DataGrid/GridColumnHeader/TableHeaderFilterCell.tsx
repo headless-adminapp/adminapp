@@ -216,6 +216,7 @@ export const TableHeaderFilterCell: FC<
         alignItems: 'center',
         fontWeight: tokens.fontWeightMedium,
         // pointerEvents: disableFilter && disableSort ? 'none' : 'auto',
+        height: '100%',
       }}
       onClick={(event) => {
         event.preventDefault();
@@ -278,9 +279,11 @@ export const TableHeaderFilterCell: FC<
     return headerCell;
   }
 
+  const menuPosition = align === 'right' ? 'below-end' : 'below-start';
+
   return (
     <th>
-      <Menu positioning="below-start">
+      <Menu positioning={menuPosition}>
         <MenuTrigger>{headerCell}</MenuTrigger>
         <MenuPopover>
           <MenuList>

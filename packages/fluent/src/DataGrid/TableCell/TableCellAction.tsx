@@ -48,10 +48,11 @@ export const TableCellAction: FC<TableCellActionProps> = ({
         right: 0,
         // top: 0,
         zIndex: 1,
+        height: '100%',
         justifyContent: 'right',
         // background: 'white',
         // boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-        borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,
+        // borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,
       }}
     >
       <Menu positioning="before-top">

@@ -4,6 +4,7 @@ import {
   BoardContextState,
 } from '@headless-adminapp/app/board/context';
 import { BoardConfig } from '@headless-adminapp/app/board/types';
+import { ScrollView } from '@headless-adminapp/app/components/ScrollView';
 import {
   ContextValue,
   useCreateContextStore,
@@ -77,9 +78,20 @@ export function PageBoard<S extends SchemaAttributes = SchemaAttributes>(
               marginTop: tokens.spacingVerticalM,
             }}
           >
-            {props.config.columnConfigs.map((config) => (
-              <BoardColumn key={config.columnId} config={config} />
-            ))}
+            <ScrollView>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  flex: 1,
+                  height: '100%',
+                }}
+              >
+                {props.config.columnConfigs.map((config) => (
+                  <BoardColumn key={config.columnId} config={config} />
+                ))}
+              </div>
+            </ScrollView>
           </div>
         </div>
       </DndProvider>

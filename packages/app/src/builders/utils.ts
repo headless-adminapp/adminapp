@@ -40,7 +40,7 @@ const getHeaders = (
       return `${lookupSchema.attributes[field]?.label} (${schema.attributes[lookup]?.label})`;
     }
 
-    return schema.attributes[column.name]?.label;
+    return column.label ?? schema.attributes[column.name]?.label;
   });
 
   return headers;

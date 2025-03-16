@@ -1,4 +1,3 @@
-// eslint-disable-next-line simple-import-sort/imports
 import {
   Button,
   Caption1,
@@ -6,14 +5,15 @@ import {
   Subtitle2,
   tokens,
 } from '@fluentui/react-components';
-import { FC } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-
 import {
-  useSearchText,
   useBoardSchema,
+  useSearchText,
 } from '@headless-adminapp/app/board/hooks';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { Icons } from '@headless-adminapp/icons';
+import { useQueryClient } from '@tanstack/react-query';
+import { FC } from 'react';
+
 import { useAppStrings } from '../App/AppStringContext';
 
 interface HeaderProps {
@@ -24,6 +24,7 @@ interface HeaderProps {
 export const Header: FC<HeaderProps> = ({ title, subtitle }) => {
   const client = useQueryClient();
   const schema = useBoardSchema();
+  const isMobile = useIsMobile();
 
   const [searchText, setSearchText] = useSearchText();
   const appStrings = useAppStrings();
@@ -38,7 +39,8 @@ export const Header: FC<HeaderProps> = ({ title, subtitle }) => {
     <div
       style={{
         display: 'flex',
-        alignItems: 'center',
+        flexDirection: isMobile ? 'column' : 'row',
+        alignItems: isMobile ? 'flex-start' : 'center',
         gap: tokens.spacingHorizontalM,
       }}
     >

@@ -133,14 +133,30 @@ export function useTableColumns({
     const { columns: calculatedColumns } = calculateColumnWidths({
       availableWidth,
       gapWidth: 0,
-      columns: columns.map((column) => ({
-        width: column.width ?? 100,
-        maxWidth: column.maxWidth ?? 1000,
-      })),
+      columns: columns.map((column) => {
+        const attribute = schema.attributes[column.name];
+
+        let defaultMaxWidth = 1000;
+
+        if (attribute.type === 'date') {
+          if (attribute.format === 'datetime') {
+            defaultMaxWidth = 200;
+          } else {
+            defaultMaxWidth = 100;
+          }
+        } else if (attribute.type === 'money') {
+          defaultMaxWidth = 150;
+        }
+
+        return {
+          width: column.width ?? 100,
+          maxWidth: column.maxWidth ?? defaultMaxWidth,
+        };
+      }),
     });
 
     return calculatedColumns;
-  }, [columns, tableWrapperSize.width]);
+  }, [columns, tableWrapperSize.width, schema.attributes]);
 
   const gridColumns = useGridColumns();
 
@@ -190,7 +206,7 @@ export function useTableColumns({
               top: 0,
               // zIndex: 1,
               background: tokens.colorNeutralBackground1,
-              borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,
+              // borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,
             }}
           >
             &nbsp;
@@ -266,6 +282,7 @@ export function useTableColumns({
               width: 32,
               maxWidth: 32,
               minWidth: 32,
+              alignItems: 'center',
             }}
             onClick={toggleAllSelectedIds}
           />
@@ -502,6 +519,7 @@ function renderCellContent({
 
   switch (attribute?.type) {
     case 'money':
+    case 'number':
       return (
         <TableCellText
           key={column.id}

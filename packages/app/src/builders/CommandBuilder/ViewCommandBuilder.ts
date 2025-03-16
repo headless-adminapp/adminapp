@@ -8,7 +8,7 @@ import { Icon } from '@headless-adminapp/icons';
 import { exportRecordsCSV, exportRecordsXLS, retriveRecords } from '../utils';
 import { createLocalizedSelector, plurialize } from './utils';
 
-namespace EnabledRules {
+export namespace EnabledRules {
   export function HasCreatePermisssion(context: EntityMainGridCommandContext) {
     return !context.primaryControl.schema.restrictions?.disableCreate;
   }
@@ -150,76 +150,10 @@ export namespace ViewCommandBuilder {
       danger: true,
       isContextMenu: true,
       onClick: async (context) => {
-        const recordIds = context.primaryControl.selectedIds;
-
-        if (!recordIds.length) {
-          return;
-        }
-
-        const localizeSelector = createLocalizedSelector(
+        await processDeleteRecordRequest(context, {
           stringSet,
           localizedStringSet,
-          context.locale.language
-        );
-
-        try {
-          const confirmResult = await context.utility.openConfirmDialog({
-            title: plurialize(
-              recordIds.length,
-              localizeSelector((s) => s.confirmation.title)
-            ),
-            text: plurialize(
-              recordIds.length,
-              localizeSelector((s) => s.confirmation.text)
-            ),
-            cancelButtonLabel: localizeSelector(
-              (s) => s.confirmation.buttonCancel
-            ),
-            confirmButtonLabel: localizeSelector(
-              (s) => s.confirmation.buttonConfirm
-            ),
-          });
-
-          if (!confirmResult?.confirmed) {
-            return;
-          }
-
-          context.utility.showProgressIndicator(
-            plurialize(
-              recordIds.length,
-              localizeSelector((s) => s.status.deleting)
-            ) + '...'
-          );
-
-          for (const recordId of recordIds) {
-            await context.dataService.deleteRecord(
-              context.primaryControl.logicalName,
-              recordId
-            );
-          }
-
-          context.utility.showNotification({
-            title: plurialize(
-              recordIds.length,
-              localizeSelector((s) => s.successNotification.title)
-            ),
-            text: plurialize(
-              recordIds.length,
-              localizeSelector((s) => s.successNotification.text)
-            ),
-            type: 'success',
-          });
-
-          context.primaryControl.refresh();
-        } catch (error) {
-          context.utility.showNotification({
-            title: localizeSelector((s) => s.errorNotification.title),
-            text: (error as Error).message,
-            type: 'error',
-          });
-        } finally {
-          context.utility.hideProgressIndicator();
-        }
+        });
       },
       hidden: [
         (context) => !EnabledRules.HasAtLeastOneRecordSelected(context),
@@ -281,32 +215,7 @@ export namespace ViewCommandBuilder {
             text: excel.text,
             localizedTexts: excel.localizedTexts,
             onClick: async (context) => {
-              context.utility.showProgressIndicator('Exporting to Excel...');
-              try {
-                const result = await retriveRecords({
-                  columnFilters: context.primaryControl.columnFilter,
-                  dataService: context.dataService,
-                  gridColumns: context.primaryControl.gridColumns,
-                  schema: context.primaryControl.schema,
-                  schemaStore: context.stores.schemaStore,
-                  view: context.primaryControl.view,
-                  search: context.primaryControl.searchText,
-                  extraFilter: context.primaryControl.extraFilter,
-                  sorting: context.primaryControl.sorting,
-                  skip: 0,
-                  limit: 5000,
-                });
-
-                await exportRecordsXLS({
-                  fileName: context.primaryControl.view.name + '.xlsx',
-                  gridColumns: context.primaryControl.gridColumns,
-                  records: result.records,
-                  schema: context.primaryControl.schema,
-                  schemaStore: context.stores.schemaStore,
-                });
-              } finally {
-                context.utility.hideProgressIndicator();
-              }
+              await exportRecordsToExcel(context);
             },
           },
           {
@@ -314,36 +223,143 @@ export namespace ViewCommandBuilder {
             text: csv.text,
             localizedTexts: csv.localizedTexts,
             onClick: async (context) => {
-              context.utility.showProgressIndicator('Exporting to CSV...');
-              try {
-                const result = await retriveRecords({
-                  columnFilters: context.primaryControl.columnFilter,
-                  dataService: context.dataService,
-                  gridColumns: context.primaryControl.gridColumns,
-                  schema: context.primaryControl.schema,
-                  schemaStore: context.stores.schemaStore,
-                  view: context.primaryControl.view,
-                  search: context.primaryControl.searchText,
-                  extraFilter: context.primaryControl.extraFilter,
-                  sorting: context.primaryControl.sorting,
-                  skip: 0,
-                  limit: 5000,
-                });
-
-                await exportRecordsCSV({
-                  fileName: context.primaryControl.view.name + '.csv',
-                  gridColumns: context.primaryControl.gridColumns,
-                  records: result.records,
-                  schema: context.primaryControl.schema,
-                  schemaStore: context.stores.schemaStore,
-                });
-              } finally {
-                context.utility.hideProgressIndicator();
-              }
+              await exportRecordsToCSV(context);
             },
           },
         ],
       ],
     };
+  }
+}
+
+async function retrieveFilteredRecords(context: EntityMainGridCommandContext) {
+  return retriveRecords({
+    columnFilters: context.primaryControl.columnFilter,
+    dataService: context.dataService,
+    gridColumns: context.primaryControl.gridColumns,
+    schema: context.primaryControl.schema,
+    schemaStore: context.stores.schemaStore,
+    view: context.primaryControl.view,
+    search: context.primaryControl.searchText,
+    extraFilter: context.primaryControl.extraFilter,
+    sorting: context.primaryControl.sorting,
+    skip: 0,
+    limit: 5000,
+  });
+}
+
+export async function exportRecordsToExcel(
+  context: EntityMainGridCommandContext
+) {
+  context.utility.showProgressIndicator('Exporting to Excel...');
+  try {
+    const result = await retrieveFilteredRecords(context);
+
+    await exportRecordsXLS({
+      fileName: context.primaryControl.view.name + '.xlsx',
+      gridColumns: context.primaryControl.gridColumns,
+      records: result.records,
+      schema: context.primaryControl.schema,
+      schemaStore: context.stores.schemaStore,
+    });
+  } finally {
+    context.utility.hideProgressIndicator();
+  }
+}
+
+export async function exportRecordsToCSV(
+  context: EntityMainGridCommandContext
+) {
+  context.utility.showProgressIndicator('Exporting to CSV...');
+  try {
+    const result = await retrieveFilteredRecords(context);
+
+    await exportRecordsCSV({
+      fileName: context.primaryControl.view.name + '.csv',
+      gridColumns: context.primaryControl.gridColumns,
+      records: result.records,
+      schema: context.primaryControl.schema,
+      schemaStore: context.stores.schemaStore,
+    });
+  } finally {
+    context.utility.hideProgressIndicator();
+  }
+}
+
+export async function processDeleteRecordRequest(
+  context: EntityMainGridCommandContext,
+  {
+    stringSet,
+    localizedStringSet,
+  }: {
+    stringSet: ViewCommandBuilder.DeleteRecordCommandStringSet;
+    localizedStringSet?: Localized<ViewCommandBuilder.DeleteRecordCommandStringSet>;
+  }
+) {
+  const recordIds = context.primaryControl.selectedIds;
+
+  if (!recordIds.length) {
+    return;
+  }
+
+  const localizeSelector = createLocalizedSelector(
+    stringSet,
+    localizedStringSet,
+    context.locale.language
+  );
+
+  try {
+    const confirmResult = await context.utility.openConfirmDialog({
+      title: plurialize(
+        recordIds.length,
+        localizeSelector((s) => s.confirmation.title)
+      ),
+      text: plurialize(
+        recordIds.length,
+        localizeSelector((s) => s.confirmation.text)
+      ),
+      cancelButtonLabel: localizeSelector((s) => s.confirmation.buttonCancel),
+      confirmButtonLabel: localizeSelector((s) => s.confirmation.buttonConfirm),
+    });
+
+    if (!confirmResult?.confirmed) {
+      return;
+    }
+
+    context.utility.showProgressIndicator(
+      plurialize(
+        recordIds.length,
+        localizeSelector((s) => s.status.deleting)
+      ) + '...'
+    );
+
+    for (const recordId of recordIds) {
+      await context.dataService.deleteRecord(
+        context.primaryControl.logicalName,
+        recordId
+      );
+    }
+
+    context.utility.showNotification({
+      title: plurialize(
+        recordIds.length,
+        localizeSelector((s) => s.successNotification.title)
+      ),
+      text: plurialize(
+        recordIds.length,
+        localizeSelector((s) => s.successNotification.text)
+      ),
+      type: 'success',
+    });
+
+    context.primaryControl.refresh();
+  } catch (error) {
+    context.utility.showNotification({
+      title: localizeSelector((s) => s.errorNotification.title),
+      text: (error as Error).message,
+      type: 'error',
+    });
+  } finally {
+    context.utility.hideProgressIndicator();
   }
 }

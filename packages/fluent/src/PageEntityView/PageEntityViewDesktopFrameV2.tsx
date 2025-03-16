@@ -2,15 +2,15 @@ import { Divider, tokens } from '@fluentui/react-components';
 import React, { FC } from 'react';
 
 interface PageEntityViewDesktopFrameProps {
-  commandBar: React.ReactNode;
   header: React.ReactNode;
   content: React.ReactNode;
   footer: React.ReactNode;
 }
 
-export const PageEntityViewDesktopFrame: FC<
+// Exprement component
+export const PageEntityViewDesktopFrameV2: FC<
   PageEntityViewDesktopFrameProps
-> = ({ commandBar, header, content, footer }) => {
+> = ({ header, content, footer }) => {
   return (
     <div
       style={{
@@ -29,30 +29,12 @@ export const PageEntityViewDesktopFrame: FC<
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          // overflow: 'hidden',
         }}
       >
         <div
           style={{
-            // padding: 4,
-            boxShadow: tokens.shadow2,
-            borderRadius: tokens.borderRadiusMedium,
-            background: tokens.colorNeutralBackground1,
-            display: 'flex',
-            // overflow: 'hidden',
-            minHeight: 40,
-          }}
-        >
-          {commandBar}
-        </div>
-        <div
-          style={{
-            flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            boxShadow: tokens.shadow2,
-            borderRadius: tokens.borderRadiusMedium,
-            background: tokens.colorNeutralBackground1,
             paddingBlock: 8,
           }}
         >
@@ -65,18 +47,39 @@ export const PageEntityViewDesktopFrame: FC<
             }}
           >
             {header}
+          </div>
+        </div>
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            boxShadow: tokens.shadow2,
+            borderRadius: tokens.borderRadiusMedium,
+            background: tokens.colorNeutralBackground1,
+            overflow: 'hidden',
+          }}
+        >
+          <div
+            style={{
+              gap: 16,
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 1,
+            }}
+          >
             <div style={{ flex: 1, display: 'flex' }}>{content}</div>
           </div>
           <div
             style={{
-              paddingInline: 8,
               display: 'flex',
               flexDirection: 'column',
-              gap: 8,
             }}
           >
             <Divider style={{ opacity: 0.5 }} />
-            {footer}
+            <div style={{ display: 'flex', paddingInline: 8, paddingBlock: 8 }}>
+              {footer}
+            </div>
           </div>
         </div>
       </div>

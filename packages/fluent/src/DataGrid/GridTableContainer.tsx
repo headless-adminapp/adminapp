@@ -35,6 +35,10 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { usePageEntityViewStrings } from '../PageEntityView/PageEntityViewStringContext';
+import {
+  DEFAULT_TABLE_HEADER_HEIGHT,
+  DEFAULT_TABLE_ROW_HEIGHT,
+} from './constants';
 import { UniqueRecord } from './types';
 import { useTableColumns } from './useTableColumns';
 import { adjustTableHeight } from './utils';
@@ -42,7 +46,7 @@ import { adjustTableHeight } from './utils';
 const useStyles = makeStyles({
   root: {
     '[aria-selected="true"]': {
-      background: tokens.colorBrandBackground2,
+      background: tokens.colorSubtleBackgroundHover,
 
       '& .fui-TableSelectionCell': {
         background: 'inherit',
@@ -87,6 +91,10 @@ const useStyles = makeStyles({
       // borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,
       // borderBottom: 'none !important',
     },
+
+    '&:last-of-type': {
+      borderBottom: 'none',
+    },
   },
   selectionCell: {
     position: 'sticky',
@@ -97,8 +105,6 @@ const useStyles = makeStyles({
     alignItems: 'center',
   },
   table: {
-    color: 'yellow',
-
     '&:after': {
       content: ' ',
       display: 'block',
@@ -117,6 +123,8 @@ interface GridTableContainerProps {
   disableColumnReorder?: boolean;
   disableColumnFilter?: boolean;
   noPadding?: boolean;
+  headerHeight?: number;
+  rowHeight?: number;
 }
 
 export const GridTableContainer: FC<GridTableContainerProps> = ({
@@ -126,6 +134,8 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
   disableColumnResize,
   disableContextMenu,
   disableSelection,
+  headerHeight = DEFAULT_TABLE_HEADER_HEIGHT,
+  rowHeight = DEFAULT_TABLE_ROW_HEIGHT,
 }) => {
   const styles = useStyles();
   const data = useGridData();
@@ -141,6 +151,8 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
 
   const setSelectedIdsRef = useRef(setSelectedIds);
   setSelectedIdsRef.current = setSelectedIds;
+
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const sortingState = useMemo(() => {
     return sorting.map((sort) => ({
@@ -239,9 +251,9 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
     count: rows.length,
     getScrollElement: () =>
       tableWrapperRef.current?.parentElement?.parentElement!,
-    estimateSize: () => 44,
+    estimateSize: () => rowHeight,
     overscan: 30,
-    paddingStart: 33,
+    paddingStart: headerHeight,
   });
 
   const tableElementRef = useRef<HTMLTableElement>(null);
@@ -256,7 +268,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
     return adjustTableHeight(tableElementRef, virtualSize);
   }, [virtualSize]);
 
-  // callback to handle scrolling, checking if we are near the bottom
+  // callback to handle scrolling, checking if we are near the bottom or top
   const handleScroll = useCallback(() => {
     if (tableWrapperRef.current?.parentElement?.parentElement) {
       const scrollPosition =
@@ -266,6 +278,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
       setIsScrollNearBottom(
         scrollPosition > virtualSize * 0.95 - visibleHeight
       );
+      setIsScrolled(scrollPosition > 0);
     }
   }, [virtualSize]);
 
@@ -293,6 +306,8 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
     (tableWrapperRef.current?.parentElement?.parentElement?.scrollWidth ?? 0) -
       (tableWrapperRef.current?.parentElement?.parentElement?.clientWidth ?? 0);
 
+  const hPadding = noPadding ? 0 : 8;
+
   return (
     <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
       <ScrollbarWithMoreDataRequest
@@ -305,7 +320,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
       >
         <div
           style={{
-            paddingInline: noPadding ? 0 : 8,
+            paddingInline: hPadding,
             position: 'relative',
           }}
           ref={tableWrapperRef}
@@ -316,7 +331,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
               flexDirection: 'column',
               borderCollapse: 'collapse',
               width: '100%',
-              height: virtualizer.getTotalSize() + 33,
+              height: virtualizer.getTotalSize() + headerHeight,
               ['--action-shadow' as any]: !isScrolledToRight
                 ? '-2px 0px 6px rgba(0, 0, 0, 0.12)'
                 : 'none',
@@ -331,6 +346,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
                 top: 0,
                 background: tokens.colorNeutralBackground1,
                 zIndex: 2,
+                boxShadow: isScrolled && noPadding ? tokens.shadow2 : 'none',
               }}
             >
               {table.getHeaderGroups().map((headerGroup) => (
@@ -340,8 +356,14 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
                     position: 'sticky',
                     top: 0,
                     display: 'flex',
-                    minWidth: 'calc(100% - 16px)',
-                    borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,
+                    minWidth: 'calc(100%)',
+                    borderBottomColor:
+                      isScrolled && noPadding
+                        ? 'transparent'
+                        : tokens.colorNeutralStroke3,
+                    borderBottomStyle: 'solid',
+                    borderBottomWidth: tokens.strokeWidthThin,
+                    height: headerHeight,
                   }}
                 >
                   {headerGroup.headers.map((header) =>
@@ -359,7 +381,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                transform: 'translateY(-33px)',
+                transform: `translateY(-${headerHeight}px)`,
               }}
             >
               {virtualItems.map((virtualRow) => {
@@ -373,7 +395,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
                     style={{
                       display: 'flex',
                       height: `${virtualRow.size}px`,
-                      minWidth: 'calc(100% - 16px)',
+                      minWidth: `calc(100% - ${hPadding * 2}px)`,
                       position: 'absolute',
                       transform: `translateY(${virtualRow.start}px)`,
                     }}
@@ -413,7 +435,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
                     key={index}
                     style={{
                       display: 'flex',
-                      height: 44,
+                      height: rowHeight,
                       alignItems: 'center',
                     }}
                   >

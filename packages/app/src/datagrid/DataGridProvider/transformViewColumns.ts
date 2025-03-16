@@ -14,14 +14,14 @@ export function transformViewColumns<S extends SchemaAttributes>(
   const schema = schemaStore.getSchema(logicalName);
 
   return columns
-    .map(column => {
+    .map((column) => {
       const attribute = schema.attributes[column.name as string];
 
       if (!attribute) {
         return null;
       }
 
-      const label = localizedLabel(language, attribute);
+      const label = column.label ?? localizedLabel(language, attribute);
 
       if (column.expandedKey) {
         if (attribute.type !== 'lookup') {

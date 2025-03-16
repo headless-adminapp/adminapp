@@ -1,0 +1,2 @@
+export const DEFAULT_TABLE_HEADER_HEIGHT = 40; // 33
+export const DEFAULT_TABLE_ROW_HEIGHT = 40; // 44

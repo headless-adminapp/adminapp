@@ -18,6 +18,7 @@ export const TableCellBase: FC<TableCellBaseProps> = ({
       style={{
         display: 'flex',
         alignItems: 'center',
+        height: '100%',
         // borderBottom: `var(--strokeWidthThin) solid var(--colorNeutralStroke2)`,
         ...style,
       }}

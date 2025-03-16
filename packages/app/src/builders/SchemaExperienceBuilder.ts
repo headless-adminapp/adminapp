@@ -199,13 +199,14 @@ export class SchemaExperienceBuilder<
         {
           name: 'general',
           label: 'General',
-          columnCount: 1,
+          columnCount: 2,
           tabColumns: [
             {
               sections: [
                 {
                   name: 'general',
                   label: 'General',
+                  hideLabel: true,
                   controls: [
                     {
                       type: 'standard',

@@ -4,6 +4,7 @@ export interface ViewColumn<S extends SchemaAttributes = SchemaAttributes> {
   width?: number;
   maxWidth?: number;
   name: keyof S;
+  label?: string;
   expandedKey?: string;
   component?: string;
   plainText?: boolean; // Forcing plain text rendering

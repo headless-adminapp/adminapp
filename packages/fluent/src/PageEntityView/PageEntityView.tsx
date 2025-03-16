@@ -6,19 +6,24 @@ import { FC } from 'react';
 
 import { PageBroken } from '../components/PageBroken';
 import { PageLoading } from '../components/PageLoading';
-import { PageEntityViewDesktopContainer } from './PageEntityViewDesktopContainer';
+import {
+  PageEntityViewDesktopContainer,
+  PageEntityViewDesktopContainerV2,
+} from './PageEntityViewDesktopContainer';
 import { PageEntityViewMobileContainer } from './PageEntityViewMobileContainer';
 
 interface PageEntityViewProps {
   logicalName: string;
   viewId?: string;
   onChangeView?: (viewId: string) => void;
+  useV2?: boolean; // Exprement component
 }
 
 export const PageEntityView: FC<PageEntityViewProps> = ({
   logicalName,
   viewId,
   onChangeView,
+  useV2,
 }) => {
   const result = useLoadMainGridPage(logicalName, viewId);
   const isMobile = useIsMobile();
@@ -39,6 +44,16 @@ export const PageEntityView: FC<PageEntityViewProps> = ({
 
   const { schema, commands, viewLookup, view } = result;
 
+  let content = null;
+
+  if (isMobile) {
+    content = <PageEntityViewMobileContainer />;
+  } else if (!useV2) {
+    content = <PageEntityViewDesktopContainer />;
+  } else {
+    content = <PageEntityViewDesktopContainerV2 />;
+  }
+
   return (
     <PageEntityViewProvider
       schema={schema}
@@ -47,11 +62,7 @@ export const PageEntityView: FC<PageEntityViewProps> = ({
       commands={commands}
       onChangeView={onChangeView}
     >
-      {isMobile ? (
-        <PageEntityViewMobileContainer />
-      ) : (
-        <PageEntityViewDesktopContainer />
-      )}
+      {content}
     </PageEntityViewProvider>
   );
 };
