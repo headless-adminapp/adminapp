@@ -33,7 +33,7 @@ const defaultApp: AppExperience = {
     label: 'Home',
     link: '/home',
     type: PageType.Custom,
-    icon: IconPlaceholder,
+    Icon: IconPlaceholder,
   },
   logo: {},
 };

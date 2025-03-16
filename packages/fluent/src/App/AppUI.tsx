@@ -3,7 +3,7 @@ import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 
 import { AppHeaderContainer } from './AppHeaderContianer';
-import { NavigationContainer } from './NavigationContainer';
+import { NavigationContainer } from './Navigation';
 
 type DrawerType = Required<DrawerProps>['type'];
 

@@ -10,7 +10,7 @@ import {
 interface BasePageItem {
   label?: string;
   localizedLabel?: Localized<string>;
-  icon?: Icon;
+  Icon?: Icon;
 }
 
 export enum PageType {
@@ -20,6 +20,7 @@ export enum PageType {
   Custom = 'custom',
   Dashboard = 'dashboard',
   Report = 'report',
+  Category = 'category',
 }
 
 interface BasePageEntityView {
@@ -63,22 +64,22 @@ interface PageEntityView extends BasePageItem, BasePageEntityView {}
 export interface PageEntiyForm extends BasePageItem, BasePageEntiyForm {}
 
 interface PageExternalLink extends BasePageItem, BasePageExternalLink {
-  icon: Icon;
+  Icon: Icon;
   label: string;
 }
 
 interface PageCustom extends BasePageItem, BasePageCustom {
-  icon?: Icon;
+  Icon?: Icon;
   label: string;
 }
 
 interface PageDashboard extends BasePageItem, BasePageDashboard {
-  icon?: Icon;
+  Icon?: Icon;
   label: string;
 }
 
 interface PageReport extends BasePageItem, BasePageReport {
-  icon?: Icon;
+  Icon?: Icon;
   label: string;
 }
 
@@ -90,15 +91,18 @@ export type NavPageItem =
   | PageDashboard
   | PageReport;
 
-export interface NavPageGroup {
-  label: string;
-  hideLabel?: boolean;
-  items: NavPageItem[];
+export interface NavPageCategory extends BasePageItem {
+  type: PageType.Category;
+  label?: string;
+  localizedLabel?: Localized<string>;
+  Icon?: Icon;
+  items: [NavPageItem, ...NavPageItem[]];
 }
 
-export interface NavPageGroupArea {
+export interface NavPageSection {
   label: string;
-  groups: NavPageGroup[];
+  hideLabel?: boolean;
+  items: Array<NavPageItem | NavPageCategory>;
 }
 
 export interface AccountMenuItem {
@@ -125,8 +129,7 @@ export interface AppExperience {
   };
   title: string;
   shortTitle?: string;
-  enableArea?: boolean;
-  navItems: NavPageGroupArea[];
+  navItems: NavPageSection[];
   defaultPage?: NavPageItem;
   accountMenuItems?: AccountMenuItem[];
   quickActionItems?: QuickActionItem[];
