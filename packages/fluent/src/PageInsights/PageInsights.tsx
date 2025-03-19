@@ -27,7 +27,7 @@ export function PageInsights({
   insightId,
   insights,
   onChangeInsight,
-}: PageInsightsProps) {
+}: Readonly<PageInsightsProps>) {
   const insightExpereince = useMemo(() => {
     return insights.find((insight) => insight.id === insightId);
   }, [insightId, insights]);

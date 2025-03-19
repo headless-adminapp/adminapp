@@ -9,6 +9,7 @@ import { BodyLoading } from '../components/BodyLoading';
 import { AreaChart } from './charts/AreaChart';
 import { BarChart } from './charts/BarChart';
 import { ComposedChart } from './charts/ComposedChart';
+import { FunnelChart } from './charts/FunnelChart';
 import { GaugeChart } from './charts/GaugeChart';
 import { LineChart } from './charts/LineChart';
 import { OhlcChart } from './charts/OhlcChart';
@@ -18,10 +19,15 @@ import { ScatterChart } from './charts/ScatterChart';
 import { useWidgetDetail } from './hooks/useWidgetDetail';
 import { WidgetTitleBar } from './WidgetTitleBar';
 
+export type ChartComponentProps = {
+  dataset: any[];
+  chartInfo: any;
+};
+
 function getChartComponent(
-  type: ChartWidgetInfo['chart']['type']
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): (props: { dataset: any[]; chartInfo: any }) => JSX.Element {
+  chart: ChartWidgetInfo['chart']
+): ((props: ChartComponentProps) => JSX.Element) | null {
+  const type = chart.type;
   switch (type) {
     case 'line':
       return LineChart;
@@ -41,6 +47,14 @@ function getChartComponent(
       return GaugeChart;
     case 'ohlc':
       return OhlcChart;
+    case 'funnel':
+      return FunnelChart;
+    case 'custom':
+      return chart.Component as unknown as (
+        props: ChartComponentProps
+      ) => JSX.Element;
+    default:
+      return null;
   }
 }
 
@@ -48,16 +62,16 @@ interface WidgetChartContainerProps {
   content: ChartWidgetExperience;
 }
 
-export const WidgetChartContainer: FC<WidgetChartContainerProps> = ({
-  content,
-}) => {
+export const WidgetChartContainer: FC<WidgetChartContainerProps> = (props) => {
   const { transformedCommands, dataset, isPending, isFetching, widget } =
-    useWidgetDetail<ChartWidgetExperience>(content);
+    useWidgetDetail<ChartWidgetExperience>(props.content);
 
-  const info = content.chart;
-  const type = info.chart.type;
+  const info = props.content.chart;
+  const ChartComponent = getChartComponent(info.chart);
 
-  const ChartComponent = getChartComponent(type);
+  if (!ChartComponent) {
+    return null;
+  }
 
   return (
     <div

@@ -68,7 +68,7 @@ export interface DataGridWidgetExperience extends BaseWidgetExperience {
 export interface CustomWidgetExperience extends BaseWidgetExperience {
   type: 'custom';
   commands: CommandItemExperience<unknown>[];
-  Component: React.ComponentType;
+  Component: React.ComponentType<{ content: CustomWidgetExperience }>;
 }
 
 export type WidgetContentExperience =

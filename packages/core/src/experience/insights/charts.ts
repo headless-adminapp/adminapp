@@ -1,3 +1,5 @@
+import { ComponentType } from 'react';
+
 import { SchemaAttributes } from '../../schema';
 import { AggregateQuery, CustomAction } from '../../transport';
 import { InsightsState } from './InsightExpereince';
@@ -248,6 +250,25 @@ export interface OhlcChartInfo {
   }>;
 }
 
+export interface FunnelChartInfo {
+  type: 'funnel';
+  dataTick: NumericAxisTick;
+  nameTick?: Omit<CategoryAxisTick, 'type'>;
+  dataKey: string;
+  nameKey: string;
+  colorKey?: string; // if color from data
+  colors?: string[]; // override default color list
+}
+
+export interface CustomChart {
+  type: 'custom';
+  Component: ComponentType<{
+    dataset: any[];
+    chartInfo: unknown;
+  }>;
+  extra?: unknown;
+}
+
 export type ChartInfo =
   | LineChartInfo
   | AreaChartInfo
@@ -257,7 +278,9 @@ export type ChartInfo =
   | PieChartInfo
   | RadarChartInfo
   | GaugeChartInfo
-  | OhlcChartInfo;
+  | OhlcChartInfo
+  | CustomChart
+  | FunnelChartInfo;
 
 export type DataSetItem =
   | {

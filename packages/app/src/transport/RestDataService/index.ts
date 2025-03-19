@@ -141,11 +141,17 @@ export class RestDataService implements IDataService {
   }
 
   public async customAction<T = unknown>(
-    _actionName: string,
-    _payload: unknown
+    actionName: string,
+    payload: unknown
   ): Promise<T> {
-    throw new Error(
-      'Custom action not implemented in RestDataService, to use custom actions, define a custom data service extending RestDataService'
-    );
+    const result = await this.execute<T>({
+      type: 'customAction',
+      payload: {
+        actionName,
+        payload,
+      },
+    });
+
+    return result;
   }
 }

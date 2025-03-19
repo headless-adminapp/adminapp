@@ -25,8 +25,6 @@ export function LineChart({
   const xAxisFullFormatter = createLongAxisFormatter(xAxis.tick);
   const yAxisFullFormatter = createLongAxisFormatter(yAxis.tick);
 
-  console.log('dataset', dataset, chartInfo);
-
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChartInternal>

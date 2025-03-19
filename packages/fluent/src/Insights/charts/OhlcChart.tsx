@@ -80,8 +80,6 @@ export function OhlcChart({
   const xAxisLongFormatter = createLongAxisFormatter(chartInfo.xAxis.tick);
   const yAxisLongFormatter = createLongAxisFormatter(chartInfo.yAxis.tick);
 
-  console.log('temp.data', dataset, chartInfo);
-
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ScatterChart data={data}>

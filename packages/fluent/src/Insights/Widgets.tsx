@@ -95,7 +95,7 @@ function WidgetItem() {
   }
 
   if (content.type === 'custom') {
-    return <content.Component />;
+    return <content.Component content={content} />;
   }
 
   return null;

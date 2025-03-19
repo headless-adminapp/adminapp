@@ -25,7 +25,6 @@ export function useQueriesData(queries: DataSetItemAllowFunction[]) {
   const resolvedQueries = useMemo<DataSetItem[]>(() => {
     return queries.map((item) => {
       if (typeof item === 'function') {
-        console.log('temp.item', item, item(insightsState, widgetState));
         return item(insightsState, widgetState);
       }
 

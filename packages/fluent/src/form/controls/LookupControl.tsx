@@ -249,11 +249,15 @@ const LookupControlMd: FC<LookupControlProps> = ({
             className={mergeClasses(styles.option)}
             text={item[schema.primaryAttribute] as string}
           >
-            <RecordCard
-              cardView={view?.experience.card!}
-              record={item}
-              schema={schema}
-            />
+            {view?.experience.card ? (
+              <RecordCard
+                cardView={view.experience.card}
+                record={item}
+                schema={schema}
+              />
+            ) : (
+              (item[schema.primaryAttribute] as string)
+            )}
           </Option>
         ))}
         {!isLoading && !data?.records.length && (

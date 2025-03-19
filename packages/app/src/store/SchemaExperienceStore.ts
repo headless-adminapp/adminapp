@@ -235,7 +235,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
     const experience = await this.getExperience(logicalName);
 
     if (!viewId) {
-      viewId = experience.defaultViewId;
+      viewId = experience.defaultLookupId;
     }
 
     const view = experience.lookups.find((v) => v.id === viewId);

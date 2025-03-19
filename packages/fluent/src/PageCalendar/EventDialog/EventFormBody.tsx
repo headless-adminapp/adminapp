@@ -127,9 +127,9 @@ export function EventFormBody(props: Readonly<EventFormBodyProps>) {
     );
   }
 
-  let title = props.values.id
-    ? 'Edit'
-    : 'New' + ` ${props.config.eventLabel.toLowerCase()}`;
+  let title =
+    (props.values.id ? 'Edit' : 'New') +
+    ` ${props.config.eventLabel.toLowerCase()}`;
 
   if (props.values.id && props.config.disableEdit) {
     title = props.config.eventLabel;
