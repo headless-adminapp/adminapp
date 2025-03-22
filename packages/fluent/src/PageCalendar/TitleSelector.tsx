@@ -6,6 +6,7 @@ import {
   PopoverTrigger,
   tokens,
 } from '@fluentui/react-components';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { iconSet } from '@headless-adminapp/icons-fluent';
 import dayjs from 'dayjs';
@@ -34,6 +35,7 @@ export const TitleSelector: FC<TitleSelectorProps> = ({
   viewType,
 }) => {
   const { timezone } = useLocale();
+  const isMobile = useIsMobile();
   const label = useMemo(() => {
     if (!start || !end) {
       return '';
@@ -41,17 +43,20 @@ export const TitleSelector: FC<TitleSelectorProps> = ({
 
     switch (viewType) {
       case ViewType.Day:
-        return dayjs(start).format('MMM D, YYYY');
+        return dayjs(start).format(isMobile ? 'MMM D' : 'MMM D, YYYY');
       case ViewType.Week:
+        if (isMobile) {
+          return `${dayjs(start).format('MMM D')} - ${dayjs(end).format('D')}`;
+        }
         return `${dayjs(start).format('MMM D')} - ${dayjs(end).format(
           'MMM D, YYYY'
         )}`;
       case ViewType.Month:
-        return dayjs(start).format('MMMM YYYY');
+        return dayjs(start).format(isMobile ? 'MMM YYYY' : 'MMMM YYYY');
     }
 
     return '';
-  }, [start, end, viewType]);
+  }, [start, end, viewType, isMobile]);
 
   if (!start || !end) {
     return null;

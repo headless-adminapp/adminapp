@@ -9,6 +9,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { Icons } from '@headless-adminapp/icons';
 import dayjs from 'dayjs';
@@ -56,6 +57,7 @@ export const CalendarSection = ({
 }: Readonly<CalendarSectionProps>) => {
   const calendarRef = useRef<FullCalendar>(null);
   const { timezone } = useLocale();
+  const isMobile = useIsMobile();
 
   const isToday = useMemo(() => {
     if (!startDate || !endDate) {
@@ -118,6 +120,22 @@ export const CalendarSection = ({
     }
   }
 
+  const initialScrollTime = useMemo(() => {
+    const now = dayjs().tz(timezone);
+
+    if (now.hour() < 3) {
+      return '00:00:00';
+    }
+
+    const time = dayjs()
+      .tz(timezone)
+      .subtract(1, 'hour')
+      .startOf('hour')
+      .format('HH:mm:ss');
+
+    return time;
+  }, [timezone]);
+
   return (
     <div
       style={{
@@ -132,7 +150,13 @@ export const CalendarSection = ({
         gap: tokens.spacingVerticalM,
       }}
     >
-      <div style={{ display: 'flex', gap: tokens.spacingHorizontalS }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: tokens.spacingHorizontalS,
+          flexDirection: isMobile ? 'column' : 'row',
+        }}
+      >
         <div
           style={{ flex: 1, display: 'flex', gap: tokens.spacingHorizontalS }}
         >
@@ -155,26 +179,57 @@ export const CalendarSection = ({
             icon={<Icons.ChevronRight />}
             onClick={() => calendarRef.current?.getApi().next()}
           />
+          {isMobile && (
+            <div
+              style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <TitleSelector
+                start={startDate}
+                end={endDate}
+                onChange={(start) => {
+                  const api = calendarRef.current?.getApi();
+
+                  if (!api) {
+                    return;
+                  }
+
+                  api.gotoDate(start);
+                }}
+                viewType={viewType}
+              />
+            </div>
+          )}
         </div>
-        <TitleSelector
-          start={startDate}
-          end={endDate}
-          onChange={(start) => {
-            const api = calendarRef.current?.getApi();
+        {!isMobile && (
+          <div>
+            <TitleSelector
+              start={startDate}
+              end={endDate}
+              onChange={(start) => {
+                const api = calendarRef.current?.getApi();
 
-            if (!api) {
-              return;
-            }
+                if (!api) {
+                  return;
+                }
 
-            api.gotoDate(start);
+                api.gotoDate(start);
+              }}
+              viewType={viewType}
+            />
+          </div>
+        )}
+        <div
+          style={{
+            display: 'flex',
+            flex: 1,
+            justifyContent: isMobile ? 'flex-start' : 'flex-end',
           }}
-          viewType={viewType}
-        />
-        <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>
+        >
           <ViewSelector
             viewType={viewType}
             onChange={(viewType) => {
               calendarRef.current?.getApi().changeView(viewType);
+              calendarRef.current?.getApi().scrollToTime(initialScrollTime);
             }}
           />
         </div>
@@ -194,6 +249,9 @@ export const CalendarSection = ({
             eventContent={renderEventContent}
             timeZone={timezone}
             height="100%"
+            nowIndicator={true}
+            scrollTime={initialScrollTime}
+            scrollTimeReset={false}
             editable={false}
             selectable={true}
             selectMirror={true}

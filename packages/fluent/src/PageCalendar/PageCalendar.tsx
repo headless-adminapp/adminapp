@@ -14,6 +14,7 @@ import {
   useOpenConfirmDialog,
   useOpenDialog,
 } from '@headless-adminapp/app/dialog';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 import {
   ContextValue,
   useCreateContextStore,
@@ -75,12 +76,15 @@ export function PageCalendar<
   const openToastNotification = useOpenToastNotification();
   const { hideProgressIndicator, showProgressIndicator } =
     useProgressIndicator();
+  const isMobile = useIsMobile();
 
   const [activeStartDate, setActiveStartDate] = useState<Date | null>(null);
   const [activeEndDate, setActiveEndDate] = useState<Date | null>(null);
   const [currentStartDate, setCurrentStartDate] = useState<Date | null>(null);
   const [currentEndDate, setCurrentEndDate] = useState<Date | null>(null);
-  const [viewType, setViewType] = useState<ViewType>(ViewType.Month);
+  const [viewType, setViewType] = useState<ViewType>(
+    isMobile ? ViewType.Day : ViewType.Month
+  );
 
   const queryClient = useQueryClient();
 
