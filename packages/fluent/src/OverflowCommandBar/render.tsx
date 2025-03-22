@@ -22,6 +22,7 @@ export function renderCommandItem(
           text={item.localizedTexts?.[language] ?? item.text ?? ''}
           danger={item.danger}
           disabled={item.disabled}
+          appearance={item.appearance}
           onClick={item.onClick}
           items={
             item.items?.map((x) =>
@@ -40,6 +41,7 @@ export function renderCommandItem(
           danger={item.danger}
           disabled={item.disabled}
           onClick={item.onClick}
+          appearance={item.appearance}
         />
       );
     case 'label':
@@ -59,6 +61,7 @@ export function renderCommandItem(
           danger={item.danger}
           disabled={item.disabled}
           onClick={item.onClick}
+          appearance={item.appearance}
         />
       );
 

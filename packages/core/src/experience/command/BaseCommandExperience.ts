@@ -8,4 +8,5 @@ export interface BaseCommandExperience<Context> {
   iconPosition?: IconPosition;
   danger?: boolean;
   hidden?: AllowArray<BooleanOrFunction<Context>>;
+  appearance?: 'subtle' | 'colored';
 }

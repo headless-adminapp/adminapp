@@ -54,6 +54,7 @@ function transformCommand<HandlerContext>(
         isQuickAction: command.isQuickAction,
         danger: command.danger,
         iconPosition: command.iconPosition,
+        appearance: command.appearance,
         ...transformedProperties(command, handlerContext),
       } as CommandItemState;
     case 'button':
@@ -64,6 +65,7 @@ function transformCommand<HandlerContext>(
         danger: command.danger,
         iconPosition: command.iconPosition,
         localizedTexts: command.localizedText,
+        appearance: command.appearance,
         ...transformedProperties(command, handlerContext),
       } as CommandItemState;
     case 'menu':
@@ -73,6 +75,7 @@ function transformCommand<HandlerContext>(
         danger: command.danger,
         localizedTexts: command.localizedTexts,
         iconPosition: command.iconPosition,
+        appearance: command.appearance,
         ...transformedProperties(command, handlerContext),
         items: command.items.map((item) =>
           transformMenuItems(item, handlerContext)

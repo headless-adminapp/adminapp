@@ -145,6 +145,7 @@ export function RelatedViewSelector(props: RelatedViewSelectorProps) {
             padding: `${tokens.spacingVerticalM} ${tokens.spacingHorizontalMNudge}`,
             fontFamily: tokens.fontFamilyBase,
             lineHeight: tokens.lineHeightBase300,
+            fontSize: tokens.fontSizeBase300,
             backgroundColor: tokens.colorTransparentBackground,
             alignItems: 'center',
             position: 'relative',

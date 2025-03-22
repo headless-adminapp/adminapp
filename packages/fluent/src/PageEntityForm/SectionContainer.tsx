@@ -12,6 +12,7 @@ import {
   useRecordId,
 } from '@headless-adminapp/app/dataform/hooks';
 import { useEventManager } from '@headless-adminapp/app/dataform/hooks/useEventManager';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { localizedLabel } from '@headless-adminapp/app/locale/utils';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
@@ -37,6 +38,7 @@ export function SectionContainer<
   const isFormReadonly = useFormIsReadonly();
   const { language } = useLocale();
   const eventManager = useEventManager();
+  const isMobile = useIsMobile();
 
   const disabledControls = useContextSelector(
     DataFormContext,
@@ -150,7 +152,7 @@ export function SectionContainer<
                     return (
                       <SectionControlWrapper
                         label={label}
-                        labelPosition={section.labelPosition}
+                        labelPosition={isMobile ? 'top' : section.labelPosition}
                         required={required}
                         isError={isError}
                         errorMessage={errorMessage}

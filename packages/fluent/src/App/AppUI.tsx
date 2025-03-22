@@ -21,7 +21,14 @@ export const AppUI: FC<PropsWithChildren> = ({ children }) => {
   }, [isMobile]);
 
   return (
-    <main style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <main
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'fixed',
+        inset: 0,
+      }}
+    >
       <AppHeaderContainer onNavToggle={() => setIsNavOpen(!isNavOpen)} />
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <NavigationContainer

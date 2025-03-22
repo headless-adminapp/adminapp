@@ -315,7 +315,3 @@ export type DataSetItemAllowFunction =
       insightsState: InsightsState<ISA>,
       widgetState: WidgetState<WSA>
     ) => DataSetItem);
-
-export interface ChartWidgetInfo {
-  chart: ChartInfo;
-}

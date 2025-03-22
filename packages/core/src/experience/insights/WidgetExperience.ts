@@ -1,7 +1,7 @@
 import { InferredSchemaType, SchemaAttributes } from '../../schema';
 import { Filter } from '../../transport';
 import { CommandContextBase, CommandItemExperience } from '../command';
-import { ChartWidgetInfo, DataSetItemAllowFunction } from './charts';
+import { ChartInfo, DataSetItemAllowFunction } from './charts';
 
 interface BaseWidgetExperience {}
 
@@ -35,7 +35,7 @@ export interface TileWidgetCommandContext extends CommandContextBase {
 export interface ChartWidgetExperience extends BaseWidgetExperience {
   type: 'chart';
   commands: ChartWidgetCommandItemExperience[];
-  chart: ChartWidgetInfo;
+  chart: ChartInfo;
 }
 
 export interface TileWidgetExperience extends BaseWidgetExperience {

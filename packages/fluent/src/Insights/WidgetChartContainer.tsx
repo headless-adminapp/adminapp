@@ -1,7 +1,7 @@
 import { tokens } from '@fluentui/react-components';
 import {
+  ChartInfo,
   ChartWidgetExperience,
-  ChartWidgetInfo,
 } from '@headless-adminapp/core/experience/insights';
 import { FC, JSX } from 'react';
 
@@ -25,7 +25,7 @@ export type ChartComponentProps = {
 };
 
 function getChartComponent(
-  chart: ChartWidgetInfo['chart']
+  chart: ChartInfo
 ): ((props: ChartComponentProps) => JSX.Element) | null {
   const type = chart.type;
   switch (type) {
@@ -66,8 +66,8 @@ export const WidgetChartContainer: FC<WidgetChartContainerProps> = (props) => {
   const { transformedCommands, dataset, isPending, isFetching, widget } =
     useWidgetDetail<ChartWidgetExperience>(props.content);
 
-  const info = props.content.chart;
-  const ChartComponent = getChartComponent(info.chart);
+  const chart = props.content.chart;
+  const ChartComponent = getChartComponent(chart);
 
   if (!ChartComponent) {
     return null;
@@ -88,7 +88,7 @@ export const WidgetChartContainer: FC<WidgetChartContainerProps> = (props) => {
       <div style={{ flex: 1, position: 'relative' }}>
         {!isPending && (
           <div style={{ position: 'absolute', inset: 0 }}>
-            <ChartComponent dataset={dataset} chartInfo={info.chart} />
+            <ChartComponent dataset={dataset} chartInfo={chart} />
           </div>
         )}
         <BodyLoading loading={isFetching} />

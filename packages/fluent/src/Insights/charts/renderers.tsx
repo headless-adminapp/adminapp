@@ -12,12 +12,17 @@ import {
   CartesianGrid,
   Line,
   XAxis as XAxisInternal,
+  XAxisProps,
   YAxis as YAxisInternal,
 } from 'recharts';
 
 import { createAxisFormatter } from './formatters';
 
-export function renderXAxis(axis: XAxis, forceCategory = false) {
+export function renderXAxis(
+  axis: XAxis,
+  forceCategory = false,
+  padding: XAxisProps['padding'] = 'gap'
+) {
   const xAxisFormatter = createAxisFormatter(axis.tick);
 
   return (
@@ -28,7 +33,7 @@ export function renderXAxis(axis: XAxis, forceCategory = false) {
       tickLine={false}
       minTickGap={10}
       // padding={{ left: 10, right: 10 }}
-      padding="gap"
+      padding={padding}
       axisLine={{
         stroke: tokens.colorNeutralBackground6,
       }}

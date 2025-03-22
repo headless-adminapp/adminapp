@@ -25,7 +25,7 @@ export function ScatterChart({
     <ResponsiveContainer width="100%" height="100%">
       <ScatterChartInternal>
         {renderGrid()}
-        {renderXAxis(chartInfo.xAxis)}
+        {renderXAxis(chartInfo.xAxis, false, { left: 10, right: 10 })}
         {renderYAxis(chartInfo.yAxis)}
         <ZAxis
           type="number"

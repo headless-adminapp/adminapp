@@ -54,6 +54,7 @@ interface BaseCommandState {
   iconPosition?: 'before' | 'after';
   danger?: boolean;
   hidden?: boolean;
+  appearance?: 'subtle' | 'colored';
 }
 
 interface ActionableCommandState {

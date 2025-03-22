@@ -34,6 +34,28 @@ const useStyles = makeStyles({
       },
     },
   },
+  colored: {
+    '&:not(:disabled)': {
+      '& .fui-Button__icon': {
+        color: tokens.colorBrandForeground1,
+      },
+    },
+
+    '&:hover:not(:disabled)': {
+      color: tokens.colorBrandForeground1,
+    },
+  },
+  dangerColored: {
+    '&:not(:disabled)': {
+      '& .fui-Button__icon': {
+        color: tokens.colorPaletteRedForeground1,
+      },
+    },
+
+    '&:hover:not(:disabled)': {
+      color: tokens.colorPaletteRedForeground1,
+    },
+  },
 });
 
 export interface CommandButtonProps {
@@ -43,6 +65,7 @@ export interface CommandButtonProps {
   danger?: boolean;
   onClick?: () => void;
   disabled?: boolean;
+  appearance?: 'subtle' | 'colored';
 }
 
 const ToolbarButtonInternal = ToolbarButton as any;
@@ -51,7 +74,15 @@ export const CommandButton: MemoExoticComponent<
   ForwardRefComponent<CommandButtonProps>
 > = memo(
   forwardRef(function CommandButton(
-    { Icon, text, danger, onClick, disabled, iconPosition = 'before' },
+    {
+      Icon,
+      text,
+      danger,
+      onClick,
+      disabled,
+      iconPosition = 'before',
+      appearance,
+    },
     ref
   ) {
     const styles = useStyles();
@@ -60,11 +91,16 @@ export const CommandButton: MemoExoticComponent<
       <ToolbarButtonInternal
         ref={ref}
         type="button"
-        icon={!!Icon ? <Icon size={20} /> : undefined}
+        icon={Icon ? <Icon size={20} /> : undefined}
         iconPosition={iconPosition}
         disabled={disabled}
         onClick={onClick}
-        className={mergeClasses(styles.root, danger && styles.danger)}
+        className={mergeClasses(
+          styles.root,
+          appearance === 'colored' && styles.colored,
+          danger && styles.danger,
+          appearance === 'colored' && danger && styles.dangerColored
+        )}
       >
         {text}
       </ToolbarButtonInternal>

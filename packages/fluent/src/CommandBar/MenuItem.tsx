@@ -47,6 +47,7 @@ export interface MenuItemProps {
   disabled?: boolean;
   danger?: boolean;
   onClick: (() => void) | undefined;
+  appearance?: 'subtle' | 'colored';
   items?: ArrayGroupWithAtLeastOne<MenuItemProps>;
 }
 

@@ -38,6 +38,7 @@ export interface CommandIconButtonProps {
   disabled?: boolean;
   onClick?: () => void;
   danger?: boolean;
+  appearance?: 'subtle' | 'colored';
 }
 
 export const CommandIconButton: MemoExoticComponent<

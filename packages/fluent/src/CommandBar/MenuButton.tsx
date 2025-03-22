@@ -54,6 +54,7 @@ export interface CommandMenuButtonProps {
   disabled?: boolean;
   danger?: boolean;
   onClick?: () => void;
+  appearance?: 'subtle' | 'colored';
   items: ArrayGroupWithAtLeastOne<MenuItemProps>;
 }
 
