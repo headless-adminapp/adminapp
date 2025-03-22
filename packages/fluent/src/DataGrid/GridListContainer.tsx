@@ -1,4 +1,9 @@
-import { makeStyles, mergeClasses, tokens } from '@fluentui/react-components';
+import {
+  Divider,
+  makeStyles,
+  mergeClasses,
+  tokens,
+} from '@fluentui/react-components';
 import { ScrollbarWithMoreDataRequest } from '@headless-adminapp/app/components/ScrollbarWithMoreDataRequest';
 import { GridContext } from '@headless-adminapp/app/datagrid';
 import {
@@ -136,23 +141,36 @@ export const GridListContainer: FC<GridListContainerProps> = () => {
                     key={virtualRow.key}
                     ref={virtualizer.measureElement}
                     data-index={virtualRow.index}
-                    className={mergeClasses(styles.root)}
                     style={{
                       width: '100%',
                       position: 'absolute',
                       transform: `translateY(${virtualRow.start}px)`,
                     }}
-                    onClick={() => {
-                      const id = row[schema.idAttribute] as string;
-                      openRecord(id);
-                    }}
                   >
-                    <RecordCard
-                      cardView={view.experience.card}
-                      record={row}
-                      schema={schema}
-                      selected={false}
-                    />
+                    {virtualRow.index > 0 && (
+                      <div style={{ paddingBlock: 0 }}>
+                        <Divider style={{ opacity: 0.2 }} />
+                      </div>
+                    )}
+                    <div
+                      className={mergeClasses(styles.root)}
+                      style={{
+                        width: '100%',
+                        cursor: 'pointer',
+                        borderRadius: tokens.borderRadiusMedium,
+                      }}
+                      onClick={() => {
+                        const id = row[schema.idAttribute] as string;
+                        openRecord(id);
+                      }}
+                    >
+                      <RecordCard
+                        cardView={view.experience.card}
+                        record={row}
+                        schema={schema}
+                        selected={false}
+                      />
+                    </div>
                   </div>
                 );
               })}

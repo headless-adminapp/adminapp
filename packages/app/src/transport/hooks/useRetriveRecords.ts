@@ -36,7 +36,7 @@ export function useRetrieveRecordsKey<
   columns,
   expand,
   maxRecords,
-}: UseRetriveRecordProps<S>) {
+}: UseRetriveRecordProps<S>): QueryKey {
   const queryKey = useMemo(
     () => [
       'data',
@@ -95,7 +95,7 @@ export function useRetriveRecords<
     search,
     sorting,
     disabled,
-  }: UseRetriveRecordProps
+  }: UseRetriveRecordProps<S>
 ) {
   const dataService = useDataService();
 

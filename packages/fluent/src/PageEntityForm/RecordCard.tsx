@@ -76,19 +76,23 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
 
   let avatarSrc = '';
 
-  if (cardView.avatarColumn) {
-    const avatarAttribute = schema.attributes[cardView.avatarColumn];
+  if (cardView.showAvatar) {
+    const avatarColumn = cardView.avatarColumn || schema.avatarAttribute;
 
-    if (
-      avatarAttribute.type === 'attachment' &&
-      avatarAttribute.format === 'image'
-    ) {
-      avatarSrc = _record[cardView.avatarColumn]?.url;
-    } else if (
-      avatarAttribute.type === 'string' &&
-      avatarAttribute.format === 'url'
-    ) {
-      avatarSrc = _record[cardView.avatarColumn];
+    if (avatarColumn) {
+      const avatarAttribute = schema.attributes[avatarColumn];
+
+      if (
+        avatarAttribute.type === 'attachment' &&
+        avatarAttribute.format === 'image'
+      ) {
+        avatarSrc = _record[avatarColumn]?.url;
+      } else if (
+        avatarAttribute.type === 'string' &&
+        avatarAttribute.format === 'url'
+      ) {
+        avatarSrc = _record[avatarColumn];
+      }
     }
   }
 
@@ -98,6 +102,7 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
         <Avatar
           initials={initials}
           color="neutral"
+          size={!cardView.secondaryColumns?.length ? 20 : 32}
           style={{ cursor: 'pointer' }}
           image={{
             src: avatarSrc,
