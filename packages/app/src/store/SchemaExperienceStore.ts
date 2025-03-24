@@ -368,7 +368,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
 
     return schemaMetadatas.map((schemaMetadata) => ({
       ...schemaMetadata,
-      icon: this.experiences[schemaMetadata.logicalName]?.icon,
+      Icon: this.experiences[schemaMetadata.logicalName]?.Icon,
     }));
   }
 }

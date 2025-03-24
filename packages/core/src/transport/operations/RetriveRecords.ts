@@ -5,7 +5,7 @@ import { Data } from './Data';
 /*** @todo merge required */
 export interface RetriveRecordsFnOptions<T = unknown> {
   logicalName: string;
-  filter: Filter | null;
+  filter?: Filter | null;
   columns?: Array<keyof T>;
   expand?: {
     [key in keyof T]?: string[];
@@ -13,7 +13,7 @@ export interface RetriveRecordsFnOptions<T = unknown> {
   search?: string;
   skip?: number;
   limit?: number;
-  sort: Array<{
+  sort?: Array<{
     field: keyof T;
     order: SortOrder;
   }>;

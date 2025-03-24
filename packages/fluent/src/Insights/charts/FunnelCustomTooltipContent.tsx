@@ -1,5 +1,7 @@
 import { Caption1, Divider, tokens } from '@fluentui/react-components';
 
+import { formatNumber } from './formatters';
+
 export const FunnelCustomTooltipContent = ({
   active,
   payload,
@@ -49,7 +51,7 @@ export const FunnelCustomTooltipContent = ({
           </Caption1>
           <div style={{ flex: 1, minWidth: 50 }} />
           <Caption1 style={{ color: tokens.colorNeutralForeground4 }}>
-            {firstPayload.payload.perc * 100}%
+            {formatNumber(firstPayload.payload.perc * 100, { maxDigit: 2 })}%
           </Caption1>
         </div>
       </div>

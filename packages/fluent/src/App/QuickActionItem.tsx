@@ -1,4 +1,10 @@
-import { Button, makeStyles } from '@fluentui/react-components';
+import {
+  Badge,
+  BadgeProps,
+  Button,
+  makeStyles,
+} from '@fluentui/react-components';
+import { useBasePath, useRouter } from '@headless-adminapp/app/route';
 import { Icon } from '@headless-adminapp/icons';
 import { FC } from 'react';
 
@@ -27,6 +33,8 @@ interface QuickActionItemProps {
   Icon: Icon;
   link?: string;
   onClick?: () => void;
+  badgeCount?: number;
+  badgeColor?: BadgeProps['color'];
 }
 
 export const QuickActionItem: FC<QuickActionItemProps> = ({
@@ -34,20 +42,45 @@ export const QuickActionItem: FC<QuickActionItemProps> = ({
   Icon,
   onClick,
   link,
+  badgeCount,
+  badgeColor = 'informative',
 }) => {
   const styles = useStyles();
+  const router = useRouter();
+  const basePath = useBasePath();
+
+  const fullLink = link ? `${basePath}${link}` : undefined;
 
   return (
     <Button
-      icon={<Icon size="inherit" />}
+      icon={
+        <>
+          <Icon size="inherit" />
+          {!!badgeCount && (
+            <Badge
+              style={{ position: 'absolute', top: 0, right: 0 }}
+              color={badgeColor}
+              size="small"
+            >
+              {badgeCount}
+            </Badge>
+          )}
+        </>
+      }
       appearance="transparent"
+      style={{ position: 'relative' }}
       as="a"
-      href={link}
+      href={fullLink}
       title={label}
       className={styles.root}
       onClick={(event) => {
         event.preventDefault();
-        onClick?.();
+
+        if (fullLink) {
+          router.push(fullLink);
+        } else if (onClick) {
+          onClick();
+        }
       }}
     />
   );

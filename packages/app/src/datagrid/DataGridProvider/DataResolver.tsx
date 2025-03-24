@@ -5,12 +5,12 @@ import {
 import { Data } from '@headless-adminapp/core/transport';
 import { useEffect, useMemo, useRef } from 'react';
 
+import { useIsMobile } from '../../hooks';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 import { useMetadata } from '../../metadata/hooks/useMetadata';
 import { useContextSetValue } from '../../mutable/context';
 import {
   useClearDataExceptFirstPage,
-  useRetrieveRecordsKey,
   useRetriveRecords,
 } from '../../transport/hooks/useRetriveRecords';
 import { GridContext } from '../context';
@@ -26,7 +26,13 @@ import {
   useSelectedView,
 } from '../hooks';
 import { useGridDisabled } from '../hooks/useGridDisabled';
-import { collectExpandedKeys, mergeConditions } from './utils';
+import {
+  collectCardColumns,
+  collectCardExpandedKeys,
+  collectExpandedKeys,
+  collectGridColumns,
+  mergeConditions,
+} from './utils';
 
 const MAX_RECORDS = 10000;
 
@@ -52,20 +58,26 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
 
   const [search] = useDebouncedValue(searchText, 500);
 
-  const columns = useMemo(() => {
-    const set = new Set([
-      ...gridColumns.filter((x) => !x.expandedKey).map((x) => x.name),
-      schema.primaryAttribute,
-    ]);
+  const isMobile = useIsMobile();
 
-    if (schema.avatarAttribute) {
-      set.add(schema.avatarAttribute);
-    }
+  const columns = useMemo(
+    () =>
+      isMobile
+        ? collectCardColumns({ cardView: view.experience.card, schema })
+        : collectGridColumns({
+            gridColumns,
+            schema,
+          }),
+    [isMobile, view.experience.card, schema, gridColumns]
+  );
 
-    return Array.from(set);
-  }, [gridColumns, schema.avatarAttribute, schema.primaryAttribute]);
-
-  const expand = useMemo(() => collectExpandedKeys(gridColumns), [gridColumns]);
+  const expand = useMemo(
+    () =>
+      isMobile
+        ? collectCardExpandedKeys({ cardView: view.experience.card })
+        : collectExpandedKeys(gridColumns),
+    [gridColumns, isMobile, view.experience.card]
+  );
 
   const filter = useMemo(() => {
     return mergeConditions(
@@ -77,7 +89,14 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
     );
   }, [columnFilters, extraFilter, schema, schemaStore, view.experience.filter]);
 
-  const queryKey = useRetrieveRecordsKey({
+  const {
+    fetchNextPage,
+    data,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    queryKey,
+  } = useRetriveRecords({
     columns,
     expand,
     filter,
@@ -85,25 +104,16 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
     schema,
     search,
     sorting,
+    disabled,
   });
 
   useClearDataExceptFirstPage(queryKey);
 
-  const { fetchNextPage, data, hasNextPage, isFetching, isFetchingNextPage } =
-    useRetriveRecords(queryKey, {
-      columns,
-      expand,
-      filter,
-      maxRecords,
-      schema,
-      search,
-      sorting,
-      disabled,
-    });
-
   useEffect(() => {
     setState({
-      fetchNextPage: () => fetchNextPage,
+      fetchNextPage: () => {
+        fetchNextPage().catch(console.error);
+      },
     });
   }, [fetchNextPage, setState]);
 

@@ -11,6 +11,7 @@ interface BasePageItem {
   label?: string;
   localizedLabel?: Localized<string>;
   Icon?: Icon;
+  RightComponent?: React.ComponentType;
 }
 
 export enum PageType {
@@ -113,13 +114,19 @@ export interface AccountMenuItem {
   onClick?: () => void;
 }
 
-export interface QuickActionItem {
-  label: string;
-  localizedLabel?: Localized<string>;
-  icon: Icon;
-  link?: string;
-  onClick?: () => void;
-}
+export type QuickActionItem =
+  | {
+      type: 'icon';
+      label: string;
+      localizedLabel?: Localized<string>;
+      icon: Icon;
+      link?: string;
+      onClick?: () => void;
+    }
+  | {
+      type: 'custom';
+      Component: React.ComponentType;
+    };
 
 export interface AppExperience {
   id: string;

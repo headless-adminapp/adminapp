@@ -379,7 +379,7 @@ export class SchemaExperienceBuilder<
 
     return {
       logicalName: this.logicalName,
-      icon: experience.icon,
+      Icon: experience.Icon,
       defaultQuickCreateFormId: defaultQuickCreateFormId,
       defaultFormId,
       defaultViewId,

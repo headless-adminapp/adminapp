@@ -97,22 +97,12 @@ export type TickInfo = NumericAxisTick & {
 };
 
 export type LineInfo = TickInfo & {
-  dataIndex?: number;
-  // dataKey: string;
-  // dataType: 'number' | 'money';
-  // dataLabel: string;
   curveType?: CurveType;
-  // color?: string;
 };
 
-export interface AreaInfo {
-  dataIndex?: number;
-  dataKey: string;
-  dataType: 'number' | 'money';
-  dataLabel: string;
+export type AreaInfo = TickInfo & {
   curveType?: CurveType;
-  color?: string;
-}
+};
 
 export interface BarInfo {
   dataIndex?: number;
@@ -121,6 +111,8 @@ export interface BarInfo {
   dataLabel: string;
   curveType?: CurveType;
   color?: string;
+  barSize?: number;
+  radius?: number;
   stackId?: string;
 }
 

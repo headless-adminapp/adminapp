@@ -27,6 +27,7 @@ export interface NavItemInfo {
   link: string;
   active: boolean;
   isExternal: boolean;
+  RightComponent?: React.ComponentType;
 }
 
 export interface NavCategoryInfo {

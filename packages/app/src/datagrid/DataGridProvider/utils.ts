@@ -1,4 +1,7 @@
-import { ColumnCondition } from '@headless-adminapp/core/experience/view';
+import {
+  CardView,
+  ColumnCondition,
+} from '@headless-adminapp/core/experience/view';
 import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import { ISchemaStore } from '@headless-adminapp/core/store';
 import { Filter } from '@headless-adminapp/core/transport';
@@ -161,6 +164,73 @@ export function collectExpandedKeys(
 
       if (!acc[x.name].includes(x.expandedKey!)) {
         acc[x.name].push(x.expandedKey!);
+      }
+      return acc;
+    }, {} as Record<string, string[]>);
+}
+
+export function collectGridColumns<
+  S extends SchemaAttributes = SchemaAttributes
+>({
+  gridColumns,
+  schema,
+}: {
+  gridColumns: TransformedViewColumn<S>[];
+  schema: Schema<S>;
+}) {
+  const set = new Set([
+    ...gridColumns.filter((x) => !x.expandedKey).map((x) => x.name),
+    schema.primaryAttribute,
+  ]);
+
+  if (schema.avatarAttribute) {
+    set.add(schema.avatarAttribute);
+  }
+
+  return Array.from(set);
+}
+
+export function collectCardColumns<
+  S extends SchemaAttributes = SchemaAttributes
+>({
+  cardView,
+  schema,
+}: {
+  cardView: CardView<S>;
+  schema: Schema<S>;
+}): string[] {
+  const set = new Set([
+    cardView.primaryColumn,
+    ...(cardView.secondaryColumns
+      ?.filter((x) => !x.expandedKey)
+      .map((x) => x.name) ?? []),
+    ...(cardView.rightColumn?.map((x) => x.name) ?? []),
+    schema.primaryAttribute,
+  ]);
+
+  if (
+    cardView.showAvatar &&
+    (cardView.avatarColumn || schema.avatarAttribute)
+  ) {
+    set.add((cardView.avatarColumn ?? schema.avatarAttribute) as string);
+  }
+
+  return Array.from(set) as string[];
+}
+
+export function collectCardExpandedKeys<
+  S extends SchemaAttributes = SchemaAttributes
+>({ cardView }: { cardView: CardView<S> }) {
+  return cardView.secondaryColumns
+    ?.filter((x) => x.expandedKey)
+    .reduce((acc, x) => {
+      const name = x.name as string;
+      if (!acc[name]) {
+        acc[name] = [];
+      }
+
+      if (!acc[name].includes(x.expandedKey!)) {
+        acc[name].push(x.expandedKey!);
       }
       return acc;
     }, {} as Record<string, string[]>);

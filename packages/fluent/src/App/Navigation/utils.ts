@@ -59,6 +59,7 @@ export function transformNavSections({
                 link: navItem.link,
                 active: isRouteActive(selectedPath, item),
                 isExternal: navItem.isExternal,
+                RightComponent: item.RightComponent,
               } as NavSubItemInfo;
             }),
           } as NavCategoryInfo;
@@ -83,6 +84,7 @@ export function transformNavSections({
           link: navItem.link,
           active: isActive,
           isExternal: navItem.isExternal,
+          RightComponent: item.RightComponent,
         } as NavItemInfo;
       }),
     };
@@ -113,7 +115,7 @@ export function transformNavPageItem({
       }
 
       if (!Icon) {
-        Icon = metadata.icon;
+        Icon = metadata.Icon;
       }
     }
   }

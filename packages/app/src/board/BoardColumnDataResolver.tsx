@@ -4,7 +4,6 @@ import { useDebouncedValue } from '../hooks';
 import { useContextSetValue } from '../mutable';
 import {
   useClearDataExceptFirstPage,
-  useRetrieveRecordsKey,
   useRetriveRecords,
 } from '../transport/hooks/useRetriveRecords';
 import { BoardColumnContext } from './context';
@@ -28,7 +27,14 @@ export function DataResolver() {
 
   const [search] = useDebouncedValue(searchText, 500);
 
-  const queryKey = useRetrieveRecordsKey({
+  const {
+    fetchNextPage,
+    data,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    queryKey,
+  } = useRetriveRecords({
     columns,
     expand,
     filter,
@@ -40,20 +46,11 @@ export function DataResolver() {
 
   useClearDataExceptFirstPage(queryKey);
 
-  const { fetchNextPage, data, hasNextPage, isFetching, isFetchingNextPage } =
-    useRetriveRecords(queryKey, {
-      columns,
-      expand,
-      filter,
-      maxRecords,
-      schema,
-      search,
-      sorting,
-    });
-
   useEffect(() => {
     setState({
-      fetchNextPage: fetchNextPage,
+      fetchNextPage: () => {
+        fetchNextPage().catch(console.error);
+      },
     });
   }, [fetchNextPage, setState]);
 

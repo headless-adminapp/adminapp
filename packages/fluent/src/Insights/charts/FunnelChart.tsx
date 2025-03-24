@@ -77,6 +77,7 @@ export function FunnelChart({
           data={transformedData}
           isAnimationActive={false}
           lastShapeType="rectangle"
+          stroke="none"
         >
           <LabelList
             position="inside"

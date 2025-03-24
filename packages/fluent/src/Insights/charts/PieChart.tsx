@@ -73,6 +73,8 @@ export function PieChart({
           outerRadius={80}
           dataKey={item.dataKey}
           nameKey={item.nameKey}
+          blendStroke
+          legendType="circle"
         >
           {dataset[item.dataIndex ?? 0].map(
             (entry: Record<string, string>, index: number) => (

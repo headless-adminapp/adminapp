@@ -17,9 +17,9 @@ const ROWS_PER_PAGE = 100;
 
 interface UseRetriveRecordProps<S extends SchemaAttributes = SchemaAttributes> {
   schema: Schema<S>;
-  search: string;
-  filter: Filter | null;
-  sorting: SortingState<S>;
+  search?: string;
+  filter?: Filter | null;
+  sorting?: SortingState<S>;
   columns: string[];
   expand?: Partial<Record<string, string[]>>;
   maxRecords: number;
@@ -82,7 +82,7 @@ export function useClearDataExceptFirstPage(queryKey: QueryKey) {
   }, [queryClient, queryKey]);
 }
 
-export function useRetriveRecords<
+export function useRetriveRecordsInternal<
   S extends SchemaAttributes = SchemaAttributes
 >(
   queryKey: QueryKey,
@@ -174,5 +174,44 @@ export function useRetriveRecords<
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+  };
+}
+
+export function useRetriveRecords<
+  S extends SchemaAttributes = SchemaAttributes
+>({
+  columns,
+  expand,
+  filter,
+  maxRecords,
+  schema,
+  search,
+  sorting,
+  disabled,
+}: UseRetriveRecordProps<S>) {
+  const queryKey = useRetrieveRecordsKey({
+    columns,
+    expand,
+    filter,
+    maxRecords,
+    schema,
+    search,
+    sorting,
+  });
+
+  const query = useRetriveRecordsInternal(queryKey, {
+    columns,
+    expand,
+    filter,
+    maxRecords,
+    schema,
+    search,
+    sorting,
+    disabled,
+  });
+
+  return {
+    ...query,
+    queryKey,
   };
 }

@@ -17,7 +17,7 @@ import { useAuthSession, useLogout } from '@headless-adminapp/app/auth/hooks';
 import { useIsSkipAuthCheck } from '@headless-adminapp/app/auth/hooks/useIsSkipAuthCheck';
 import { useIsMobile, useItemsWithKey } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
-import { useRouter } from '@headless-adminapp/app/route';
+import { useBasePath, useRouter } from '@headless-adminapp/app/route';
 import { Icons } from '@headless-adminapp/icons';
 import { FC, useMemo } from 'react';
 
@@ -51,6 +51,7 @@ export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
   const quickActionItems = useItemsWithKey(app.quickActionItems);
   const accountMenuItems = useItemsWithKey(app.accountMenuItems);
   const router = useRouter();
+  const basePath = useBasePath();
 
   return (
     <div
@@ -99,6 +100,10 @@ export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
       >
         <div style={{ display: 'flex', gap: 8 }}>
           {quickActionItems?.map((item) => {
+            if (item.type === 'custom') {
+              return <item.Component key={item.__key} />;
+            }
+
             return (
               <QuickActionItem
                 key={item.__key}
@@ -172,7 +177,7 @@ export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
                         if (item.onClick) {
                           item.onClick();
                         } else if (item.link) {
-                          router.push(item.link);
+                          router.push(basePath + item.link);
                         }
                       }}
                     >

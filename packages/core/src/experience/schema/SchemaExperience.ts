@@ -11,7 +11,7 @@ import {
 
 export type SchemaExperience<S extends SchemaAttributes = SchemaAttributes> = {
   logicalName: string;
-  icon?: Icon;
+  Icon?: Icon;
 
   // forms
   forms: AsyncForm<S>[];

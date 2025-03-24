@@ -1,5 +1,6 @@
 import { tokens } from '@fluentui/react-components';
 import { AreaChartInfo } from '@headless-adminapp/core/experience/insights';
+import { useId } from 'react';
 import {
   AreaChart as AreaChartInternal,
   ResponsiveContainer,
@@ -18,6 +19,7 @@ export function AreaChart({
   dataset: any[];
   chartInfo: AreaChartInfo;
 }) {
+  const id = useId();
   const xAxis = chartInfo.xAxis;
   const yAxis = chartInfo.yAxis;
 
@@ -32,7 +34,7 @@ export function AreaChart({
         {renderGrid()}
         {renderXAxis(xAxis)}
         {renderYAxis(yAxis)}
-        {renderAreas(areas, dataset)}
+        {renderAreas(areas, id)}
         <Tooltip
           cursor={{
             stroke: tokens.colorNeutralBackground6,

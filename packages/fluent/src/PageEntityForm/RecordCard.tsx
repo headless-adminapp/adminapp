@@ -1,11 +1,11 @@
 import {
   Avatar,
+  Badge,
   Body1,
   Body1Strong,
   Caption1,
   makeStyles,
   mergeClasses,
-  Tag,
   tokens,
 } from '@fluentui/react-components';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
@@ -117,7 +117,10 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
         }}
       >
         <Body1 style={{ wordBreak: 'break-all' }}>
-          {_record[cardView.primaryColumn]}
+          {getAttributeFormattedValue(
+            schema.attributes[cardView.primaryColumn],
+            _record[cardView.primaryColumn]
+          )}
         </Body1>
         {cardView.secondaryColumns?.map((column) => (
           <SecondaryColumnContent
@@ -146,30 +149,12 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
 
             if (column.variant === 'choice') {
               if (attribute.type === 'choice') {
-                const choice = attribute.options.find(
-                  (option) => option.value === value
-                );
-
-                if (!choice) {
-                  return null;
-                }
-
                 return (
-                  <Tag
+                  <ChoiceTag
                     key={column.name as string}
-                    size="extra-small"
-                    appearance="filled"
-                    style={{
-                      background: choice.color,
-                      color: 'white',
-                      height: 16,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {choice.label}
-                  </Tag>
+                    attribute={attribute}
+                    value={value}
+                  />
                 );
               }
             }
@@ -289,19 +274,16 @@ const ChoiceTag: FC<ChoiceTagProps<string | number>> = ({
   }
 
   return (
-    <Tag
-      size="extra-small"
+    <Badge
+      size="small"
       appearance="filled"
       style={{
         background: bgColor,
         color: color,
-        height: 16,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        fontWeight: tokens.fontWeightRegular,
       }}
     >
       {choice.label}
-    </Tag>
+    </Badge>
   );
 };

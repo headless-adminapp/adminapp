@@ -39,6 +39,11 @@ export const NavItemComponent: FC<NavItemComponentProps> = ({
       value={item.active ? 'active' : ''}
     >
       {item.label}
+      {!!item.RightComponent && (
+        <span style={{ flex: 1, justifyContent: 'flex-end', display: 'flex' }}>
+          <item.RightComponent />
+        </span>
+      )}
     </NavItem>
   );
 };

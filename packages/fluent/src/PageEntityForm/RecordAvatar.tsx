@@ -80,7 +80,7 @@ export const RecordAvatar: FC = () => {
   }
 
   if (isPlaceholder && !value) {
-    const Icon = experienceSchema.icon ?? Icons.Entity ?? IconPlaceholder;
+    const Icon = experienceSchema.Icon ?? Icons.Entity ?? IconPlaceholder;
 
     return (
       <div

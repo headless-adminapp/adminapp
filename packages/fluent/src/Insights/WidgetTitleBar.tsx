@@ -7,7 +7,7 @@ import { renderCommandItem } from '../OverflowCommandBar';
 
 interface WidgetTitleBarProps {
   title: string;
-  commands: CommandItemState[][];
+  commands?: CommandItemState[][];
 }
 
 export function WidgetTitleBar({ title, commands }: WidgetTitleBarProps) {
@@ -27,7 +27,7 @@ export function WidgetTitleBar({ title, commands }: WidgetTitleBarProps) {
         <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           <Body1Strong>{title}</Body1Strong>
           <div style={{ flex: 1 }} />
-          {commands?.[0]?.length > 0 && (
+          {!!commands && commands[0]?.length > 0 && (
             <div style={{ marginRight: -20 }}>
               <CommandBar.Wrapper>
                 {commands[0].map((command, index) =>

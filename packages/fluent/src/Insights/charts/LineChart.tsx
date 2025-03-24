@@ -27,11 +27,11 @@ export function LineChart({
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <LineChartInternal>
+      <LineChartInternal data={dataset[0]}>
         {renderGrid()}
         {renderYAxis(yAxis)}
         {renderXAxis(xAxis)}
-        {renderLines(lines, dataset)}
+        {renderLines(lines)}
         <Tooltip
           cursor={{
             stroke: tokens.colorNeutralBackground6,

@@ -6,6 +6,7 @@ import {
   XAxis,
   YAxis,
 } from '@headless-adminapp/core/experience/insights';
+import { Fragment } from 'react';
 import {
   Area,
   Bar,
@@ -91,13 +92,12 @@ export function renderGrid() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function renderLine(line: LineInfo, dataset: any[]) {
+export function renderLine(line: LineInfo) {
   return (
     <Line
       key={line.dataKey}
       yAxisId={'left'}
       type={line.curveType}
-      data={dataset[line.dataIndex ?? 0]}
       dataKey={line.dataKey}
       name={line.dataLabel}
       stroke={line.color}
@@ -111,33 +111,47 @@ export function renderLine(line: LineInfo, dataset: any[]) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function renderLines(lines: LineInfo[], dataset: any[]) {
-  return lines.map((line) => renderLine(line, dataset));
+export function renderLines(lines: LineInfo[]) {
+  return lines.map((line) => renderLine(line));
 }
 
 // eslint-disable-next-line unused-imports/no-unused-vars
-export function renderArea(area: AreaInfo, dataset: any[]) {
+export function renderArea(area: AreaInfo, chartId: string) {
   return (
-    <Area
-      key={area.dataKey}
-      yAxisId={'left'}
-      type={area.curveType}
-      dataKey={area.dataKey}
-      name={area.dataLabel}
-      stroke={area.color}
-      fill={area.color}
-      strokeWidth={1}
-      dot={false}
-      activeDot={{
-        stroke: area.color,
-      }}
-    />
+    <Fragment key={area.dataKey}>
+      <defs>
+        <linearGradient
+          id={chartId + ':' + area.dataKey}
+          x1="0"
+          y1="0"
+          x2="0"
+          y2="1"
+        >
+          <stop offset="5%" stopColor={area.color} stopOpacity={0.8} />
+          <stop offset="95%" stopColor={area.color} stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <Area
+        yAxisId={'left'}
+        type={area.curveType}
+        dataKey={area.dataKey}
+        name={area.dataLabel}
+        stroke={area.color}
+        // fill={area.color}
+        fill={`url(#${chartId}:${area.dataKey})`}
+        strokeWidth={2}
+        dot={false}
+        activeDot={{
+          stroke: area.color,
+        }}
+      />
+    </Fragment>
   );
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function renderAreas(areas: AreaInfo[], dataset: any[]) {
-  return areas.map((area) => renderArea(area, dataset));
+export function renderAreas(areas: AreaInfo[], chartId: string) {
+  return areas.map((area) => renderArea(area, chartId));
 }
 
 // eslint-disable-next-line unused-imports/no-unused-vars
@@ -153,6 +167,8 @@ export function renderBar(bar: BarInfo, dataset: any[]) {
       fill={bar.color}
       strokeWidth={1}
       stackId={bar.stackId}
+      radius={bar.radius}
+      barSize={bar.barSize}
     />
   );
 }
