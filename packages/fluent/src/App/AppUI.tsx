@@ -1,4 +1,4 @@
-import { DrawerProps } from '@fluentui/react-components';
+import { DrawerProps, tokens } from '@fluentui/react-components';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 
@@ -30,7 +30,14 @@ export const AppUI: FC<PropsWithChildren> = ({ children }) => {
       }}
     >
       <AppHeaderContainer onNavToggle={() => setIsNavOpen(!isNavOpen)} />
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+      <div
+        style={{
+          display: 'flex',
+          flex: 1,
+          overflow: 'hidden',
+          background: tokens.colorNeutralBackground1,
+        }}
+      >
         <NavigationContainer
           open={isNavOpen}
           type={navType}
