@@ -1,23 +1,77 @@
-import { tokens } from '@fluentui/react-components';
-import { PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useMemo } from 'react';
 
-export function WidgetGrid({ children }: PropsWithChildren) {
+import { GAP, ROW_GAP, ROW_HEIGHT } from './constants';
+
+interface GridProps {
+  column?: number;
+  gap: number;
+}
+
+const Grid: FC<PropsWithChildren<GridProps>> = ({
+  children,
+  column = 12,
+  gap,
+}) => {
+  const gridTemplateColumns = useMemo(
+    () => Array.from({ length: column }, () => '1fr').join(' '),
+    [column]
+  );
+
   return (
     <div
       style={{
-        padding: tokens.spacingHorizontalM,
         width: '100%',
-        // flex: 1,
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr',
-        rowGap: tokens.spacingVerticalM,
-        columnGap: tokens.spacingHorizontalM,
+        gridTemplateColumns,
+        rowGap: gap,
+        columnGap: gap,
       }}
     >
       {children}
     </div>
   );
+};
+
+export function WidgetGrid({ children }: PropsWithChildren) {
+  return (
+    <div
+      style={{
+        padding: GAP,
+        width: '100%',
+      }}
+    >
+      <Grid column={12} gap={GAP}>
+        {children}
+      </Grid>
+    </div>
+  );
 }
+
+interface WidgetGridGroupProps {
+  column?: number;
+  row?: number;
+}
+
+export const WidgetGridGroup: FC<PropsWithChildren<WidgetGridGroupProps>> = ({
+  children,
+  column = 12,
+  row = 1,
+}) => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gridColumn: column ? `span ${column}` : undefined,
+        gridRow: row ? `span ${row}` : undefined,
+      }}
+    >
+      <Grid column={column} gap={GAP}>
+        {children}
+      </Grid>
+    </div>
+  );
+};
 
 export function WidgetGridItem({
   column,
@@ -34,7 +88,7 @@ export function WidgetGridItem({
         flexDirection: 'column',
         gridColumn: column ? `span ${column}` : undefined,
         gridRow: row ? `span ${row}` : undefined,
-        height: row ? 100 * row + 12 * (row - 1) : 100,
+        height: row ? ROW_HEIGHT * row + ROW_GAP * (row - 1) : ROW_HEIGHT,
       }}
     >
       {children}

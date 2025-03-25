@@ -1,0 +1,1 @@
+export { PageInsight } from './PageInsight';

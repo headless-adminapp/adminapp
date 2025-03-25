@@ -7,23 +7,27 @@ import {
   useExperienceView,
   useSchema,
 } from '@headless-adminapp/app/metadata/hooks';
-import {
-  useContextSelector,
-  useContextSetValue,
-} from '@headless-adminapp/app/mutable';
-import { WidgetContext } from '@headless-adminapp/app/widget';
-import { DataGridWidgetExperience } from '@headless-adminapp/core/experience/insights';
-import { useCallback } from 'react';
+import { Filter } from '@headless-adminapp/core/transport';
 
 import { GridTableContainer } from '../DataGrid';
 import { WidgetTitleBar } from './WidgetTitleBar';
 
+interface WidgetDataGridContainerProps {
+  title: string;
+  logicalName: string;
+  maxRecords?: number;
+  filter?: Filter;
+  commands?: any[][];
+}
+
+/*** @deprecated Need refactoring */
 export function WidgetDataGridContainer({
-  content,
-}: Readonly<{
-  content: DataGridWidgetExperience;
-}>) {
-  const logicalName = content.logicalName;
+  logicalName,
+  maxRecords,
+  filter,
+  commands,
+  title,
+}: Readonly<WidgetDataGridContainerProps>) {
   const schema = useSchema(logicalName);
   const { view } = useExperienceView(logicalName);
 
@@ -54,43 +58,25 @@ export function WidgetDataGridContainer({
         onChangeView={() => {}}
         commands={[]}
         allowViewSelection={false}
-        maxRecords={content.maxRecords}
-        extraFilter={content.filter}
+        maxRecords={maxRecords}
+        extraFilter={filter}
       >
-        <FormSubgridContainer content={content} />
+        <FormSubgridContainer title={title} commands={commands} />
       </DataGridProvider>
     </div>
   );
 }
 
 const FormSubgridContainer = ({
-  content,
-}: {
-  content: DataGridWidgetExperience;
-}) => {
+  title,
+  commands,
+}: Pick<WidgetDataGridContainerProps, 'title' | 'commands'>) => {
   const baseCommandHandleContext = useBaseCommandHandlerContext();
   const primaryControl = useGridControlContext();
-  const widgetState = useContextSelector(WidgetContext, (state) => state);
 
-  const widgetSetValue = useContextSetValue(WidgetContext);
-
-  const updateStateValue = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (value: any) => {
-      widgetSetValue((state) => ({
-        ...state,
-        data: { ...state.data, ...value },
-      }));
-    },
-    [widgetSetValue]
-  );
-
-  const transformedCommands = useCommands([content.commands], {
+  const transformedCommands = useCommands(commands, {
     ...baseCommandHandleContext,
-    primaryControl: {
-      ...primaryControl,
-      updateStateValue,
-    },
+    primaryControl,
   });
 
   return (
@@ -99,23 +85,15 @@ const FormSubgridContainer = ({
         display: 'flex',
         flex: 1,
         flexDirection: 'column',
-        // gap: 8,
-        // backgroundColor: tokens.colorNeutralBackground2,
-        // padding: 2,
         overflow: 'hidden',
       }}
     >
-      <WidgetTitleBar
-        title={widgetState.widget.title}
-        commands={transformedCommands}
-      />
+      <WidgetTitleBar title={title} commands={transformedCommands} />
       <div
         style={{
-          // gap: 12,
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          // overflow: 'hidden',
         }}
       >
         <div

@@ -123,7 +123,6 @@ export const TitleSelector: FC<TitleSelectorProps> = ({
             firstDayOfWeek={1}
             value={start ? dayjs(start).toDate() : new Date()}
             onSelectDate={(date) => {
-              console.log('d', date);
               const start = dayjs(date)
                 .tz(timezone, true)
                 .startOf('day')

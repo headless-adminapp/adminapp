@@ -1,102 +1,59 @@
 import { useIsMobile } from '@headless-adminapp/app/hooks';
-import { InsightsContext } from '@headless-adminapp/app/insights';
 import {
-  useContextSelector,
-  useCreateContextStore,
-} from '@headless-adminapp/app/mutable';
-import { WidgetContext } from '@headless-adminapp/app/widget';
-import {
-  InsightExpereince,
-  WidgetExperience,
-  WidgetState,
+  InsightConfig,
+  WidgetInfo,
 } from '@headless-adminapp/core/experience/insights';
-import { FC, PropsWithChildren, useEffect } from 'react';
 
-import { WidgetGrid, WidgetGridItem } from './Grid';
-import { WidgetChartContainer } from './WidgetChartContainer';
-import { WidgetDataGridContainer } from './WidgetDataGridContainer';
-import { WidgetTableContainer } from './WidgetTableContainer';
-import { WidgetTileContainer } from './WidgetTileContainer';
-
-const WidgetProvider: FC<PropsWithChildren<{ widget: WidgetExperience }>> = ({
-  children,
-  widget,
-}) => {
-  const contextValue = useCreateContextStore<WidgetState>({
-    widget,
-    data: widget.defaultData,
-  });
-
-  useEffect(() => {
-    contextValue.setValue({
-      widget,
-      data: widget.defaultData,
-    });
-  }, [contextValue, widget]);
-
-  return (
-    <WidgetContext.Provider value={contextValue}>
-      {children}
-    </WidgetContext.Provider>
-  );
-};
+import { WidgetGrid, WidgetGridGroup, WidgetGridItem } from './Grid';
 
 export function Widgets({
   widgets,
 }: Readonly<{
-  widgets: InsightExpereince['widgets'];
+  widgets: InsightConfig['widgets'];
 }>) {
-  const isMobile = useIsMobile();
-
   return (
     <WidgetGrid>
-      {widgets.map((widget, index) => {
-        return (
-          <WidgetGridItem
-            key={widget.title + String(index)}
-            row={widget.rows}
-            column={isMobile ? 12 : widget.columns}
-          >
-            <WidgetProvider widget={widget}>
-              <WidgetItem />
-            </WidgetProvider>
-          </WidgetGridItem>
-        );
-      })}
+      <WidgetRenderer items={widgets} />
     </WidgetGrid>
   );
 }
 
-function WidgetItem() {
-  const insightState = useContextSelector(InsightsContext, (state) => state);
-  const widgetState = useContextSelector(WidgetContext, (state) => state);
+interface Props {
+  items: WidgetInfo[];
+}
 
-  const widget = widgetState.widget;
+function WidgetRenderer({ items }: Props) {
+  const isMobile = useIsMobile();
 
-  const content =
-    typeof widget.content === 'function'
-      ? widget.content(insightState, widgetState)
-      : widget.content;
+  return items.map((widget, index) => {
+    if (widget.type === 'space') {
+      if (isMobile) {
+        return null;
+      }
 
-  if (content.type === 'tile') {
-    return <WidgetTileContainer content={content} />;
-  }
+      return <WidgetGridItem key={String(index)} column={widget.columns} />;
+    }
 
-  if (content.type === 'chart') {
-    return <WidgetChartContainer content={content} />;
-  }
+    if (widget.type === 'group') {
+      return (
+        <WidgetGridGroup
+          key={String(index)}
+          column={isMobile ? 12 : widget.columns}
+          row={widget.rows}
+        >
+          <WidgetRenderer items={widget.items} />
+        </WidgetGridGroup>
+      );
+    }
 
-  if (content.type === 'grid') {
-    return <WidgetDataGridContainer content={content} />;
-  }
-
-  if (content.type === 'table') {
-    return <WidgetTableContainer content={content} />;
-  }
-
-  if (content.type === 'custom') {
-    return <content.Component content={content} />;
-  }
-
-  return null;
+    return (
+      <WidgetGridItem
+        key={String(index)}
+        row={widget.rows}
+        column={isMobile ? 12 : widget.columns}
+      >
+        <widget.Component {...widget.props} />
+      </WidgetGridItem>
+    );
+  });
 }

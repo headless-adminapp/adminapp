@@ -201,3 +201,5 @@ const ScatterTooltipContent = (props: {
     </div>
   );
 };
+
+export default ScatterChart;

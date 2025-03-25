@@ -34,8 +34,8 @@ export function BarChart({
         {renderBars(bars, dataset)}
         <Tooltip
           cursor={{
-            stroke: tokens.colorNeutralBackground6,
-            opacity: 0.5,
+            fill: tokens.colorNeutralBackground6,
+            opacity: 0.2,
           }}
           content={({ active, payload, label }) => (
             <CustomTooltipContent
@@ -51,3 +51,5 @@ export function BarChart({
     </ResponsiveContainer>
   );
 }
+
+export default BarChart;

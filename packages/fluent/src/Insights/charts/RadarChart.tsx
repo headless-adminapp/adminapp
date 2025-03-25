@@ -118,3 +118,5 @@ function renderTooltipContent({
     </div>
   );
 }
+
+export default RadarChart;

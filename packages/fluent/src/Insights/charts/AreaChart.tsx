@@ -54,3 +54,5 @@ export function AreaChart({
     </ResponsiveContainer>
   );
 }
+
+export default AreaChart;

@@ -1,23 +1,29 @@
-import { tokens } from '@fluentui/react-components';
+import { CommandItemState } from '@headless-adminapp/app/command';
+import { ChartInfo } from '@headless-adminapp/core/experience/insights';
 import {
-  ChartInfo,
-  ChartWidgetExperience,
-} from '@headless-adminapp/core/experience/insights';
-import { FC, JSX } from 'react';
+  FC,
+  JSX,
+  lazy,
+  LazyExoticComponent,
+  PropsWithChildren,
+  Suspense,
+} from 'react';
 
 import { BodyLoading } from '../components/BodyLoading';
-import { AreaChart } from './charts/AreaChart';
-import { BarChart } from './charts/BarChart';
-import { ComposedChart } from './charts/ComposedChart';
-import { FunnelChart } from './charts/FunnelChart';
-import { GaugeChart } from './charts/GaugeChart';
-import { LineChart } from './charts/LineChart';
-import { OhlcChart } from './charts/OhlcChart';
-import { PieChart } from './charts/PieChart';
-import { RadarChart } from './charts/RadarChart';
-import { ScatterChart } from './charts/ScatterChart';
-import { useWidgetDetail } from './hooks/useWidgetDetail';
+import { ComponentErrorBoundary } from '../components/ComponentErrorBoundary';
+import { WidgetSection } from './WidgetSection';
 import { WidgetTitleBar } from './WidgetTitleBar';
+
+const AreaChart = lazy(() => import('./charts/AreaChart'));
+const BarChart = lazy(() => import('./charts/BarChart'));
+const ComposedChart = lazy(() => import('./charts/ComposedChart'));
+const FunnelChart = lazy(() => import('./charts/FunnelChart'));
+const GaugeChart = lazy(() => import('./charts/GaugeChart'));
+const LineChart = lazy(() => import('./charts/LineChart'));
+const OhlcChart = lazy(() => import('./charts/OhlcChart'));
+const PieChart = lazy(() => import('./charts/PieChart'));
+const RadarChart = lazy(() => import('./charts/RadarChart'));
+const ScatterChart = lazy(() => import('./charts/ScatterChart'));
 
 export type ChartComponentProps = {
   dataset: any[];
@@ -26,7 +32,7 @@ export type ChartComponentProps = {
 
 function getChartComponent(
   chart: ChartInfo
-): ((props: ChartComponentProps) => JSX.Element) | null {
+): LazyExoticComponent<(props: ChartComponentProps) => JSX.Element> {
   const type = chart.type;
   switch (type) {
     case 'line':
@@ -49,50 +55,65 @@ function getChartComponent(
       return OhlcChart;
     case 'funnel':
       return FunnelChart;
-    case 'custom':
-      return chart.Component as unknown as (
-        props: ChartComponentProps
-      ) => JSX.Element;
     default:
-      return null;
+      throw new Error(`Unsupported chart type: ${type}`);
   }
 }
 
 interface WidgetChartContainerProps {
-  content: ChartWidgetExperience;
+  title: string;
+  commands?: CommandItemState[][];
+  dataset: any[];
+  chartInfo: ChartInfo;
+  isPending?: boolean;
+  isFetching?: boolean;
 }
 
-export const WidgetChartContainer: FC<WidgetChartContainerProps> = (props) => {
-  const { transformedCommands, dataset, isPending, isFetching, widget } =
-    useWidgetDetail<ChartWidgetExperience>(props.content);
+export const WidgetChart: FC<WidgetChartContainerProps> = (props) => {
+  return (
+    <WidgetSection>
+      <WidgetTitleBar title={props.title} commands={props.commands} />
+      <WidgetChartBody
+        dataset={props.dataset}
+        chartInfo={props.chartInfo}
+        isFetching={props.isFetching}
+        isPending={props.isPending}
+      />
+    </WidgetSection>
+  );
+};
 
-  const chart = props.content.chart;
-  const ChartComponent = getChartComponent(chart);
+interface Props {
+  isFetching?: boolean;
+  isPending?: boolean;
+  chartInfo: ChartInfo;
+  dataset: any[];
+}
+
+const WidgetChartBody: FC<PropsWithChildren<Props>> = ({
+  isFetching,
+  isPending,
+  chartInfo,
+  dataset,
+}) => {
+  const ChartComponent = getChartComponent(chartInfo);
 
   if (!ChartComponent) {
     return null;
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flex: 1,
-        background: tokens.colorNeutralBackground1,
-        boxShadow: tokens.shadow2,
-        borderRadius: tokens.borderRadiusMedium,
-        flexDirection: 'column',
-      }}
-    >
-      <WidgetTitleBar title={widget.title} commands={transformedCommands} />
-      <div style={{ flex: 1, position: 'relative' }}>
-        {!isPending && (
+    <div style={{ display: 'flex', flex: 1, position: 'relative' }}>
+      {!isPending && (
+        <ComponentErrorBoundary>
           <div style={{ position: 'absolute', inset: 0 }}>
-            <ChartComponent dataset={dataset} chartInfo={chart} />
+            <Suspense fallback={<BodyLoading loading={isFetching} />}>
+              <ChartComponent dataset={dataset} chartInfo={chartInfo} />
+            </Suspense>
           </div>
-        )}
-        <BodyLoading loading={isFetching} />
-      </div>
+        </ComponentErrorBoundary>
+      )}
+      <BodyLoading loading={isFetching} />
     </div>
   );
 };

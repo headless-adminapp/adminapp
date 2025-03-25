@@ -165,3 +165,5 @@ function renderTooltipContent({
     </div>
   );
 }
+
+export default PieChart;

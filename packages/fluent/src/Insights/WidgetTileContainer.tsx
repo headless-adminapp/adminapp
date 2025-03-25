@@ -1,20 +1,9 @@
 import { Title2, tokens } from '@fluentui/react-components';
-import { TileWidgetExperience } from '@headless-adminapp/core/experience/insights';
 import { FC } from 'react';
 
-import { useWidgetDetail } from './hooks/useWidgetDetail';
-import { WidgetTitleBar } from './WidgetTitleBar';
+interface WidgetTileContainerProps {}
 
-interface WidgetTileContainerProps {
-  content: TileWidgetExperience;
-}
-
-export const WidgetTileContainer: FC<WidgetTileContainerProps> = ({
-  content,
-}) => {
-  const { transformedCommands, widget } =
-    useWidgetDetail<TileWidgetExperience>(content);
-
+export const WidgetTileContainer: FC<WidgetTileContainerProps> = ({}) => {
   return (
     <div
       style={{
@@ -26,7 +15,6 @@ export const WidgetTileContainer: FC<WidgetTileContainerProps> = ({
         flexDirection: 'column',
       }}
     >
-      <WidgetTitleBar title={widget.title} commands={transformedCommands} />
       <div style={{ display: 'flex', flex: 1 }}>
         <div
           style={{

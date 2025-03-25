@@ -278,3 +278,5 @@ function renderShape(
     </g>
   );
 }
+
+export default OhlcChart;

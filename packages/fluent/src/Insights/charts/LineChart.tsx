@@ -51,3 +51,5 @@ export function LineChart({
     </ResponsiveContainer>
   );
 }
+
+export default LineChart;

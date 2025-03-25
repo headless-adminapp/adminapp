@@ -7,41 +7,37 @@ import {
   TableRow,
   tokens,
 } from '@fluentui/react-components';
+import { CommandItemState } from '@headless-adminapp/app/command';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
-import { TableWidgetExperience } from '@headless-adminapp/core/experience/insights';
+import { Attribute } from '@headless-adminapp/core';
 import { FC } from 'react';
 
 import { BodyLoading } from '../components/BodyLoading';
-import { useWidgetDetail } from './hooks/useWidgetDetail';
+import { WidgetSection } from './WidgetSection';
 import { WidgetTitleBar } from './WidgetTitleBar';
 
 interface WidgetTableContainerProps {
-  content: TableWidgetExperience;
+  title: string;
+  columns: string[];
+  attributes: Record<string, Attribute>;
+  isPending?: boolean;
+  isFetching?: boolean;
+  commands?: CommandItemState[][];
+  data: any[];
 }
 
 export const WidgetTableContainer: FC<WidgetTableContainerProps> = ({
-  content,
+  title,
+  columns,
+  attributes,
+  isPending,
+  isFetching,
+  commands,
+  data,
 }) => {
-  const { transformedCommands, dataset, isPending, isFetching, widget } =
-    useWidgetDetail<TableWidgetExperience>(content);
-
-  const info = content.table;
-
-  const data = dataset[0] as Record<string, unknown>[];
-
   return (
-    <div
-      style={{
-        display: 'flex',
-        flex: 1,
-        background: tokens.colorNeutralBackground1,
-        boxShadow: tokens.shadow2,
-        borderRadius: tokens.borderRadiusMedium,
-        flexDirection: 'column',
-        overflow: 'hidden',
-      }}
-    >
-      <WidgetTitleBar title={widget.title} commands={transformedCommands} />
+    <WidgetSection>
+      <WidgetTitleBar title={title} commands={commands} />
       <div style={{ flex: 1, position: 'relative', overflow: 'auto' }}>
         {!isPending && (
           <Table
@@ -65,8 +61,8 @@ export const WidgetTableContainer: FC<WidgetTableContainerProps> = ({
                   minWidth: 'calc(100% - 16px)',
                 }}
               >
-                {info.columns.map((column, index) => {
-                  const attribute = info.attributes[column];
+                {columns.map((column, index) => {
+                  const attribute = attributes[column];
 
                   return (
                     <TableHeaderCell
@@ -89,8 +85,8 @@ export const WidgetTableContainer: FC<WidgetTableContainerProps> = ({
             <TableBody>
               {data.map((row, index) => (
                 <TableRow key={index}>
-                  {info.columns.map((column) => {
-                    const attribute = info.attributes[column];
+                  {columns.map((column) => {
+                    const attribute = attributes[column];
                     const value = row[column];
 
                     const formattedValue =
@@ -114,6 +110,6 @@ export const WidgetTableContainer: FC<WidgetTableContainerProps> = ({
         )}
         <BodyLoading loading={isFetching} />
       </div>
-    </div>
+    </WidgetSection>
   );
 };

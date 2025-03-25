@@ -8,3 +8,5 @@ export function GaugeChart(_props: {
 }) {
   return <div>Not supported yet</div>;
 }
+
+export default GaugeChart;

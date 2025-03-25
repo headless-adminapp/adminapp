@@ -309,7 +309,10 @@ const LookupControlMd: FC<LookupControlProps> = ({
               size="small"
               dismissible={!disabled && !readOnly}
               value={value.id}
-              style={{ paddingRight: !disabled && !readOnly ? 0 : 5 }}
+              style={{
+                paddingRight: !disabled && !readOnly ? 0 : 5,
+                background: tokens.colorNeutralBackground6,
+              }}
               dismissIcon={
                 <div
                   style={{ display: 'flex', cursor: 'pointer' }}
@@ -379,7 +382,7 @@ const LookupAvatar: FC<LookupAvatarProps> = ({
 
   if (!schema.avatarAttribute) {
     const experienceSchema = schemaMetadataDic[logicalName];
-    const Icon = experienceSchema.icon ?? Icons.Entity ?? IconPlaceholder;
+    const Icon = experienceSchema.Icon ?? Icons.Entity ?? IconPlaceholder;
 
     return (
       <Avatar

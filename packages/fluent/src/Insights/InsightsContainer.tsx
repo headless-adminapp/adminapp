@@ -1,44 +1,20 @@
-import {
-  Body1Strong,
-  Button,
-  Caption1,
-  Caption2,
-  Menu,
-  MenuItem,
-  MenuList,
-  MenuPopover,
-  MenuTrigger,
-  Subtitle2,
-  tokens,
-} from '@fluentui/react-components';
+import { tokens } from '@fluentui/react-components';
 import { ScrollView } from '@headless-adminapp/app/components/ScrollView';
 import { InsightsContext } from '@headless-adminapp/app/insights';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
-import { InsightsState } from '@headless-adminapp/core/experience/insights';
+import { InsightConfig } from '@headless-adminapp/core/experience/insights';
+import { useState } from 'react';
 
-import { CommandBarContainer } from './CommandBarContainer';
-import { FilterBarContainer } from './FilterBarContainer';
+import { Header } from './Header';
 import { Widgets } from './Widgets';
 
 export function InsightsContainer() {
-  const insightsState = useContextSelector(
+  const config = useContextSelector(
     InsightsContext,
-    (state) => state as unknown as InsightsState
+    (state) => state.config as unknown as InsightConfig
   );
-  const insightExpereince = insightsState.experience;
 
-  const titleButton = (
-    <Button appearance="subtle" style={{ pointerEvents: 'auto' }}>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <Subtitle2 style={{ color: tokens.colorNeutralForeground1 }}>
-          {insightExpereince.title}
-        </Subtitle2>
-        <Caption1 style={{ color: tokens.colorNeutralForeground2 }}>
-          {insightExpereince.subtitle}
-        </Caption1>
-      </div>
-    </Button>
-  );
+  const [isScrolled, setIsScrolled] = useState(false);
 
   return (
     <div
@@ -50,7 +26,7 @@ export function InsightsContainer() {
         overflow: 'hidden',
       }}
     >
-      <div style={{ padding: 12 }}>
+      {/* <div style={{ padding: 12 }}>
         <div
           style={{
             background: tokens.colorNeutralBackground1,
@@ -93,6 +69,21 @@ export function InsightsContainer() {
         ) : (
           titleButton
         )}
+      </div> */}
+      <div
+        style={{
+          // padding: spacingMapping[insightExpereince.style?.spacing ?? 'normal'],
+          // paddingBottom: 0,
+          // boxShadow: isScrolled ? tokens.shadow2 : 'none',
+          // backgroundColor: isScrolled
+          //   ? tokens.colorNeutralBackground1
+          //   : 'transparent',
+          zIndex: 1,
+          position: 'sticky',
+          top: 0,
+        }}
+      >
+        <Header isScrolled={isScrolled} />
       </div>
       <div
         style={{
@@ -102,8 +93,38 @@ export function InsightsContainer() {
           overflow: 'hidden',
         }}
       >
-        <ScrollView>
-          <Widgets widgets={insightExpereince.widgets} />
+        <ScrollView
+          onScroll={(event) => {
+            const div = event.target as HTMLDivElement;
+
+            setIsScrolled(div.scrollTop > 0);
+          }}
+        >
+          {/* <div
+            style={{
+              paddingInline:
+                spacingMapping[insightExpereince.style?.spacing ?? 'normal'],
+              paddingBottom: 0,
+              // boxShadow: isScrolled ? tokens.shadow2 : 'none',
+              // backgroundColor: isScrolled
+              //   ? tokens.colorNeutralBackground1
+              //   : 'transparent',
+              zIndex: 1,
+              position: 'sticky',
+              top: 0,
+            }}
+          >
+            <div
+              style={{
+                height:
+                  spacingMapping[insightExpereince.style?.spacing ?? 'normal'],
+                backgroundColor: tokens.colorNeutralBackground2,
+              }}
+            />
+            <Header isScrolled={isScrolled} />
+          </div> */}
+          {/* <div style={{ height: ROW_GAP }} /> */}
+          <Widgets widgets={config.widgets} />
         </ScrollView>
       </div>
     </div>

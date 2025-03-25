@@ -159,7 +159,6 @@ export const DurationControl: FC<DurationControlProps> = ({
           }
 
           if (newValue !== null) {
-            console.log('onBlur', newValue);
             onChange?.(newValue);
           }
 
@@ -175,7 +174,6 @@ export const DurationControl: FC<DurationControlProps> = ({
           setSearchText(e.target.value);
         }}
         onOptionSelect={(e, item) => {
-          console.log('onOptionSelect', e, item);
           if (!item.optionValue) {
             return;
           } else {

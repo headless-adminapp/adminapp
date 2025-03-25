@@ -1,10 +1,3 @@
-import { ComponentType } from 'react';
-
-import { SchemaAttributes } from '../../schema';
-import { AggregateQuery, CustomAction } from '../../transport';
-import { InsightsState } from './InsightExpereince';
-import { WidgetState } from './WidgetExperience';
-
 export enum DateAxisTickFormat {
   Date = 'date', // year:month:day // 01 Jan 2024
   DateTime = 'datetime', // 01 Jan 2024 12:20
@@ -252,15 +245,6 @@ export interface FunnelChartInfo {
   colors?: string[]; // override default color list
 }
 
-export interface CustomChart {
-  type: 'custom';
-  Component: ComponentType<{
-    dataset: any[];
-    chartInfo: unknown;
-  }>;
-  extra?: unknown;
-}
-
 export type ChartInfo =
   | LineChartInfo
   | AreaChartInfo
@@ -271,39 +255,8 @@ export type ChartInfo =
   | RadarChartInfo
   | GaugeChartInfo
   | OhlcChartInfo
-  | CustomChart
   | FunnelChartInfo;
 
-export type DataSetItem =
-  | {
-      type: 'aggregateQuery';
-      value: AggregateQuery;
-    }
-  | {
-      type: 'customAction';
-      value: CustomAction;
-    }
-  | {
-      type: 'function';
-      value: <
-        ISA extends SchemaAttributes = SchemaAttributes,
-        WSA extends SchemaAttributes = SchemaAttributes
-      >(
-        insightsState: InsightsState<ISA>,
-        widgetState: WidgetState<WSA>
-      ) => unknown;
-    }
-  | {
-      type: 'constant';
-      value: unknown;
-    };
-
-export type DataSetItemAllowFunction =
-  | DataSetItem
-  | (<
-      ISA extends SchemaAttributes = SchemaAttributes,
-      WSA extends SchemaAttributes = SchemaAttributes
-    >(
-      insightsState: InsightsState<ISA>,
-      widgetState: WidgetState<WSA>
-    ) => DataSetItem);
+export function defineChartInfo(chartInfo: ChartInfo): ChartInfo {
+  return chartInfo;
+}

@@ -35,6 +35,10 @@ export function FunnelChart({
   const valueFormatter = createLongAxisFormatter(item.dataTick);
 
   const transformedData = useMemo(() => {
+    if (!data?.length) {
+      return [];
+    }
+
     let total = data[0][item.dataKey] ?? 0;
 
     return data.map((dataItem, index) => {
@@ -96,3 +100,5 @@ export function FunnelChart({
     </ResponsiveContainer>
   );
 }
+
+export default FunnelChart;

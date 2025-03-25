@@ -7,11 +7,12 @@ import {
 } from '@headless-adminapp/core/schema';
 import { Filter } from '@headless-adminapp/core/transport';
 import {
+  QueryClient,
   QueryKey,
   useInfiniteQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 const ROWS_PER_PAGE = 100;
 
@@ -61,25 +62,32 @@ export function useClearDataExceptFirstPage(queryKey: QueryKey) {
   useEffect(() => {
     return () => {
       // Clear all pages except the first one when the component is unmounted
-      queryClient.setQueryData(
-        queryKey,
-        (oldData: { pageParams: unknown[]; pages: unknown[] }) => {
-          if (!oldData) {
-            return oldData;
-          }
-
-          if (!oldData.pageParams.length || !oldData.pages.length) {
-            return oldData;
-          }
-
-          return {
-            pageParams: [oldData.pageParams[0]],
-            pages: [oldData.pages[0]],
-          };
-        }
-      );
+      clearDataExceptFirstPage(queryClient, queryKey);
     };
   }, [queryClient, queryKey]);
+}
+
+function clearDataExceptFirstPage(
+  queryClient: QueryClient,
+  queryKey: QueryKey
+) {
+  queryClient.setQueryData(
+    queryKey,
+    (oldData: { pageParams: unknown[]; pages: unknown[] }) => {
+      if (!oldData) {
+        return oldData;
+      }
+
+      if (!oldData.pageParams.length || !oldData.pages.length) {
+        return oldData;
+      }
+
+      return {
+        pageParams: [oldData.pageParams[0]],
+        pages: [oldData.pages[0]],
+      };
+    }
+  );
 }
 
 export function useRetriveRecordsInternal<
@@ -98,6 +106,7 @@ export function useRetriveRecordsInternal<
   }: UseRetriveRecordProps<S>
 ) {
   const dataService = useDataService();
+  const queryClient = useQueryClient();
 
   const { data, isFetching, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery({
@@ -168,12 +177,22 @@ export function useRetriveRecordsInternal<
     };
   }, [data]);
 
+  const refech = useCallback(() => {
+    clearDataExceptFirstPage(queryClient, queryKey);
+    queryClient
+      .resetQueries({
+        queryKey,
+      })
+      .catch(console.error);
+  }, []);
+
   return {
     data: finalData,
     isFetching,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    refetch: refech,
   };
 }
 

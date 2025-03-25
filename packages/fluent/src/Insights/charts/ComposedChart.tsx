@@ -1,5 +1,6 @@
 import { tokens } from '@fluentui/react-components';
 import { ComposedChartInfo } from '@headless-adminapp/core/experience/insights';
+import { useId } from 'react';
 import {
   ComposedChart as ComposedChartInternal,
   ResponsiveContainer,
@@ -25,6 +26,7 @@ export function ComposedChart({
   dataset: any[];
   chartInfo: ComposedChartInfo;
 }) {
+  const id = useId();
   const xAxis = chartInfo.xAxis;
   const yAxis = chartInfo.yAxis;
 
@@ -37,8 +39,8 @@ export function ComposedChart({
         {renderGrid()}
         {renderYAxis(yAxis)}
         {renderXAxis(xAxis, !!chartInfo.bars?.length)}
-        {renderLines(chartInfo.lines ?? [], dataset)}
-        {renderAreas(chartInfo.areas ?? [], dataset)}
+        {renderLines(chartInfo.lines ?? [])}
+        {renderAreas(chartInfo.areas ?? [], id)}
         {renderBars(chartInfo.bars ?? [], dataset)}
         <Tooltip
           cursor={{
@@ -59,3 +61,5 @@ export function ComposedChart({
     </ResponsiveContainer>
   );
 }
+
+export default ComposedChart;

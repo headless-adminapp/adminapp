@@ -53,8 +53,6 @@ export const RecordAvatar: FC = () => {
       return;
     }
 
-    console.log('onChange', value);
-
     try {
       showProgressIndicator();
 
