@@ -26,6 +26,7 @@ import { SwitchControl } from '../form/controls/SwitchControl';
 import { TelephoneControl } from '../form/controls/TelephoneControl';
 import { TextAreaControl } from '../form/controls/TextAreaControl';
 import { TextControl } from '../form/controls/TextControl';
+import { TimeControl } from '../form/controls/TimeControl';
 import { UrlControl } from '../form/controls/UrlControl';
 
 // Standard Control (Base control)
@@ -177,6 +178,25 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
             componentStore.getComponent<typeof DurationControl>(
               'Form.DurationControl'
             ) ?? DurationControl;
+
+          return (
+            <Control
+              name={name}
+              placeholder={placeholder}
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={isError}
+              disabled={isDisabled}
+              readOnly={readOnly}
+            />
+          );
+        }
+        case 'time': {
+          const Control =
+            componentStore.getComponent<typeof TimeControl>(
+              'Form.TimeControl'
+            ) ?? TimeControl;
 
           return (
             <Control
