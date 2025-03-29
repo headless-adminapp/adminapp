@@ -21,6 +21,7 @@ export function SectionControlWrapper(
       validationState={props.isError ? 'error' : undefined}
       validationMessage={props.errorMessage}
       validationMessageIcon={null}
+      style={{ paddingLeft: props.labelHidden ? 0 : undefined }}
     >
       {props.children}
     </Field>
