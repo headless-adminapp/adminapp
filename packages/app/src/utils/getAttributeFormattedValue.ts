@@ -5,6 +5,7 @@ import {
   DataLookup,
   DateAttribute,
   InferredAttributeType,
+  NumberAttribute,
 } from '@headless-adminapp/core/attributes';
 import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
 import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
@@ -177,6 +178,75 @@ function getAttributeMoneyFormattedValue(
   }).format(value as number);
 }
 
+function getAttributeNumberFormattedValue(
+  attribute: NumberAttribute,
+  value: unknown,
+  options?: {
+    locale?: string;
+    currency?: string;
+    currencySign?: 'accounting' | 'standard';
+    currencyDisplay?: 'symbol' | 'narrowSymbol' | 'code';
+    timeFormat?: string;
+  }
+) {
+  if (attribute.format === 'duration') {
+    return formatDuration(value as number);
+  }
+
+  if (attribute.format === 'time') {
+    return dayjs()
+      .startOf('day')
+      .add(value as number, 'minutes')
+      .format(options?.timeFormat ?? defaultTimeFormat);
+  }
+
+  return new Intl.NumberFormat(options?.locale).format(value as number);
+}
+
+export function formatDuration(value: number | null) {
+  if (!value) {
+    return '';
+  }
+
+  // No decimal, if value is decimal, round to nearest whole number
+  // 1 - 1 minute
+  // 2-59 minutes -> 2-59 minutes
+  // 90 minutes -> 1.5 hours
+  // more than a day -> 1 day, 1.5 days, 2 days, etc.
+
+  // check if value has decimal
+  if (value % 1 !== 0) {
+    // round to nearest whole number
+    value = Math.round(value);
+  }
+
+  if (!value) {
+    return '';
+  }
+
+  if (value === 1) {
+    return '1 minute';
+  }
+
+  if (value < 60) {
+    return `${value} minutes`;
+  }
+
+  if (value === 60) {
+    return '1 hour';
+  }
+
+  if (value < 1440) {
+    return `${Number((value / 60).toFixed(2))} hours`;
+  }
+
+  if (value === 1440) {
+    return '1 day';
+  }
+
+  return `${Number((value / 1440).toFixed(2))} days`;
+}
+
 export function getAttributeFormattedValue<A extends Attribute = Attribute>(
   attribute: Attribute,
   value: InferredAttributeType<A> | null | undefined,
@@ -197,7 +267,6 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
     return null;
   }
 
-  const locale = options?.locale ?? defaultLocale;
   const region = options?.region ?? 'US';
 
   switch (attribute.type) {
@@ -218,7 +287,7 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
     case 'money':
       return getAttributeMoneyFormattedValue(value, options);
     case 'number':
-      return new Intl.NumberFormat(locale).format(value as number);
+      return getAttributeNumberFormattedValue(attribute, value, options);
     case 'attachment':
       return getAttributeAttachmentFormattedValue(value);
     case 'string':

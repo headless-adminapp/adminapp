@@ -92,7 +92,8 @@ export function SectionContainer<
               return null;
             }
 
-            let Control = StandardControl;
+            let Control: React.ComponentType<StandardControlProps> =
+              StandardControl;
 
             if (control.component) {
               if (typeof control.component === 'function') {
@@ -149,9 +150,12 @@ export function SectionContainer<
                       control.label ??
                       attribute.label;
 
+                    const labelHidden = control.labelHidden;
+
                     return (
                       <SectionControlWrapper
                         label={label}
+                        labelHidden={labelHidden}
                         labelPosition={isMobile ? 'top' : section.labelPosition}
                         required={required}
                         isError={isError}

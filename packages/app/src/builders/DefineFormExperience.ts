@@ -23,7 +23,7 @@ export namespace DefineFormExperience {
       > & {
         tabs: Tab<S>[];
       })
-    | (keyof S)[];
+    | SectionControl<S>[];
 
   export function resolveExperience<
     S extends SchemaAttributes = SchemaAttributes
@@ -59,12 +59,12 @@ export namespace DefineFormExperience {
   }
 
   type Tab<S extends SchemaAttributes = SchemaAttributes> =
-    | Pick<$Tab<S>, 'label' | 'localizedLabels' | 'name'> &
-        (
+    | Pick<$Tab<S>, 'label' | 'localizedLabels' | 'name'> & {
+        columnCount?: $Tab<S>['columnCount'];
+        columnWidths?: $Tab<S>['columnWidths'];
+      } & (
           | {
               tabColumns: TabColumn<S>[];
-              columnCount?: $Tab<S>['columnCount'];
-              columnWidths?: $Tab<S>['columnWidths'];
             }
           | {
               sections: Section<S>[];
@@ -83,19 +83,17 @@ export namespace DefineFormExperience {
       localizedLabels: v.localizedLabels,
     } as $Tab<S>;
 
+    tab.columnCount = v.columnCount ?? 2;
+    tab.columnWidths = v.columnWidths;
     if ('tabColumns' in v) {
-      tab.columnCount = v.columnCount ?? 2;
-      tab.columnWidths = v.columnWidths;
       tab.tabColumns = v.tabColumns.map(resolveTabColumn);
     } else if ('sections' in v) {
-      tab.columnCount = 2;
       tab.tabColumns = [
         {
           sections: v.sections.map(resolveSection),
         },
       ];
     } else if ('controls' in v) {
-      tab.columnCount = 2;
       tab.tabColumns = [
         {
           sections: [

@@ -34,7 +34,7 @@ export type CalendarEventsResolverFn<
 
 export type CalendarEventResolverFn<T extends CalendarEvent = CalendarEvent> = (
   id: string
-) => Promise<T>;
+) => Promise<Partial<T>>;
 
 export type CalendarEventSaveData<
   SA1 extends SchemaAttributes = SchemaAttributes,

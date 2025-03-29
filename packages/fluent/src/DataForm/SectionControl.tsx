@@ -4,6 +4,7 @@ import { PropsWithChildren } from 'react';
 interface SectionControlWrapperProps {
   label: string;
   labelPosition?: 'top' | 'left';
+  labelHidden?: boolean;
   required?: boolean;
   isError?: boolean;
   errorMessage?: string;
@@ -14,9 +15,9 @@ export function SectionControlWrapper(
 ) {
   return (
     <Field
-      label={props.label}
+      label={props.labelHidden ? undefined : props.label}
       orientation={props.labelPosition === 'top' ? 'vertical' : 'horizontal'}
-      required={props.required}
+      required={props.labelHidden ? undefined : props.required}
       validationState={props.isError ? 'error' : undefined}
       validationMessage={props.errorMessage}
       validationMessageIcon={null}

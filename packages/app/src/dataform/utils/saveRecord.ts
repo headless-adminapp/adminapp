@@ -37,7 +37,7 @@ export function getModifiedValues(
   }, {} as Record<string, any>);
 }
 
-type SaveRecordResult =
+export type SaveRecordResult =
   | {
       success: true;
       recordId: string;
@@ -258,12 +258,14 @@ async function updateRecord({
   };
 }
 
-export interface SaveRecordFnOptions {
+export interface SaveRecordFnOptions<
+  S extends SchemaAttributes = SchemaAttributes
+> {
   values: any;
-  form: Form<SchemaAttributes>;
-  record: InferredSchemaType<SchemaAttributes> | undefined;
-  initialValues: Nullable<InferredSchemaType<SchemaAttributes>>;
-  schema: Schema<SchemaAttributes>;
+  form: Form<S>;
+  record: InferredSchemaType<S> | undefined;
+  initialValues: Nullable<InferredSchemaType<S>>;
+  schema: Schema<S>;
   dataService: IDataService;
   schemaStore: ISchemaStore;
 }

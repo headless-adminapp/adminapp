@@ -34,8 +34,6 @@ import {
   mergeConditions,
 } from './utils';
 
-const MAX_RECORDS = 10000;
-
 export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
   const schema = useDataGridSchema();
   const view = useSelectedView();
@@ -45,7 +43,7 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
   const extraFilter = useGridExtraFilter();
   const [columnFilters] = useGridColumnFilter();
   const gridColumns = useGridColumns();
-  const maxRecords = useMaxRecords() ?? MAX_RECORDS;
+  const maxRecords = useMaxRecords();
   const [selectedIds] = useGridSelection();
   const disabled = useGridDisabled();
 

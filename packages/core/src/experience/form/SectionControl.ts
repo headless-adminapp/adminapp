@@ -43,7 +43,7 @@ export interface SectionStatndardControl<
 > extends BaseSectionControl {
   type: 'standard';
   attributeName: keyof S;
-  component?: string | ((props: StandardControlProps) => JSX.Element | null); // Component or unique name of component from registry to override default component
+  component?: string | React.ComponentType<StandardControlProps>; // Component or unique name of component from registry to override default component
 }
 
 export interface SectionSpacerControl extends BaseSectionControl {
@@ -54,7 +54,7 @@ export interface SectionSubgridControl extends BaseSectionControl {
   type: 'subgrid';
   logicalName: string;
   // attributeName: string;
-  viewId: string;
+  viewId?: string;
   availableViewIds?: string[];
   allowViewSelection?: boolean;
   // noAssociateFilter?: boolean;

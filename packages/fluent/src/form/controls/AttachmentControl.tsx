@@ -30,7 +30,7 @@ interface UseAttachmentSelectorOptions {
   fileService: IFileService | null; // required for remote location
   fileServiceContext?: Record<string, unknown>;
   location: AttachmentAttribute['location'];
-  onChange?: (fileObject: FileObject) => void;
+  onChange?: (fileObject: FileObject) => void | Promise<void>;
 }
 
 export function useAttachmentSelector({
@@ -57,8 +57,8 @@ export function useAttachmentSelector({
         return urlToFileObject(url);
       }
     },
-    onSuccess: (fileObject: FileObject) => {
-      onChange?.(fileObject);
+    onSuccess: async (fileObject: FileObject) => {
+      await onChange?.(fileObject);
     },
     onError: (error) => {
       console.error(error);

@@ -15,6 +15,7 @@ import {
 import { useCallback, useEffect, useMemo } from 'react';
 
 const ROWS_PER_PAGE = 100;
+const MAX_RECORDS = 10000;
 
 interface UseRetriveRecordProps<S extends SchemaAttributes = SchemaAttributes> {
   schema: Schema<S>;
@@ -23,7 +24,7 @@ interface UseRetriveRecordProps<S extends SchemaAttributes = SchemaAttributes> {
   sorting?: SortingState<S>;
   columns: string[];
   expand?: Partial<Record<string, string[]>>;
-  maxRecords: number;
+  maxRecords?: number;
   disabled?: boolean;
 }
 
@@ -118,8 +119,10 @@ export function useRetriveRecordsInternal<
           pageIndex: 0,
         };
 
+        const _maxRecords = maxRecords ?? MAX_RECORDS;
+
         const skip = params.pageIndex * ROWS_PER_PAGE;
-        const limit = Math.min(ROWS_PER_PAGE, Math.max(0, maxRecords - skip));
+        const limit = Math.min(ROWS_PER_PAGE, Math.max(0, _maxRecords - skip));
 
         if (limit <= 0) {
           return {
