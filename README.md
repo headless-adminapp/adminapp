@@ -4,9 +4,21 @@ Headless AdminApp is a web-based application designed to manage administrative t
 
 [Documentation](https://headless-adminapp.github.io/) | [Demo](https://headless-adminapp-examples.vercel.app) | [Examples](https://github.com/kishanmundha/headless-adminapp-examples) | [Boilerplate](https://github.com/headless-adminapp/boilerplate)
 
-![Board](screenshots/board.png)
-![DataGrid](screenshots/datagrid.png)
-![Form](screenshots/form.png)
+## Screenshots
+
+Here are some screenshots showcasing the features of Headless AdminApp:
+
+| ![Dashboard](screenshots/dashboard.png) |
+| --------------------------------------- |
+| **Dashboard**                           |
+
+| ![Board](screenshots/board.png) | ![Calendar](screenshots/calendar.png) |
+| ------------------------------- | ------------------------------------- |
+| **Board**                       | **Calendar**                          |
+
+| ![DataGrid](screenshots/datagrid.png) | ![Form](screenshots/form.png) |
+| ------------------------------------- | ----------------------------- |
+| **Data Listing**                      | **Form**                      |
 
 ## Features
 
