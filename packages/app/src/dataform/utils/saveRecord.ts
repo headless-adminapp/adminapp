@@ -1,3 +1,4 @@
+import { Id } from '@headless-adminapp/core';
 import {
   Form,
   SectionEditableGridControl,
@@ -40,7 +41,7 @@ export function getModifiedValues(
 export type SaveRecordResult =
   | {
       success: true;
-      recordId: string;
+      recordId: Id;
     }
   | {
       success: false;
@@ -169,7 +170,7 @@ async function createRecord({
 
   const result = await dataService.createRecord(schema.logicalName, values);
 
-  const recordId = (result as any)[schema.idAttribute] as string;
+  const recordId = result.id;
 
   for (const control of editableGridControls) {
     const gridRows = values[control.attributeName] as any[];
@@ -283,7 +284,7 @@ export async function saveRecord({
   record,
   schemaStore,
 }: SaveRecordFnOptions): Promise<SaveRecordResult> {
-  let recordId: string;
+  let recordId: Id;
 
   if (record) {
     recordId = record[schema.idAttribute] as string;
