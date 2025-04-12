@@ -108,6 +108,7 @@ export function defineModel<S extends MongoRequiredSchemaAttributes>(
           createdAt: !!schema.createdAtAttribute,
           updatedAt: !!schema.updatedAtAttribute,
         },
+        autoCreate: !schema.virtual, // Don't create a collection for virtual schemas
       }
     );
 

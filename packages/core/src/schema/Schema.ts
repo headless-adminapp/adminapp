@@ -21,6 +21,7 @@ export interface Schema<A extends SchemaAttributes = SchemaAttributes>
   updatedAtAttribute?: keyof A;
   avatarAttribute?: keyof A;
   ownership?: 'scoped' | 'global'; // Scoped means user can only see records they have permission to see, global means user can see all records
+  virtual?: boolean; // Not a physical collection and used for query only
   additionalMetadata?: Record<string, any>; // Additional metadata
   attributes: A;
   restrictions?: {

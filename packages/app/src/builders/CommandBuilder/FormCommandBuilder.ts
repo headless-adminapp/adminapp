@@ -19,6 +19,10 @@ namespace EnabledRules {
   export function HasDeletePermission(context: EntityFormCommandContext) {
     return !context.primaryControl.schema.restrictions?.disableDelete;
   }
+
+  export function IsPhysicalSchema(context: EntityFormCommandContext) {
+    return !context.primaryControl.schema.virtual;
+  }
 }
 
 export namespace FormCommandBuilder {
@@ -42,6 +46,10 @@ export namespace FormCommandBuilder {
       },
       hidden: [
         (context) => {
+          if (!EnabledRules.IsPhysicalSchema(context)) {
+            return true;
+          }
+
           if (context.primaryControl.readonly) {
             return true;
           }
@@ -75,6 +83,10 @@ export namespace FormCommandBuilder {
       },
       hidden: [
         (context) => {
+          if (!EnabledRules.IsPhysicalSchema(context)) {
+            return true;
+          }
+
           if (context.primaryControl.readonly) {
             return true;
           }
@@ -154,6 +166,10 @@ export namespace FormCommandBuilder {
       localizedText: localizedTexts,
       danger: true,
       hidden: (context) => {
+        if (!EnabledRules.IsPhysicalSchema(context)) {
+          return true;
+        }
+
         if (!context.primaryControl.recordId) {
           return true;
         }

@@ -22,6 +22,10 @@ export function ReadonlyInfoResolver({
     readonly = true;
   }
 
+  if (schema.virtual) {
+    readonly = true;
+  }
+
   const setValue = useContextSetValue(DataFormContext);
 
   useEffect(() => {

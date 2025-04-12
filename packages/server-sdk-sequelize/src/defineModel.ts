@@ -72,7 +72,7 @@ function resolveIdAttribute(
         modelAttribute.type = DataTypes.UUID;
         modelAttribute.defaultValue = () => uuid();
       } else {
-        throw new Error('Invalid type for id attribute');
+        modelAttribute.type = DataTypes.STRING;
       }
     }
   }
@@ -80,8 +80,15 @@ function resolveIdAttribute(
   return modelAttribute;
 }
 
-function resolveLookupAttribute(attribute: LookupAttribute) {
+function resolveLookupAttribute(
+  attribute: LookupAttribute,
+  isSchemaIdAttribute: boolean
+) {
   const modelAttribute = {} as ModelAttributeColumnOptions;
+
+  if (isSchemaIdAttribute) {
+    modelAttribute.primaryKey = true;
+  }
 
   if ('number' in attribute && attribute.number) {
     modelAttribute.type = DataTypes.INTEGER;
@@ -176,7 +183,10 @@ function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
         acc[key] = resolveChoicesAttribute(attribute);
         break;
       case 'lookup':
-        acc[key] = resolveLookupAttribute(attribute);
+        acc[key] = resolveLookupAttribute(
+          attribute,
+          schema.idAttribute === key
+        );
         break;
       case 'mixed':
         acc[key] = { type: DataTypes.JSONB };
@@ -191,7 +201,7 @@ function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
     return acc;
   }, {} as Record<string, any>);
 
-  return sequelize.define(name, sequelizeSchema, {
+  const defination = sequelize.define(name, sequelizeSchema, {
     createdAt: schema.createdAtAttribute
       ? (schema.createdAtAttribute as string)
       : false,
@@ -201,6 +211,13 @@ function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
     freezeTableName: true,
     tableName: schema.collectionName ?? schema.logicalName,
   });
+
+  if (schema.virtual) {
+    // Do not sync
+    defination.sync = (() => Promise.resolve()) as any;
+  }
+
+  return defination;
 }
 
 export function defineModel<S extends SequelizeRequiredSchemaAttributes>(

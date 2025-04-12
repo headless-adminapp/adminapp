@@ -22,7 +22,7 @@ export default function SelectControl<T extends string | number>({
   onBlur,
   onFocus,
   placeholder,
-}: SelectControlProps<T>) {
+}: Readonly<SelectControlProps<T>>) {
   const transformedOptions = useMemo(
     () => options.map((x) => ({ label: x.label, value: String(x.value) })),
     [options]
@@ -57,37 +57,7 @@ export default function SelectControl<T extends string | number>({
       }}
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}
-      // error={error}
-      disabled={disabled}
-      // readOnly={readOnly}
-      // clearable
-      // size="sm"
-      // {...(value
-      //   ? {
-      //       endDecorator: (
-      //         <IconButton
-      //           size="sm"
-      //           variant="plain"
-      //           color="neutral"
-      //           onMouseDown={(event) => {
-      //             // don't open the popup when clicking on this button
-      //             event.stopPropagation();
-      //           }}
-      //           onClick={() => {
-      //             handleChange('');
-      //             // action.current?.focusVisible();
-      //           }}
-      //           sx={{
-      //             minHeight: '1.5rem !important',
-      //             minWidth: '1.5rem !important',
-      //           }}
-      //         >
-      //           <X size={14} />
-      //         </IconButton>
-      //       ),
-      //       indicator: null,
-      //     }
-      //   : {})}
+      style={{ pointerEvents: disabled ? 'none' : undefined }}
     >
       {transformedOptions.map((x) => (
         <Option key={x.value} value={x.value}>

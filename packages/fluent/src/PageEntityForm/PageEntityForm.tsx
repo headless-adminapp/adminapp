@@ -38,6 +38,28 @@ export const PageEntityForm: FC<PageEntityFormProps> = ({
 
   const { schema, form, commands } = result;
 
+  if (!recordId) {
+    if (schema.virtual) {
+      return (
+        <PageBroken
+          Icon={Icons.Error}
+          title="Virtual Schema"
+          message="This schema is virtual and cannot be used in this context."
+        />
+      );
+    }
+
+    if (schema.restrictions?.disableCreate) {
+      return (
+        <PageBroken
+          Icon={Icons.Error}
+          title="Creating is disabled"
+          message="Creating records is disabled for this entity."
+        />
+      );
+    }
+  }
+
   return (
     <PageEntityFormProvider
       schema={schema}

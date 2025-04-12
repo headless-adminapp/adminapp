@@ -70,17 +70,29 @@ export abstract class ServerSdk<
     if (schema.restrictions?.disableCreate) {
       throw new ForbiddenError('Creating is disabled for this entity');
     }
+
+    if (schema.virtual) {
+      throw new ForbiddenError('Creating is not allowed for virtual entities');
+    }
   }
 
   protected async validateUpdate(schema: Schema<SA>) {
     if (schema.restrictions?.disableUpdate) {
       throw new ForbiddenError('Updating is disabled for this entity');
     }
+
+    if (schema.virtual) {
+      throw new ForbiddenError('Updating is not allowed for virtual entities');
+    }
   }
 
   protected async validateDelete(schema: Schema<SA>) {
     if (schema.restrictions?.disableDelete) {
       throw new ForbiddenError('Deleting is disabled for this entity');
+    }
+
+    if (schema.virtual) {
+      throw new ForbiddenError('Deleting is not allowed for virtual entities');
     }
   }
 

@@ -33,6 +33,10 @@ namespace EnabledRules {
   ) {
     return context.secondaryControl.selectedIds.length > 0;
   }
+
+  export function IsPhysicalSchema(context: EntitySubGridCommandContext) {
+    return !context.secondaryControl.schema.virtual;
+  }
 }
 
 export namespace SubgridCommandBuilder {
@@ -68,7 +72,10 @@ export namespace SubgridCommandBuilder {
           });
         }
       },
-      hidden: (context) => !EnabledRules.HasCreatePermisssion(context),
+      hidden: [
+        (context) => !EnabledRules.HasCreatePermisssion(context),
+        (context) => !EnabledRules.IsPhysicalSchema(context),
+      ],
     };
   }
 
@@ -92,7 +99,37 @@ export namespace SubgridCommandBuilder {
           context.secondaryControl.selectedIds[0]
         );
       },
-      hidden: [(context) => !EnabledRules.HasSingleRecordSelected(context)],
+      hidden: [
+        (context) => !EnabledRules.HasSingleRecordSelected(context),
+        (context) => !EnabledRules.IsPhysicalSchema(context),
+      ],
+    };
+  }
+
+  export function createViewRecordCommand({
+    Icon,
+    text,
+    localizedTexts,
+  }: {
+    Icon: Icon;
+    text: string;
+    localizedTexts?: Record<string, string>;
+  }): SubGridCommandItemExperience {
+    return {
+      type: 'button',
+      Icon,
+      text,
+      localizedText: localizedTexts,
+      isContextMenu: true,
+      onClick: (context) => {
+        context.secondaryControl.openRecord(
+          context.secondaryControl.selectedIds[0]
+        );
+      },
+      hidden: [
+        (context) => !EnabledRules.HasSingleRecordSelected(context),
+        (context) => EnabledRules.IsPhysicalSchema(context),
+      ],
     };
   }
 
@@ -208,6 +245,7 @@ export namespace SubgridCommandBuilder {
       hidden: [
         (context) => !EnabledRules.HasAtLeastOneRecordSelected(context),
         (context) => !EnabledRules.HasDeletePermission(context),
+        (context) => !EnabledRules.IsPhysicalSchema(context),
       ],
     };
   }

@@ -14,6 +14,7 @@ export namespace DefaultCommandBuilder {
   interface CreateDefaultViewCommandStrings {
     new: string;
     edit: string;
+    view: string;
     delete: string;
     refresh: string;
     export: string;
@@ -25,6 +26,7 @@ export namespace DefaultCommandBuilder {
   export const defaultViewCommandStrings: CreateDefaultViewCommandStrings = {
     new: 'New',
     edit: 'Edit',
+    view: 'View',
     delete: 'Delete',
     deleteRecordCommandStringSet:
       ViewCommandBuilder.defaultDeleteRecordStringSet,
@@ -38,6 +40,7 @@ export namespace DefaultCommandBuilder {
     icons: {
       New: Icon;
       Edit: Icon;
+      View: Icon;
       Delete: Icon;
       Refresh: Icon;
       Export: Icon;
@@ -84,6 +87,14 @@ export namespace DefaultCommandBuilder {
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
             (x) => x.edit
+          ),
+        }),
+        ViewCommandBuilder.createViewRecordCommand({
+          Icon: icons.View,
+          text: strings.view,
+          localizedTexts: extractLocalizedStrings(
+            localizedSrings,
+            (x) => x.view
           ),
         }),
         ViewCommandBuilder.createDeleteRecordCommand({
@@ -218,6 +229,7 @@ export namespace DefaultCommandBuilder {
   interface CreateDefaultSubgridCommandStrings {
     new: string;
     edit: string;
+    view: string;
     delete: string;
     refresh: string;
     export: string;
@@ -230,6 +242,7 @@ export namespace DefaultCommandBuilder {
     icons: {
       New: Icon;
       Edit: Icon;
+      View: Icon;
       Delete: Icon;
       Refresh: Icon;
       Export: Icon;
@@ -243,6 +256,7 @@ export namespace DefaultCommandBuilder {
   const defaultSubgridCommandStrings: CreateDefaultSubgridCommandStrings = {
     new: 'New',
     edit: 'Edit',
+    view: 'View',
     delete: 'Delete',
     refresh: 'Refresh',
     export: 'Export',
@@ -273,6 +287,14 @@ export namespace DefaultCommandBuilder {
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
             (x) => x.edit
+          ),
+        }),
+        SubgridCommandBuilder.createEditRecordCommand({
+          Icon: icons.View,
+          text: strings.view,
+          localizedTexts: extractLocalizedStrings(
+            localizedSrings,
+            (x) => x.view
           ),
         }),
         SubgridCommandBuilder.createDeleteRecordCommand({
