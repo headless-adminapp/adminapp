@@ -123,6 +123,7 @@ const FormTabInternal: FC<PropsWithChildren<FormTabProps>> = ({
           gridRowGap: 12,
           gridColumnGap: 12,
           gridTemplateColumns: template,
+          flex: 1,
         }}
       >
         {children}

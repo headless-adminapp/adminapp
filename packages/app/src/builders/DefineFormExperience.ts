@@ -136,6 +136,7 @@ export namespace DefineFormExperience {
         | 'hidden'
         | 'hideLabel'
         | 'noPadding'
+        | 'fullHeight'
       > & {
         controls: SectionControl<S>[];
       };

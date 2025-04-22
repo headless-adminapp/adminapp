@@ -25,6 +25,8 @@ export interface StandardControlProps {
   quickViewControl?: boolean;
   allowNavigation?: boolean;
   allowNewRecord?: boolean;
+  autoHeight?: boolean;
+  maxHeight?: number;
 }
 
 export interface BaseSectionControl {
@@ -44,6 +46,8 @@ export interface SectionStatndardControl<
   type: 'standard';
   attributeName: keyof S;
   component?: string | React.ComponentType<StandardControlProps>; // Component or unique name of component from registry to override default component
+  autoHeight?: boolean; // auto height for the control
+  maxHeight?: number; // max height for the control
 }
 
 export interface SectionSpacerControl extends BaseSectionControl {

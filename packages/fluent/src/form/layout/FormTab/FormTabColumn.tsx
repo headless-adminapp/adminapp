@@ -20,6 +20,7 @@ export const FormTabColumn: FC<PropsWithChildren<FormTabColumnProps>> = ({
           flexDirection: 'column',
           width: '100%',
           gap: tokens.spacingVerticalM,
+          minHeight: '100%',
         }}
       >
         {children}

@@ -14,7 +14,7 @@ import {
 } from '@fluentui/react-components';
 import { useAppContext } from '@headless-adminapp/app/app';
 import { useDebouncedValue } from '@headless-adminapp/app/hooks';
-import { useMetadata } from '@headless-adminapp/app/metadata';
+import { useMetadata } from '@headless-adminapp/app/metadata/hooks/useMetadata';
 import {
   useRouter,
   useRouteResolver,

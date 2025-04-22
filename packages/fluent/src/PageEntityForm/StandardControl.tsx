@@ -55,6 +55,8 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     // quickViewControl,
     allowNavigation,
     allowNewRecord,
+    autoHeight,
+    maxHeight,
   } = props;
   const isDisabled = readOnly;
   // const label = hideLabel ? undefined : _label ?? attribute.label;
@@ -120,7 +122,13 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
             componentStore.getComponent<typeof TextAreaControl>(
               'Form.TextAreaControl'
             ) ?? TextAreaControl;
-          return <Control {...controlProps} />;
+          return (
+            <Control
+              {...controlProps}
+              autoHeight={autoHeight}
+              maxHeight={maxHeight}
+            />
+          );
         }
         case 'richtext': {
           const Control =

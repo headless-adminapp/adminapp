@@ -7,6 +7,7 @@ export interface Section<S extends SchemaAttributes = SchemaAttributes> {
   label: string;
   localizedLabels?: Localized<string>;
   hideLabel?: boolean;
+  fullHeight?: boolean;
   noPadding?: boolean;
   hidden?: boolean;
   columnCount?: 1 | 2 | 3 | 4;

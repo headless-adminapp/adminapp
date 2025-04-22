@@ -1,6 +1,6 @@
-import { useAppContext } from '@headless-adminapp/app/app';
 import { useQuery } from '@tanstack/react-query';
 
+import { useAppContext } from '../../app/hooks/useAppContext';
 import { useExperienceStore } from './useExperienceStore';
 
 /** @todo move in different dir */

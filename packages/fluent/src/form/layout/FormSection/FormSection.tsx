@@ -27,7 +27,15 @@ interface FormSectionProps {
 export const FormSection: FC<PropsWithChildren<FormSectionProps>> & {
   Column: typeof FormSectionColumn;
   Loading: typeof FormSectionLoading;
-} = ({ title, children, columnCount, labelPosition, noPadding, hideLabel }) => {
+} = ({
+  title,
+  children,
+  columnCount,
+  labelPosition,
+  noPadding,
+  hideLabel,
+  fullHeight,
+}) => {
   // const columnCount = 2;
   const divRef = useRef<HTMLDivElement>(null);
 
@@ -100,9 +108,18 @@ export const FormSection: FC<PropsWithChildren<FormSectionProps>> & {
         boxShadow: tokens.shadow2,
         borderRadius: tokens.borderRadiusMedium,
         background: tokens.colorNeutralBackground1,
+        display: 'flex',
+        flexDirection: 'column',
+        flex: fullHeight ? 1 : undefined,
       }}
     >
-      <div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          flex: fullHeight ? 1 : undefined,
+        }}
+      >
         {!hideLabel && !!title && (
           <Fragment>
             <div

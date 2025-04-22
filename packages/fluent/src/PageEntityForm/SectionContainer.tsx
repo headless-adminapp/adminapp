@@ -79,6 +79,7 @@ export function SectionContainer<
       labelPosition={section.labelPosition}
       noPadding={section.noPadding}
       hideLabel={section.hideLabel}
+      fullHeight={section.fullHeight}
     >
       {visibleControls.map((control, index) => {
         switch (control.type) {
@@ -189,6 +190,8 @@ export function SectionContainer<
                             attributeName: control.attributeName,
                             logicalName: schema.logicalName,
                           }}
+                          autoHeight={control.autoHeight}
+                          maxHeight={control.maxHeight}
                         />
                       </SectionControlWrapper>
                     );
