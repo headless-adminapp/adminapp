@@ -20,6 +20,7 @@ import { IntegerControl } from '../form/controls/IntegerControl';
 import { LookupControl } from '../form/controls/LookupControl';
 import MultiSelectControl from '../form/controls/MultiSelectControl';
 import { MultiSelectLookupControl } from '../form/controls/MultiSelectLookupControl';
+import { RegardingControl } from '../form/controls/RegardingControl';
 import { RichTextControl } from '../form/controls/RichTextControl';
 import SelectControl from '../form/controls/SelectControl';
 import { SwitchControl } from '../form/controls/SwitchControl';
@@ -317,6 +318,28 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           disabled={isDisabled}
           dataService={dataService}
           schema={schemaStore.getSchema(attribute.entity)}
+          experienceStore={experienceStore}
+          allowNavigation={allowNavigation}
+          allowNewRecord={allowNewRecord}
+        />
+      );
+    }
+    case 'regarding': {
+      const Control =
+        componentStore.getComponent<typeof RegardingControl>(
+          'Form.RegardingControl'
+        ) ?? RegardingControl;
+      return (
+        <Control
+          name={name}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          disabled={isDisabled}
+          dataService={dataService}
+          entities={attribute.entities}
+          schemaStore={schemaStore}
           experienceStore={experienceStore}
           allowNavigation={allowNavigation}
           allowNewRecord={allowNewRecord}

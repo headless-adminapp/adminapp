@@ -30,7 +30,7 @@ import { SubgridControl } from './SubgridControl';
 
 export function SectionContainer<
   S extends SchemaAttributes = SchemaAttributes
->({ section }: { section: Section<S>; readOnly: boolean }) {
+>({ section }: Readonly<{ section: Section<S>; readOnly: boolean }>) {
   const schema = useDataFormSchema<S>();
 
   const formInstance = useFormInstance();
@@ -203,7 +203,7 @@ export function SectionContainer<
           case 'quickview':
             return null;
           case 'subgrid': {
-            let ContainerComponent: FC | null = null;
+            let ContainerComponent: React.ComponentType | null = null;
 
             if (control.component) {
               if (typeof control.component === 'function') {
@@ -235,15 +235,44 @@ export function SectionContainer<
               />
             );
           }
+          case 'component': {
+            const Component =
+              control.component === 'string'
+                ? (componentStore.getComponent(
+                    control.component
+                  ) as React.ComponentType)
+                : control.component;
+
+            if (!Component) {
+              console.warn(
+                `Component ${control.component} not found for control ${control.key}`
+              );
+
+              return null;
+            }
+
+            return (
+              <div
+                key={index}
+                style={{
+                  gridColumn: control.span
+                    ? `var(--section-item-span-${control.span ?? 1})`
+                    : undefined,
+                  display: 'flex',
+                }}
+              >
+                <Component {...control.componentProps} />
+              </div>
+            );
+          }
           case 'spacer':
             return (
               <div
                 key={index}
                 style={{
                   gridColumn: control.span
-                    ? `var(--section-item-span-${control.span})`
+                    ? `var(--section-item-span-${control.span ?? 1})`
                     : undefined,
-                  display: `var(--section-item-spacer-${control.span ?? 1})`,
                 }}
               />
             );

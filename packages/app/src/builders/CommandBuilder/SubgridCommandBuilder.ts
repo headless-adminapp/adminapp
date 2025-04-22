@@ -96,7 +96,8 @@ export namespace SubgridCommandBuilder {
       isContextMenu: true,
       onClick: (context) => {
         context.secondaryControl.openRecord(
-          context.secondaryControl.selectedIds[0]
+          context.secondaryControl.selectedIds[0],
+          context.secondaryControl.schema.logicalName
         );
       },
       hidden: [
@@ -123,7 +124,8 @@ export namespace SubgridCommandBuilder {
       isContextMenu: true,
       onClick: (context) => {
         context.secondaryControl.openRecord(
-          context.secondaryControl.selectedIds[0]
+          context.secondaryControl.selectedIds[0],
+          context.secondaryControl.schema.logicalName
         );
       },
       hidden: [

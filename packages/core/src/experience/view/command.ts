@@ -23,7 +23,7 @@ export interface EntityMainGridCommandContext extends CommandContextBase {
     view: View;
     viewId: string;
     data: RetriveRecordsResult<InferredSchemaType<SchemaAttributes>> | null;
-    openRecord: (id: string) => void;
+    openRecord: (id: string, logicalName: string) => void;
   };
 }
 
@@ -65,7 +65,7 @@ export interface EntitySubGridCommandContext extends CommandContextBase {
           id: string;
           name: string;
         };
-    openRecord: (id: string) => void;
+    openRecord: (id: string, logicalName: string) => void;
   };
 }
 

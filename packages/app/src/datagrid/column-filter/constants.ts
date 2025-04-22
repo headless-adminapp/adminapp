@@ -449,6 +449,29 @@ const lookupOperatorOptions: OperatorOptionConfig[] = [
   },
 ];
 
+const regardingOperatorOptions: OperatorOptionConfig[] = [
+  {
+    value: 'in',
+    labelKey: 'equals',
+    controls: ['regarding'],
+  },
+  {
+    value: 'not-in',
+    labelKey: 'doesNotEqual',
+    controls: ['regarding'],
+  },
+  {
+    value: 'not-null',
+    labelKey: 'containsData',
+    controls: [],
+  },
+  {
+    value: 'null',
+    labelKey: 'doesNotContainData',
+    controls: [],
+  },
+];
+
 const booleanOperatorOptions: OperatorOptionConfig[] = [
   {
     value: 'in',
@@ -526,4 +549,5 @@ export const operatorOptions: Record<AttributeType, OperatorOptionConfig[]> = {
   mixed: mixedOperatorOptions,
   daterange: [],
   lookups: [],
+  regarding: regardingOperatorOptions,
 };

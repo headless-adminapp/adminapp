@@ -19,3 +19,11 @@ export type MultiLookupAttribute = AttributeBase<Id[]> & {
   relatedLabel?: string;
   localizedRelatedLabel?: Localized<string>;
 } & IdTypes;
+
+export type RegardingAttribute = AttributeBase<Id> & {
+  type: 'regarding';
+  behavior?: LookupBehavior;
+  localizedRelatedLabel?: Localized<string>;
+  entities: string[];
+  entityTypeAttribute: string;
+} & IdTypes;

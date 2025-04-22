@@ -1,4 +1,5 @@
 import {
+  Body1,
   Button,
   MessageBar,
   MessageBarBody,
@@ -13,7 +14,7 @@ import { SectionControlWrapper } from '../DataForm/SectionControl';
 import { PasswordControl } from '../form/controls/PasswordControl';
 import { TextControl } from '../form/controls/TextControl';
 
-interface LoginFormData {
+export interface LoginFormData {
   username: string;
   password: string;
 }
@@ -33,11 +34,15 @@ const initialValues = {
 interface LoginFormProps {
   logoImageUrl?: string;
   onLogin: (username: string, password: string) => Promise<void>;
+  beforeLoginContent?: React.ReactNode;
+  afterLoginContent?: React.ReactNode;
+  subtitle?: string;
+  defaultValues?: LoginFormData;
 }
 
 export function LoginForm(props: LoginFormProps) {
   const form = useForm<LoginFormData>({
-    defaultValues: initialValues,
+    defaultValues: props.defaultValues ?? initialValues,
     resolver: yupResolver(validationSchema),
   });
 
@@ -87,6 +92,7 @@ export function LoginForm(props: LoginFormProps) {
           )}
         </div>
         <Subtitle1>Log in to your account</Subtitle1>
+        {props.subtitle && <Body1>{props.subtitle}</Body1>}
         <div
           style={{
             display: 'flex',
@@ -144,6 +150,7 @@ export function LoginForm(props: LoginFormProps) {
               </SectionControlWrapper>
             )}
           />
+          {props.beforeLoginContent}
           {!!form.formState.errors.root && (
             <MessageBar intent="error">
               <MessageBarBody>
@@ -168,6 +175,7 @@ export function LoginForm(props: LoginFormProps) {
             )}
             Login
           </Button>
+          {props.afterLoginContent}
         </div>
         <div style={{ height: 80 }}></div>
       </div>

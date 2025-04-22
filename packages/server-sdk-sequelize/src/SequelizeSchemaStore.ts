@@ -60,23 +60,41 @@ export class SequelizeSchemaStore<
       const attributes = schema.attributes;
 
       for (const [key, attribute] of Object.entries(attributes)) {
-        if (attribute.type !== 'lookup') {
-          continue;
+        if (attribute.type === 'lookup') {
+          const targetSchema = this.getSchema(attribute.entity);
+
+          const targetModel = this.getModel(targetSchema.logicalName);
+
+          model.belongsTo(targetModel, {
+            as: this.getRelationAlias(
+              schema.collectionName ?? schema.logicalName,
+              key,
+              targetSchema.collectionName ?? targetSchema.logicalName
+            ),
+            foreignKey: key,
+            onDelete:
+              attribute.behavior === 'dependent' ? 'RESTRICT' : undefined,
+          });
+        } else if (attribute.type === 'regarding') {
+          const targetSchemas = attribute.entities.map((entity) =>
+            this.getSchema(entity)
+          );
+
+          const targetModels = targetSchemas.map((schema) =>
+            this.getModel(schema.logicalName)
+          );
+
+          targetModels.forEach((targetModel) => {
+            model.belongsTo(targetModel, {
+              as: this.getRelationAlias(
+                schema.collectionName ?? schema.logicalName,
+                key,
+                targetModel.tableName
+              ),
+              foreignKey: key,
+            });
+          });
         }
-
-        const targetSchema = this.getSchema(attribute.entity);
-
-        const targetModel = this.getModel(targetSchema.logicalName);
-
-        model.belongsTo(targetModel, {
-          as: this.getRelationAlias(
-            schema.collectionName ?? schema.logicalName,
-            key,
-            targetSchema.collectionName ?? targetSchema.logicalName
-          ),
-          foreignKey: key,
-          onDelete: attribute.behavior === 'dependent' ? 'RESTRICT' : undefined,
-        });
       }
     }
   }

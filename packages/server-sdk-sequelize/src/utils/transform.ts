@@ -48,6 +48,50 @@ function transformColumns({
           logicalName: attribute.entity,
         };
       }
+    } else if (attribute.type === 'regarding') {
+      const regardingid = recordJson[column];
+
+      if (!regardingid) {
+        transformedRecord[column] = null;
+      }
+
+      const regardingType = recordJson[attribute.entityTypeAttribute];
+
+      if (!regardingType) {
+        transformedRecord[column] = null;
+        continue;
+      }
+
+      const hasScheam = schemaStore.hasSchema(regardingType);
+
+      if (!hasScheam) {
+        transformedRecord[column] = null;
+        continue;
+      }
+
+      const regardingSchema = schemaStore.getSchema(regardingType);
+
+      const expandedValue =
+        recordJson[
+          schemaStore.getRelationAlias(
+            schema.collectionName ?? schema.logicalName,
+            column,
+            regardingSchema.collectionName ?? regardingSchema.logicalName
+          )
+        ];
+
+      if (!expandedValue) {
+        transformedRecord[column] = null;
+      } else {
+        transformedRecord[column] = {
+          id: expandedValue[regardingSchema.idAttribute],
+          name: expandedValue[regardingSchema.primaryAttribute],
+          avatar: regardingSchema.avatarAttribute
+            ? expandedValue[regardingSchema.avatarAttribute]
+            : null,
+          logicalName: regardingSchema.logicalName,
+        };
+      }
     } else if (attribute.type === 'attachment') {
       if (recordJson[column]) {
         transformedRecord[column] = urlToFileObject(recordJson[column]);
@@ -159,6 +203,14 @@ export function transformRecord({
   const transformedRecord = {
     $entity: schema.logicalName,
   } as Record<string, any>;
+
+  if (
+    schema.virtual &&
+    schema.virtualLogicalNameAttribute &&
+    recordJson[schema.virtualLogicalNameAttribute]
+  ) {
+    transformedRecord.$entity = recordJson[schema.virtualLogicalNameAttribute];
+  }
 
   transformedRecord[schema.idAttribute] = recordJson[schema.idAttribute];
 

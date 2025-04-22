@@ -79,7 +79,7 @@ export function useLoadFormGridPage(
       loading: false,
       error: true,
       title: 'Form not found',
-      message: 'The form was not found',
+      message: `The form was not found for "${logicalName}"`,
     };
   }
 

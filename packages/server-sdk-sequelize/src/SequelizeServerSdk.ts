@@ -233,7 +233,7 @@ export class SequelizeServerSdk<
     Object.entries(schema.attributes).forEach(([key, attribute]) => {
       if (attribute.type === 'lookup') {
         // either column included
-        // either searchable and search tax included
+        // either searchable and search text included
         // either expand included
         if (
           columns?.includes(key) ||
@@ -284,10 +284,73 @@ export class SequelizeServerSdk<
             includes: nestedIncludes,
           });
         }
+      } else if (attribute.type === 'regarding') {
+        if (
+          columns?.includes(key) ||
+          (!!search && attribute.searchable) ||
+          (!!sort && sort.find((x) => x.field === key))
+        ) {
+          const lookupSchemas = attribute.entities.map((entity) =>
+            this.options.schemaStore.getSchema(entity)
+          );
+
+          lookupSchemas.forEach((lookupSchema) => {
+            includes.push({
+              model: this.options.schemaStore.getModel(
+                lookupSchema.logicalName
+              ),
+              as: this.options.schemaStore.getRelationAlias(
+                schema.collectionName ?? schema.logicalName,
+                key,
+                lookupSchema.collectionName ?? lookupSchema.logicalName
+              ),
+            });
+          });
+        }
       }
     });
 
     return includes;
+  }
+
+  private prepareAttributes({
+    logicalName,
+    columns,
+  }: {
+    logicalName: string;
+    columns: string[] | null | undefined;
+  }): string[] {
+    const schema = this.options.schemaStore.getSchema(logicalName);
+
+    const attributes: string[] = [];
+
+    attributes.push(schema.idAttribute as string);
+    attributes.push(...(columns ?? []));
+
+    if (
+      columns?.includes(schema.primaryAttribute as string) &&
+      schema.avatarAttribute
+    ) {
+      attributes.push(schema.avatarAttribute as string);
+    }
+
+    columns?.forEach((column) => {
+      const attribute = schema.attributes[column];
+
+      if (!attribute) {
+        return;
+      }
+
+      if (attribute.type === 'regarding') {
+        attributes.push(attribute.entityTypeAttribute);
+      }
+    });
+
+    if (schema.virtual && schema.virtualLogicalNameAttribute) {
+      attributes.push(schema.virtualLogicalNameAttribute as string);
+    }
+
+    return Array.from(new Set(attributes));
   }
 
   protected async retriveRecord<T extends Record<string, unknown>>(
@@ -321,7 +384,10 @@ export class SequelizeServerSdk<
 
     const records = await model.findAll({
       where: whereClause.length ? { [Op.and]: whereClause } : undefined,
-      attributes: [schema.idAttribute as string, ...(params.columns ?? [])],
+      attributes: this.prepareAttributes({
+        logicalName,
+        columns: params.columns,
+      }),
       include: includes,
     });
 
@@ -385,7 +451,10 @@ export class SequelizeServerSdk<
 
     const records = await model.findAll({
       where: whereClause.length ? { [Op.and]: whereClause } : undefined,
-      attributes: [schema.idAttribute as string, ...(params.columns ?? [])],
+      attributes: this.prepareAttributes({
+        logicalName,
+        columns: params.columns,
+      }),
       include: includes,
       limit: params.limit ?? 100,
       offset: params.skip ?? 0,
@@ -569,6 +638,11 @@ export class SequelizeServerSdk<
         acc[key] = value;
       }
 
+      if (attribute.type === 'regarding') {
+        acc[key] = value.id;
+        acc[attribute.entityTypeAttribute] = value.logicalName;
+      }
+
       if (schema.attributes[key]?.type === 'attachment') {
         if (typeof value === 'object') {
           acc[key] = value.url;
@@ -694,6 +768,11 @@ export class SequelizeServerSdk<
         acc[key] = value;
       } else {
         acc[key] = value;
+      }
+
+      if (attribute.type === 'regarding') {
+        acc[key] = value.id;
+        acc[attribute.entityTypeAttribute] = value.logicalName;
       }
 
       if (schema.attributes[key]?.type === 'attachment') {

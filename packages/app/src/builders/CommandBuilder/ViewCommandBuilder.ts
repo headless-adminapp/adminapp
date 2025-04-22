@@ -18,7 +18,52 @@ export namespace EnabledRules {
   }
 
   export function HasDeletePermission(context: EntityMainGridCommandContext) {
-    return !context.primaryControl.schema.restrictions?.disableDelete;
+    if (context.primaryControl.schema.restrictions?.disableDelete) {
+      return false;
+    }
+
+    if (context.primaryControl.schema.virtual) {
+      const baseSchemaLogicalName =
+        context.primaryControl.schema.baseSchemaLogicalName;
+      const virtualLogicalNameAttribute =
+        context.primaryControl.schema.virtualLogicalNameAttribute;
+
+      if (!baseSchemaLogicalName && !virtualLogicalNameAttribute) {
+        return false;
+      }
+
+      if (baseSchemaLogicalName) {
+        const baseSchema = context.stores.schemaStore.getSchema(
+          baseSchemaLogicalName
+        );
+
+        if (!baseSchema) {
+          return false;
+        }
+
+        if (baseSchema.restrictions?.disableDelete) {
+          return false;
+        }
+      } else if (virtualLogicalNameAttribute) {
+        const logicalNames = Array.from(
+          new Set(context.primaryControl.selectedRecords.map((x) => x.$entity))
+        );
+
+        const schemas = logicalNames.map((x) =>
+          context.stores.schemaStore.getSchema(x)
+        );
+
+        if (
+          !schemas.length ||
+          schemas.some((x) => x.restrictions?.disableDelete) ||
+          schemas.some((x) => x.virtual)
+        ) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   export function HasSingleRecordSelected(
@@ -89,7 +134,8 @@ export namespace ViewCommandBuilder {
       isContextMenu: true,
       onClick: (context) => {
         context.primaryControl.openRecord(
-          context.primaryControl.selectedIds[0]
+          context.primaryControl.selectedIds[0],
+          context.primaryControl.schema.logicalName
         );
       },
       hidden: [
@@ -116,7 +162,8 @@ export namespace ViewCommandBuilder {
       isContextMenu: true,
       onClick: (context) => {
         context.primaryControl.openRecord(
-          context.primaryControl.selectedIds[0]
+          context.primaryControl.selectedIds[0],
+          context.primaryControl.schema.logicalName
         );
       },
       hidden: [
@@ -196,7 +243,6 @@ export namespace ViewCommandBuilder {
       hidden: [
         (context) => !EnabledRules.HasAtLeastOneRecordSelected(context),
         (context) => !EnabledRules.HasDeletePermission(context),
-        (context) => !EnabledRules.IsPhysicalSchema(context),
       ],
     };
   }
@@ -341,6 +387,27 @@ export async function processDeleteRecordRequest(
     return;
   }
 
+  let logicalName = context.primaryControl.schema.logicalName;
+
+  if (context.primaryControl.schema.virtual) {
+    const baseSchemaLogicalName =
+      context.primaryControl.schema.baseSchemaLogicalName;
+
+    if (!baseSchemaLogicalName) {
+      return;
+    }
+
+    const baseSchema = context.stores.schemaStore.getSchema(
+      baseSchemaLogicalName
+    );
+
+    if (!baseSchema) {
+      return;
+    }
+
+    logicalName = baseSchema.logicalName;
+  }
+
   const localizeSelector = createLocalizedSelector(
     stringSet,
     localizedStringSet,
@@ -373,10 +440,7 @@ export async function processDeleteRecordRequest(
     );
 
     for (const recordId of recordIds) {
-      await context.dataService.deleteRecord(
-        context.primaryControl.logicalName,
-        recordId
-      );
+      await context.dataService.deleteRecord(logicalName, recordId);
     }
 
     context.utility.showNotification({

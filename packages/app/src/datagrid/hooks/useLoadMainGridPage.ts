@@ -60,7 +60,7 @@ export function useLoadMainGridPage(
       loading: false,
       error: true,
       title: 'View not found',
-      message: 'The view was not found',
+      message: `The view was not found for schema "${schema.logicalName}"`,
     };
   }
 

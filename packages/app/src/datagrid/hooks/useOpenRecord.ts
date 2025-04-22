@@ -17,18 +17,21 @@ export function useOpenRecord() {
   dataRef.current = data;
 
   return useCallback(
-    (id: string) => {
+    (id: string, logicalName: string) => {
       const path = routeResolver({
-        logicalName: schema.logicalName,
+        logicalName: logicalName,
         type: PageType.EntityForm,
         id,
       });
 
-      recordSetSetter(
-        schema.logicalName,
-        dataRef.current?.records.map((x) => x[schema.idAttribute] as string) ??
-          []
-      );
+      if (logicalName === schema.logicalName) {
+        recordSetSetter(
+          schema.logicalName,
+          dataRef.current?.records.map(
+            (x) => x[schema.idAttribute] as string
+          ) ?? []
+        );
+      }
       router.push(path);
     },
     [

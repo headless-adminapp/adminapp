@@ -1,11 +1,15 @@
 import { tokens } from '@fluentui/react-components';
 
-import { LoginForm } from './LoginForm';
+import { LoginForm, LoginFormData } from './LoginForm';
 
 interface LoginPageProps {
   logoImageUrl?: string;
   illustrationImageUrl?: string;
   onLogin: (username: string, password: string) => Promise<void>;
+  beforeLoginContent?: React.ReactNode;
+  afterLoginContent?: React.ReactNode;
+  subtitle?: string;
+  defaultValues?: LoginFormData;
 }
 
 export function PageLogin(props: LoginPageProps) {
@@ -49,11 +53,16 @@ export function PageLogin(props: LoginPageProps) {
                 justifyContent: 'flex-start',
                 gap: 16,
                 minWidth: 300,
+                maxWidth: 300,
               }}
             >
               <LoginForm
                 logoImageUrl={props.logoImageUrl}
                 onLogin={props.onLogin}
+                defaultValues={props.defaultValues}
+                beforeLoginContent={props.beforeLoginContent}
+                afterLoginContent={props.afterLoginContent}
+                subtitle={props.subtitle}
               />
             </div>
           </div>

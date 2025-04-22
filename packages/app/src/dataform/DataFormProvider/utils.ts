@@ -112,7 +112,7 @@ export function getIsFieldDisabled<
       disabledFields[control.attributeName] !== undefined
     ) {
       disabled = disabledFields[control.attributeName];
-    } else if (control.disabled !== undefined) {
+    } else if ('disabled' in control && control.disabled !== undefined) {
       disabled = control.disabled;
     } else if (attribute.readonly !== undefined) {
       disabled = attribute.readonly;

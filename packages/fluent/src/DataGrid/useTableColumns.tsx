@@ -48,6 +48,7 @@ import {
   LookupAttribute,
 } from '@headless-adminapp/core/attributes';
 import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
+import { RegardingAttribute } from '@headless-adminapp/core/attributes/LookupAttribute';
 import { PageType } from '@headless-adminapp/core/experience/app';
 import { Locale } from '@headless-adminapp/core/experience/locale';
 import { ViewColumn } from '@headless-adminapp/core/experience/view';
@@ -434,7 +435,7 @@ function renderCellContent({
   schemaStore: ISchemaStore;
   locale: Locale;
   routeResolver: InternalRouteResolver;
-  openRecord: (id: string) => void;
+  openRecord: (id: string, logicalName: string) => void;
   recordSetSetter: (logicalName: string, ids: (string | number)[]) => void;
   router: RouterInstance;
 }) {
@@ -541,6 +542,19 @@ function renderCellContent({
         formattedValue,
       });
     }
+    case 'regarding': {
+      return renderRegardingAttribute({
+        info,
+        column,
+        schemaStore,
+        routeResolver,
+        recordSetSetter,
+        router,
+        value,
+        attribute,
+        formattedValue,
+      });
+    }
     case 'attachment': {
       const url = (value as FileObject)?.url;
       if (!url) {
@@ -629,11 +643,11 @@ function renderPrimaryAttribute({
   column: TransformedViewColumn<SchemaAttributes>;
   schema: Schema;
   routeResolver: InternalRouteResolver;
-  openRecord: (id: string) => void;
+  openRecord: (id: string, logicalName: string) => void;
   value: string;
 }) {
   const path = routeResolver({
-    logicalName: schema.logicalName,
+    logicalName: info.row.original.$entity,
     type: PageType.EntityForm,
     id: info.row.original[schema.idAttribute] as string,
   });
@@ -654,7 +668,10 @@ function renderPrimaryAttribute({
       width={info.column.getSize()}
       href={path}
       onClick={() => {
-        openRecord(info.row.original[schema.idAttribute] as string);
+        openRecord(
+          info.row.original[schema.idAttribute] as string,
+          info.row.original.$entity
+        );
       }}
     />
   );
@@ -730,6 +747,82 @@ function renderLookupAttribute({
 
   const path = routeResolver({
     logicalName: attribute.entity,
+    type: PageType.EntityForm,
+    id: (value as unknown as DataLookup<Id>).id as string,
+  });
+
+  return (
+    <TableCellLink
+      key={column.id}
+      value={
+        <Fragment>
+          {!!lookupSchema.avatarAttribute && (
+            <Avatar
+              style={{
+                width: 24,
+                height: 24,
+                fontSize: tokens.fontSizeBase100,
+              }}
+              name={formattedValue}
+              color={getAvatarColor(formattedValue)}
+              image={{
+                src: (value as unknown as DataLookup<Id>).avatar as string,
+              }}
+            />
+          )}
+          {formattedValue}
+        </Fragment>
+      }
+      width={info.column.getSize()}
+      href={path}
+      onClick={() => {
+        recordSetSetter('', []);
+        router.push(path);
+      }}
+    />
+  );
+}
+
+function renderRegardingAttribute({
+  value,
+  info,
+  column,
+  schemaStore,
+  routeResolver,
+  recordSetSetter,
+  router,
+  formattedValue,
+}: {
+  value: unknown;
+  info: CellContext<UniqueRecord, unknown>;
+  column: TransformedViewColumn<SchemaAttributes>;
+  schemaStore: ISchemaStore;
+  routeResolver: InternalRouteResolver;
+  recordSetSetter: (logicalName: string, ids: (string | number)[]) => void;
+  router: RouterInstance;
+  attribute: RegardingAttribute;
+  formattedValue: string;
+}) {
+  if (!value) {
+    return (
+      <TableCellText key={column.id} value="" width={info.column.getSize()} />
+    );
+  }
+
+  const hasSchema = schemaStore.hasSchema((value as any).logicalName as string);
+
+  if (!hasSchema) {
+    return (
+      <TableCellText key={column.id} value="" width={info.column.getSize()} />
+    );
+  }
+
+  const logicalName = (value as any).logicalName as string;
+
+  const lookupSchema = schemaStore.getSchema(logicalName);
+
+  const path = routeResolver({
+    logicalName,
     type: PageType.EntityForm,
     id: (value as unknown as DataLookup<Id>).id as string,
   });

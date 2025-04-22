@@ -5,7 +5,11 @@ import { ChoiceAttribute, ChoicesAttribute } from './ChoiceAttribute';
 import { DateAttribute } from './DateAttribute';
 import { DateRangeAttribute } from './DateRangeAttribute';
 import { IdAttribute } from './IdAttribute';
-import { LookupAttribute, MultiLookupAttribute } from './LookupAttribute';
+import {
+  LookupAttribute,
+  MultiLookupAttribute,
+  RegardingAttribute,
+} from './LookupAttribute';
 import { MixedAttribute } from './MixedAttribute';
 import { MoneyAttribute } from './MoneyAttribute';
 import { NumberAttribute } from './NumberAttribute';
@@ -22,6 +26,7 @@ export type Attribute =
   | ChoicesAttribute<string | number>
   | LookupAttribute
   | MultiLookupAttribute
+  | RegardingAttribute
   | MoneyAttribute
   | AttachmentAttribute
   | AttachmentsAttribute

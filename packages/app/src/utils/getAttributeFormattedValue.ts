@@ -152,7 +152,11 @@ function getAttributeChoicesFormattedValue(
 }
 
 function getAttributeLookupFormattedValue(value: unknown) {
-  return (value as unknown as DataLookup<string>)?.name;
+  return (value as DataLookup<string>)?.name;
+}
+
+function getAttributeRegardingFormattedValue(value: unknown) {
+  return (value as DataLookup<string>)?.name;
 }
 
 function getAttributeMoneyFormattedValue(
@@ -284,6 +288,8 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
       return getAttributeLookupFormattedValue(value);
     case 'lookups':
       return getAttributeLookupsFormattedValue(value, options);
+    case 'regarding':
+      return getAttributeRegardingFormattedValue(value);
     case 'money':
       return getAttributeMoneyFormattedValue(value, options);
     case 'number':

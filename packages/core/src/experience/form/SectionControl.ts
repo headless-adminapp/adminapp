@@ -60,7 +60,7 @@ export interface SectionSubgridControl extends BaseSectionControl {
   // noAssociateFilter?: boolean;
   // relatedRecordsOnly: boolean;
   associatedAttribute: false | string; // false if no associated attribute // local attirubte for the subgrid
-  component?: string | (() => JSX.Element | null); // Component or unique name of component from registry to override default component
+  component?: string | React.ComponentType; // Component or unique name of component from registry to override default component
 }
 
 export interface SectionQuickViewControl<
@@ -72,9 +72,19 @@ export interface SectionQuickViewControl<
   form: QuickViewForm<S>;
 }
 
+export interface CustomComponentControl {
+  key?: string;
+  span?: number;
+  hidden?: boolean;
+  type: 'component';
+  component: string | React.ComponentType;
+  componentProps?: Record<string, unknown>;
+}
+
 export type SectionControl<S extends SchemaAttributes = SchemaAttributes> =
   | SectionStatndardControl<S>
   | SectionSubgridControl
   | SectionQuickViewControl
   | SectionEditableGridControl
-  | SectionSpacerControl;
+  | SectionSpacerControl
+  | CustomComponentControl;

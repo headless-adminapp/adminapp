@@ -22,7 +22,7 @@ interface UseRetriveRecordProps<S extends SchemaAttributes = SchemaAttributes> {
   search?: string;
   filter?: Filter | null;
   sorting?: SortingState<S>;
-  columns: string[];
+  columns: (keyof S)[];
   expand?: Partial<Record<string, string[]>>;
   maxRecords?: number;
   disabled?: boolean;
