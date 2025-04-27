@@ -1,5 +1,4 @@
 import type { Attribute } from '@headless-adminapp/core/attributes';
-import type { JSX } from 'react';
 
 import type { SchemaAttributes } from '../../schema';
 import type { Localized } from '../../types';

@@ -15,7 +15,11 @@ import { Hamburger } from '@fluentui/react-nav-preview';
 import { useAppContext } from '@headless-adminapp/app/app';
 import { useAuthSession, useLogout } from '@headless-adminapp/app/auth/hooks';
 import { useIsSkipAuthCheck } from '@headless-adminapp/app/auth/hooks/useIsSkipAuthCheck';
-import { useIsMobile, useItemsWithKey } from '@headless-adminapp/app/hooks';
+import {
+  useIsMobile,
+  useIsTablet,
+  useItemsWithKey,
+} from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useBasePath, useRouter } from '@headless-adminapp/app/route';
 import { Icons } from '@headless-adminapp/icons';
@@ -39,6 +43,7 @@ export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
   const strings = useAppStrings();
   const { language } = useLocale();
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
 
   const initials = useMemo(() => {
     return authSession?.fullName
@@ -66,11 +71,16 @@ export const AppHeaderContainer: FC<AppHeaderContainerProps> = ({
       }}
     >
       <div style={{ display: 'flex', flex: 1, alignItems: 'center', gap: 8 }}>
-        {isMobile && (
+        {isTablet && (
           <div
             role="button"
             style={{
               cursor: 'pointer',
+              width: !isMobile ? 44 : undefined,
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
             onClick={onNavToggle}
           >

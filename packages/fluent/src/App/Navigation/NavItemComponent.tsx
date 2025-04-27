@@ -7,11 +7,13 @@ import { NavItemInfo } from './types';
 interface NavItemComponentProps {
   item: NavItemInfo;
   onClick: (item: NavItemInfo) => void;
+  isMini?: boolean;
 }
 
 export const NavItemComponent: FC<NavItemComponentProps> = ({
   item,
   onClick,
+  isMini,
 }) => {
   return (
     <NavItem
@@ -38,11 +40,17 @@ export const NavItemComponent: FC<NavItemComponentProps> = ({
       }
       value={item.active ? 'active' : ''}
     >
-      {item.label}
-      {!!item.RightComponent && (
-        <span style={{ flex: 1, justifyContent: 'flex-end', display: 'flex' }}>
-          <item.RightComponent />
-        </span>
+      {!isMini && (
+        <>
+          {item.label}
+          {!!item.RightComponent && (
+            <span
+              style={{ flex: 1, justifyContent: 'flex-end', display: 'flex' }}
+            >
+              <item.RightComponent />
+            </span>
+          )}
+        </>
       )}
     </NavItem>
   );

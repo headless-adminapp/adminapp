@@ -1,5 +1,5 @@
 import { DrawerProps, tokens } from '@fluentui/react-components';
-import { useIsMobile } from '@headless-adminapp/app/hooks';
+import { useIsMobile, useIsTablet } from '@headless-adminapp/app/hooks';
 import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 
 import { AppHeaderContainer } from './AppHeaderContianer';
@@ -9,6 +9,7 @@ type DrawerType = Required<DrawerProps>['type'];
 
 export const AppUI: FC<PropsWithChildren> = ({ children }) => {
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
 
   const [isNavOpen, setIsNavOpen] = useState(!isMobile);
   const navType = useMemo<DrawerType>(
@@ -17,8 +18,8 @@ export const AppUI: FC<PropsWithChildren> = ({ children }) => {
   );
 
   useEffect(() => {
-    setIsNavOpen(!isMobile);
-  }, [isMobile]);
+    setIsNavOpen(!isTablet);
+  }, [isMobile, isTablet]);
 
   return (
     <main
@@ -41,6 +42,7 @@ export const AppUI: FC<PropsWithChildren> = ({ children }) => {
         <NavigationContainer
           open={isNavOpen}
           type={navType}
+          isMini={!isMobile && isTablet && !isNavOpen}
           onOpenChange={(open) => setIsNavOpen(open)}
         />
         <div

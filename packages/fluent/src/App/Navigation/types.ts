@@ -1,18 +1,14 @@
 import { DrawerProps } from '@fluentui/react-components';
-import {
-  NavPageCategory,
-  NavPageItem,
-  NavPageSection,
-} from '@headless-adminapp/core/experience/app';
+import { NavPageSection } from '@headless-adminapp/core/experience/app';
 import { Icon } from '@headless-adminapp/icons';
 
 export type DrawerType = Required<DrawerProps>['type'];
 
-type NavPageItemWithKey = NavPageItem & { key: string };
-type NavPageCategoryWithKey = Omit<NavPageCategory, 'items'> & {
-  key: string;
-  items: Array<NavPageItemWithKey>;
-};
+// type NavPageItemWithKey = NavPageItem & { key: string };
+// type NavPageCategoryWithKey = Omit<NavPageCategory, 'items'> & {
+//   key: string;
+//   items: Array<NavPageItemWithKey>;
+// };
 
 export type NavPageSectionWithKey = Omit<NavPageSection, 'items'> & {
   key: string;

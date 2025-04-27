@@ -1,4 +1,4 @@
-import { makeStyles, tokens } from '@fluentui/react-components';
+import { Divider, makeStyles, tokens } from '@fluentui/react-components';
 import {
   NavCategory,
   NavDrawer,
@@ -19,6 +19,7 @@ import { FC, Fragment, useMemo } from 'react';
 
 import { NavCategoryItemComponent } from './NavCategoryItemComponent';
 import { NavItemComponent } from './NavItemComponent';
+import { NavMiniCategoryMenu } from './NavMiniCategoryMenu';
 import { NavSubItemComponent } from './NavSubItemComponent';
 import { DrawerType, NavItemInfo, NavSubItemInfo } from './types';
 import { transformNavSections } from './utils';
@@ -36,6 +37,7 @@ const useStyles = makeStyles({
 interface NavigationContainerProps {
   open: boolean;
   type: DrawerType;
+  isMini: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
@@ -43,6 +45,7 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
   open,
   type,
   onOpenChange,
+  isMini,
 }) => {
   const styles = useStyles();
   const { appExperience: app } = useAppContext();
@@ -108,26 +111,43 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
         selectedValue="active"
         selectedCategoryValue="active"
         defaultOpenCategories={['active']}
-        open={open}
+        open={open || isMini}
         type={type}
         onOpenChange={(_value, data) => onOpenChange(data.open)}
         onNavItemSelect={() => {
           // do nothing
         }}
+        style={{ width: isMini ? 60 : undefined }}
       >
         <NavDrawerBody
           style={{
             paddingTop: 8,
           }}
         >
-          {sections.map((section) => (
+          {sections.map((section, index) => (
             <Fragment key={section.label}>
-              {!section.hideLabel && (
+              {!section.hideLabel && !isMini && (
                 <NavSectionHeader>{section.label}</NavSectionHeader>
+              )}
+              {isMini && index > 0 && (
+                <div>
+                  <Divider style={{ opacity: 0.5 }} />
+                </div>
               )}
               {section.items.map((item) => {
                 if (item.type === PageType.Category) {
                   const isActive = item.items.some((subItem) => subItem.active);
+
+                  if (isMini) {
+                    return (
+                      <NavMiniCategoryMenu
+                        key={item.key}
+                        isActive={isActive}
+                        item={item}
+                        onSelect={handleNavigation}
+                      />
+                    );
+                  }
 
                   return (
                     <NavCategory
@@ -156,6 +176,7 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
                     key={item.key}
                     item={item}
                     onClick={handleNavigation}
+                    isMini={isMini}
                   />
                 );
               })}

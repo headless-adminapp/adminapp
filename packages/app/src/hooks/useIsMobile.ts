@@ -17,3 +17,20 @@ export function useIsMobile() {
 
   return isMobile;
 }
+
+export function useIsTablet() {
+  const [isTablet, setIsTablet] = useState(false);
+
+  useLayoutEffect(() => {
+    const updateSize = (): void => {
+      setIsTablet(window.innerWidth < 1024);
+    };
+
+    window.addEventListener('resize', debounce(updateSize, 250));
+    updateSize();
+
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
+  return isTablet;
+}

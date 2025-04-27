@@ -187,7 +187,7 @@ export function useRetriveRecordsInternal<
         queryKey,
       })
       .catch(console.error);
-  }, []);
+  }, [queryClient, queryKey]);
 
   return {
     data: finalData,

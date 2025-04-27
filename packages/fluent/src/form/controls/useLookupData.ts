@@ -91,10 +91,7 @@ export function useLookupData<S extends SchemaAttributes = SchemaAttributes>({
     return extractColumns(schema, view);
   }, [schema, view]);
 
-  const expand = useMemo(
-    () => extractExpand(view),
-    [view?.card?.secondaryColumns]
-  );
+  const expand = useMemo(() => extractExpand(view), [view]);
 
   const queryKey = useMemo(
     () =>
@@ -105,14 +102,7 @@ export function useLookupData<S extends SchemaAttributes = SchemaAttributes>({
         search,
         view,
       }),
-    [
-      columns,
-      expand,
-      schema.logicalName,
-      search,
-      view?.filter,
-      view?.defaultSorting,
-    ]
+    [columns, expand, schema, search, view]
   );
 
   const { data, isFetching } = useQuery({
