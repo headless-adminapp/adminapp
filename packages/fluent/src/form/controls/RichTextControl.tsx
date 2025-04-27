@@ -1,4 +1,4 @@
-import { FC, lazy } from 'react';
+import { FC, lazy, Suspense } from 'react';
 
 import { ControlProps } from './types';
 
@@ -16,15 +16,17 @@ export const RichTextControl: FC<RichTextControlProps> = ({
   readOnly,
 }) => {
   return (
-    <ReactQuill
-      value={value ?? ''}
-      onChange={onChange}
-      className="hdlapp_rte"
-      readOnly={disabled || readOnly}
-      style={{ maxHeight: '400px', minHeight: '200px' }}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      id={id}
-    />
+    <Suspense>
+      <ReactQuill
+        value={value ?? ''}
+        onChange={onChange}
+        className="hdlapp_rte"
+        readOnly={disabled || readOnly}
+        style={{ maxHeight: '400px', minHeight: '200px' }}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        id={id}
+      />
+    </Suspense>
   );
 };

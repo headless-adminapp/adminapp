@@ -240,14 +240,12 @@ export const generateValidationSchema = memoize(
     schema: Schema<A>;
     columns: string[];
     readonlyAttributes?: string[];
-    editableGrids:
-      | Array<{
-          schema: Schema;
-          columns: string[];
-          attributeName: string;
-          required?: boolean;
-        }>
-      | undefined;
+    editableGrids?: Array<{
+      schema: Schema;
+      columns: string[];
+      attributeName: string;
+      required?: boolean;
+    }>;
     language: string;
     strings: FormValidationStringSet;
     region: string;

@@ -2,3 +2,32 @@
   margin-right: 0 !important;
   margin-left: -15px;
 }
+
+.hdl-scrollbar-shadow-top::before {
+  content: ' ';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--colorNeutralStrokeAlpha),
+    transparent
+  );
+}
+.hdl-scrollbar-shadow-bottom::after {
+  content: ' ';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    var(--colorNeutralStrokeAlpha),
+    transparent
+  );
+}

@@ -30,7 +30,7 @@ import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import { lazy, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { DefaultValues, useForm } from 'react-hook-form';
 
 import { EventDialog } from './EventDialog/EventDialog';
@@ -291,16 +291,18 @@ export function PageCalendar<
           filterForm={filterForm}
           onCreateButtonClick={handleCreateButtonClick}
         />
-        <CalendarSection
-          startDate={currentStartDate}
-          endDate={currentEndDate}
-          viewType={viewType}
-          onRangeChange={onRangeChange}
-          events={events ?? []}
-          onEventClick={handleEventClick}
-          onDateSelect={handleDateSelect}
-          loading={loading}
-        />
+        <Suspense>
+          <CalendarSection
+            startDate={currentStartDate}
+            endDate={currentEndDate}
+            viewType={viewType}
+            onRangeChange={onRangeChange}
+            events={events ?? []}
+            onEventClick={handleEventClick}
+            onDateSelect={handleDateSelect}
+            loading={loading}
+          />
+        </Suspense>
       </div>
     </CalendarContext.Provider>
   );

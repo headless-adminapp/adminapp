@@ -4,6 +4,7 @@ import {
   FC,
   lazy,
   PropsWithChildren,
+  Suspense,
   useContext,
   useEffect,
   useState,
@@ -60,9 +61,11 @@ export const DndProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <DndContext.Provider value={context}>
-      <DndProviderIntenral backend={context.backend}>
-        {children}
-      </DndProviderIntenral>
+      <Suspense>
+        <DndProviderIntenral backend={context.backend}>
+          {children}
+        </DndProviderIntenral>
+      </Suspense>
     </DndContext.Provider>
   );
 };
