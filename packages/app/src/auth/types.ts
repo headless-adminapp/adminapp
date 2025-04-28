@@ -1,4 +1,4 @@
-import { AuthSession } from './context';
+import { AuthSession } from '@headless-adminapp/core/experience/auth';
 
 export type UnauthorizeReason =
   | 'sessionExpired'

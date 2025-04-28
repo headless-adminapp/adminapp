@@ -1,9 +1,8 @@
+import { AuthSession } from '@headless-adminapp/core/experience/auth';
 import {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-
-import { AuthSession } from '../auth';
 
 export interface CalendarEvent {
   id: string;
