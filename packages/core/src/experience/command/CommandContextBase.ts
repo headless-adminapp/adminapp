@@ -3,6 +3,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import type { InferredSchemaType, SchemaAttributes } from '../../schema';
 import type { ISchemaExperienceStore, ISchemaStore } from '../../store';
 import type { IDataService } from '../../transport';
+import { AuthSession } from '../auth';
 import {
   ConfirmDialogOptions,
   ConfirmResult,
@@ -68,4 +69,5 @@ export interface CommandContextBase {
   utility: Utiltity;
   stores: Store;
   locale: Locale;
+  authSession: AuthSession | null;
 }

@@ -526,7 +526,12 @@ function renderCellContent({
           key={column.id}
           value={formattedValue}
           width={info.column.getSize()}
-          textAlignment="right"
+          textAlignment={
+            attribute.type === 'number' &&
+            ['duration', 'time'].includes(attribute.format)
+              ? 'left'
+              : 'right'
+          }
         />
       );
     case 'lookup': {

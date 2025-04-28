@@ -1,5 +1,7 @@
+import { AuthSession } from '@headless-adminapp/core/experience/auth';
+
 import { useContextSelector } from '../../mutable';
-import { AuthContext, AuthSession } from '../context';
+import { AuthContext } from '../context';
 
 export function useAuthSession<
   T extends AuthSession = AuthSession

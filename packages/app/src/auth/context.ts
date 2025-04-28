@@ -1,3 +1,5 @@
+import { AuthSession } from '@headless-adminapp/core/experience/auth';
+
 import { createContext } from '../mutable/context';
 
 type UnauthorizeReason = 'sessionExpired' | 'unauthorized' | 'logout' | 'load';
@@ -30,14 +32,5 @@ export type AuthState = (
   loadSession: () => Promise<void>;
   onUnauthenticated?: (reason: UnauthorizeReason) => void;
 };
-
-export interface AuthSession {
-  id: string;
-  exp: number;
-  fullName: string;
-  email: string;
-  profilePicture?: string;
-  data?: Record<string, any>; // Custom data
-}
 
 export const AuthContext = createContext<AuthState>();

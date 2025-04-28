@@ -3,6 +3,7 @@ import { CommandContextBase } from '@headless-adminapp/core/experience/command';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
+import { useAuthSession } from '../../auth/hooks/useAuthSession';
 import {
   useOpenAlertDialog,
   useOpenConfirmDialog,
@@ -65,6 +66,7 @@ export function useBaseCommandHandlerContext(): CommandContextBase {
   const utility = useUtility();
   const locale = useLocale();
   const navigation = useNavigation();
+  const authSession = useAuthSession();
 
   return useMemo(
     () => ({
@@ -74,7 +76,8 @@ export function useBaseCommandHandlerContext(): CommandContextBase {
       stores,
       locale,
       navigation,
+      authSession,
     }),
-    [dataService, queryClient, stores, utility, locale, navigation]
+    [dataService, queryClient, stores, utility, locale, navigation, authSession]
   );
 }

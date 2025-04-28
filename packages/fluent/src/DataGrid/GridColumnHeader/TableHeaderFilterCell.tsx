@@ -137,11 +137,14 @@ export const TableHeaderFilterCell: FC<
     switch (attribute.type) {
       case 'money':
       case 'number':
-        return 'right';
+        return attribute.type === 'number' &&
+          ['duration', 'time'].includes(attribute.format)
+          ? 'left'
+          : 'right';
       default:
         return 'left';
     }
-  }, [attribute.type]);
+  }, [attribute]);
 
   const styles = useStyles();
 
