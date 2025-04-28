@@ -4,7 +4,7 @@ import { CalendarConfig } from '@headless-adminapp/app/calendar/types';
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { Path, UseFormReturn } from 'react-hook-form';
 
-import { AttributeController } from './AttributeController';
+import { AttributeController } from '../../form/AttributeController';
 import { BaseFieldValues } from './types';
 
 interface EventFormContentProps<
@@ -42,13 +42,13 @@ export function EventFormContent<
         }}
       >
         <AttributeController
-          form={form}
+          control={form.control}
           attributeName="title"
           attribute={baseEventAttributes.title}
           readOnly={readOnly}
         />
         <AttributeController
-          form={form}
+          control={form.control}
           attributeName="start"
           attribute={{
             ...baseEventAttributes.start,
@@ -57,7 +57,7 @@ export function EventFormContent<
           readOnly={readOnly}
         />
         <AttributeController
-          form={form}
+          control={form.control}
           attributeName="end"
           attribute={{
             ...baseEventAttributes.end,
@@ -67,7 +67,7 @@ export function EventFormContent<
         />
         {!config.disableAllDay && (
           <AttributeController
-            form={form}
+            control={form.control}
             attributeName="allDay"
             attribute={baseEventAttributes.allDay}
             readOnly={readOnly}
@@ -78,7 +78,7 @@ export function EventFormContent<
             return (
               <AttributeController
                 key={attributeName}
-                form={form}
+                control={form.control}
                 attributeName={attributeName as Path<BaseFieldValues>}
                 attribute={attribute}
                 readOnly={readOnly}
@@ -87,7 +87,7 @@ export function EventFormContent<
           }
         )}
         <AttributeController
-          form={form}
+          control={form.control}
           attributeName="description"
           attribute={baseEventAttributes.description}
           readOnly={readOnly}
@@ -97,7 +97,7 @@ export function EventFormContent<
             return (
               <AttributeController
                 key={attributeName}
-                form={form}
+                control={form.control}
                 attributeName={attributeName as Path<BaseFieldValues>}
                 attribute={attribute}
                 readOnly={readOnly}

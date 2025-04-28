@@ -1,26 +1,29 @@
 import { Attribute } from '@headless-adminapp/core';
-import { Controller, Path, UseFormReturn } from 'react-hook-form';
+import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form';
 
-import { SectionControlWrapper } from '../../DataForm/SectionControl';
-import { StandardControl } from '../../PageEntityForm/StandardControl';
-import { BaseFieldValues } from './types';
+import { SectionControlWrapper } from '../DataForm/SectionControl';
+import { StandardControl } from '../PageEntityForm/StandardControl';
 
-interface AttributeControllerProps {
+interface AttributeControllerProps<
+  TFieldValues extends FieldValues = FieldValues
+> {
   attribute: Attribute;
-  attributeName: Path<BaseFieldValues>;
-  form: UseFormReturn<BaseFieldValues>;
+  attributeName: FieldPath<TFieldValues>;
+  control: Control<TFieldValues>;
   readOnly?: boolean;
 }
 
-export function AttributeController({
+export function AttributeController<
+  TFieldValues extends FieldValues = FieldValues
+>({
   attribute,
   attributeName,
-  form,
+  control,
   readOnly,
-}: Readonly<AttributeControllerProps>) {
+}: Readonly<AttributeControllerProps<TFieldValues>>) {
   return (
     <Controller
-      control={form.control}
+      control={control}
       name={attributeName}
       render={({ field, fieldState, formState }) => {
         const isError =
@@ -41,7 +44,7 @@ export function AttributeController({
           >
             <StandardControl
               attribute={attribute}
-              name={attributeName as string}
+              name={attributeName}
               value={field.value}
               onChange={field.onChange}
               onBlur={field.onBlur}
