@@ -83,20 +83,20 @@ function generateSubgridUpdateOperation({
   schemaStore,
   values,
   initialValues,
+  alias,
 }: {
   recordId: string;
   control: SectionEditableGridControl;
   schemaStore: ISchemaStore;
   values: any;
   initialValues: Nullable<InferredSchemaType<SchemaAttributes>>;
+  alias: string;
 }): Operation[] {
   const operations: Operation[] = [];
 
   const gridSchema = schemaStore.getSchema(control.logicalName);
-  const gridRows = values[control.attributeName] as any[];
-  const initialGridRows = (initialValues as any)[
-    control.attributeName
-  ] as any[];
+  const gridRows = values[alias] as any[];
+  const initialGridRows = (initialValues as any)[alias] as any[];
 
   const newRows = gridRows.filter((x) => !x[gridSchema.idAttribute]);
   const updatedRows = gridRows.filter((x) => x[gridSchema.idAttribute]);
@@ -110,9 +110,10 @@ function generateSubgridUpdateOperation({
       logicalName: control.logicalName,
       data: {
         ...row,
-        [control.referenceAttribute]: {
+        [control.associatedAttribute]: {
           id: recordId,
         },
+        [gridSchema.idAttribute]: undefined,
       },
     });
   }
@@ -165,20 +166,20 @@ async function createRecord({
   const controls = getControls(form);
 
   const editableGridControls = controls.filter(
-    (control) => control.type === 'editablegrid'
-  );
+    (control) => control.type === 'editablegrid' && control.alias
+  ) as SectionEditableGridControl<SchemaAttributes>[];
 
   const result = await dataService.createRecord(schema.logicalName, values);
 
   const recordId = result.id;
 
   for (const control of editableGridControls) {
-    const gridRows = values[control.attributeName] as any[];
+    const gridRows = values[control.alias as string] as any[];
 
     for (const row of gridRows) {
       await dataService.createRecord(control.logicalName, {
         ...row,
-        [control.referenceAttribute]: {
+        [control.associatedAttribute]: {
           id: recordId,
         },
       });
@@ -208,13 +209,13 @@ async function updateRecord({
   const controls = getControls(form);
 
   const editableGridControls = controls.filter(
-    (control) => control.type === 'editablegrid'
-  );
+    (control) => control.type === 'editablegrid' && control.alias
+  ) as SectionEditableGridControl<SchemaAttributes>[];
 
   const modifiedValues = getModifiedValues(
     initialValues,
     values,
-    editableGridControls.map((x) => x.attributeName)
+    editableGridControls.map((x) => x.alias as string)
   );
 
   const operations: Operation[] = [];
@@ -236,6 +237,7 @@ async function updateRecord({
         schemaStore,
         initialValues,
         values,
+        alias: control.alias as string,
       })
     );
   }
@@ -311,5 +313,66 @@ export async function saveRecord({
   return {
     success: true,
     recordId,
+  };
+}
+
+interface SaveEditableGridControlOptions {
+  recordId: string;
+  control: SectionEditableGridControl;
+  schemaStore: ISchemaStore;
+  values: any;
+  initialValues: any;
+  dataService: IDataService;
+  alias: string;
+}
+
+export type SaveEditableGridResult =
+  | {
+      success: true;
+      updated: number;
+      created: number;
+    }
+  | {
+      success: false;
+      title?: string;
+      message: string;
+      isError: boolean;
+    };
+
+export async function saveEditableGridControl({
+  recordId,
+  control,
+  schemaStore,
+  values,
+  initialValues,
+  dataService,
+  alias,
+}: SaveEditableGridControlOptions) {
+  const operations: Operation[] = generateSubgridUpdateOperation({
+    recordId,
+    control,
+    schemaStore,
+    initialValues,
+    values,
+    alias,
+  });
+
+  if (!operations.length) {
+    return {
+      success: false,
+      title: 'No changes',
+      message: 'No changes made to the record',
+      isError: false,
+    };
+  }
+
+  for (const operation of operations) {
+    await executeOperation(operation, dataService);
+  }
+
+  return {
+    success: true,
+    updated: operations.filter((x) => x.type === 'update').length,
+    created: operations.filter((x) => x.type === 'create').length,
   };
 }

@@ -5,7 +5,11 @@ import type {
   StringAttribute,
 } from '@headless-adminapp/core/attributes';
 import { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
-import { Form } from '@headless-adminapp/core/experience/form';
+import {
+  Form,
+  SectionEditableGridControl,
+} from '@headless-adminapp/core/experience/form';
+import { SectionStatndardControl } from '@headless-adminapp/core/experience/form/SectionControl';
 import {
   InferredSchemaType,
   Schema,
@@ -42,12 +46,12 @@ export function getInitialValues({
 }) {
   const formColumns = getColumns(form, schema);
   const editableGridControls = getControls(form).filter(
-    (control) => control.type === 'editablegrid'
-  );
+    (control) => control.type === 'editablegrid' && control.alias !== false
+  ) as SectionEditableGridControl[];
 
   const allColumns = [
     ...formColumns,
-    ...editableGridControls.map((x) => x.attributeName),
+    ...editableGridControls.map((x) => x.alias as string),
   ];
 
   if (!recordId && !record && form.experience.cloneAttributes && cloneRecord) {
@@ -171,7 +175,8 @@ export const formValidator: FormValidator = memoize(
           });
 
         const editableGridControls = activeControls.filter(
-          (control) => control.type === 'editablegrid'
+          (control) =>
+            control.type === 'editablegrid' && control.alias !== false
         );
 
         const columns = Array.from(
@@ -185,16 +190,18 @@ export const formValidator: FormValidator = memoize(
 
         validator = generateValidationSchema({
           editableGrids: editableGridControls.map((control) => {
-            if (control.type !== 'editablegrid') {
+            if (control.type !== 'editablegrid' || control.alias === false) {
               throw new Error('Invalid control type');
             }
 
             const schema = schemaStore.getSchema(control.logicalName);
 
             return {
-              columns: control.attributes,
+              columns: control.controls.map((x) =>
+                typeof x === 'string' ? x : x.attributeName
+              ),
               schema: schema,
-              attributeName: control.attributeName,
+              attributeName: control.alias,
               required: control.required,
             };
           }),
@@ -224,6 +231,105 @@ export const formValidator: FormValidator = memoize(
       formReadOnly,
     })
 );
+
+interface EditableSubgridFormValidatorOptions<
+  A extends SchemaAttributes = SchemaAttributes
+> {
+  schema: Schema<A>;
+  control: SectionEditableGridControl<A>;
+  language: string;
+  formReadOnly?: boolean;
+  readonlyAttributes?: string[];
+  strings: FormValidationStringSet;
+  schemaStore: ISchemaStore;
+  region: string;
+  alias: string;
+}
+
+type EditableSubgridFormValidator = (<
+  A extends SchemaAttributes = SchemaAttributes
+>(
+  options: EditableSubgridFormValidatorOptions<A>
+) => (
+  values: Record<string, any>,
+  context: any,
+  options: any
+) => Promise<ResolverResult<{}>>) &
+  MemoizedFunction;
+
+export const editableSubgridFormValidator: EditableSubgridFormValidator =
+  memoize(
+    function formValidator<A extends SchemaAttributes = SchemaAttributes>({
+      schema,
+      readonlyAttributes,
+      formReadOnly,
+      schemaStore,
+      language,
+      strings,
+      region,
+      control,
+      alias,
+    }: EditableSubgridFormValidatorOptions<A>) {
+      return async (
+        values: Record<string, any>,
+        context: any,
+        options: any
+      ) => {
+        let validator = yup.object().shape({});
+
+        if (!formReadOnly) {
+          const controlSchema = schemaStore.getSchema(control.logicalName);
+
+          const columns: string[] = [];
+
+          validator = generateValidationSchema({
+            editableGrids: [
+              {
+                columns: control.controls.map((x) =>
+                  typeof x === 'string'
+                    ? x
+                    : (x as SectionStatndardControl).attributeName
+                ),
+                schema: controlSchema,
+                attributeName: alias,
+                required: control.required,
+              },
+            ],
+            schema,
+            columns,
+            language,
+            strings,
+            readonlyAttributes,
+            region,
+          });
+        }
+
+        const resolver = yupResolver(validator);
+
+        const result = await resolver(values, context, options);
+
+        return result;
+      };
+    },
+    ({
+      language,
+      schema,
+      strings,
+      readonlyAttributes,
+      formReadOnly,
+      alias,
+      control,
+    }) =>
+      JSON.stringify({
+        schema,
+        language,
+        strings,
+        readonlyAttributes,
+        formReadOnly,
+        alias,
+        control,
+      })
+  );
 
 export const generateValidationSchema = memoize(
   function generateValidationSchema<

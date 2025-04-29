@@ -11,6 +11,7 @@ interface AttributeControllerProps<
   attributeName: FieldPath<TFieldValues>;
   control: Control<TFieldValues>;
   readOnly?: boolean;
+  labelPosition?: 'left' | 'top';
 }
 
 export function AttributeController<
@@ -20,6 +21,7 @@ export function AttributeController<
   attributeName,
   control,
   readOnly,
+  labelPosition = 'left',
 }: Readonly<AttributeControllerProps<TFieldValues>>) {
   return (
     <Controller
@@ -37,7 +39,7 @@ export function AttributeController<
         return (
           <SectionControlWrapper
             label={attribute.label}
-            labelPosition="left"
+            labelPosition={labelPosition}
             required={attribute.required}
             isError={isError}
             errorMessage={errorMessage}

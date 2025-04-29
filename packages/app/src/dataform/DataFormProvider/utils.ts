@@ -98,7 +98,7 @@ export function getIsFieldDisabled<
   disabledFields,
   control,
 }: {
-  attribute: AttributeBase;
+  attribute: AttributeBase | null;
   isFormReadonly: boolean | undefined;
   disabledFields: Record<string, boolean>;
   control: Section<S>['controls'][0];
@@ -114,7 +114,7 @@ export function getIsFieldDisabled<
       disabled = disabledFields[control.attributeName];
     } else if ('disabled' in control && control.disabled !== undefined) {
       disabled = control.disabled;
-    } else if (attribute.readonly !== undefined) {
+    } else if (attribute && attribute.readonly !== undefined) {
       disabled = attribute.readonly;
     }
   }

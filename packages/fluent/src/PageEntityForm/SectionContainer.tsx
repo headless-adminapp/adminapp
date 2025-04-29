@@ -25,6 +25,7 @@ import { Controller } from 'react-hook-form';
 import { componentStore } from '../componentStore';
 import { SectionControlWrapper } from '../DataForm/SectionControl';
 import { FormSection } from '../form/layout';
+import { EditableGridControl } from './EditableGridControl/EditableGridControl';
 import { StandardControl } from './StandardControl';
 import { SubgridControl } from './SubgridControl';
 
@@ -201,7 +202,16 @@ export function SectionContainer<
             );
           }
           case 'editablegrid': {
-            return null;
+            const disabled = getIsFieldDisabled({
+              isFormReadonly,
+              disabledFields: disabledControls,
+              attribute: null,
+              control,
+            });
+
+            return (
+              <EditableGridControl readOnly={disabled} control={control} />
+            );
           }
           case 'quickview':
             return null;

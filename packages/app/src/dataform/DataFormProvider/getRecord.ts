@@ -1,8 +1,10 @@
+import { SectionEditableGridControl } from '@headless-adminapp/core/experience/form';
 import {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { HttpError } from '@headless-adminapp/core/transport';
+import { ISchemaStore } from '@headless-adminapp/core/store';
+import { HttpError, IDataService } from '@headless-adminapp/core/transport';
 
 import { RetriveRecordFnOptions } from './types';
 import { getControls } from './utils';
@@ -44,43 +46,66 @@ export async function getRecord<
   );
 
   for (const control of editableGridControls) {
-    if (control.type !== 'editablegrid') {
+    if (!control.alias) {
       continue;
     }
 
-    const controlSchema = schemaStore.getSchema(control.logicalName);
-
-    const records = await dataService.retriveRecords<
-      InferredSchemaType<SchemaAttributes>
-    >({
-      logicalName: controlSchema.logicalName,
-      filter: {
-        type: 'and',
-        conditions: [
-          {
-            field: control.referenceAttribute,
-            operator: 'eq',
-            value: recordId,
-          },
-        ],
-      },
-      sort: [
-        {
-          field: controlSchema.createdAtAttribute ?? controlSchema.idAttribute,
-          order: 'asc',
-        },
-      ],
-      limit: 5000,
-      search: '',
-      columns: [
-        controlSchema.idAttribute,
-        control.referenceAttribute,
-        ...control.attributes,
-      ],
+    const records = await getEditableSubgridRecords({
+      dataService,
+      control,
+      schemaStore,
+      recordId,
     });
 
-    (record as any)[control.attributeName] = records.records;
+    (record as any)[control.alias] = records;
   }
 
   return record;
+}
+
+export async function getEditableSubgridRecords({
+  dataService,
+  schemaStore,
+  control,
+  recordId,
+}: {
+  dataService: IDataService;
+  schemaStore: ISchemaStore;
+  control: SectionEditableGridControl<SchemaAttributes>;
+  recordId: string;
+}) {
+  const controlSchema = schemaStore.getSchema(control.logicalName);
+
+  const result = await dataService.retriveRecords<
+    InferredSchemaType<SchemaAttributes>
+  >({
+    logicalName: controlSchema.logicalName,
+    filter: {
+      type: 'and',
+      conditions: [
+        {
+          field: control.associatedAttribute,
+          operator: 'eq',
+          value: recordId,
+        },
+      ],
+    },
+    sort: control.sort ?? [
+      {
+        field: controlSchema.createdAtAttribute ?? controlSchema.idAttribute,
+        order: 'asc',
+      },
+    ],
+    limit: 5000,
+    search: '',
+    columns: [
+      controlSchema.idAttribute,
+      control.associatedAttribute,
+      ...control.controls.map((x) =>
+        typeof x === 'string' ? x : x.attributeName
+      ),
+    ],
+  });
+
+  return result.records;
 }
