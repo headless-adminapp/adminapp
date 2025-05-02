@@ -7,7 +7,10 @@ import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 
 export namespace DefineViewExperience {
   export type Experience<S extends SchemaAttributes = SchemaAttributes> =
-    | Pick<$ViewExperience<S>, 'filter' | 'defaultSorting' | 'card'> & {
+    | Pick<
+        $ViewExperience<S>,
+        'filter' | 'defaultSorting' | 'card' | 'quickFilter'
+      > & {
         grid: GridView<S>;
       };
 

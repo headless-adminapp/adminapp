@@ -1,12 +1,15 @@
 import { Badge, tokens } from '@fluentui/react-components';
 import { isColorDark } from '@headless-adminapp/app/utils/color';
 import { ChoiceAttribute } from '@headless-adminapp/core/attributes';
+import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
 import { useMemo } from 'react';
 
 interface ChoiceBadgeProps {
   value: unknown;
-  attribute: ChoiceAttribute<string | number>;
-  formattedValue: string | null;
+  attribute:
+    | ChoiceAttribute<string | number>
+    | ChoicesAttribute<string | number>;
+  formattedValue?: string | null;
   size?: 'small' | 'medium';
 }
 
@@ -29,7 +32,27 @@ export function ChoiceBadge(props: Readonly<ChoiceBadgeProps>) {
     return isColorDark(bgColor) ? '#FFFFFF' : '#000000';
   }, [bgColor]);
 
-  if (!props.formattedValue) {
+  const formattedValue = useMemo(() => {
+    if (props.formattedValue) {
+      return props.formattedValue;
+    }
+
+    if (!props.value) {
+      return null;
+    }
+
+    const choice = props.attribute.options.find(
+      (option) => option.value === props.value
+    );
+
+    if (!choice) {
+      return null;
+    }
+
+    return choice.label;
+  }, [props.attribute.options, props.formattedValue, props.value]);
+
+  if (!formattedValue) {
     return null;
   }
 
@@ -42,7 +65,7 @@ export function ChoiceBadge(props: Readonly<ChoiceBadgeProps>) {
       }}
       size={props.size}
     >
-      {props.formattedValue}
+      {formattedValue}
     </Badge>
   );
 }

@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Badge,
   Body1,
   Body1Strong,
   Caption1,
@@ -9,7 +8,6 @@ import {
   tokens,
 } from '@fluentui/react-components';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
-import { isColorDark } from '@headless-adminapp/app/utils/color';
 import { ChoiceAttribute } from '@headless-adminapp/core/attributes';
 import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
 import { CardView } from '@headless-adminapp/core/experience/view';
@@ -20,6 +18,8 @@ import {
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
 import { FC } from 'react';
+
+import { ChoiceBadge } from '../components/ChoiceBadge';
 
 interface RecordCardProps<S extends SchemaAttributes = SchemaAttributes> {
   schema: Schema<S>;
@@ -141,6 +141,7 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
         >
           {cardView.rightColumn.map((column) => {
             const value = _record[column.name];
+
             if (!value) {
               return null;
             }
@@ -261,29 +262,5 @@ const ChoiceTag: FC<ChoiceTagProps<string | number>> = ({
   attribute,
   value,
 }) => {
-  const choice = attribute.options.find((option) => option.value === value);
-
-  if (!choice) {
-    return null;
-  }
-
-  const bgColor = choice.color;
-  let color: string | undefined;
-  if (bgColor) {
-    color = isColorDark(bgColor) ? '#FFFFFF' : '#000000';
-  }
-
-  return (
-    <Badge
-      size="small"
-      appearance="filled"
-      style={{
-        background: bgColor,
-        color: color,
-        fontWeight: tokens.fontWeightRegular,
-      }}
-    >
-      {choice.label}
-    </Badge>
-  );
+  return <ChoiceBadge attribute={attribute} value={value} size="small" />;
 };

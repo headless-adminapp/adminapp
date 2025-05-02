@@ -256,6 +256,7 @@ export async function retriveRecords<
       schema,
       view.experience.filter,
       extraFilter,
+      null, // quickFilterResults
       columnFilters,
       schemaStore
     ),

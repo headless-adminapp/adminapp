@@ -36,6 +36,7 @@ export function useRecordSetResult() {
         ...(cardView.secondaryColumns ?? [])
           .filter((x) => !x.expandedKey)
           .map((x) => x.name),
+        ...(cardView.rightColumn ?? []).map((x) => x.name),
       ])
     ).filter(Boolean) as string[];
   }, [cardView]);

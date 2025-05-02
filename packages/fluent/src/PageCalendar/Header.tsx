@@ -66,7 +66,7 @@ export function Header<SA extends SchemaAttributes = SchemaAttributes>({
             gap: tokens.spacingHorizontalS,
           }}
         >
-          {!config.disableCreate && (
+          {!config.createOptions && (
             <Button
               style={{ fontWeight: tokens.fontWeightMedium }}
               icon={<iconSet.Add />}
@@ -78,37 +78,38 @@ export function Header<SA extends SchemaAttributes = SchemaAttributes>({
           )}
         </div>
       </div>
-      {!!config.filterAttributes && (
-        <Fragment>
-          <Divider style={{ opacity: 0.2 }} />
-          <div style={{ display: 'flex', gap: tokens.spacingHorizontalS }}>
-            {Object.entries(config.filterAttributes).map(
-              ([attributeName, attribute]) => {
-                return (
-                  <Controller
-                    key={attributeName}
-                    control={filterForm.control}
-                    name={attributeName as Path<InferredSchemaType<SA>>}
-                    render={({ field }) => {
-                      return (
-                        <div>
-                          <StandardControl
-                            attribute={attribute}
-                            name={attributeName}
-                            value={field.value}
-                            onChange={field.onChange}
-                            onBlur={field.onBlur}
-                          />
-                        </div>
-                      );
-                    }}
-                  />
-                );
-              }
-            )}
-          </div>
-        </Fragment>
-      )}
+      {!!config.filterAttributes &&
+        Object.keys(config.filterAttributes).length > 0 && (
+          <Fragment>
+            <Divider style={{ opacity: 0.2 }} />
+            <div style={{ display: 'flex', gap: tokens.spacingHorizontalS }}>
+              {Object.entries(config.filterAttributes).map(
+                ([attributeName, attribute]) => {
+                  return (
+                    <Controller
+                      key={attributeName}
+                      control={filterForm.control}
+                      name={attributeName as Path<InferredSchemaType<SA>>}
+                      render={({ field }) => {
+                        return (
+                          <div>
+                            <StandardControl
+                              attribute={attribute}
+                              name={attributeName}
+                              value={field.value}
+                              onChange={field.onChange}
+                              onBlur={field.onBlur}
+                            />
+                          </div>
+                        );
+                      }}
+                    />
+                  );
+                }
+              )}
+            </div>
+          </Fragment>
+        )}
     </div>
   );
 }

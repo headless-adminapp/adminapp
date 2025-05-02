@@ -114,7 +114,7 @@ export class SchemaExperienceBuilder<
   public defineViewExperience(
     viewExperience: Pick<
       DefineViewExperience.Experience<S>,
-      'filter' | 'defaultSorting'
+      'filter' | 'defaultSorting' | 'quickFilter'
     > & {
       grid?: DefineViewExperience.Experience<S>['grid'];
       card?: DefineViewExperience.Experience<S>['card'];

@@ -4,11 +4,11 @@ export type Filter<T extends string = string> = {
   type: 'and' | 'or';
 } & (
   | {
-      conditions?: Condition<T>[];
+      conditions?: [Condition<T>, ...Condition<T>[]];
       filters: [Filter<T>, ...Filter<T>[]];
     }
   | {
-      conditions: Condition[];
+      conditions: [Condition<T>, ...Condition<T>[]];
       filters?: [Filter<T>, ...Filter<T>[]];
     }
 );

@@ -51,6 +51,7 @@ export interface GridContextState<
   searchText: string;
   columnFilters: Partial<Record<keyof S, ColumnCondition>>;
   sorting: SortingState<S>;
+  quickFilterValues: Record<string, unknown>;
 
   // internal state (selection)
   selectedIds: string[];

@@ -5,6 +5,7 @@ import {
 import { Data } from '@headless-adminapp/core/transport';
 import { useEffect, useMemo, useRef } from 'react';
 
+import { useAuthSession } from '../../auth';
 import { useIsMobile } from '../../hooks';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 import { useMetadata } from '../../metadata/hooks/useMetadata';
@@ -26,6 +27,7 @@ import {
   useSelectedView,
 } from '../hooks';
 import { useGridDisabled } from '../hooks/useGridDisabled';
+import { useQuickFilter } from '../hooks/useQuickFilter';
 import {
   collectCardColumns,
   collectCardExpandedKeys,
@@ -46,6 +48,8 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
   const maxRecords = useMaxRecords();
   const [selectedIds] = useGridSelection();
   const disabled = useGridDisabled();
+  const [quickFilter, quickFilterValues] = useQuickFilter();
+  const authSession = useAuthSession();
 
   const { schemaStore } = useMetadata();
 
@@ -77,15 +81,35 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
     [gridColumns, isMobile, view.experience.card]
   );
 
+  const quickFilterResults = useMemo(() => {
+    if (!quickFilter) {
+      return null;
+    }
+
+    if (!quickFilterValues) {
+      return null;
+    }
+
+    return quickFilter.resolver(quickFilterValues, authSession);
+  }, [authSession, quickFilter, quickFilterValues]);
+
   const filter = useMemo(() => {
     return mergeConditions(
       schema,
       view.experience.filter,
       extraFilter,
+      quickFilterResults,
       columnFilters,
       schemaStore
     );
-  }, [columnFilters, extraFilter, schema, schemaStore, view.experience.filter]);
+  }, [
+    columnFilters,
+    extraFilter,
+    schema,
+    schemaStore,
+    view.experience.filter,
+    quickFilterResults,
+  ]);
 
   const {
     fetchNextPage,

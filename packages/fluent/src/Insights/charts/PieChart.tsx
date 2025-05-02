@@ -103,6 +103,7 @@ export function PieChart({
               top: 5,
               bottom: 5,
             }}
+            formatter={nameFormatter}
           />
         )}
         <Tooltip

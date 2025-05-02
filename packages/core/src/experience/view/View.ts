@@ -2,6 +2,7 @@ import { SchemaAttributes } from '../../schema';
 import { Filter, SortOrder } from '../../transport';
 import { AllowAsync } from '../../types';
 import { Metadata } from '../types';
+import { QuickFilter } from './QuickFilter';
 import { ViewColumn } from './ViewColumn';
 
 export interface BaseView<S extends SchemaAttributes = SchemaAttributes> {
@@ -27,6 +28,7 @@ export type ViewExperience<S extends SchemaAttributes = SchemaAttributes> =
   BaseView<S> & {
     grid: GridView<S>;
     card: CardView<S>;
+    quickFilter?: QuickFilter;
   };
 
 export type GridView<S extends SchemaAttributes = SchemaAttributes> = {

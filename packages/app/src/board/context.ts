@@ -14,6 +14,7 @@ export interface BoardContextState<
 
   // internal state (data)
   searchText: string;
+  quickFilterValues: Record<string, unknown>;
 }
 
 export interface BoardColumnContextState<

@@ -42,7 +42,7 @@ const CardViewSetter: FC = () => {
     }
 
     experienceStore
-      .getViewLookupV2(logicalName)
+      .getPublicView(logicalName)
       .then((view) => {
         setValue({
           cardView: view.experience.card,

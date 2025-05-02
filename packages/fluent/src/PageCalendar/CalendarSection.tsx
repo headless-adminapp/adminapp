@@ -1,10 +1,5 @@
 import { Button, tokens } from '@fluentui/react-components';
-import {
-  DateSelectArg,
-  DatesSetArg,
-  EventClickArg,
-  EventInput,
-} from '@fullcalendar/core';
+import { DateSelectArg, DatesSetArg, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import FullCalendar from '@fullcalendar/react';
@@ -40,7 +35,6 @@ interface CalendarSectionProps {
     viewType: ViewType;
   }) => void;
   events: EventInput[];
-  onEventClick?: (event: EventClickArg) => void;
   onDateSelect?: (event: DateSelectArg) => void;
   loading?: boolean;
 }
@@ -52,7 +46,6 @@ export const CalendarSection = ({
   onRangeChange,
   events,
   onDateSelect,
-  onEventClick,
   loading,
 }: Readonly<CalendarSectionProps>) => {
   const calendarRef = useRef<FullCalendar>(null);
@@ -245,7 +238,6 @@ export const CalendarSection = ({
             events={events}
             datesSet={handleDateRangeChange}
             select={onDateSelect}
-            eventClick={onEventClick}
             eventContent={renderEventContent}
             timeZone={timezone}
             height="100%"

@@ -1,4 +1,16 @@
-import { SchemaAttributes } from '../../schema';
+import { Attribute } from '../../attributes';
+import { InferredSchemaType, Schema, SchemaAttributes } from '../../schema';
+import { Data } from '../../transport';
+
+export interface ViewColumnProps {
+  column: ViewColumn;
+  schema: Schema;
+  record: Data<InferredSchemaType<SchemaAttributes>>;
+  value: unknown;
+  attribute: Attribute;
+  formattedValue: string;
+  width: number;
+}
 
 export interface ViewColumn<S extends SchemaAttributes = SchemaAttributes> {
   width?: number;
@@ -6,7 +18,7 @@ export interface ViewColumn<S extends SchemaAttributes = SchemaAttributes> {
   name: keyof S;
   label?: string;
   expandedKey?: string;
-  component?: string;
+  component?: string | React.ComponentType<ViewColumnProps>; // Component or unique name of component from registry to override default component
   plainText?: boolean; // Forcing plain text rendering
 }
 

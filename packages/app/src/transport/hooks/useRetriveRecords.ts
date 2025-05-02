@@ -14,6 +14,8 @@ import {
 } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo } from 'react';
 
+import { simplyfyFilter } from '../../datagrid/DataGridProvider/utils';
+
 const ROWS_PER_PAGE = 100;
 const MAX_RECORDS = 10000;
 
@@ -211,10 +213,18 @@ export function useRetriveRecords<
   sorting,
   disabled,
 }: UseRetriveRecordProps<S>) {
+  const _filter = useMemo(() => {
+    if (!filter) {
+      return null;
+    }
+
+    return simplyfyFilter(filter);
+  }, [filter]);
+
   const queryKey = useRetrieveRecordsKey({
     columns,
     expand,
-    filter,
+    filter: _filter,
     maxRecords,
     schema,
     search,
@@ -224,7 +234,7 @@ export function useRetriveRecords<
   const query = useRetriveRecordsInternal(queryKey, {
     columns,
     expand,
-    filter,
+    filter: _filter,
     maxRecords,
     schema,
     search,

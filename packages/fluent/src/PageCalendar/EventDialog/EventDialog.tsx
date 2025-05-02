@@ -45,9 +45,6 @@ interface EventDialogProps<
   }) => Promise<void>;
   onCancel?: () => void;
   onDismiss?: () => void;
-  allowOpenRecord?: boolean;
-  onOpenRecord?: (id: string) => void;
-  onDelete?: (id: string) => void;
   eventResolver?: CalendarEventResolverFn;
   config: CalendarConfig;
 }
@@ -69,9 +66,6 @@ export function EventDialog<
           config={props.config}
           onCancel={props.onCancel}
           onSubmit={props.onSubmit}
-          allowOpenRecord={props.allowOpenRecord}
-          onOpenRecord={props.onOpenRecord}
-          onDelete={props.onDelete}
         />
       </DialogSurface>
     </Dialog>

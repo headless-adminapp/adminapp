@@ -26,7 +26,7 @@ export function getLocale(
     timezone,
     dateFormats: {
       short: options?.dateFormats?.short ?? 'M/D/YYYY',
-      long: options?.dateFormats?.long ?? 'WWW, MMM D, YYYY',
+      long: options?.dateFormats?.long ?? 'ddd, MMM D, YYYY',
     },
     timeFormats: {
       short: options?.timeFormats?.short ?? 'hh:mm A',

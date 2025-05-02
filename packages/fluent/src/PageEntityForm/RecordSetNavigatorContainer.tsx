@@ -6,7 +6,10 @@ import {
   tokens,
 } from '@fluentui/react-components';
 import { ScrollView } from '@headless-adminapp/app/components/ScrollView';
-import { useRecordId } from '@headless-adminapp/app/dataform/hooks';
+import {
+  useDataFormSchema,
+  useRecordId,
+} from '@headless-adminapp/app/dataform/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useOpenForm } from '@headless-adminapp/app/navigation';
 import {
@@ -39,6 +42,7 @@ export const RecordSetNavigatorContainer: FC = () => {
   const [visible] = useRecordSetVisibility();
 
   const recordId = useRecordId();
+  const formSchema = useDataFormSchema();
 
   const styles = useStyles();
 
@@ -50,6 +54,10 @@ export const RecordSetNavigatorContainer: FC = () => {
   }
 
   if (!visible) {
+    return null;
+  }
+
+  if (schema.logicalName !== formSchema?.logicalName) {
     return null;
   }
 

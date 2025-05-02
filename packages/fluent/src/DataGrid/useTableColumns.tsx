@@ -51,7 +51,7 @@ import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribu
 import { RegardingAttribute } from '@headless-adminapp/core/attributes/LookupAttribute';
 import { PageType } from '@headless-adminapp/core/experience/app';
 import { Locale } from '@headless-adminapp/core/experience/locale';
-import { ViewColumn } from '@headless-adminapp/core/experience/view';
+import { ViewColumnProps } from '@headless-adminapp/core/experience/view/ViewColumn';
 import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import { ISchemaStore } from '@headless-adminapp/core/store';
 import {
@@ -478,17 +478,21 @@ function renderCellContent({
   }
 
   if (column.component) {
-    const Component = componentStore.getComponent<
-      FC<{
-        column: ViewColumn;
-        schema: Schema;
-        record: UniqueRecord;
-        value: unknown;
-        attribute: Attribute;
-        formattedValue: string;
-        width: number;
-      }>
-    >(column.component);
+    let Component: React.ComponentType<ViewColumnProps> | undefined;
+
+    if (column.component) {
+      if (typeof column.component === 'function') {
+        Component = column.component;
+      } else if (typeof column.component === 'string') {
+        const OverrideControl = componentStore.getComponent<
+          FC<ViewColumnProps>
+        >(column.component);
+
+        if (OverrideControl) {
+          Component = OverrideControl;
+        }
+      }
+    }
 
     if (!Component) {
       throw new Error(`Component with name ${column.component} not found`);

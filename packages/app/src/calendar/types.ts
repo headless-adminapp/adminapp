@@ -1,8 +1,11 @@
 import { AuthSession } from '@headless-adminapp/core/experience/auth';
+import { OpenFormOptions } from '@headless-adminapp/core/experience/command';
 import {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
+
+import { InternalRouteResolver, RouterInstance } from '../route/context';
 
 export interface CalendarEvent {
   id: string;
@@ -66,18 +69,45 @@ export interface CalendarConfig<
 > {
   eventsResolver: CalendarEventsResolverFn<SA3>;
   eventResolver?: CalendarEventResolverFn;
-  saveEvent: CalendarEventSaveFn<SA1, SA2>;
+  saveEvent?: CalendarEventSaveFn<SA1, SA2>; // required for dialog mode
   beforeDescriptionAttributes?: SA1;
   afterDescriptionAttributes?: SA2;
   filterAttributes?: SA3;
   defaultFilter?: InferredSchemaType<SA3>;
-  openRecord?: (id: string) => void;
-  deleteEvent: (id: string) => Promise<void>;
+  deleteEvent?: (id: string) => Promise<void>;
   title: string;
   description: string;
   eventLabel: string;
-  disableCreate?: boolean;
-  disableEdit?: boolean;
-  disableDelete?: boolean;
   disableAllDay?: boolean;
+  createOptions?:
+    | {
+        mode: 'dialog';
+      }
+    | {
+        mode: 'custom';
+        allowQuickCreate?: boolean;
+        onClick: (
+          defaultValues: Record<string, unknown>,
+          options: {
+            router: RouterInstance;
+            routeResolver: InternalRouteResolver;
+            openForm: (options: OpenFormOptions) => void;
+          }
+        ) => void;
+      };
+  editOptions?:
+    | {
+        mode: 'dialog';
+      }
+    | {
+        mode: 'custom';
+        onClick: (
+          event: CalendarEvent,
+          options: {
+            router: RouterInstance;
+            routeResolver: InternalRouteResolver;
+            openForm: (options: OpenFormOptions) => void;
+          }
+        ) => void;
+      };
 }

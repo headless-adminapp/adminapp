@@ -25,22 +25,23 @@ export const ScrollView: FC<PropsWithChildren<ScrollViewProps>> = ({
   const [isTop, setIsTop] = useState(true);
   const [isBottom, setIsBottom] = useState(false);
   const handleScroll: ScrollbarProps['onScroll'] = (event) => {
-    const div = event.target as HTMLDivElement;
+    if (onScroll) {
+      onScroll(event);
+    }
+  };
 
-    const remainingSpace = getReaminingSpace(div);
+  const handleOnUpdate: ScrollbarProps['onUpdate'] = (values) => {
+    const remainingSpace =
+      values.scrollHeight - values.scrollTop - values.clientHeight;
 
-    const _isTop = div.scrollTop === 0;
-    const _isBottom = remainingSpace <= 0;
+    const _isTop = values.scrollTop === 0;
+    const _isBottom = remainingSpace <= 10;
 
     if (isTop !== _isTop) {
       setIsTop(_isTop);
     }
     if (isBottom !== _isBottom) {
       setIsBottom(_isBottom);
-    }
-
-    if (onScroll) {
-      onScroll(event);
     }
   };
 
@@ -55,6 +56,7 @@ export const ScrollView: FC<PropsWithChildren<ScrollViewProps>> = ({
         shadowEffect && !isBottom && 'hdl-scrollbar-shadow-bottom'
       )}
       onScroll={handleScroll}
+      onUpdate={handleOnUpdate}
     >
       {children}
     </Scrollbars>

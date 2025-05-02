@@ -1,5 +1,7 @@
-import { useEffect } from 'react';
+import { Filter } from '@headless-adminapp/core/transport';
+import { useEffect, useMemo } from 'react';
 
+import { useAuthSession } from '../auth';
 import { useDebouncedValue } from '../hooks';
 import { useContextSetValue } from '../mutable';
 import {
@@ -9,6 +11,7 @@ import {
 import { BoardColumnContext } from './context';
 import { useBoardColumnConfig } from './hooks/useBoardColumnConfig';
 import { useBoardConfig } from './hooks/useBoardConfig';
+import { useQuickFilter } from './hooks/useQuickFilter';
 import { useSearchText } from './hooks/useSearchText';
 
 const MAX_RECORDS = 10000;
@@ -20,12 +23,50 @@ export function DataResolver() {
     projection: { columns, expand },
   } = useBoardConfig();
   const [searchText] = useSearchText();
+  const [quickFilter, quickFilterValues] = useQuickFilter();
+  const authSession = useAuthSession();
 
   const { filter, maxRecords = MAX_RECORDS } = useBoardColumnConfig();
 
   const setState = useContextSetValue(BoardColumnContext);
 
   const [search] = useDebouncedValue(searchText, 500);
+
+  const quickFilterResults = useMemo(() => {
+    if (!quickFilter) {
+      return null;
+    }
+
+    if (!quickFilterValues) {
+      return null;
+    }
+
+    return quickFilter.resolver(quickFilterValues, authSession);
+  }, [authSession, quickFilter, quickFilterValues]);
+
+  const mergedFilter = useMemo(() => {
+    const filters: Filter[] = [];
+    if (filter) {
+      filters.push(filter);
+    }
+
+    if (quickFilterResults) {
+      filters.push(quickFilterResults);
+    }
+
+    if (filters.length === 0) {
+      return null;
+    }
+
+    if (filters.length === 1) {
+      return filters[0];
+    }
+
+    return {
+      type: 'and',
+      filters,
+    } as Filter;
+  }, [filter, quickFilterResults]);
 
   const {
     fetchNextPage,
@@ -37,7 +78,7 @@ export function DataResolver() {
   } = useRetriveRecords({
     columns,
     expand,
-    filter,
+    filter: mergedFilter,
     maxRecords,
     schema,
     search,

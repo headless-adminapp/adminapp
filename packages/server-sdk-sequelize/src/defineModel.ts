@@ -214,7 +214,12 @@ function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
 
   if (schema.virtual) {
     // Do not sync
-    defination.sync = (() => Promise.resolve()) as any;
+    defination.sync = (() => {
+      return Promise.resolve();
+    }) as any;
+    defination.drop = () => {
+      return Promise.resolve();
+    };
   }
 
   return defination;

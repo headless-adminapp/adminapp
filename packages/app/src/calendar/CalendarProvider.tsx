@@ -1,13 +1,11 @@
-import { CalendarProvider } from '@headless-adminapp/app/calendar/CalendarProvider';
-import { CalendarContextState } from '@headless-adminapp/app/calendar/context';
-import { CalendarConfig } from '@headless-adminapp/app/calendar/types';
-import { useCreateContextStore } from '@headless-adminapp/app/mutable';
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
-import { useEffect } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 
-import { PageCalendarUI } from './PageCalendarUI';
+import { ContextValue, useCreateContextStore } from '../mutable';
+import { CalendarContext, CalendarContextState } from './context';
+import { CalendarConfig } from './types';
 
-interface PageCalendarProps<
+interface CalendarProviderProps<
   SA1 extends SchemaAttributes = SchemaAttributes,
   SA2 extends SchemaAttributes = SchemaAttributes,
   SA3 extends SchemaAttributes = SchemaAttributes
@@ -15,11 +13,11 @@ interface PageCalendarProps<
   config: CalendarConfig<SA1, SA2, SA3>;
 }
 
-export function PageCalendar<
+export function CalendarProvider<
   SA1 extends SchemaAttributes = SchemaAttributes,
   SA2 extends SchemaAttributes = SchemaAttributes,
   SA3 extends SchemaAttributes = SchemaAttributes
->(props: Readonly<PageCalendarProps<SA1, SA2, SA3>>) {
+>(props: Readonly<PropsWithChildren<CalendarProviderProps<SA1, SA2, SA3>>>) {
   const contextValue = useCreateContextStore<CalendarContextState<SA1>>({
     config: props.config,
   });
@@ -30,11 +28,11 @@ export function PageCalendar<
     });
   }, [contextValue, props.config]);
 
-  const config = props.config;
-
   return (
-    <CalendarProvider config={config}>
-      <PageCalendarUI />
-    </CalendarProvider>
+    <CalendarContext.Provider
+      value={contextValue as unknown as ContextValue<CalendarContextState>}
+    >
+      {props.children}
+    </CalendarContext.Provider>
   );
 }

@@ -23,6 +23,7 @@ export interface Schema<A extends SchemaAttributes = SchemaAttributes>
   ownership?: 'scoped' | 'global'; // Scoped means user can only see records they have permission to see, global means user can see all records
   virtual?: boolean; // Not a physical collection and used for query only
   baseSchemaLogicalName?: string; // Base entity for the schema
+  baseSchemaLogicalNames?: string[]; // Base entities for the schema (Used to create record)
   virtualLogicalNameAttribute?: keyof A; // Attribute that contains the schema logical name for virtual entities
   additionalMetadata?: Record<string, any>; // Additional metadata
   attributes: A;

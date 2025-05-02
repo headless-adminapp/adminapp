@@ -26,12 +26,14 @@ export function PageBoard<S extends SchemaAttributes = SchemaAttributes>(
   const contextValue = useCreateContextStore<BoardContextState<S>>({
     config: props.config,
     searchText: '',
+    quickFilterValues: props.config.quickFilter?.defaultValues ?? {},
   });
 
   useEffect(() => {
     contextValue.setValue({
       config: props.config,
       searchText: '',
+      quickFilterValues: props.config.quickFilter?.defaultValues ?? {},
     });
   }, [contextValue, props.config]);
 

@@ -69,6 +69,7 @@ export function DataGridProvider<
     searchText: '',
     selectedIds: [],
     sorting: props.view.experience.defaultSorting ?? [],
+    quickFilterValues: props.view.experience.quickFilter?.defaultValues ?? {},
     view: props.view,
     commands: props.commands,
     columns: transformViewColumns(
@@ -99,6 +100,7 @@ export function DataGridProvider<
       searchText: '',
       selectedIds: [],
       sorting: props.view.experience.defaultSorting ?? [],
+      quickFilterValues: props.view.experience.quickFilter?.defaultValues ?? {},
       columns: transformViewColumns(
         props.view.logicalName,
         props.view.experience.grid.columns,

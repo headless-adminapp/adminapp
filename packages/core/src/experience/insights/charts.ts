@@ -127,7 +127,13 @@ export interface BarChartInfo {
   type: 'bar';
   xAxis: XAxis;
   yAxis: YAxis;
-  stackOffset?: 'sign';
+  stackOffset?:
+    | 'sign'
+    | 'expand'
+    | 'none'
+    | 'wiggle'
+    | 'silhouette'
+    | 'positive';
   bars: [BarInfo, ...BarInfo[]];
 }
 

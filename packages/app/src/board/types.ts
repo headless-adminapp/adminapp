@@ -1,5 +1,6 @@
 import { CommandContextBase } from '@headless-adminapp/core/experience/command';
 import { SortingState, View } from '@headless-adminapp/core/experience/view';
+import { QuickFilter } from '@headless-adminapp/core/experience/view/QuickFilter';
 import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import { Filter } from '@headless-adminapp/core/transport';
 import { FC } from 'react';
@@ -54,4 +55,5 @@ export interface BoardConfig<S extends SchemaAttributes = SchemaAttributes> {
   emptyMessage?: string;
   minColumnWidth?: number;
   maxColumnWidth?: number;
+  quickFilter?: QuickFilter;
 }

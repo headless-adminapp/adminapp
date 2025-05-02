@@ -23,7 +23,7 @@ export type InferredAttributeType<A extends Attribute> = A extends {
   ? A['options'][0]['value']
   : A extends { type: 'choices'; options: Array<infer _> }
   ? A['options'][0]['value'][]
-  : A extends { type: 'lookup' }
+  : A extends { type: 'lookup' | 'regarding' }
   ? A extends IdTypes
     ? DataLookup<InferredIdType<A>>
     : never

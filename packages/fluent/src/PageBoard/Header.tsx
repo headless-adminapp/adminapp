@@ -15,6 +15,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { FC } from 'react';
 
 import { useAppStrings } from '../App/AppStringContext';
+import { HeaderQuickFilter } from './HeaderQuickFilter';
 
 interface HeaderProps {
   title: string;
@@ -39,42 +40,51 @@ export const Header: FC<HeaderProps> = ({ title, subtitle }) => {
     <div
       style={{
         display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        alignItems: isMobile ? 'flex-start' : 'center',
-        gap: tokens.spacingHorizontalM,
+        flexDirection: 'column',
+        gap: 16,
       }}
     >
-      <div style={{ flex: 1 }}>
-        <div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Subtitle2 style={{ color: tokens.colorNeutralForeground1 }}>
-              {title}
-            </Subtitle2>
-            <Caption1 style={{ color: tokens.colorNeutralForeground2 }}>
-              {subtitle}
-            </Caption1>
-          </div>
-        </div>
-      </div>
       <div
         style={{
           display: 'flex',
-          alignItems: 'center',
-          gap: tokens.spacingHorizontalS,
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: isMobile ? 'flex-start' : 'center',
+          gap: tokens.spacingHorizontalM,
         }}
       >
-        <SearchBox
-          appearance="filled-darker"
-          placeholder={appStrings.searchPlaceholder}
-          value={searchText}
-          onChange={(e, data) => setSearchText(data.value)}
-        />
-        <Button
-          appearance="subtle"
-          icon={<Icons.Refresh size={20} />}
-          onClick={refresh}
-        ></Button>
+        <div style={{ flex: 1 }}>
+          <div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <Subtitle2 style={{ color: tokens.colorNeutralForeground1 }}>
+                {title}
+              </Subtitle2>
+              <Caption1 style={{ color: tokens.colorNeutralForeground2 }}>
+                {subtitle}
+              </Caption1>
+            </div>
+          </div>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: tokens.spacingHorizontalS,
+          }}
+        >
+          <SearchBox
+            appearance="filled-darker"
+            placeholder={appStrings.searchPlaceholder}
+            value={searchText}
+            onChange={(e, data) => setSearchText(data.value)}
+          />
+          <Button
+            appearance="subtle"
+            icon={<Icons.Refresh size={20} />}
+            onClick={refresh}
+          ></Button>
+        </div>
       </div>
+      <HeaderQuickFilter />
     </div>
   );
 };

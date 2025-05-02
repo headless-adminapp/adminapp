@@ -4,7 +4,7 @@ import {
 } from '@headless-adminapp/core/experience/view';
 import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import { ISchemaStore } from '@headless-adminapp/core/store';
-import { Filter } from '@headless-adminapp/core/transport';
+import { Condition, Filter } from '@headless-adminapp/core/transport';
 import dayjs from 'dayjs';
 
 import { TransformedViewColumn } from '../context';
@@ -101,6 +101,7 @@ export function mergeConditions<S extends SchemaAttributes = SchemaAttributes>(
   schema: Schema<S>,
   filter: Filter | null | undefined,
   extraFilter: Filter | null | undefined,
+  quickFilterResults: Filter | null | undefined,
   columnFilters: Partial<Record<string, ColumnCondition>> | undefined,
   schemaStore: ISchemaStore
 ): Filter | null {
@@ -112,6 +113,10 @@ export function mergeConditions<S extends SchemaAttributes = SchemaAttributes>(
 
   if (extraFilter) {
     filters.push(extraFilter);
+  }
+
+  if (quickFilterResults) {
+    filters.push(quickFilterResults);
   }
 
   if (columnFilters) {
@@ -143,13 +148,49 @@ export function mergeConditions<S extends SchemaAttributes = SchemaAttributes>(
   }
 
   if (filters.length === 1) {
-    return filters[0];
+    return simplyfyFilter(filters[0]);
+  }
+
+  return simplyfyFilter({
+    type: 'and',
+    filters: filters as [Filter, ...Filter[]],
+  });
+}
+
+export function simplyfyFilter(filter: Filter): Filter | null {
+  const conditions: Condition<any>[] = filter.conditions ?? [];
+  const filters: Filter[] = [];
+
+  if (filter.filters) {
+    for (const f of filter.filters) {
+      const _f = simplyfyFilter(f);
+
+      if (!_f) {
+        continue;
+      }
+
+      if (_f.type !== filter.type) {
+        filters.push(_f);
+      } else {
+        if (_f.conditions) {
+          conditions.push(..._f.conditions);
+        }
+        if (_f.filters) {
+          filters.push(..._f.filters);
+        }
+      }
+    }
+  }
+
+  if (conditions.length === 0 && filters.length === 0) {
+    return null;
   }
 
   return {
-    type: 'and',
-    filters: filters as [Filter, ...Filter[]],
-  };
+    type: filter.type,
+    conditions: conditions,
+    filters: filters,
+  } as Filter<any>;
 }
 
 export function collectExpandedKeys(

@@ -81,6 +81,14 @@ export namespace DefaultCommandBuilder {
             (x) => x.new
           ),
         }),
+        ViewCommandBuilder.createNewRecordForVirtualCommand({
+          Icon: icons.New,
+          text: strings.new,
+          localizedTexts: extractLocalizedStrings(
+            localizedSrings,
+            (x) => x.new
+          ),
+        }),
         ViewCommandBuilder.createEditRecordCommand({
           Icon: icons.Edit,
           text: strings.edit,

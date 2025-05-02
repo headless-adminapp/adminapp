@@ -3,11 +3,6 @@ import {
   DialogActions,
   DialogBody,
   DialogTitle,
-  Menu,
-  MenuItem,
-  MenuList,
-  MenuPopover,
-  MenuTrigger,
 } from '@fluentui/react-components';
 import {
   BaseEventAttributes,
@@ -22,7 +17,6 @@ import {
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
 import { Nullable } from '@headless-adminapp/core/types';
-import { iconSet } from '@headless-adminapp/icons-fluent';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -48,9 +42,6 @@ interface EventFormBodyProps<
     values: Nullable<InferredSchemaType<BaseEventAttributes>>;
   }) => Promise<void>;
   onCancel?: () => void;
-  allowOpenRecord?: boolean;
-  onOpenRecord?: (id: string) => void;
-  onDelete?: (id: string) => void;
   config: CalendarConfig;
 }
 
@@ -101,92 +92,40 @@ export function EventFormBody(props: Readonly<EventFormBodyProps>) {
     formRef.current.reset(defaultValues);
   }, [defaultValues]);
 
-  const menuItems = [];
-
-  if (props.allowOpenRecord) {
-    menuItems.push(
-      <MenuItem
-        key="open"
-        icon={<iconSet.OpenInNew size={20} />}
-        onClick={() => props.onOpenRecord?.(props.values.id as string)}
-      >
-        Open
-      </MenuItem>
-    );
-  }
-
-  if (!props.config.disableEdit) {
-    menuItems.push(
-      <MenuItem
-        key="delete"
-        icon={<iconSet.Delete size={20} />}
-        onClick={() => props.onDelete?.(props.values.id as string)}
-      >
-        Delete
-      </MenuItem>
-    );
-  }
-
   let title =
     (props.values.id ? 'Edit' : 'New') +
     ` ${props.config.eventLabel.toLowerCase()}`;
 
-  if (props.values.id && props.config.disableEdit) {
+  if (props.values.id) {
     title = props.config.eventLabel;
   }
 
-  let readOnly = props.values.id
-    ? props.config.disableEdit
-    : props.config.disableCreate;
-
   return (
     <DialogBody>
-      <DialogTitle
-        action={
-          props.values.id && menuItems.length > 0 ? (
-            <Menu positioning="below-end">
-              <MenuTrigger>
-                <Button
-                  appearance="subtle"
-                  aria-label="close"
-                  icon={<iconSet.MoreVertical />}
-                />
-              </MenuTrigger>
-              <MenuPopover>
-                <MenuList>{menuItems}</MenuList>
-              </MenuPopover>
-            </Menu>
-          ) : null
-        }
-      >
-        {title}
-      </DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <EventFormContent
         form={form}
         afterDescriptionAttributes={props.config.afterDescriptionAttributes}
         beforeDescriptionAttributes={props.config.beforeDescriptionAttributes}
-        readOnly={readOnly}
         config={props.config}
       />
       <DialogActions>
-        {!readOnly && (
-          <Button
-            appearance="primary"
-            disabled={form.formState.submitCount > 0 && !form.formState.isValid}
-            onClick={async () => {
-              await form.handleSubmit(async (values) => {
-                await props.onSubmit?.({
-                  modifiedValues: values.id
-                    ? getModifiedValues(defaultValues, values)
-                    : values,
-                  values,
-                });
-              })();
-            }}
-          >
-            {props.values.id ? 'Save' : 'Create'}
-          </Button>
-        )}
+        <Button
+          appearance="primary"
+          disabled={form.formState.submitCount > 0 && !form.formState.isValid}
+          onClick={async () => {
+            await form.handleSubmit(async (values) => {
+              await props.onSubmit?.({
+                modifiedValues: values.id
+                  ? getModifiedValues(defaultValues, values)
+                  : values,
+                values,
+              });
+            })();
+          }}
+        >
+          {props.values.id ? 'Save' : 'Create'}
+        </Button>
         <Button
           appearance="secondary"
           type="button"

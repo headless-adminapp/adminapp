@@ -117,6 +117,71 @@ export namespace ViewCommandBuilder {
     };
   }
 
+  export function createNewRecordForVirtualCommand({
+    Icon,
+    text,
+    localizedTexts,
+  }: {
+    Icon: Icon;
+    text: string;
+    localizedTexts?: Record<string, string>;
+  }): EntityMainGridCommandItemExperience {
+    return {
+      type: 'button',
+      Icon,
+      text,
+      localizedText: localizedTexts,
+      onClick: async (context) => {
+        if (!context.primaryControl.schema.baseSchemaLogicalNames?.length) {
+          return;
+        }
+
+        const data = await context.utility.openPromptDialog({
+          title: 'Select type',
+          attributes: {
+            type: {
+              type: 'choice',
+              label: 'Select type',
+              string: true,
+              required: true,
+              options:
+                context.primaryControl.schema.baseSchemaLogicalNames?.map(
+                  (x) => {
+                    const schema = context.stores.schemaStore.getSchema(x);
+
+                    return {
+                      value: x,
+                      label: schema.label,
+                    };
+                  }
+                ),
+            },
+          },
+          defaultValues: {},
+        });
+
+        if (!data) {
+          return;
+        }
+
+        context.navigation.openForm({
+          logicalName: data.type,
+        });
+      },
+      hidden: (context) => {
+        if (EnabledRules.IsPhysicalSchema(context)) {
+          return true;
+        }
+
+        if (!context.primaryControl.schema.baseSchemaLogicalNames?.length) {
+          return true;
+        }
+
+        return false;
+      },
+    };
+  }
+
   export function createEditRecordCommand({
     Icon,
     text,
@@ -133,14 +198,51 @@ export namespace ViewCommandBuilder {
       localizedText: localizedTexts,
       isContextMenu: true,
       onClick: (context) => {
-        context.primaryControl.openRecord(
-          context.primaryControl.selectedIds[0],
-          context.primaryControl.schema.logicalName
-        );
+        if (EnabledRules.IsPhysicalSchema(context)) {
+          context.primaryControl.openRecord(
+            context.primaryControl.selectedIds[0],
+            context.primaryControl.schema.logicalName
+          );
+        } else {
+          if (!context.primaryControl.schema.virtualLogicalNameAttribute) {
+            return;
+          }
+
+          const logicalName = (
+            context.primaryControl.selectedRecords[0] as any
+          )[context.primaryControl.schema.virtualLogicalNameAttribute];
+
+          if (!logicalName) {
+            return;
+          }
+
+          context.primaryControl.openRecord(
+            context.primaryControl.selectedIds[0],
+            logicalName
+          );
+        }
       },
       hidden: [
         (context) => !EnabledRules.HasSingleRecordSelected(context),
-        (context) => !EnabledRules.IsPhysicalSchema(context),
+        (context) => {
+          if (EnabledRules.IsPhysicalSchema(context)) {
+            return false;
+          }
+
+          if (!context.primaryControl.schema.virtualLogicalNameAttribute) {
+            return true;
+          }
+
+          const logicalName = (
+            context.primaryControl.selectedRecords[0] as any
+          )[context.primaryControl.schema.virtualLogicalNameAttribute];
+
+          if (!logicalName) {
+            return true;
+          }
+
+          return false;
+        },
       ],
     };
   }
@@ -168,7 +270,20 @@ export namespace ViewCommandBuilder {
       },
       hidden: [
         (context) => !EnabledRules.HasSingleRecordSelected(context),
-        (context) => EnabledRules.IsPhysicalSchema(context),
+        (context) => {
+          if (EnabledRules.IsPhysicalSchema(context)) {
+            return true;
+          }
+
+          if (
+            context.primaryControl.schema.virtualLogicalNameAttribute ||
+            context.primaryControl.schema.baseSchemaLogicalName
+          ) {
+            return true;
+          }
+
+          return false;
+        },
       ],
     };
   }
