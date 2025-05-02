@@ -66,7 +66,7 @@ export function Header<SA extends SchemaAttributes = SchemaAttributes>({
             gap: tokens.spacingHorizontalS,
           }}
         >
-          {!config.createOptions && (
+          {!!config.createOptions && (
             <Button
               style={{ fontWeight: tokens.fontWeightMedium }}
               icon={<iconSet.Add />}
