@@ -125,9 +125,17 @@ export class MongoServerSdk<
 
     const basePipelines: PipelineStage[] = [];
 
+    const idAttribute = schema.attributes[schema.idAttribute];
+
+    let recordId: unknown = params.id;
+
+    if ('objectId' in idAttribute) {
+      recordId = new Types.ObjectId(params.id);
+    }
+
     basePipelines.push({
       $match: {
-        _id: new Types.ObjectId(params.id),
+        _id: recordId,
       },
     });
 
@@ -582,8 +590,16 @@ export class MongoServerSdk<
       throw new Error('Session is not started');
     }
 
+    const idAttribute = schema.attributes[schema.idAttribute];
+
+    let recordId: unknown = params.id;
+
+    if ('objectId' in idAttribute) {
+      recordId = new Types.ObjectId(params.id);
+    }
+
     const filter: FilterQuery<unknown> = {
-      $and: [{ _id: new Types.ObjectId(params.id) }],
+      $and: [{ _id: recordId }],
     };
 
     const orgFilter = transformFilter(
@@ -633,7 +649,7 @@ export class MongoServerSdk<
     let dependedRecordToBeDeleted: DependentRecord[] =
       await getDependentRecordsToDelete({
         schema,
-        _id: record._id as Types.ObjectId,
+        _id: record._id,
         session: this.session,
         schemaStore: this.options.schemaStore,
       });
@@ -723,11 +739,17 @@ export class MongoServerSdk<
     let data = params.data;
 
     data = Object.entries(data).reduce((acc, [key, value]) => {
-      if (key === '_id') {
+      if (value === undefined) {
         return acc;
       }
 
-      if (value === undefined) {
+      const attribute = schema.attributes[key];
+
+      if (!attribute) {
+        return acc;
+      }
+
+      if (key === '_id' && !value) {
         return acc;
       }
 
@@ -736,12 +758,24 @@ export class MongoServerSdk<
         return acc;
       }
 
+      if (attribute.type === 'id') {
+        if ('objectId' in attribute) {
+          value = new Types.ObjectId(value as string);
+        }
+
+        acc[key] = value;
+      }
+
       if (schema.attributes[key]?.type === 'lookup') {
         if (typeof value === 'object') {
           value = value.id;
         }
 
-        acc[key] = new Types.ObjectId(value as string);
+        if ('objectId' in schema.attributes[key]) {
+          acc[key] = new Types.ObjectId(value as string);
+        } else {
+          acc[key] = value;
+        }
       } else {
         acc[key] = value;
       }

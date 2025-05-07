@@ -16,6 +16,7 @@ import { DateTimeControl } from '../form/controls/DateTimeControl';
 import { DecimalControl } from '../form/controls/DecimalControl';
 import { DurationControl } from '../form/controls/DurationControl';
 import { EmailControl } from '../form/controls/EmailControl';
+import { IdControl } from '../form/controls/IdControl';
 import { IntegerControl } from '../form/controls/IntegerControl';
 import { LookupControl } from '../form/controls/LookupControl';
 import MultiSelectControl from '../form/controls/MultiSelectControl';
@@ -72,6 +73,23 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
   // const { openQuickCreate } = useQuickCreateForm();
 
   switch (attribute.type) {
+    case 'id': {
+      const controlProps = {
+        name,
+        placeholder,
+        value,
+        onChange,
+        onBlur,
+        error: isError,
+        disabled: readOnly,
+        readOnly,
+      };
+
+      const Control =
+        componentStore.getComponent<typeof IdControl>('Form.IdControl') ??
+        IdControl;
+      return <Control {...controlProps} idTypes={attribute} />;
+    }
     case 'string': {
       const controlProps = {
         name,

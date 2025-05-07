@@ -2,6 +2,8 @@ import { parsePhoneNumber } from '@headless-adminapp/app/utils/phone';
 import type {
   AttachmentsAttribute,
   Attribute,
+  Id,
+  IdAttribute,
   StringAttribute,
 } from '@headless-adminapp/core/attributes';
 import { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
@@ -28,6 +30,11 @@ import { FormValidationStringSet } from '../../form/FormValidationStringContext'
 import { localizedLabel } from '../../locale/utils';
 
 export { saveRecord } from './saveRecord';
+
+const guidRegex =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+const objectIdRegex = /^[0-9a-f]{24}$/i;
 
 export function getInitialValues({
   cloneRecord,
@@ -447,6 +454,13 @@ function createAttributeValidationSchema(attribute: Attribute): yup.Schema {
     case 'lookups':
       validationSchema = yup.array().nullable();
       break;
+    case 'id':
+      if ('number' in attribute && attribute.number) {
+        validationSchema = yup.number().nullable();
+      } else {
+        validationSchema = yup.string().nullable();
+      }
+      break;
     default:
       validationSchema = yup.mixed().nullable();
       break;
@@ -503,6 +517,14 @@ function extendAttributeValidationSchema({
       validationSchema = extendAttributeAttachmentsValidationSchema({
         attribute,
         validationSchema: validationSchema as yup.ArraySchema<any, any>,
+        label,
+        strings,
+      });
+      break;
+    case 'id':
+      validationSchema = extendAttributeIdValidationSchema({
+        attribute,
+        validationSchema: validationSchema as yup.StringSchema,
         label,
         strings,
       });
@@ -604,6 +626,32 @@ function extendAttributeAttachmentsValidationSchema({
           (file: any) => file?.size && file.size <= attribute.maxSize!
         );
       }
+    );
+  }
+
+  return validationSchema;
+}
+
+function extendAttributeIdValidationSchema({
+  attribute,
+  validationSchema,
+  label,
+  strings,
+}: {
+  attribute: IdAttribute<Id>;
+  validationSchema: yup.StringSchema;
+  strings: FormValidationStringSet;
+  label: string;
+}): yup.Schema {
+  if ('guid' in attribute && attribute.guid) {
+    validationSchema = validationSchema.matches(
+      guidRegex,
+      `${label}: ${strings.invalidIdFormat}`
+    );
+  } else if ('objectId' in attribute && attribute.objectId) {
+    validationSchema = validationSchema.matches(
+      objectIdRegex,
+      `${label}: ${strings.invalidIdFormat}`
     );
   }
 

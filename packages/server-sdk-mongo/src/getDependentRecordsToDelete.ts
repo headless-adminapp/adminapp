@@ -6,7 +6,7 @@ import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import { ISchemaStore } from '@headless-adminapp/core/store';
 import { ConflictError } from '@headless-adminapp/core/transport';
 import { DependentRecord } from '@headless-adminapp/server-sdk';
-import { ClientSession, Types } from 'mongoose';
+import { ClientSession } from 'mongoose';
 
 import { MongoSchemaStore } from './MongoSchemaStore';
 import { MongoRequiredSchemaAttributes } from './types';
@@ -49,7 +49,7 @@ export async function getDependentRecordsToDelete<
   schemaStore,
 }: {
   schema: Schema<SA>;
-  _id: Types.ObjectId;
+  _id: unknown;
   session: ClientSession | null;
   schemaStore: MongoSchemaStore<SA>;
 }) {

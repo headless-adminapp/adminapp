@@ -8,6 +8,7 @@ export interface TextControlProps extends ControlProps<string> {
   autoCorrect?: string;
   textTransform?: 'capitalize' | 'uppercase' | 'lowercase' | 'none';
   appearance?: InputProps['appearance'];
+  maxLength?: number;
 }
 
 export function TextControl({
@@ -28,6 +29,7 @@ export function TextControl({
   // borderOnFocusOnly,
   readOnly,
   appearance = 'filled-darker',
+  maxLength,
 }: TextControlProps) {
   const readonly = disabled || readOnly;
 
@@ -58,6 +60,7 @@ export function TextControl({
       style={{
         width: '100%',
       }}
+      maxLength={maxLength}
       // styles={{
       //   input: {
       //     ...(borderOnFocusOnly &&

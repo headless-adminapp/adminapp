@@ -9,6 +9,7 @@ export interface FormValidationStringSet {
   invalidPhoneNumber: string;
   atLeastOneRowRequired: string;
   fileSizeExceeded: string;
+  invalidIdFormat: string;
 }
 
 export const defaultFormValidationStrings: FormValidationStringSet = {
@@ -20,6 +21,7 @@ export const defaultFormValidationStrings: FormValidationStringSet = {
   invalidPhoneNumber: 'Invalid phone number.',
   atLeastOneRowRequired: 'At least one row required.',
   fileSizeExceeded: 'File size exceeded.',
+  invalidIdFormat: 'Invalid ID format.',
 };
 
 export const FormValidationStringContext =
