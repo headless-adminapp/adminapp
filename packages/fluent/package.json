@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/fluent",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
@@ -41,9 +41,9 @@
     "@fullcalendar/core": "6.1.15",
     "@fullcalendar/daygrid": "6.1.15",
     "@fullcalendar/interaction": "6.1.15",
+    "@fullcalendar/moment-timezone": "6.1.15",
     "@fullcalendar/react": "6.1.15",
     "@fullcalendar/timegrid": "6.1.15",
-    "@fullcalendar/moment-timezone": "6.1.15",
     "@headless-adminapp/core": "workspace:*",
     "@headless-adminapp/icons": "workspace:*",
     "@headless-adminapp/icons-fluent": "workspace:*",
