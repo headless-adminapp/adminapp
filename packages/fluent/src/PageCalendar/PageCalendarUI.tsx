@@ -4,6 +4,7 @@ import { useAuthSession } from '@headless-adminapp/app/auth';
 import { useConfig } from '@headless-adminapp/app/calendar/hooks';
 import { useOpenDetailDialog } from '@headless-adminapp/app/calendar/hooks/useOpenDetailDialog';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
+import { useLocale } from '@headless-adminapp/app/locale';
 import { useOpenForm } from '@headless-adminapp/app/navigation';
 import { useRouter, useRouteResolver } from '@headless-adminapp/app/route';
 import { useOpenToastNotification } from '@headless-adminapp/app/toast-notification';
@@ -16,7 +17,7 @@ import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import { DefaultValues, useForm } from 'react-hook-form';
 
 import { EventDialog } from './EventDialog/EventDialog';
@@ -32,20 +33,66 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isoWeek);
 
-export function PageCalendarUI<
-  SA3 extends SchemaAttributes = SchemaAttributes
->() {
+function strToViewType(view: string): ViewType | undefined {
+  switch (view) {
+    case 'month':
+    case ViewType.Month:
+      return ViewType.Month;
+    case 'week':
+    case ViewType.Week:
+      return ViewType.Week;
+    case 'day':
+    case ViewType.Day:
+      return ViewType.Day;
+    default:
+      return undefined;
+  }
+}
+
+function viewTypeToStr(view: ViewType): string {
+  switch (view) {
+    case ViewType.Month:
+      return 'month';
+    case ViewType.Week:
+      return 'week';
+    case ViewType.Day:
+      return 'day';
+  }
+}
+
+function getInitialView(isMobile: boolean, initialView?: string): ViewType {
+  if (initialView) {
+    const _view = strToViewType(initialView);
+
+    if (_view) {
+      return _view;
+    }
+  }
+
+  return isMobile ? ViewType.Day : ViewType.Month;
+}
+
+interface PageCalendarUIProps {
+  initialView?: string;
+  initialDate?: string; // YYYY-MM-DD
+  onChange?: (view: string, date: string) => void;
+}
+
+export function PageCalendarUI<SA3 extends SchemaAttributes = SchemaAttributes>(
+  props: Readonly<PageCalendarUIProps>
+) {
   const config = useConfig();
 
   const openToastNotification = useOpenToastNotification();
   const isMobile = useIsMobile();
+  const { timezone } = useLocale();
 
   const [activeStartDate, setActiveStartDate] = useState<Date | null>(null);
   const [activeEndDate, setActiveEndDate] = useState<Date | null>(null);
   const [currentStartDate, setCurrentStartDate] = useState<Date | null>(null);
   const [currentEndDate, setCurrentEndDate] = useState<Date | null>(null);
   const [viewType, setViewType] = useState<ViewType>(
-    isMobile ? ViewType.Day : ViewType.Month
+    getInitialView(isMobile, props.initialView)
   );
 
   const filterForm = useForm<InferredSchemaType<SA3>>({
@@ -94,10 +141,34 @@ export function PageCalendarUI<
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
+  const initialDate = useMemo(() => {
+    if (!props.initialDate) {
+      return undefined;
+    }
+
+    return dayjs(props.initialDate).tz(timezone, true).toDate();
+  }, [props.initialDate, timezone]);
+
   const openEventDetailModel = useOpenDetailDialog(EventDialog);
   const router = useRouter();
   const routeResolver = useRouteResolver();
   const openForm = useOpenForm();
+
+  const selectable = useMemo(() => {
+    if (!config.createOptions) {
+      return false;
+    }
+
+    if (config.createOptions.mode === 'dialog') {
+      return true;
+    }
+
+    if (config.createOptions.mode === 'custom') {
+      return config.createOptions.allowQuickCreate ?? false;
+    }
+
+    return false;
+  }, [config.createOptions]);
 
   const handleNewRecord = (values: Record<string, unknown>) => {
     if (!config.createOptions) {
@@ -172,6 +243,11 @@ export function PageCalendarUI<
     setActiveStartDate(activeStart);
     setActiveEndDate(activeEnd);
     setViewType(viewType);
+
+    props.onChange?.(
+      viewTypeToStr(viewType),
+      dayjs(currentStart).tz(timezone).format('YYYY-MM-DD')
+    );
   };
 
   return (
@@ -198,6 +274,8 @@ export function PageCalendarUI<
           events={events ?? []}
           onDateSelect={handleDateSelect}
           loading={loading}
+          selectable={selectable}
+          initialDate={initialDate}
         />
       </Suspense>
     </div>

@@ -15,9 +15,14 @@ import { useOpenForm } from '@headless-adminapp/app/navigation';
 import { useRouter, useRouteResolver } from '@headless-adminapp/app/route';
 import { Icons } from '@headless-adminapp/icons';
 import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import { FC, useState } from 'react';
 
 import { EventDialog } from './EventDialog/EventDialog';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export function renderEventContent(eventInfo: EventContentArg) {
   return <EventContent eventInfo={eventInfo} />;
@@ -26,40 +31,44 @@ export function renderEventContent(eventInfo: EventContentArg) {
 const EventContent: FC<{ eventInfo: EventContentArg }> = ({ eventInfo }) => {
   const [open, setOpen] = useState(false);
   return (
-    <Popover
-      positioning="after"
-      withArrow
-      open={open}
-      onOpenChange={(e, data) => setOpen(data.open)}
-    >
-      <PopoverTrigger>
-        <div
-          style={{
-            display: 'flex',
-            backgroundColor: tokens.colorBrandBackground2,
-            color: tokens.colorNeutralForeground1,
-            borderRadius: tokens.borderRadiusMedium,
-            paddingBlock: tokens.spacingVerticalXXS,
-            paddingInline: tokens.spacingHorizontalS,
-            border: `1px solid ${tokens.colorBrandStroke2}`,
-            gap: tokens.spacingHorizontalS,
-            width: '100%',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            height: '100%',
-            cursor: 'pointer',
-          }}
-        >
-          {eventInfo.timeText && <span>{eventInfo.timeText}</span>}
-          <span style={{ fontWeight: tokens.fontWeightSemibold }}>
-            {eventInfo.event.title}
-          </span>
-        </div>
-      </PopoverTrigger>
-      <PopoverSurface style={{ maxWidth: 600 }}>
-        <PopoverContent eventInfo={eventInfo} onClose={() => setOpen(false)} />
-      </PopoverSurface>
-    </Popover>
+    <div style={{ height: '100%', display: 'flex' }}>
+      <Popover
+        positioning="after"
+        withArrow
+        open={open}
+        onOpenChange={(e, data) => setOpen(data.open)}
+      >
+        <PopoverTrigger>
+          <div
+            style={{
+              display: 'flex',
+              backgroundColor: tokens.colorBrandBackground2,
+              color: tokens.colorNeutralForeground1,
+              borderRadius: tokens.borderRadiusMedium,
+              paddingBlock: tokens.spacingVerticalXXS,
+              paddingInline: tokens.spacingHorizontalS,
+              border: `1px solid ${tokens.colorBrandStroke2}`,
+              gap: tokens.spacingHorizontalS,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              height: '100%',
+              cursor: 'pointer',
+            }}
+          >
+            {eventInfo.timeText && <span>{eventInfo.timeText}</span>}
+            <span style={{ fontWeight: tokens.fontWeightSemibold }}>
+              {eventInfo.event.title}
+            </span>
+          </div>
+        </PopoverTrigger>
+        <PopoverSurface style={{ maxWidth: 480 }}>
+          <PopoverContent
+            eventInfo={eventInfo}
+            onClose={() => setOpen(false)}
+          />
+        </PopoverSurface>
+      </Popover>
+    </div>
   );
 };
 
@@ -68,7 +77,7 @@ const PopoverContent: FC<{
   onClose: () => void;
 }> = ({ eventInfo, onClose }) => {
   const config = useConfig();
-  const { dateFormats, timeFormats } = useLocale();
+  const { dateFormats, timeFormats, timezone } = useLocale();
   const deleteEvent = useDeleteEvent();
   const openEventDetailModel = useOpenDetailDialog(EventDialog);
   const router = useRouter();
@@ -165,11 +174,14 @@ const PopoverContent: FC<{
         }}
       >
         <div>
-          {dayjs(eventInfo.event.start).format(dateFormats.long)}{' '}
-          {dayjs(eventInfo.event.start).format(timeFormats.short)}{' '}
+          {dayjs(eventInfo.event.start).tz(timezone).format(dateFormats.long)}{' '}
           {eventInfo.event.allDay
-            ? 'All Day'
-            : '- ' + dayjs(eventInfo.event.end).format(timeFormats.short)}
+            ? '(All Day)'
+            : dayjs(eventInfo.event.start)
+                .tz(timezone)
+                .format(timeFormats.short) +
+              ' - ' +
+              dayjs(eventInfo.event.end).tz(timezone).format(timeFormats.short)}
         </div>
         <div>{eventInfo.event.extendedProps.description}</div>
       </div>

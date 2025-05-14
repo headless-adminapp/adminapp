@@ -43,6 +43,7 @@
     "@fullcalendar/interaction": "6.1.15",
     "@fullcalendar/react": "6.1.15",
     "@fullcalendar/timegrid": "6.1.15",
+    "@fullcalendar/moment-timezone": "6.1.15",
     "@headless-adminapp/core": "workspace:*",
     "@headless-adminapp/icons": "workspace:*",
     "@headless-adminapp/icons-fluent": "workspace:*",

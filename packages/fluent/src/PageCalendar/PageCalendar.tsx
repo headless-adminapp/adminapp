@@ -13,6 +13,9 @@ interface PageCalendarProps<
   SA3 extends SchemaAttributes = SchemaAttributes
 > {
   config: CalendarConfig<SA1, SA2, SA3>;
+  initialView?: string;
+  initialDate?: string; // YYYY-MM-DD
+  onChange?: (view: string, date: string) => void;
 }
 
 export function PageCalendar<
@@ -34,7 +37,11 @@ export function PageCalendar<
 
   return (
     <CalendarProvider config={config}>
-      <PageCalendarUI />
+      <PageCalendarUI
+        initialView={props.initialView}
+        initialDate={props.initialDate}
+        onChange={props.onChange}
+      />
     </CalendarProvider>
   );
 }

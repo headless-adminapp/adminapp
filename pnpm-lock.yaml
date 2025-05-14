@@ -146,6 +146,9 @@ importers:
       '@fullcalendar/interaction':
         specifier: 6.1.15
         version: 6.1.15(@fullcalendar/core@6.1.15)
+      '@fullcalendar/moment-timezone':
+        specifier: 6.1.15
+        version: 6.1.15(@fullcalendar/core@6.1.15)(moment-timezone@0.5.46)
       '@fullcalendar/react':
         specifier: 6.1.15
         version: 6.1.15(@fullcalendar/core@6.1.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -981,6 +984,12 @@ packages:
     resolution: {integrity: sha512-DOTSkofizM7QItjgu7W68TvKKvN9PSEEvDJceyMbQDvlXHa7pm/WAVtAc6xSDZ9xmB1QramYoWGLHkCYbTW1rQ==}
     peerDependencies:
       '@fullcalendar/core': ~6.1.15
+
+  '@fullcalendar/moment-timezone@6.1.15':
+    resolution: {integrity: sha512-hXPhI/HeSF1dXWD4WUJ2+2B0b4aNuw6/jCRoUQ2k58ye8rNVBlUglLTKQa+SZLw0q6Fpk0lUCu9q0RcxbbbfEA==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.15
+      moment-timezone: ^0.5.40
 
   '@fullcalendar/react@6.1.15':
     resolution: {integrity: sha512-L0b9hybS2J4e7lq6G2CD4nqriyLEqOH1tE8iI6JQjAMTVh5JicOo5Mqw+fhU5bJ7hLfMw2K3fksxX3Ul1ssw5w==}
@@ -6274,6 +6283,11 @@ snapshots:
   '@fullcalendar/interaction@6.1.15(@fullcalendar/core@6.1.15)':
     dependencies:
       '@fullcalendar/core': 6.1.15
+
+  '@fullcalendar/moment-timezone@6.1.15(@fullcalendar/core@6.1.15)(moment-timezone@0.5.46)':
+    dependencies:
+      '@fullcalendar/core': 6.1.15
+      moment-timezone: 0.5.46
 
   '@fullcalendar/react@6.1.15(@fullcalendar/core@6.1.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:

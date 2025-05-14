@@ -2,6 +2,7 @@ import { Button, tokens } from '@fluentui/react-components';
 import { DateSelectArg, DatesSetArg, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import momentTimezonePlugin from '@fullcalendar/moment-timezone';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
@@ -37,6 +38,8 @@ interface CalendarSectionProps {
   events: EventInput[];
   onDateSelect?: (event: DateSelectArg) => void;
   loading?: boolean;
+  selectable?: boolean;
+  initialDate?: Date;
 }
 
 export const CalendarSection = ({
@@ -47,9 +50,11 @@ export const CalendarSection = ({
   events,
   onDateSelect,
   loading,
+  selectable,
+  initialDate,
 }: Readonly<CalendarSectionProps>) => {
   const calendarRef = useRef<FullCalendar>(null);
-  const { timezone } = useLocale();
+  const { timezone, timeFormats } = useLocale();
   const isMobile = useIsMobile();
 
   const isToday = useMemo(() => {
@@ -231,8 +236,14 @@ export const CalendarSection = ({
         <div style={{ position: 'absolute', inset: 0 }}>
           <FullCalendar
             ref={calendarRef}
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            initialView={ViewType.Month}
+            plugins={[
+              dayGridPlugin,
+              timeGridPlugin,
+              interactionPlugin,
+              momentTimezonePlugin,
+            ]}
+            initialView={viewType}
+            initialDate={initialDate}
             weekends={true}
             firstDay={1}
             events={events}
@@ -245,12 +256,20 @@ export const CalendarSection = ({
             scrollTime={initialScrollTime}
             scrollTimeReset={false}
             editable={false}
-            selectable={true}
+            selectable={selectable}
             selectMirror={true}
             dayMaxEvents={true}
             eventMinHeight={24}
             eventTimeFormat={(props) => {
-              return dayjs(props.start.marker).tz(timezone).format('hh:mm A');
+              return dayjs(
+                new Date(
+                  props.start.year,
+                  props.start.month,
+                  props.start.day,
+                  props.start.hour,
+                  props.start.minute
+                )
+              ).format(timeFormats.short);
             }}
             headerToolbar={false}
           />
