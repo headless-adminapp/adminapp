@@ -33,6 +33,7 @@
     "@tanstack/react-query": "^5.51.1"
   },
   "dependencies": {
+    "@fullcalendar/core": "6.1.15",
     "@headless-adminapp/core": "workspace:*",
     "@headless-adminapp/icons": "workspace:*",
     "@hookform/resolvers": "^3.9.0",

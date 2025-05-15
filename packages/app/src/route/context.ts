@@ -17,6 +17,7 @@ export interface RouterInstance {
   forward: () => void;
   push(href: string, options?: NavigateOptions): void;
   replace(href: string, options?: NavigateOptions): void;
+  prefetch(href: string): void;
 }
 
 export const RouterContext = createContext<RouterInstance>(null as any);

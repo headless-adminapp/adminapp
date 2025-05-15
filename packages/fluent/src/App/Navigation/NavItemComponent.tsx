@@ -3,6 +3,7 @@ import { NavItem } from '@fluentui/react-nav-preview';
 import { FC } from 'react';
 
 import { NavItemInfo } from './types';
+import { usePrefetch } from './usePrefetch';
 
 interface NavItemComponentProps {
   item: NavItemInfo;
@@ -15,6 +16,8 @@ export const NavItemComponent: FC<NavItemComponentProps> = ({
   onClick,
   isMini,
 }) => {
+  usePrefetch(item);
+
   return (
     <NavItem
       href={item.link}

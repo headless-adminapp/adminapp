@@ -54,8 +54,6 @@ export function TimeControl({
     return dayjs().startOf('day').add(value, 'minutes').toDate();
   }, [value]);
 
-  console.log('TimeControl', value, selectedTime);
-
   return (
     <div
       style={{
@@ -82,7 +80,6 @@ export function TimeControl({
         freeform
         value={internalTimeValue}
         onTimeChange={(_, data) => {
-          console.log('onTimeChange', data);
           if (data.selectedTime) {
             onChange?.(
               dayjs(data.selectedTime).diff(dayjs().startOf('day'), 'minutes')

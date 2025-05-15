@@ -9,6 +9,7 @@ import { FC } from 'react';
 
 import { NavItemComponent } from './NavItemComponent';
 import { NavCategoryInfo, NavSubItemInfo } from './types';
+import { usePrefetch } from './usePrefetch';
 
 interface NavMiniCategoryMenuProps {
   item: NavCategoryInfo;
@@ -45,12 +46,21 @@ export const NavMiniCategoryMenu: FC<NavMiniCategoryMenuProps> = ({
       <MenuPopover>
         <MenuList>
           {item.items.map((subItem) => (
-            <MenuItem key={subItem.key} onClick={() => onSelect(subItem)}>
-              {subItem.label}
-            </MenuItem>
+            <NavMenuItem key={subItem.key} item={subItem} onSelect={onSelect} />
           ))}
         </MenuList>
       </MenuPopover>
     </Menu>
   );
+};
+
+interface NavMenuItemProps {
+  item: NavSubItemInfo;
+  onSelect: (item: NavSubItemInfo) => void;
+}
+
+const NavMenuItem: FC<NavMenuItemProps> = ({ item, onSelect }) => {
+  usePrefetch(item);
+
+  return <MenuItem onClick={() => onSelect(item)}>{item.label}</MenuItem>;
 };

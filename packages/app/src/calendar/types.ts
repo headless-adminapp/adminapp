@@ -1,3 +1,4 @@
+import type { EventContentArg } from '@fullcalendar/core';
 import { AuthSession } from '@headless-adminapp/core/experience/auth';
 import { OpenFormOptions } from '@headless-adminapp/core/experience/command';
 import {
@@ -79,6 +80,12 @@ export interface CalendarConfig<
   description: string;
   eventLabel: string;
   disableAllDay?: boolean;
+  EventItemPreviewComponent?: React.ComponentType<{
+    eventInfo: EventContentArg;
+  }>;
+  EventExtendedDetailComponent?: React.ComponentType<{
+    eventInfo: EventContentArg;
+  }>;
   createOptions?:
     | {
         mode: 'dialog';

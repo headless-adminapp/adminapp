@@ -63,6 +63,9 @@ importers:
 
   packages/app:
     dependencies:
+      '@fullcalendar/core':
+        specifier: 6.1.15
+        version: 6.1.15
       '@headless-adminapp/core':
         specifier: workspace:*
         version: link:../core/dist
@@ -188,6 +191,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      moment-timezone:
+        specifier: 0.5.46
+        version: 0.5.46
       react-dnd:
         specifier: ^16.0.1
         version: 16.0.1(@types/node@22.7.6)(@types/react@18.3.1)(react@18.3.1)

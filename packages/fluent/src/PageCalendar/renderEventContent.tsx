@@ -28,47 +28,62 @@ export function renderEventContent(eventInfo: EventContentArg) {
   return <EventContent eventInfo={eventInfo} />;
 }
 
+const EventItemPreviewComponent: FC<{ eventInfo: EventContentArg }> = ({
+  eventInfo,
+}) => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        backgroundColor: tokens.colorBrandBackground2,
+        color: tokens.colorNeutralForeground1,
+        borderRadius: tokens.borderRadiusMedium,
+        paddingBlock: tokens.spacingVerticalXXS,
+        paddingInline: tokens.spacingHorizontalS,
+        border: `1px solid ${tokens.colorBrandStroke2}`,
+        gap: tokens.spacingHorizontalS,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        width: '100%',
+        height: '100%',
+        cursor: 'pointer',
+      }}
+    >
+      {eventInfo.timeText && <span>{eventInfo.timeText}</span>}
+      <span style={{ fontWeight: tokens.fontWeightSemibold }}>
+        {eventInfo.event.title}
+      </span>
+    </div>
+  );
+};
+
 const EventContent: FC<{ eventInfo: EventContentArg }> = ({ eventInfo }) => {
   const [open, setOpen] = useState(false);
+  const config = useConfig();
+
+  const EventItemPreview =
+    config.EventItemPreviewComponent ?? EventItemPreviewComponent;
+
   return (
-    <div style={{ height: '100%', display: 'flex' }}>
-      <Popover
-        positioning="after"
-        withArrow
-        open={open}
-        onOpenChange={(e, data) => setOpen(data.open)}
-      >
-        <PopoverTrigger>
-          <div
-            style={{
-              display: 'flex',
-              backgroundColor: tokens.colorBrandBackground2,
-              color: tokens.colorNeutralForeground1,
-              borderRadius: tokens.borderRadiusMedium,
-              paddingBlock: tokens.spacingVerticalXXS,
-              paddingInline: tokens.spacingHorizontalS,
-              border: `1px solid ${tokens.colorBrandStroke2}`,
-              gap: tokens.spacingHorizontalS,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              height: '100%',
-              cursor: 'pointer',
-            }}
-          >
-            {eventInfo.timeText && <span>{eventInfo.timeText}</span>}
-            <span style={{ fontWeight: tokens.fontWeightSemibold }}>
-              {eventInfo.event.title}
-            </span>
-          </div>
-        </PopoverTrigger>
-        <PopoverSurface style={{ maxWidth: 480 }}>
-          <PopoverContent
-            eventInfo={eventInfo}
-            onClose={() => setOpen(false)}
-          />
-        </PopoverSurface>
-      </Popover>
-    </div>
+    <Popover
+      positioning={{
+        // coverTarget: true,
+        position: 'after',
+        shiftToCoverTarget: true,
+      }}
+      withArrow
+      open={open}
+      onOpenChange={(e, data) => setOpen(data.open)}
+    >
+      <PopoverTrigger>
+        <div style={{ width: '100%', height: '100%' }}>
+          <EventItemPreview eventInfo={eventInfo} />
+        </div>
+      </PopoverTrigger>
+      <PopoverSurface style={{ maxWidth: 480 }}>
+        <PopoverContent eventInfo={eventInfo} onClose={() => setOpen(false)} />
+      </PopoverSurface>
+    </Popover>
   );
 };
 
@@ -184,6 +199,9 @@ const PopoverContent: FC<{
               dayjs(eventInfo.event.end).tz(timezone).format(timeFormats.short)}
         </div>
         <div>{eventInfo.event.extendedProps.description}</div>
+        {!!config.EventExtendedDetailComponent && (
+          <config.EventExtendedDetailComponent eventInfo={eventInfo} />
+        )}
       </div>
     </div>
   );
