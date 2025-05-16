@@ -84,34 +84,28 @@ export const CalendarSection = ({
     switch (props.view.type) {
       case ViewType.Month:
         onRangeChange?.({
-          currentStart: currentStart, //dayjs(currentStart).tz(timezone).startOf('month').toDate(),
-          currentEnd: currentEnd, // dayjs(currentEnd).tz(timezone).endOf('month').toDate(),
-          activeStart: activeStart, // dayjs(activeStart).tz(timezone).startOf('day').toDate(),
-          activeEnd: activeEnd, // dayjs(activeEnd).tz(timezone).endOf('day').toDate(),
+          currentStart: currentStart,
+          currentEnd: currentEnd,
+          activeStart: activeStart,
+          activeEnd: activeEnd,
           viewType: ViewType.Month,
         });
         break;
       case ViewType.Week:
         onRangeChange?.({
-          currentStart: dayjs(currentStart)
-            .tz(timezone)
-            .startOf('isoWeek')
-            .toDate(),
-          currentEnd: dayjs(currentEnd).tz(timezone).endOf('isoWeek').toDate(),
-          activeStart: dayjs(activeStart).tz(timezone).startOf('day').toDate(),
-          activeEnd: dayjs(activeEnd).tz(timezone).endOf('day').toDate(),
+          currentStart: currentStart,
+          currentEnd: currentEnd,
+          activeStart: activeStart,
+          activeEnd: activeEnd,
           viewType: ViewType.Week,
         });
         break;
       case ViewType.Day:
         onRangeChange?.({
-          currentStart: dayjs(currentStart)
-            .tz(timezone)
-            .startOf('day')
-            .toDate(),
-          currentEnd: dayjs(currentEnd).tz(timezone).endOf('day').toDate(),
-          activeStart: dayjs(activeStart).tz(timezone).startOf('day').toDate(),
-          activeEnd: dayjs(activeEnd).tz(timezone).endOf('day').toDate(),
+          currentStart: currentStart,
+          currentEnd: currentEnd,
+          activeStart: activeStart,
+          activeEnd: activeEnd,
           viewType: ViewType.Day,
         });
         break;

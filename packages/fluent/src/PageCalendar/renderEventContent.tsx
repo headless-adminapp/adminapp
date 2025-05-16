@@ -198,7 +198,9 @@ const PopoverContent: FC<{
               ' - ' +
               dayjs(eventInfo.event.end).tz(timezone).format(timeFormats.short)}
         </div>
-        <div>{eventInfo.event.extendedProps.description}</div>
+        {!!eventInfo.event.extendedProps.description && (
+          <div>{eventInfo.event.extendedProps.description}</div>
+        )}
         {!!config.EventExtendedDetailComponent && (
           <config.EventExtendedDetailComponent eventInfo={eventInfo} />
         )}

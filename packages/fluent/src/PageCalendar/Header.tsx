@@ -10,7 +10,8 @@ import {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { iconSet } from '@headless-adminapp/icons-fluent';
+import { Icons } from '@headless-adminapp/icons';
+import { useQueryClient } from '@tanstack/react-query';
 import { Fragment } from 'react';
 import { Controller, Path, UseFormReturn } from 'react-hook-form';
 
@@ -26,6 +27,7 @@ export function Header<SA extends SchemaAttributes = SchemaAttributes>({
   onCreateButtonClick,
 }: Readonly<HeaderProps<SA>>) {
   const config = useConfig();
+  const queryClient = useQueryClient();
 
   return (
     <div
@@ -69,13 +71,23 @@ export function Header<SA extends SchemaAttributes = SchemaAttributes>({
           {!!config.createOptions && (
             <Button
               style={{ fontWeight: tokens.fontWeightMedium }}
-              icon={<iconSet.Add />}
+              icon={<Icons.Add />}
               appearance="primary"
               onClick={onCreateButtonClick}
             >
               Create
             </Button>
           )}
+          <Button
+            icon={<Icons.Refresh />}
+            appearance="subtle"
+            style={{ fontWeight: tokens.fontWeightRegular }}
+            onClick={async () => {
+              await queryClient.invalidateQueries({
+                queryKey: ['calendar-events', 'list'],
+              });
+            }}
+          />
         </div>
       </div>
       {!!config.filterAttributes &&

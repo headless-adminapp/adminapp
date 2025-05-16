@@ -43,20 +43,28 @@ export const TitleSelector: FC<TitleSelectorProps> = ({
 
     switch (viewType) {
       case ViewType.Day:
-        return dayjs(start).format(isMobile ? 'MMM D' : 'MMM D, YYYY');
+        return dayjs(start)
+          .tz(timezone)
+          .format(isMobile ? 'MMM D' : 'MMM D, YYYY');
       case ViewType.Week:
         if (isMobile) {
-          return `${dayjs(start).format('MMM D')} - ${dayjs(end).format('D')}`;
+          return `${dayjs(start).tz(timezone).format('MMM D')} - ${dayjs(end)
+            .tz(timezone)
+            .subtract(1, 'millisecond')
+            .format('D')}`;
         }
-        return `${dayjs(start).format('MMM D')} - ${dayjs(end).format(
-          'MMM D, YYYY'
-        )}`;
+        return `${dayjs(start).tz(timezone).format('MMM D')} - ${dayjs(end)
+          .tz(timezone)
+          .subtract(1, 'millisecond')
+          .format('MMM D, YYYY')}`;
       case ViewType.Month:
-        return dayjs(start).format(isMobile ? 'MMM YYYY' : 'MMMM YYYY');
+        return dayjs(start)
+          .tz(timezone)
+          .format(isMobile ? 'MMM YYYY' : 'MMMM YYYY');
     }
 
     return '';
-  }, [start, end, viewType, isMobile]);
+  }, [start, end, viewType, timezone, isMobile]);
 
   if (!start || !end) {
     return null;
