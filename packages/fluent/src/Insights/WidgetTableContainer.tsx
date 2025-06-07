@@ -1,4 +1,5 @@
 import {
+  makeStyles,
   Table,
   TableBody,
   TableCell,
@@ -16,6 +17,35 @@ import { FC } from 'react';
 import { BodyLoading } from '../components/BodyLoading';
 import { WidgetSection } from './WidgetSection';
 import { WidgetTitleBar } from './WidgetTitleBar';
+
+const useStyles = makeStyles({
+  table: {
+    borderCollapse: 'collapse',
+    width: '100%',
+
+    '& tr': {
+      borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,
+    },
+    '& th': {
+      fontWeight: tokens.fontWeightMedium,
+      minWidth: '32px',
+      flexShrink: 0,
+      flex: 1,
+      position: 'sticky',
+      background: tokens.colorNeutralBackground3,
+      borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,
+    },
+    '& td': {
+      height: '36px',
+    },
+  },
+  headerAlignRight: {
+    textAlign: 'right',
+    '& > div': {
+      justifyContent: 'flex-end',
+    },
+  },
+});
 
 interface WidgetTableContainerProps {
   title: string;
@@ -37,18 +67,14 @@ export const WidgetTableContainer: FC<WidgetTableContainerProps> = ({
   data,
 }) => {
   const locale = useLocale();
+  const styles = useStyles();
 
   return (
     <WidgetSection>
       <WidgetTitleBar title={title} commands={commands} />
       <div style={{ flex: 1, position: 'relative', overflow: 'auto' }}>
         {!isPending && (
-          <Table
-            style={{
-              borderCollapse: 'collapse',
-              width: '100%',
-            }}
-          >
+          <Table className={styles.table}>
             <TableHeader
               style={{
                 position: 'sticky',
@@ -70,14 +96,12 @@ export const WidgetTableContainer: FC<WidgetTableContainerProps> = ({
                   return (
                     <TableHeaderCell
                       key={column + String(index)}
-                      style={{
-                        minWidth: 32,
-                        flexShrink: 0,
-                        flex: 1,
-                        position: 'sticky',
-                        background: tokens.colorNeutralBackground3,
-                        borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,
-                      }}
+                      align="right"
+                      className={
+                        attribute?.type === 'money'
+                          ? styles.headerAlignRight
+                          : ''
+                      }
                     >
                       {attribute.label}
                     </TableHeaderCell>
@@ -99,7 +123,12 @@ export const WidgetTableContainer: FC<WidgetTableContainerProps> = ({
                     switch (attribute?.type) {
                       case 'money':
                         return (
-                          <TableCell key={column}>{formattedValue}</TableCell>
+                          <TableCell
+                            key={column}
+                            style={{ textAlign: 'right' }}
+                          >
+                            {formattedValue}
+                          </TableCell>
                         );
                       case 'lookup':
                         return null;

@@ -105,7 +105,7 @@ export const Header: FC<HeaderProps> = () => {
                     name={attributeName}
                     render={({ field }) => {
                       return (
-                        <div>
+                        <div style={{ width: 210, minWidth: 210 }}>
                           <StandardControl
                             attribute={attribute}
                             name={attributeName}

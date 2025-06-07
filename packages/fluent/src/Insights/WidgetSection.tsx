@@ -11,6 +11,7 @@ export const WidgetSection: FC<PropsWithChildren> = ({ children }) => {
         boxShadow: 'none',
         borderRadius: tokens.borderRadiusXLarge,
         flexDirection: 'column',
+        overflow: 'hidden',
       }}
     >
       {children}

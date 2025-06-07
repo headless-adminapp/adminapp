@@ -243,7 +243,7 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
         }}
         placeholder={placeholder}
         inputMode="search"
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%', minWidth: 'unset' }}
         autoComplete="off"
         readOnly={readOnly || disabled}
         open={open && !readOnly && !disabled}

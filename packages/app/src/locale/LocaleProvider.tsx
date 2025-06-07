@@ -9,6 +9,7 @@ export interface LocaleProviderProps {
   options?: {
     direction?: Locale['direction'];
     dateFormats?: Locale['dateFormats'];
+    dateRangeFormats?: Locale['dateRangeFormats'];
     timeFormats?: Locale['timeFormats'];
     currency?: Partial<Locale['currency']>;
   };
