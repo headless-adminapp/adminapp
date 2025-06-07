@@ -30,6 +30,6 @@
   "license": "ISC",
   "dependencies": {
     "@fluentui/react-icons": "^2.0.274",
-    "@headless-adminapp/icons": "*"
+    "@headless-adminapp/icons": "workspace:*"
   }
 }
