@@ -439,8 +439,6 @@ function renderCellContent({
   recordSetSetter: (logicalName: string, ids: (string | number)[]) => void;
   router: RouterInstance;
 }) {
-  const { currency, dateFormats, timezone, timeFormats } = locale;
-
   let attribute: Attribute | undefined;
   let value: unknown;
   if (column.expandedKey) {
@@ -456,16 +454,7 @@ function renderCellContent({
   }
 
   const formattedValue =
-    getAttributeFormattedValue(attribute, value, {
-      currency: currency.currency,
-      dateFormat: dateFormats.short,
-      timeFormat: timeFormats.short,
-      timezone,
-      currencyDisplay: currency.currencyDisplay,
-      currencySign: currency.currencySign,
-      locale: locale.locale,
-      region: locale.region,
-    }) ?? '';
+    getAttributeFormattedValue(attribute, value, locale) ?? '';
 
   if (column.plainText) {
     return (

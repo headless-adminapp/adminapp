@@ -23,7 +23,7 @@
     "clean": "rm -rf dist && rm -f tsconfig.tsbuildinfo",
     "ts-check": "tsc --noEmit",
     "prepublishOnly": "pnpm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"OK\""
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.51.1"

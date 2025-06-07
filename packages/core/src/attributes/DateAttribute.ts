@@ -1,7 +1,7 @@
 import { AttributeBase } from './AttributeBase';
 
-export type DateAttribute = Omit<AttributeBase<Date>, 'default'> & {
+export type DateAttribute = Omit<AttributeBase<string>, 'default'> & {
   type: 'date';
   format: 'date' | 'datetime';
-  default?: Date | '@now';
+  default?: (string & {}) | '@now';
 };

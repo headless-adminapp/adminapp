@@ -292,21 +292,6 @@ const dateOperatorOptions: OperatorOptionConfig[] = [
     controls: [],
   },
   {
-    value: 'next-x-weeks',
-    labelKey: 'nextXWeeks',
-    controls: [],
-  },
-  {
-    value: 'next-x-months',
-    labelKey: 'nextXMonths',
-    controls: [],
-  },
-  {
-    value: 'next-x-years',
-    labelKey: 'nextXYears',
-    controls: [],
-  },
-  {
     value: 'last-week',
     labelKey: 'lastWeek',
     controls: [],
@@ -342,21 +327,6 @@ const dateOperatorOptions: OperatorOptionConfig[] = [
     controls: ['number'],
   },
   {
-    value: 'last-x-weeks',
-    labelKey: 'lastXWeeks',
-    controls: ['number'],
-  },
-  {
-    value: 'last-x-months',
-    labelKey: 'lastXMonths',
-    controls: ['number'],
-  },
-  {
-    value: 'last-x-years',
-    labelKey: 'lastXYears',
-    controls: ['number'],
-  },
-  {
     value: 'olderthan-x-hours',
     labelKey: 'olderthanXHours',
     controls: ['number'],
@@ -367,24 +337,9 @@ const dateOperatorOptions: OperatorOptionConfig[] = [
     controls: ['number'],
   },
   {
-    value: 'olderthan-x-weeks',
-    labelKey: 'olderthanXWeeks',
-    controls: ['number'],
-  },
-  {
-    value: 'olderthan-x-months',
-    labelKey: 'olderthanXMonths',
-    controls: ['number'],
-  },
-  {
-    value: 'olderthan-x-years',
-    labelKey: 'olderthanXYears',
-    controls: ['number'],
-  },
-  {
     value: 'in-fiscal-year',
     labelKey: 'inFiscalYear',
-    controls: [],
+    controls: ['number'],
   },
   {
     value: 'between',

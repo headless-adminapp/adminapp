@@ -7,9 +7,11 @@ import {
   mergeClasses,
   tokens,
 } from '@fluentui/react-components';
+import { useLocale } from '@headless-adminapp/app/locale';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
 import { ChoiceAttribute } from '@headless-adminapp/core/attributes';
 import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
+import { Locale } from '@headless-adminapp/core/experience/locale';
 import { CardView } from '@headless-adminapp/core/experience/view';
 import { CardViewSecondaryColumn } from '@headless-adminapp/core/experience/view/View';
 import {
@@ -67,6 +69,7 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
   selected,
 }: Readonly<RecordCardProps<S>>) {
   const styles = useStyles();
+  const locale = useLocale();
 
   const _record = record as any;
 
@@ -119,7 +122,8 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
         <Body1 style={{ wordBreak: 'break-all' }}>
           {getAttributeFormattedValue(
             schema.attributes[cardView.primaryColumn],
-            _record[cardView.primaryColumn]
+            _record[cardView.primaryColumn],
+            locale
           )}
         </Body1>
         {cardView.secondaryColumns?.map((column) => (
@@ -128,6 +132,7 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
             record={_record}
             column={column}
             schema={schema}
+            locale={locale}
           />
         ))}
       </div>
@@ -163,7 +168,7 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
             if (column.variant === 'strong') {
               return (
                 <Body1Strong key={column.name as string}>
-                  {getAttributeFormattedValue(value, attribute)}
+                  {getAttributeFormattedValue(value, attribute, locale)}
                 </Body1Strong>
               );
             }
@@ -173,7 +178,7 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
                 key={column.name as string}
                 style={{ color: tokens.colorNeutralForeground4 }}
               >
-                {getAttributeFormattedValue(value, attribute)}
+                {getAttributeFormattedValue(value, attribute, locale)}
               </Caption1>
             );
           })}
@@ -187,10 +192,12 @@ function SecondaryColumnContent<S extends SchemaAttributes = SchemaAttributes>({
   record: _record,
   column,
   schema,
+  locale,
 }: Readonly<{
   record: any;
   column: CardViewSecondaryColumn<S>;
   schema: Schema<S>;
+  locale: Locale;
 }>) {
   const value = _record[column.name];
   if (!value) {
@@ -248,7 +255,7 @@ function SecondaryColumnContent<S extends SchemaAttributes = SchemaAttributes>({
       style={{ color: tokens.colorNeutralForeground4 }}
     >
       {!!label && `${label}: `}
-      {getAttributeFormattedValue(attribute, value)}
+      {getAttributeFormattedValue(attribute, value, locale)}
     </Caption1>
   );
 }

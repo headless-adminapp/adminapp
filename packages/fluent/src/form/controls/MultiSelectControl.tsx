@@ -51,6 +51,9 @@ export default function MultiSelectControl<T extends string | number>({
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}
       disabled={disabled}
+      style={{
+        width: '100%',
+      }}
     >
       {transformedOptions.map((x) => (
         <Option key={x.value} value={x.value}>

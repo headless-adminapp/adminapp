@@ -327,6 +327,7 @@ export namespace SubgridCommandBuilder {
                   records: result.records,
                   schema: context.secondaryControl.schema,
                   schemaStore: context.stores.schemaStore,
+                  locale: context.locale,
                 });
               } finally {
                 context.utility.hideProgressIndicator();
@@ -360,6 +361,7 @@ export namespace SubgridCommandBuilder {
                   records: result.records,
                   schema: context.secondaryControl.schema,
                   schemaStore: context.stores.schemaStore,
+                  locale: context.locale,
                 });
               } finally {
                 context.utility.hideProgressIndicator();

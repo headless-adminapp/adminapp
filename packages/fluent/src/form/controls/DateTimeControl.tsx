@@ -9,6 +9,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { useEffect, useRef, useState } from 'react';
 
+import { resolveTimeValue } from './TimeControl/utils';
 import { ControlProps } from './types';
 
 dayjs.extend(customParseFormat);
@@ -83,6 +84,7 @@ export function DateTimeControl({
         onBlur={() => onBlur?.()}
         placeholder={placeholder}
         appearance="filled-darker"
+        showMonthPickerAsOverlay
         formatDate={(date) =>
           date ? dayjs(date).tz(timezone).format(dateFormat) : ''
         }
@@ -215,18 +217,4 @@ export function DateTimeControl({
       />
     </div>
   );
-}
-
-function resolveTimeValue(value: string, timeFormat: string): Date | undefined {
-  if (!value) {
-    return;
-  }
-
-  const time = dayjs(value, timeFormat);
-
-  if (!time.isValid()) {
-    return;
-  }
-
-  return time.toDate();
 }

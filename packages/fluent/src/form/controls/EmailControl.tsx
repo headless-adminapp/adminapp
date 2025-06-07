@@ -45,6 +45,7 @@ export function EmailControl({
       style={{
         flex: 1,
         paddingRight: tokens.spacingHorizontalXS,
+        width: '100%',
       }}
       contentAfter={
         !!value ? (

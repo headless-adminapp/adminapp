@@ -1,4 +1,5 @@
 import { Attribute, LookupAttribute } from '@headless-adminapp/core/attributes';
+import { Locale } from '@headless-adminapp/core/experience/locale';
 import {
   ColumnCondition,
   SortingState,
@@ -25,6 +26,7 @@ type ExportFn<S extends SchemaAttributes = SchemaAttributes> = (option: {
   gridColumns: TransformedViewColumn<SchemaAttributes>[];
   schemaStore: ISchemaStore;
   fileName: string;
+  locale: Locale;
 }) => Promise<void>;
 
 const getHeaders = (
@@ -102,6 +104,7 @@ export const exportRecordsCSV: ExportFn = async ({
   gridColumns,
   schemaStore,
   fileName,
+  locale,
 }) => {
   const csvDownload = await import('json-to-csv-export');
 
@@ -120,7 +123,7 @@ export const exportRecordsCSV: ExportFn = async ({
         return value?.toString() ?? '';
       }
 
-      return getAttributeFormattedValue(attribute, value) ?? '';
+      return getAttributeFormattedValue(attribute, value, locale) ?? '';
     });
   });
 
@@ -138,6 +141,7 @@ export const exportRecordsXLS: ExportFn = async ({
   records,
   schema,
   schemaStore,
+  locale,
 }) => {
   const ExcelJS = await import('exceljs');
   const headers = getHeaders(schema, gridColumns, schemaStore);
@@ -162,7 +166,7 @@ export const exportRecordsXLS: ExportFn = async ({
         case 'date':
           return value ? new Date(value as string) : undefined;
         default:
-          return getAttributeFormattedValue(attribute, value);
+          return getAttributeFormattedValue(attribute, value, locale);
       }
     });
   });
@@ -185,10 +189,10 @@ export const exportRecordsXLS: ExportFn = async ({
     const sheetColumn = worksheet.getColumn(index + 1);
 
     let formatFn = (value: any) =>
-      getAttributeFormattedValue(attribute, value) ?? '';
+      getAttributeFormattedValue(attribute, value, locale) ?? '';
 
     if (attribute?.type === 'money') {
-      sheetColumn.numFmt = '"₹" #,##0.00';
+      sheetColumn.numFmt = `"₹" #,##0.00`;
     }
 
     let maxLength = 0;

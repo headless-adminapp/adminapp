@@ -1,3 +1,9 @@
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_DATE_FORMATS,
+  DEFAULT_DATE_RANGE_FORMATS,
+  DEFAULT_TIME_FORMATS,
+} from './constants';
 import { Locale } from './types';
 
 export function getLocale(
@@ -6,6 +12,7 @@ export function getLocale(
   options?: {
     direction?: Locale['direction'];
     dateFormats?: Locale['dateFormats'];
+    dateRangeFormats?: Locale['dateRangeFormats'];
     timeFormats?: Locale['timeFormats'];
     currency?: Partial<Locale['currency']>;
   }
@@ -25,17 +32,24 @@ export function getLocale(
     language,
     timezone,
     dateFormats: {
-      short: options?.dateFormats?.short ?? 'M/D/YYYY',
-      long: options?.dateFormats?.long ?? 'ddd, MMM D, YYYY',
+      short: options?.dateFormats?.short ?? DEFAULT_DATE_FORMATS.short,
+      long: options?.dateFormats?.long ?? DEFAULT_DATE_FORMATS.long,
     },
     timeFormats: {
-      short: options?.timeFormats?.short ?? 'hh:mm A',
+      short: options?.timeFormats?.short ?? DEFAULT_TIME_FORMATS.short,
+    },
+    dateRangeFormats: {
+      short:
+        options?.dateRangeFormats?.short ?? DEFAULT_DATE_RANGE_FORMATS.short,
+      long: options?.dateRangeFormats?.long ?? DEFAULT_DATE_RANGE_FORMATS.long,
     },
     numberFormats: {},
     currency: {
-      currency: options?.currency?.currency ?? 'USD',
-      currencySign: options?.currency?.currencySign ?? 'standard',
-      currencyDisplay: options?.currency?.currencyDisplay ?? 'symbol',
+      currency: options?.currency?.currency ?? DEFAULT_CURRENCY.currency,
+      currencySign:
+        options?.currency?.currencySign ?? DEFAULT_CURRENCY.currencySign,
+      currencyDisplay:
+        options?.currency?.currencyDisplay ?? DEFAULT_CURRENCY.currencyDisplay,
     },
   };
 }

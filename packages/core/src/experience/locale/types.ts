@@ -1,3 +1,25 @@
+export type DateRangeFormat = {
+  separator: string;
+  date: string;
+  sameMonth: [string, string];
+  sameYear: [string, string];
+};
+
+export type DateFormats = {
+  short: string;
+  long: string;
+};
+
+export type TimeFormats = {
+  short: string;
+};
+
+export type CurrencyFormats = {
+  currency: string;
+  currencySign: 'standard' | 'accounting';
+  currencyDisplay: 'symbol' | 'narrowSymbol' | 'code';
+};
+
 export type Locale = {
   locale: string; // en-US, fr-FR, etc.
 
@@ -8,23 +30,19 @@ export type Locale = {
 
   // date formats
   timezone: string;
-  dateFormats: {
-    short: string;
-    long: string;
+  dateFormats: DateFormats;
+
+  dateRangeFormats: {
+    short: DateRangeFormat;
+    long: DateRangeFormat;
   };
 
   // time formats
-  timeFormats: {
-    short: string;
-  };
+  timeFormats: TimeFormats;
 
   // number formats (decimal symbol, digit grouping, negative format, etc.)
   numberFormats: {};
 
   // currency formats (extends number formats, withSpace, currency, position, negative, etc.)
-  currency: {
-    currency: string;
-    currencySign: 'standard' | 'accounting';
-    currencyDisplay: 'symbol' | 'narrowSymbol' | 'code';
-  };
+  currency: CurrencyFormats;
 };

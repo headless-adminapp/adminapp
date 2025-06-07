@@ -26,6 +26,9 @@ export function IntegerControl({
       name={name}
       value={value ?? null}
       readOnly={readOnly || disabled}
+      style={{
+        width: '100%',
+      }}
       onChange={(e, data) => {
         if (data.value !== undefined) {
           onChange?.(data.value);

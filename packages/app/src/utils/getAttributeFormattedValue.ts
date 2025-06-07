@@ -9,6 +9,7 @@ import {
 } from '@headless-adminapp/core/attributes';
 import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
 import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
+import { Locale } from '@headless-adminapp/core/experience/locale/types';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
@@ -29,14 +30,7 @@ const defaultAttributeFormattedValueStrings: AttributeFormattedValueStringsSet =
     no: 'No',
   };
 
-const defaultDateFormat = 'YYYY-MM-DD';
-const defaultTimeFormat = 'HH:mm';
-const defaultLocale = 'en-US';
-const defaultCurrency = 'USD';
-const defaultCurrencySign = 'accounting';
-const defaultCurrencyDisplay = 'symbol';
-
-function getAttributeLookupsFormattedValue(
+export function getAttributeLookupsFormattedValue(
   value: unknown,
   options?: {
     maxCount?: number;
@@ -54,64 +48,72 @@ function getAttributeLookupsFormattedValue(
   }
 }
 
-function getAttributeAttachmentFormattedValue(value: unknown) {
+export function getAttributeAttachmentFormattedValue(value: unknown) {
   return (value as FileObject)?.url ?? null;
 }
 
-function getAttributeDateFormattedValue(
+export function getAttributeDateFormattedValue(
   attribute: DateAttribute,
   value: unknown,
-  options?: { dateFormat?: string; timeFormat?: string; timezone?: string }
+  locale: Locale
 ) {
-  const dateFormat = options?.dateFormat ?? defaultDateFormat;
-  const timeFormat = options?.timeFormat ?? defaultTimeFormat;
-
   if (attribute.format === 'datetime') {
     return dayjs(value as string)
-      .tz(options?.timezone)
-      .format(dateFormat + ' ' + timeFormat);
+      .tz(locale?.timezone)
+      .format(locale.dateFormats.short + ' ' + locale.timeFormats.short);
   } else {
-    return dayjs(value as string)
-      .tz(options?.timezone)
-      .format(dateFormat);
+    return dayjs(value as string).format(locale.dateFormats.short);
   }
 }
 
-function getAttributeDateRangeFormattedValue(
+export function getAttributeDateRangeFormattedValue(
   value: unknown,
-  options?: { dateFormat?: string; timezone?: string }
+  locale: Locale
 ) {
-  if (!value) return null;
-
-  const dateFormat = options?.dateFormat ?? defaultDateFormat;
-
-  const from = (value as string[])[0];
-  const to = (value as string[])[1];
-
-  if (!from && !to) {
-    return null;
+  if (!value) {
+    return '';
   }
 
-  if (from && to) {
+  if (!Array.isArray(value) || value.length !== 2) {
+    return '';
+  }
+
+  if (!value[0] || !value[1]) {
+    return '';
+  }
+
+  const dateRangeFormat = locale.dateRangeFormats.short;
+
+  const [start, end] = value.map((date) => dayjs(date));
+
+  if (start.isSame(end, 'year')) {
+    if (start.isSame(end, 'month')) {
+      if (start.isSame(end, 'day')) {
+        return start.format(dateRangeFormat.date);
+      } else {
+        return (
+          start.format(dateRangeFormat.sameMonth[0]) +
+          dateRangeFormat.separator +
+          end.format(dateRangeFormat.sameMonth[1])
+        );
+      }
+    } else {
+      return (
+        start.format(dateRangeFormat.sameYear[0]) +
+        dateRangeFormat.separator +
+        end.format(dateRangeFormat.sameYear[1])
+      );
+    }
+  } else {
     return (
-      dayjs(from).tz(options?.timezone).format(dateFormat) +
-      ' - ' +
-      dayjs(to).tz(options?.timezone).format(dateFormat)
+      start.format(dateRangeFormat.date) +
+      dateRangeFormat.separator +
+      end.format(dateRangeFormat.date)
     );
   }
-
-  if (from) {
-    return 'After ' + dayjs(from).tz(options?.timezone).format(dateFormat);
-  }
-
-  if (to) {
-    return 'Before ' + dayjs(to).tz(options?.timezone).format(dateFormat);
-  }
-
-  return null;
 }
 
-function getAttributeBooleanFormattedValue(
+export function getAttributeBooleanFormattedValue(
   attribute: BooleanAttribute,
   value: unknown,
   options?: {
@@ -136,7 +138,7 @@ function getAttributeChoiceFormattedValue(
   ).label;
 }
 
-function getAttributeChoicesFormattedValue(
+export function getAttributeChoicesFormattedValue(
   attribute: ChoicesAttribute<string | number>,
   value: unknown
 ) {
@@ -151,47 +153,30 @@ function getAttributeChoicesFormattedValue(
     .join(', ');
 }
 
-function getAttributeLookupFormattedValue(value: unknown) {
+export function getAttributeLookupFormattedValue(value: unknown) {
   return (value as DataLookup<string>)?.name;
 }
 
-function getAttributeRegardingFormattedValue(value: unknown) {
+export function getAttributeRegardingFormattedValue(value: unknown) {
   return (value as DataLookup<string>)?.name;
 }
 
-function getAttributeMoneyFormattedValue(
+export function getAttributeMoneyFormattedValue(
   value: unknown,
-  options?: {
-    locale?: string;
-    currency?: string;
-    currencySign?: 'accounting' | 'standard';
-    currencyDisplay?: 'symbol' | 'narrowSymbol' | 'code';
-  }
+  locale: Locale
 ) {
-  const locale = options?.locale ?? defaultLocale;
-
-  const currency = options?.currency ?? defaultCurrency;
-  const currencySign = options?.currencySign ?? defaultCurrencySign;
-  const currencyDisplay = options?.currencyDisplay ?? defaultCurrencyDisplay;
-
-  return new Intl.NumberFormat(locale, {
+  return new Intl.NumberFormat(locale.locale, {
     style: 'currency',
-    currency,
-    currencySign,
-    currencyDisplay,
+    currency: locale.currency.currency,
+    currencySign: locale.currency.currencySign,
+    currencyDisplay: locale.currency.currencyDisplay,
   }).format(value as number);
 }
 
 function getAttributeNumberFormattedValue(
   attribute: NumberAttribute,
   value: unknown,
-  options?: {
-    locale?: string;
-    currency?: string;
-    currencySign?: 'accounting' | 'standard';
-    currencyDisplay?: 'symbol' | 'narrowSymbol' | 'code';
-    timeFormat?: string;
-  }
+  locale: Locale
 ) {
   if (attribute.format === 'duration') {
     return formatDuration(value as number);
@@ -201,10 +186,10 @@ function getAttributeNumberFormattedValue(
     return dayjs()
       .startOf('day')
       .add(value as number, 'minutes')
-      .format(options?.timeFormat ?? defaultTimeFormat);
+      .format(locale.timeFormats.short);
   }
 
-  return new Intl.NumberFormat(options?.locale).format(value as number);
+  return new Intl.NumberFormat(locale.locale).format(value as number);
 }
 
 export function formatDuration(value: number | null) {
@@ -254,24 +239,17 @@ export function formatDuration(value: number | null) {
 export function getAttributeFormattedValue<A extends Attribute = Attribute>(
   attribute: Attribute,
   value: InferredAttributeType<A> | null | undefined,
+  locale: Locale,
   options?: {
     maxCount?: number; // for choices and lookups
     strings?: AttributeFormattedValueStringsSet;
-    dateFormat?: string;
-    timeFormat?: string;
-    locale?: string;
-    currency?: string;
-    currencySign?: 'accounting' | 'standard';
-    currencyDisplay?: 'symbol' | 'narrowSymbol' | 'code';
-    timezone?: string;
-    region?: string;
   }
 ): string | null {
   if (value === null || value === undefined) {
     return null;
   }
 
-  const region = options?.region ?? 'US';
+  const region = locale.region;
 
   switch (attribute.type) {
     case 'boolean':
@@ -281,9 +259,9 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
     case 'choices':
       return getAttributeChoicesFormattedValue(attribute, value);
     case 'date':
-      return getAttributeDateFormattedValue(attribute, value, options);
+      return getAttributeDateFormattedValue(attribute, value, locale);
     case 'daterange':
-      return getAttributeDateRangeFormattedValue(value, options);
+      return getAttributeDateRangeFormattedValue(value, locale);
     case 'lookup':
       return getAttributeLookupFormattedValue(value);
     case 'lookups':
@@ -291,9 +269,9 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
     case 'regarding':
       return getAttributeRegardingFormattedValue(value);
     case 'money':
-      return getAttributeMoneyFormattedValue(value, options);
+      return getAttributeMoneyFormattedValue(value, locale);
     case 'number':
-      return getAttributeNumberFormattedValue(attribute, value, options);
+      return getAttributeNumberFormattedValue(attribute, value, locale);
     case 'attachment':
       return getAttributeAttachmentFormattedValue(value);
     case 'string':

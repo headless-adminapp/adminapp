@@ -76,6 +76,9 @@ export function TextAreaControl({
       // error={error}
       readOnly={disabled || readOnly}
       rows={rows}
+      style={{
+        width: '100%',
+      }}
     />
   );
 }

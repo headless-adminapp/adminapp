@@ -461,6 +461,7 @@ export async function exportRecordsToExcel(
       records: result.records,
       schema: context.primaryControl.schema,
       schemaStore: context.stores.schemaStore,
+      locale: context.locale,
     });
   } finally {
     context.utility.hideProgressIndicator();
@@ -480,6 +481,7 @@ export async function exportRecordsToCSV(
       records: result.records,
       schema: context.primaryControl.schema,
       schemaStore: context.stores.schemaStore,
+      locale: context.locale,
     });
   } finally {
     context.utility.hideProgressIndicator();

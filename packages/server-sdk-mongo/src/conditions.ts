@@ -6,6 +6,7 @@ import {
   OperatorKey,
 } from '@headless-adminapp/core/transport';
 import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { FilterQuery, Types } from 'mongoose';
@@ -14,22 +15,45 @@ import { MongoRequiredSchemaAttributes } from './types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(isoWeek);
 
-function startOfFiscalYear(year: number, tz: string) {
-  return dayjs()
-    .tz(tz)
-    .startOf('day')
-    .set('year', year)
-    .set('month', 3)
-    .set('date', 1);
+// Definations
+
+// last-x-hours (current time - x hours to current time) (based on time)
+// last-x-days (current date (start of day) - x days to current date (end of day)) (based on date only)
+
+// olderthan-x-hours (current time - x hours) (based on time)
+// olderthan-x-days (current date (end of day) - x days) (based on date only)
+
+declare module 'dayjs' {
+  interface Dayjs {
+    toAttributeDate(attribute: Attribute): Date;
+  }
 }
 
-function endOfFiscalYear(year: number, tz: string) {
-  return dayjs()
-    .tz(tz)
-    .set('year', year + 1)
-    .set('month', 2)
-    .set('date', 31);
+dayjs.extend((option, dayjsClass) => {
+  dayjsClass.prototype.toAttributeDate = function (attribute) {
+    if (attribute.type === 'date' && attribute.format === 'date') {
+      return this.utc(true).toDate();
+    }
+
+    return this.toDate();
+  };
+});
+
+function getFiscalYear(date: dayjs.Dayjs) {
+  if (date.month() < 3) {
+    return date.year() - 1;
+  }
+  return date.year();
+}
+
+function startOfFiscalYear(year: number, tz: string, attribute: Attribute) {
+  if (attribute.type === 'date' && attribute.format === 'date') {
+    return dayjs(`${year}-04-01`).utc(true).startOf('day');
+  }
+
+  return dayjs(`${year}-04-01`).tz(tz, true).startOf('day');
 }
 
 interface ConditionTransformerOptions {
@@ -41,6 +65,24 @@ type ConditionTransformer = (
   attribute: Attribute,
   options: ConditionTransformerOptions
 ) => { [key: string]: any } | null;
+
+function hasTimezoneInfo(dateString: string): boolean {
+  return /([Zz]|[+-]\d{2}:?\d{2}|GMT[+-]\d{4})/.test(dateString);
+}
+
+function hasTime(dateString: string): boolean {
+  return /\d{1,2}:\d{2}(:\d{2})?/.test(dateString);
+}
+
+function createDayjs(timezone: string, value?: any) {
+  const d = dayjs(value);
+
+  // If value is plain string without timezone
+  // we assume it is a local time
+  const keepLocalTime = typeof value === 'string' && !hasTimezoneInfo(value);
+
+  return d.tz(timezone, keepLocalTime);
+}
 
 const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
   // number
@@ -104,230 +146,302 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
   }),
 
   // date
-  on: (condition, attribute, { timezone }) => ({
-    [condition.field]: {
-      $gte: dayjs(condition.value).tz(timezone).startOf('day').toDate(),
-      $lte: dayjs(condition.value).tz(timezone).endOf('day').toDate(),
-    },
-  }),
-  'on-or-after': (condition, attribute, { timezone }) => ({
-    [condition.field]: {
-      $gte: dayjs(condition.value).tz(timezone).startOf('day').toDate(),
-    },
-  }),
-  'on-or-before': (condition, attribute, { timezone }) => ({
-    [condition.field]: {
-      $lte: dayjs(condition.value).tz(timezone).endOf('day').toDate(),
-    },
-  }),
-  'this-month': (condition, attribute, { timezone }) => ({
-    [condition.field]: {
-      $gte: dayjs().tz(timezone).startOf('month').toDate(),
-      $lte: dayjs().tz(timezone).endOf('month').toDate(),
-    },
-  }),
-  today: (condition, attribute, { timezone }) => ({
-    [condition.field]: {
-      $gte: dayjs().tz(timezone).startOf('day').toDate(),
-      $lte: dayjs().tz(timezone).endOf('day').toDate(),
-    },
-  }),
+  on: (condition, attribute, { timezone }) => {
+    return {
+      [condition.field]: {
+        $gte: createDayjs(timezone, condition.value)
+          .startOf('day')
+          .toAttributeDate(attribute),
+        $lt: createDayjs(timezone, condition.value)
+          .startOf('day')
+          .add(1, 'day')
+          .toAttributeDate(attribute),
+      },
+    };
+  },
+  'on-or-after': (condition, attribute, { timezone }) => {
+    return {
+      [condition.field]: {
+        $gte: createDayjs(timezone, condition.value)
+          .startOf('day')
+          .toAttributeDate(attribute),
+      },
+    };
+  },
+  'on-or-before': (condition, attribute, { timezone }) => {
+    return {
+      [condition.field]: {
+        $lt: createDayjs(timezone, condition.value)
+          .startOf('day')
+          .add(1, 'day')
+          .toAttributeDate(attribute),
+      },
+    };
+  },
+  'this-month': (condition, attribute, { timezone }) => {
+    return {
+      [condition.field]: {
+        $gte: createDayjs(timezone).startOf('month').toAttributeDate(attribute),
+        $lt: createDayjs(timezone)
+          .add(1, 'month')
+          .startOf('month')
+          .toAttributeDate(attribute),
+      },
+    };
+  },
+  today: (condition, attribute, { timezone }) => {
+    return {
+      [condition.field]: {
+        $gte: createDayjs(timezone).startOf('day').toAttributeDate(attribute),
+        $lt: createDayjs(timezone)
+          .add(1, 'day')
+          .startOf('day')
+          .toAttributeDate(attribute),
+      },
+    };
+  },
   yesterday: (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().subtract(1, 'day').tz(timezone).startOf('day').toDate(),
-      $lte: dayjs().subtract(1, 'day').tz(timezone).endOf('day').toDate(),
+      $gte: createDayjs(timezone)
+        .subtract(1, 'day')
+        .startOf('day')
+        .toAttributeDate(attribute),
+      $lt: createDayjs(timezone).startOf('day').toAttributeDate(attribute),
     },
   }),
   tomorrow: (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().add(1, 'day').tz(timezone).startOf('day').toDate(),
-      $lte: dayjs().add(1, 'day').tz(timezone).endOf('day').toDate(),
+      $gte: createDayjs(timezone)
+        .add(1, 'day')
+        .startOf('day')
+        .toAttributeDate(attribute),
+      $lt: createDayjs(timezone)
+        .add(2, 'day')
+        .startOf('day')
+        .toAttributeDate(attribute),
     },
   }),
   'this-week': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().tz(timezone).startOf('week').toDate(),
-      $lte: dayjs().tz(timezone).endOf('week').toDate(),
+      $gte: createDayjs(timezone).startOf('isoWeek').toAttributeDate(attribute),
+      $lt: createDayjs(timezone)
+        .add(1, 'week')
+        .startOf('isoWeek')
+        .toAttributeDate(attribute),
     },
   }),
   'this-year': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().tz(timezone).startOf('year').toDate(),
-      $lte: dayjs().tz(timezone).endOf('year').toDate(),
+      $gte: createDayjs(timezone).startOf('year').toAttributeDate(attribute),
+      $lt: createDayjs(timezone)
+        .add(1, 'year')
+        .startOf('year')
+        .toAttributeDate(attribute),
     },
   }),
-  'this-fiscal-year': (condition, attribute, { timezone }) => ({
-    [condition.field]: {
-      $gte:
-        dayjs().month() < 3
-          ? startOfFiscalYear(dayjs().year() - 1, timezone).toDate()
-          : startOfFiscalYear(dayjs().year(), timezone).toDate(),
-      $lte:
-        dayjs().month() < 3
-          ? endOfFiscalYear(dayjs().year() - 1, timezone).toDate()
-          : endOfFiscalYear(dayjs().year(), timezone).toDate(),
-    },
-  }),
+  'this-fiscal-year': (condition, attribute, { timezone }) => {
+    const fiscalYear = getFiscalYear(createDayjs(timezone));
+
+    return {
+      [condition.field]: {
+        $gte: startOfFiscalYear(
+          fiscalYear,
+          timezone,
+          attribute
+        ).toAttributeDate(attribute),
+        $lt: startOfFiscalYear(
+          fiscalYear + 1,
+          timezone,
+          attribute
+        ).toAttributeDate(attribute),
+      },
+    };
+  },
   'next-week': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().add(1, 'week').tz(timezone).startOf('week').toDate(),
-      $lte: dayjs().add(1, 'week').tz(timezone).endOf('week').toDate(),
+      $gte: createDayjs(timezone)
+        .add(1, 'week')
+        .startOf('isoWeek')
+        .toAttributeDate(attribute),
+      $lt: createDayjs(timezone)
+        .add(2, 'week')
+        .startOf('isoWeek')
+        .toAttributeDate(attribute),
     },
   }),
   'next-seven-days': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().tz(timezone).startOf('day').toDate(),
-      $lte: dayjs().tz(timezone).add(7, 'day').endOf('day').toDate(),
+      $gte: createDayjs(timezone).startOf('day').toAttributeDate(attribute),
+      $lt: createDayjs(timezone)
+        .add(8, 'day')
+        .startOf('day')
+        .toAttributeDate(attribute),
     },
   }),
   'next-month': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().add(1, 'month').tz(timezone).startOf('month').toDate(),
-      $lte: dayjs().add(1, 'month').tz(timezone).endOf('month').toDate(),
+      $gte: createDayjs(timezone)
+        .add(1, 'month')
+        .startOf('month')
+        .toAttributeDate(attribute),
+      $lt: createDayjs(timezone)
+        .add(2, 'month')
+        .startOf('month')
+        .toAttributeDate(attribute),
     },
   }),
   'next-year': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().add(1, 'year').tz(timezone).startOf('year').toDate(),
-      $lte: dayjs().add(1, 'year').tz(timezone).endOf('year').toDate(),
+      $gte: createDayjs(timezone)
+        .add(1, 'year')
+        .startOf('year')
+        .toAttributeDate(attribute),
+      $lt: createDayjs(timezone)
+        .add(2, 'year')
+        .startOf('year')
+        .toAttributeDate(attribute),
     },
   }),
-  'next-fiscal-year': (condition, attribute, { timezone }) => ({
-    [condition.field]: {
-      $gte:
-        dayjs().month() < 3
-          ? startOfFiscalYear(dayjs().year(), timezone).toDate()
-          : startOfFiscalYear(dayjs().year() + 1, timezone).toDate(),
-      $lte:
-        dayjs().month() < 3
-          ? endOfFiscalYear(dayjs().year(), timezone).toDate()
-          : endOfFiscalYear(dayjs().year() + 1, timezone).toDate(),
-    },
-  }),
-  'next-x-hours': (condition, attribute, { timezone }) => ({
-    [condition.field]: {
-      $gte: dayjs().tz(timezone).toDate(),
-      $lte: dayjs().add(condition.value, 'hour').toDate(),
-    },
-  }),
+  'next-fiscal-year': (condition, attribute, { timezone }) => {
+    const fiscalYear = getFiscalYear(createDayjs(timezone)) + 1;
+    return {
+      [condition.field]: {
+        $gte: startOfFiscalYear(
+          fiscalYear,
+          timezone,
+          attribute
+        ).toAttributeDate(attribute),
+        $lt: startOfFiscalYear(
+          fiscalYear + 1,
+          timezone,
+          attribute
+        ).toAttributeDate(attribute),
+      },
+    };
+  },
+  'next-x-hours': (condition, attribute, { timezone }) => {
+    return {
+      [condition.field]: {
+        $gte: createDayjs(timezone).toAttributeDate(attribute),
+        $lt: createDayjs(timezone)
+          .add(condition.value, 'hour')
+          .toAttributeDate(attribute),
+      },
+    };
+  },
   'next-x-days': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().tz(timezone).startOf('day').toDate(),
-      $lte: dayjs().add(condition.value, 'day').toDate(),
-    },
-  }),
-  'next-x-weeks': (condition, attribute, { timezone }) => ({
-    [condition.field]: {
-      $gte: dayjs().tz(timezone).startOf('day').toDate(),
-      $lte: dayjs()
-        .tz(timezone)
-        .add(condition.value, 'week')
-        .endOf('week')
-        .toDate(),
-    },
-  }),
-  'next-x-months': (condition, attribute, { timezone }) => ({
-    [condition.field]: {
-      $gte: dayjs().tz(timezone).startOf('day').toDate(),
-      $lte: dayjs().add(condition.value, 'month').toDate(),
-    },
-  }),
-  'next-x-years': (condition, attribute, { timezone }) => ({
-    [condition.field]: {
-      $gte: dayjs().tz(timezone).startOf('day').toDate(),
-      $lte: dayjs().add(condition.value, 'year').toDate(),
+      $gte: createDayjs(timezone).startOf('day').toAttributeDate(attribute),
+      $lt: createDayjs(timezone)
+        .add(condition.value, 'day')
+        .startOf('day')
+        .toAttributeDate(attribute),
     },
   }),
   'last-week': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().subtract(1, 'week').tz(timezone).startOf('week').toDate(),
-      $lte: dayjs().subtract(1, 'week').tz(timezone).endOf('week').toDate(),
+      $gte: createDayjs(timezone)
+        .subtract(1, 'week')
+        .startOf('isoWeek')
+        .toAttributeDate(attribute),
+      $lt: createDayjs(timezone).startOf('isoWeek').toAttributeDate(attribute),
     },
   }),
   'last-seven-days': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().subtract(7, 'day').tz(timezone).startOf('day').toDate(),
-      $lte: dayjs().subtract(1, 'day').tz(timezone).endOf('day').toDate(),
+      $gte: createDayjs(timezone)
+        .subtract(7, 'day')
+        .tz(timezone)
+        .startOf('day')
+        .toAttributeDate(attribute),
+      $lt: createDayjs(timezone)
+        .add(1, 'day')
+        .startOf('day')
+        .toAttributeDate(attribute),
     },
   }),
   'last-month': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().subtract(1, 'month').tz(timezone).startOf('month').toDate(),
-      $lte: dayjs().subtract(1, 'month').tz(timezone).endOf('month').toDate(),
+      $gte: createDayjs(timezone)
+        .subtract(1, 'month')
+        .startOf('month')
+        .toAttributeDate(attribute),
+      $lt: createDayjs(timezone).startOf('month').toAttributeDate(attribute),
     },
   }),
   'last-year': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().subtract(1, 'year').tz(timezone).startOf('year').toDate(),
-      $lte: dayjs().subtract(1, 'year').tz(timezone).endOf('year').toDate(),
+      $gte: createDayjs(timezone)
+        .subtract(1, 'year')
+        .startOf('year')
+        .toAttributeDate(attribute),
+      $lt: createDayjs(timezone).startOf('year').toAttributeDate(attribute),
     },
   }),
-  'last-fiscal-year': (condition, attribute, { timezone }) => ({
+  'last-fiscal-year': (condition, attribute, { timezone }) => {
+    const fiscalYear = getFiscalYear(createDayjs(timezone)) - 1;
+    return {
+      [condition.field]: {
+        $gte: startOfFiscalYear(
+          fiscalYear,
+          timezone,
+          attribute
+        ).toAttributeDate(attribute),
+        $lt: startOfFiscalYear(
+          fiscalYear + 1,
+          timezone,
+          attribute
+        ).toAttributeDate(attribute),
+      },
+    };
+  },
+  'last-x-hours': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte:
-        dayjs().month() < 3
-          ? startOfFiscalYear(dayjs().year() - 2, timezone).toDate()
-          : startOfFiscalYear(dayjs().year() - 1, timezone).toDate(),
-      $lte:
-        dayjs().month() < 3
-          ? endOfFiscalYear(dayjs().year() - 2, timezone).toDate()
-          : endOfFiscalYear(dayjs().year() - 1, timezone).toDate(),
+      $gte: createDayjs(timezone)
+        .subtract(condition.value, 'hour')
+        .toAttributeDate(attribute),
+      $lt: createDayjs(timezone).toAttributeDate(attribute),
     },
   }),
-  'last-x-hours': (condition) => ({
+  'last-x-days': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().subtract(condition.value, 'hour').toDate(),
+      $gte: createDayjs(timezone)
+        .subtract(condition.value, 'day')
+        .startOf('day')
+        .toAttributeDate(attribute),
+      $lt: createDayjs(timezone)
+        .add(1, 'day')
+        .startOf('day')
+        .toAttributeDate(attribute),
     },
   }),
-  'last-x-days': (condition) => ({
+  'olderthan-x-hours': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().subtract(condition.value, 'day').toDate(),
+      $lt: createDayjs(timezone)
+        .subtract(condition.value, 'hour')
+        .toAttributeDate(attribute),
     },
   }),
-  'last-x-weeks': (condition) => ({
+  'olderthan-x-days': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().subtract(condition.value, 'week').toDate(),
-    },
-  }),
-  'last-x-months': (condition) => ({
-    [condition.field]: {
-      $gte: dayjs().subtract(condition.value, 'month').toDate(),
-    },
-  }),
-  'last-x-years': (condition) => ({
-    [condition.field]: {
-      $gte: dayjs().subtract(condition.value, 'year').toDate(),
-    },
-  }),
-  'olderthan-x-hours': (condition) => ({
-    [condition.field]: {
-      $lte: dayjs().subtract(condition.value, 'hour').toDate(),
-    },
-  }),
-  'olderthan-x-days': (condition) => ({
-    [condition.field]: {
-      $lte: dayjs().subtract(condition.value, 'day').toDate(),
-    },
-  }),
-  'olderthan-x-weeks': (condition) => ({
-    [condition.field]: {
-      $lte: dayjs().subtract(condition.value, 'week').toDate(),
-    },
-  }),
-  'olderthan-x-months': (condition) => ({
-    [condition.field]: {
-      $lte: dayjs().subtract(condition.value, 'month').toDate(),
-    },
-  }),
-  'olderthan-x-years': (condition) => ({
-    [condition.field]: {
-      $lte: dayjs().subtract(condition.value, 'year').toDate(),
+      $lt: createDayjs(timezone)
+        .subtract(condition.value - 1, 'day')
+        .startOf('day')
+        .toAttributeDate(attribute),
     },
   }),
   'in-fiscal-year': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      $gte: dayjs().tz(timezone).startOf('year').toDate(),
-      $lte: dayjs().tz(timezone).endOf('year').toDate(),
+      $gte: startOfFiscalYear(
+        condition.value,
+        timezone,
+        attribute
+      ).toAttributeDate(attribute),
+      $lt: startOfFiscalYear(
+        condition.value + 1,
+        timezone,
+        attribute
+      ).toAttributeDate(attribute),
     },
   }),
 
@@ -342,7 +456,7 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       };
     }
 
-    if (attribute.type === 'lookup') {
+    if (attribute.type === 'lookup' && 'objectId' in attribute) {
       return {
         [condition.field]: new Types.ObjectId(condition.value as string),
       };
@@ -364,18 +478,57 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       };
     }
 
+    if (attribute.type === 'lookup' && 'objectId' in attribute) {
+      return {
+        [condition.field]: {
+          $ne: new Types.ObjectId(condition.value as string),
+        },
+      };
+    }
+
     return {
       [condition.field]: {
         $ne: condition.value,
       },
     };
   },
-  between: (condition, attribute) => {
+  between: (condition, attribute, { timezone }) => {
     if (attribute.type === 'date') {
+      if (attribute.format === 'date') {
+        return {
+          [condition.field]: {
+            $gte: createDayjs(timezone, condition.value[0])
+              .startOf('day')
+              .toAttributeDate(attribute),
+            $lt: createDayjs(timezone, condition.value[1])
+              .add(1, 'day')
+              .startOf('day')
+              .toAttributeDate(attribute),
+          },
+        };
+      }
+
+      const inputHasTime =
+        hasTime(condition.value[0]) || hasTime(condition.value[1]);
+
+      if (!inputHasTime) {
+        return {
+          [condition.field]: {
+            $gte: createDayjs(timezone, condition.value[0])
+              .startOf('day')
+              .toAttributeDate(attribute),
+            $lt: createDayjs(timezone, condition.value[1])
+              .add(1, 'day')
+              .startOf('day')
+              .toAttributeDate(attribute),
+          },
+        };
+      }
+
       return {
         [condition.field]: {
-          $gte: new Date(condition.value[0]),
-          $lte: new Date(condition.value[1]),
+          $gte: createDayjs(timezone, condition.value[0]).toDate(),
+          $lte: createDayjs(timezone, condition.value[1]).toDate(),
         },
       };
     }
@@ -394,13 +547,9 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
 
   'not-null': (condition) => {
     return {
-      $and: [
-        {
-          [condition.field]: {
-            $ne: null,
-          },
-        },
-      ],
+      [condition.field]: {
+        $ne: null,
+      },
     };
   },
   null: (condition) => {
@@ -421,14 +570,45 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
   },
   in: (condition, attribute) => {
     if (!Array.isArray(condition.value)) {
-      throw new Error('Invalid value');
+      throw new Error('Value for "in" operator must be an array');
     }
 
-    if (
-      attribute.type === 'boolean' ||
-      attribute.type === 'choice' ||
-      attribute.type === 'choices'
-    ) {
+    if (!condition.value.length) {
+      throw new Error('Value for "in" operator cannot be an empty array');
+    }
+
+    if (attribute.type === 'boolean') {
+      // handle empty value for boolean
+      return {
+        $or: condition.value.map((value) => {
+          if (typeof value === 'boolean') {
+            if (value) {
+              return {
+                [condition.field]: { $eq: true },
+              };
+            } else {
+              return {
+                $or: [
+                  {
+                    [condition.field]: { $exists: false },
+                  },
+                  {
+                    [condition.field]: { $eq: false },
+                  },
+                  {
+                    [condition.field]: { $eq: null },
+                  },
+                ],
+              };
+            }
+          } else {
+            throw new Error('Invalid value for boolean type');
+          }
+        }),
+      };
+    }
+
+    if (attribute.type === 'choice' || attribute.type === 'choices') {
       return {
         [condition.field]: {
           $in: condition.value,
@@ -436,18 +616,18 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       };
     }
 
-    if (attribute.type === 'id') {
-      return {
-        [condition.field]: {
-          $in: condition.value.map((x: string) => new Types.ObjectId(x)),
-        },
-      };
-    }
+    if (attribute.type === 'id' || attribute.type === 'lookup') {
+      if ('objectId' in attribute) {
+        return {
+          [condition.field]: {
+            $in: condition.value.map((x: string) => new Types.ObjectId(x)),
+          },
+        };
+      }
 
-    if (attribute.type === 'lookup') {
       return {
         [condition.field]: {
-          $in: condition.value.map((x: string) => new Types.ObjectId(x)),
+          $in: condition.value,
         },
       };
     }
@@ -464,14 +644,44 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
   },
   'not-in': (condition, attribute) => {
     if (!Array.isArray(condition.value)) {
-      throw new Error('Invalid value');
+      throw new Error('Value for "not-in" operator must be an array');
     }
 
-    if (
-      attribute.type === 'boolean' ||
-      attribute.type === 'choice' ||
-      attribute.type === 'choices'
-    ) {
+    if (!condition.value.length) {
+      throw new Error('Value for "not-in" operator cannot be an empty array');
+    }
+
+    if (attribute.type === 'boolean') {
+      return {
+        $and: condition.value.map((value) => {
+          if (typeof value === 'boolean') {
+            if (value) {
+              return {
+                $or: [
+                  {
+                    [condition.field]: { $exists: false },
+                  },
+                  {
+                    [condition.field]: { $eq: false },
+                  },
+                  {
+                    [condition.field]: { $eq: null },
+                  },
+                ],
+              };
+            } else {
+              return {
+                [condition.field]: { $eq: true },
+              };
+            }
+          } else {
+            throw new Error('Invalid value for boolean type');
+          }
+        }),
+      };
+    }
+
+    if (attribute.type === 'choice' || attribute.type === 'choices') {
       return {
         [condition.field]: {
           $nin: condition.value,
@@ -479,18 +689,18 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       };
     }
 
-    if (attribute.type === 'id') {
-      return {
-        [condition.field]: {
-          $nin: condition.value.map((x: string) => new Types.ObjectId(x)),
-        },
-      };
-    }
+    if (attribute.type === 'id' || attribute.type === 'lookup') {
+      if ('objectId' in attribute) {
+        return {
+          [condition.field]: {
+            $nin: condition.value.map((x: string) => new Types.ObjectId(x)),
+          },
+        };
+      }
 
-    if (attribute.type === 'lookup') {
       return {
         [condition.field]: {
-          $nin: condition.value.map((x: string) => new Types.ObjectId(x)),
+          $nin: condition.value,
         },
       };
     }

@@ -2,6 +2,7 @@ import { Schema } from '@headless-adminapp/core/schema';
 import { ISchemaStore } from '@headless-adminapp/core/store';
 import { RetriveRecordsParams } from '@headless-adminapp/core/transport';
 import { urlToFileObject } from '@headless-adminapp/core/utils';
+import dayjs from 'dayjs';
 
 function transformColumns({
   record,
@@ -39,6 +40,14 @@ function transformColumns({
             : null,
           logicalName: attribute.entity,
         };
+      }
+    } else if (attribute.type === 'date' && attribute.format === 'date') {
+      if (record[column]) {
+        transformedRecord[column] = dayjs(record[column])
+          .utc()
+          .format('YYYY-MM-DD');
+      } else {
+        transformedRecord[column] = null;
       }
     } else if (attribute.type === 'attachment') {
       if (record[column]) {
@@ -106,6 +115,14 @@ const transformExpandedRecord = ({
               name: nestedExpandedRecord[expandedSchema.primaryAttribute],
               logicalName: attribute.entity,
             };
+          }
+        } else if (attribute.type === 'date' && attribute.format === 'date') {
+          if (expandedRecord[column]) {
+            acc[column] = dayjs(expandedRecord[column])
+              .utc()
+              .format('YYYY-MM-DD');
+          } else {
+            acc[column] = null;
           }
         } else {
           acc[column] = expandedRecord[column];

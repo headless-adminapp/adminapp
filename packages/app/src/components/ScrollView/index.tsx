@@ -2,10 +2,6 @@ import clsx from 'clsx';
 import { FC, PropsWithChildren, useState } from 'react';
 import { type ScrollbarProps, Scrollbars } from 'react-custom-scrollbars-2';
 
-function getReaminingSpace(div: HTMLElement) {
-  return div.scrollHeight - div.scrollTop - div.clientHeight;
-}
-
 interface ScrollViewProps {
   className?: string;
   autoHide?: boolean;

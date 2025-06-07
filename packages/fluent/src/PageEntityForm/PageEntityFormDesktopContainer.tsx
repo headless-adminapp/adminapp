@@ -55,6 +55,7 @@ export const PageEntityFormDesktopContainer: FC = () => {
   );
 
   const strings = usePageEntityFormStrings();
+  const locale = useLocale();
   const recordId = useRecordId();
   const record = useContextSelector(DataFormContext, (state) => state.record);
   const activeTab = useContextSelector(
@@ -241,7 +242,8 @@ export const PageEntityFormDesktopContainer: FC = () => {
                               <Body1>
                                 {getAttributeFormattedValue(
                                   attribute,
-                                  field.value
+                                  field.value,
+                                  locale
                                 )}
                               </Body1>
                             );

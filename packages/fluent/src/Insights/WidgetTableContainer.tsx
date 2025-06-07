@@ -8,6 +8,7 @@ import {
   tokens,
 } from '@fluentui/react-components';
 import { CommandItemState } from '@headless-adminapp/app/command';
+import { useLocale } from '@headless-adminapp/app/locale';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
 import { Attribute } from '@headless-adminapp/core';
 import { FC } from 'react';
@@ -35,6 +36,8 @@ export const WidgetTableContainer: FC<WidgetTableContainerProps> = ({
   commands,
   data,
 }) => {
+  const locale = useLocale();
+
   return (
     <WidgetSection>
       <WidgetTitleBar title={title} commands={commands} />
@@ -90,7 +93,8 @@ export const WidgetTableContainer: FC<WidgetTableContainerProps> = ({
                     const value = row[column];
 
                     const formattedValue =
-                      getAttributeFormattedValue(attribute, value) ?? '';
+                      getAttributeFormattedValue(attribute, value, locale) ??
+                      '';
 
                     switch (attribute?.type) {
                       case 'money':

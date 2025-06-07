@@ -1,9 +1,9 @@
 import { AttributeBase } from './AttributeBase';
 
 export type DateRangeAttribute = Omit<
-  AttributeBase<[Date, Date]>,
+  AttributeBase<[string, string]>,
   'default'
 > & {
   type: 'daterange';
-  default?: [Date, Date];
+  default?: [string, string];
 };

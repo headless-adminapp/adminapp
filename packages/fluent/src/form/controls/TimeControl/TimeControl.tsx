@@ -6,7 +6,8 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { ControlProps } from './types';
+import { ControlProps } from '../types';
+import { resolveTimeValue } from './utils';
 
 dayjs.extend(customParseFormat);
 
@@ -134,18 +135,4 @@ export function TimeControl({
       />
     </div>
   );
-}
-
-function resolveTimeValue(value: string, timeFormat: string): Date | undefined {
-  if (!value) {
-    return;
-  }
-
-  const time = dayjs(value, timeFormat);
-
-  if (!time.isValid()) {
-    return;
-  }
-
-  return time.toDate();
 }

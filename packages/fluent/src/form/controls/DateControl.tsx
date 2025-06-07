@@ -1,3 +1,4 @@
+import { DayOfWeek } from '@fluentui/react-calendar-compat';
 import { tokens } from '@fluentui/react-components';
 import { DatePicker } from '@fluentui/react-datepicker-compat';
 import { useLocale } from '@headless-adminapp/app/locale';
@@ -28,7 +29,7 @@ export function DateControl({
   disabled,
   readOnly,
 }: Readonly<DateControlProps>) {
-  const { dateFormats, timezone } = useLocale();
+  const { dateFormats } = useLocale();
   const { datePickerStrings } = useAppStrings();
 
   return (
@@ -39,20 +40,19 @@ export function DateControl({
       onBlur={() => onBlur?.()}
       placeholder={placeholder}
       appearance="filled-darker"
+      firstDayOfWeek={DayOfWeek.Monday}
+      showMonthPickerAsOverlay
       disabled={disabled}
       readOnly={readOnly}
-      formatDate={(date) =>
-        date ? dayjs(date).tz(timezone).format(dateFormats.short) : ''
-      }
+      formatDate={(date) => (date ? dayjs(date).format(dateFormats.short) : '')}
       value={value ? new Date(value) : null}
       onSelectDate={(date) => {
-        onChange?.(
-          date
-            ? dayjs(date).tz(timezone, true).startOf('day').toISOString()
-            : null
-        );
+        onChange?.(date ? dayjs(date).format('YYYY-MM-DD') : null);
       }}
       strings={datePickerStrings}
+      style={{
+        width: '100%',
+      }}
       contentAfter={
         <div
           style={{
