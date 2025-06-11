@@ -32,7 +32,6 @@ function patchHistory() {
   };
 
   history.replaceState = function (state, ...args) {
-    console.log('Patching replaceState', state, args);
     state = {
       ...state,
       [STATE_KEY]: state[STATE_KEY] ?? window.history.state[STATE_KEY],
