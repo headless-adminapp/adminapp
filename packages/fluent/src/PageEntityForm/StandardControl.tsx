@@ -58,6 +58,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     allowNewRecord,
     autoHeight,
     maxHeight,
+    skeleton,
   } = props;
   const isDisabled = readOnly;
   // const label = hideLabel ? undefined : _label ?? attribute.label;
@@ -100,6 +101,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         error: isError,
         disabled: readOnly,
         readOnly,
+        skeleton,
       };
 
       switch (attribute.format) {
@@ -178,6 +180,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
               disabled={isDisabled}
               readOnly={readOnly}
               decimalPlaces={attribute.decimalPlaces}
+              skeleton={skeleton}
             />
           );
         }
@@ -197,6 +200,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
               error={isError}
               disabled={isDisabled}
               readOnly={readOnly}
+              skeleton={skeleton}
             />
           );
         }
@@ -216,6 +220,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
               error={isError}
               disabled={isDisabled}
               readOnly={readOnly}
+              skeleton={skeleton}
             />
           );
         }
@@ -235,6 +240,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
               error={isError}
               disabled={isDisabled}
               readOnly={readOnly}
+              skeleton={skeleton}
             />
           );
         }
@@ -254,6 +260,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         error: isError,
         disabled: isDisabled,
         readOnly,
+        skeleton,
       };
 
       if (attribute.format === 'datetime') {
@@ -279,6 +286,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         error: isError,
         disabled: isDisabled,
         readOnly,
+        skeleton,
       };
 
       const Control =
@@ -304,6 +312,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           disabled={isDisabled}
           borderOnFocusOnly={borderOnFocusOnly}
           readOnly={readOnly}
+          skeleton={skeleton}
         />
       );
     }
@@ -325,6 +334,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           experienceStore={experienceStore}
           allowNavigation={allowNavigation}
           allowNewRecord={allowNewRecord}
+          skeleton={skeleton}
         />
       );
     }
@@ -347,6 +357,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           experienceStore={experienceStore}
           allowNavigation={allowNavigation}
           allowNewRecord={allowNewRecord}
+          skeleton={skeleton}
         />
       );
     }
@@ -369,6 +380,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           experienceStore={experienceStore}
           allowNavigation={allowNavigation}
           allowNewRecord={allowNewRecord}
+          skeleton={skeleton}
         />
       );
     }
@@ -388,6 +400,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           error={isError}
           disabled={isDisabled}
           readOnly={readOnly}
+          skeleton={skeleton}
         />
       );
     }
@@ -410,6 +423,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           placeholder={placeholder}
           borderOnFocusOnly={borderOnFocusOnly}
           readOnly={readOnly}
+          skeleton={skeleton}
         />
       );
     }
@@ -432,6 +446,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           placeholder={placeholder}
           borderOnFocusOnly={borderOnFocusOnly}
           readOnly={readOnly}
+          skeleton={skeleton}
         />
       );
     }
@@ -457,6 +472,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           borderOnFocusOnly={borderOnFocusOnly}
           readOnly={readOnly}
           fileServiceContext={props.fileServiceContext}
+          skeleton={skeleton}
         />
       );
     }
@@ -478,32 +494,10 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           placeholder={placeholder}
           borderOnFocusOnly={borderOnFocusOnly}
           readOnly={readOnly}
+          skeleton={skeleton}
         />
       );
     }
-
-    // case 'attachment': {
-    //   return (
-    //     <FormControl
-    //       type="attachment"
-    //       name={name}
-    //       label={label}
-    //       required={required}
-    //       value={value}
-    //       onChange={onChange}
-    //       onBlur={onBlur}
-    //       error={isError}
-    //       helperText={errorMessage}
-    //       disabled={isDisabled}
-    //       placeholder={placeholder}
-    //       borderOnFocusOnly={borderOnFocusOnly}
-    //       readOnly={readOnly}
-    //       format={attribute.format}
-    //       maxSize={attribute.maxSize}
-    //       fileService={fileService}
-    //     />
-    //   );
-    // }
   }
 
   const FallBackControl = componentStore.getComponent<FC<StandardControlProps>>(

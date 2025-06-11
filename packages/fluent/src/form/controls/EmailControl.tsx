@@ -1,6 +1,7 @@
 import { Button, Input, tokens } from '@fluentui/react-components';
 import { Icons } from '@headless-adminapp/icons';
 
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 export interface EmailControlProps extends ControlProps<string> {
@@ -20,7 +21,12 @@ export function EmailControl({
   autoComplete,
   textTransform,
   readOnly,
+  skeleton,
 }: Readonly<EmailControlProps>) {
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
+
   return (
     <Input
       type="email"

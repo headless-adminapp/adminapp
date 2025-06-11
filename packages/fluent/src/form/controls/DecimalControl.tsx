@@ -2,6 +2,7 @@
 import { Input } from '@fluentui/react-components';
 import { useEffect, useRef, useState } from 'react';
 
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 export interface DecimalControlProps extends ControlProps<number> {
@@ -21,6 +22,7 @@ export function DecimalControl({
   borderOnFocusOnly,
   readOnly,
   decimalPlaces,
+  skeleton,
 }: DecimalControlProps) {
   const [internalValue, setInternalValue] = useState<string>(
     value ? value.toString() : ''
@@ -77,6 +79,10 @@ export function DecimalControl({
     setInternalValue(value);
     onChange?.(Number(value));
   };
+
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
 
   return (
     <Input

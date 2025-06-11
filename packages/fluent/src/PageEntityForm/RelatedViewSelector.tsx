@@ -6,6 +6,7 @@ import {
   MenuTrigger,
   tokens,
 } from '@fluentui/react-components';
+import { RelatedItemInfo } from '@headless-adminapp/app/dataform/context';
 import {
   useDataFormSchema,
   useRecordId,
@@ -16,19 +17,10 @@ import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
 import { isLookupAttribute } from '@headless-adminapp/core/attributes/utils';
 import { FormRelatedItemInfo } from '@headless-adminapp/core/experience/form/Form';
 import { Schema } from '@headless-adminapp/core/schema';
-import { Localized } from '@headless-adminapp/core/types';
 import { Icons } from '@headless-adminapp/icons';
 import { useMemo } from 'react';
 
 import { usePageEntityFormStrings } from './PageEntityFormStringContext';
-
-export interface RelatedItemInfo {
-  key: string;
-  logicalName: string;
-  pluralLabel: string;
-  localizedPluralLabels?: Localized<string>;
-  attributeName: string;
-}
 
 function getRelatedItems(
   currentSchema: Schema,

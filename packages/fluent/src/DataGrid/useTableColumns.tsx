@@ -27,7 +27,6 @@ import {
   useContextSelector,
   useMutableState,
 } from '@headless-adminapp/app/mutable';
-import { useRecordSetSetter } from '@headless-adminapp/app/recordset/hooks';
 import {
   InternalRouteResolver,
   RouterInstance,
@@ -163,7 +162,6 @@ export function useTableColumns({
 
   const routeResolver = useRouteResolver();
   const router = useRouter();
-  const recordSetSetter = useRecordSetSetter();
 
   const openRecord = useOpenRecord();
 
@@ -351,7 +349,6 @@ export function useTableColumns({
             schemaStore,
             routeResolver,
             openRecord,
-            recordSetSetter,
             router,
           }),
         enableResizing: true,
@@ -372,7 +369,6 @@ export function useTableColumns({
     schemaStore,
     routeResolver,
     openRecord,
-    recordSetSetter,
     router,
   ]);
 
@@ -426,7 +422,6 @@ function renderCellContent({
   locale,
   routeResolver,
   openRecord,
-  recordSetSetter,
   router,
 }: {
   info: CellContext<UniqueRecord, unknown>;
@@ -436,7 +431,6 @@ function renderCellContent({
   locale: Locale;
   routeResolver: InternalRouteResolver;
   openRecord: (id: string, logicalName: string) => void;
-  recordSetSetter: (logicalName: string, ids: (string | number)[]) => void;
   router: RouterInstance;
 }) {
   let attribute: Attribute | undefined;
@@ -533,7 +527,6 @@ function renderCellContent({
         column,
         schemaStore,
         routeResolver,
-        recordSetSetter,
         router,
         value,
         attribute,
@@ -546,7 +539,6 @@ function renderCellContent({
         column,
         schemaStore,
         routeResolver,
-        recordSetSetter,
         router,
         value,
         attribute,
@@ -720,7 +712,6 @@ function renderLookupAttribute({
   column,
   schemaStore,
   routeResolver,
-  recordSetSetter,
   router,
   attribute,
   formattedValue,
@@ -730,7 +721,6 @@ function renderLookupAttribute({
   column: TransformedViewColumn<SchemaAttributes>;
   schemaStore: ISchemaStore;
   routeResolver: InternalRouteResolver;
-  recordSetSetter: (logicalName: string, ids: (string | number)[]) => void;
   router: RouterInstance;
   attribute: LookupAttribute;
   formattedValue: string;
@@ -774,7 +764,6 @@ function renderLookupAttribute({
       width={info.column.getSize()}
       href={path}
       onClick={() => {
-        recordSetSetter('', []);
         router.push(path);
       }}
     />
@@ -787,7 +776,6 @@ function renderRegardingAttribute({
   column,
   schemaStore,
   routeResolver,
-  recordSetSetter,
   router,
   formattedValue,
 }: {
@@ -796,7 +784,6 @@ function renderRegardingAttribute({
   column: TransformedViewColumn<SchemaAttributes>;
   schemaStore: ISchemaStore;
   routeResolver: InternalRouteResolver;
-  recordSetSetter: (logicalName: string, ids: (string | number)[]) => void;
   router: RouterInstance;
   attribute: RegardingAttribute;
   formattedValue: string;
@@ -850,7 +837,6 @@ function renderRegardingAttribute({
       width={info.column.getSize()}
       href={path}
       onClick={() => {
-        recordSetSetter('', []);
         router.push(path);
       }}
     />

@@ -1,11 +1,15 @@
 import { tokens } from '@fluentui/react-components';
+import { RelatedItemInfo } from '@headless-adminapp/app/dataform/context';
 import {
   useDataFormSchema,
   useRecordId,
 } from '@headless-adminapp/app/dataform/hooks';
+import {
+  HistoryStateKeyProvider,
+  useHistoryStateKey,
+} from '@headless-adminapp/app/historystate';
 
 import { FormTab } from '../form/layout/FormTab';
-import { RelatedItemInfo } from './RelatedViewSelector';
 import { SubgridControl } from './SubgridControl';
 
 interface FormTabRelatedProps {
@@ -15,6 +19,7 @@ interface FormTabRelatedProps {
 export function FormTabRelated({ selectedRelatedItem }: FormTabRelatedProps) {
   const recordId = useRecordId();
   const schema = useDataFormSchema();
+  const historyKey = useHistoryStateKey();
 
   return (
     <FormTab value="related" noWrapper>
@@ -57,15 +62,20 @@ export function FormTabRelated({ selectedRelatedItem }: FormTabRelatedProps) {
                 }}
               >
                 {!!selectedRelatedItem && (
-                  <SubgridControl
-                    logicalName={selectedRelatedItem.logicalName}
-                    allowViewSelection
-                    associated={{
-                      logicalName: schema.logicalName,
-                      id: recordId,
-                      refAttributeName: selectedRelatedItem.attributeName,
-                    }}
-                  />
+                  <HistoryStateKeyProvider
+                    historyKey={`related.${selectedRelatedItem.key}`}
+                    nested
+                  >
+                    <SubgridControl
+                      logicalName={selectedRelatedItem.logicalName}
+                      allowViewSelection
+                      associated={{
+                        logicalName: schema.logicalName,
+                        id: recordId,
+                        refAttributeName: selectedRelatedItem.attributeName,
+                      }}
+                    />
+                  </HistoryStateKeyProvider>
                 )}
               </div>
             </div>

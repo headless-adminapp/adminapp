@@ -1,5 +1,6 @@
 import { FC, lazy, Suspense } from 'react';
 
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 const ReactQuill = lazy(() => import('react-quill'));
@@ -14,7 +15,12 @@ export const RichTextControl: FC<RichTextControlProps> = ({
   onFocus,
   disabled,
   readOnly,
+  skeleton,
 }) => {
+  if (skeleton) {
+    return <SkeletonControl height={200} />;
+  }
+
   return (
     <Suspense>
       <ReactQuill

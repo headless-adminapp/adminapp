@@ -168,6 +168,7 @@ export function useRetriveRecordsInternal<
         pageIndex: 0,
       },
       enabled: !disabled,
+      staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
   const finalData = useMemo(() => {

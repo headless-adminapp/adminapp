@@ -23,7 +23,6 @@ import {
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { useOpenForm } from '@headless-adminapp/app/navigation';
-import { useRecordSetSetter } from '@headless-adminapp/app/recordset/hooks';
 import { Icons } from '@headless-adminapp/icons';
 import {
   flexRender,
@@ -163,24 +162,19 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
 
   const tableWrapperRef = useRef<HTMLDivElement>(null);
 
-  const recordSetSetter = useRecordSetSetter();
-
   const openFormInternal = useOpenForm();
 
   const openRecord = useCallback(
     (id: string) => {
-      recordSetSetter(
-        schema.logicalName,
-        dataRef.current?.records.map((x) => x[schema.idAttribute] as string) ??
-          []
-      );
-
       openFormInternal({
         logicalName: schema.logicalName,
         id,
+        recordSetIds: dataRef.current?.records.map(
+          (x) => x[schema.idAttribute] as string
+        ),
       });
     },
-    [openFormInternal, recordSetSetter, schema.idAttribute, schema.logicalName]
+    [openFormInternal, schema.idAttribute, schema.logicalName]
   );
 
   const { direction } = useLocale();

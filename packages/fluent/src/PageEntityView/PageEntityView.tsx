@@ -1,4 +1,5 @@
 import { useLoadMainGridPage } from '@headless-adminapp/app/datagrid';
+import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { PageEntityViewProvider } from '@headless-adminapp/app/providers/PageEntityViewProvider';
 import { Icons } from '@headless-adminapp/icons';
@@ -55,14 +56,16 @@ export const PageEntityView: FC<PageEntityViewProps> = ({
   }
 
   return (
-    <PageEntityViewProvider
-      schema={schema}
-      view={view}
-      availableViews={viewLookup}
-      commands={commands}
-      onChangeView={onChangeView}
-    >
-      {content}
-    </PageEntityViewProvider>
+    <HistoryStateKeyProvider historyKey={'page-entity-view.' + logicalName}>
+      <PageEntityViewProvider
+        schema={schema}
+        view={view}
+        availableViews={viewLookup}
+        commands={commands}
+        onChangeView={onChangeView}
+      >
+        {content}
+      </PageEntityViewProvider>
+    </HistoryStateKeyProvider>
   );
 };

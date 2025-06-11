@@ -42,6 +42,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useAppStrings } from '../../App/AppStringContext';
 import { RecordCard } from '../../PageEntityForm/RecordCard';
 import { getAvatarColor } from '../../utils/avatar';
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 import { useLookupDatas } from './useLookupData';
 
@@ -109,6 +110,7 @@ const LookupControlMd: FC<RegardingControlProps> = ({
   entities,
   schemaStore,
   allowNavigation,
+  skeleton,
 }) => {
   const [lookupEnabled, setLookupEnabled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -216,6 +218,10 @@ const LookupControlMd: FC<RegardingControlProps> = ({
 
     return schemaStore.getSchema(value?.logicalName);
   }, [schemaStore, value]);
+
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
 
   return (
     <div style={{ position: 'relative', width: '100%' }}>

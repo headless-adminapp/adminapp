@@ -9,6 +9,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { useEffect, useRef, useState } from 'react';
 
+import { SkeletonControl } from './SkeletonControl';
 import { resolveTimeValue } from './TimeControl/utils';
 import { ControlProps } from './types';
 
@@ -31,6 +32,7 @@ export function DateTimeControl({
   placeholder,
   disabled,
   readOnly,
+  skeleton,
 }: Readonly<DateTimeControlProps>) {
   const {
     dateFormats: { short: dateFormat },
@@ -57,6 +59,25 @@ export function DateTimeControl({
   const isReadonly = readOnly || disabled;
 
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+
+  if (skeleton) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: tokens.spacingHorizontalS,
+        }}
+      >
+        <div style={{ flex: 1 }}>
+          <SkeletonControl />
+        </div>
+        <div style={{ flex: 1 }}>
+          <SkeletonControl />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

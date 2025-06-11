@@ -1,5 +1,20 @@
-import { Caption1, tokens } from '@fluentui/react-components';
+import {
+  Caption1,
+  makeStyles,
+  SkeletonItem,
+  tokens,
+} from '@fluentui/react-components';
 import { FC } from 'react';
+
+const useStyles = makeStyles({
+  skeleton: {
+    backgroundColor: 'transparent',
+    '&:after': {
+      backgroundImage:
+        'linear-gradient(to right, transparent 0%, var(--colorNeutralStencil2) 50%, transparent 100%)',
+    },
+  },
+});
 
 interface ProcessFlowProps {
   height?: number;
@@ -8,13 +23,17 @@ interface ProcessFlowProps {
     label: string;
     isActivated?: boolean;
   }>;
+  skeleton?: boolean;
 }
 
 export function ProcessFlow({
   height = 32,
   rounded = true,
   items,
+  skeleton,
 }: ProcessFlowProps) {
+  const styles = useStyles();
+
   return (
     <div style={{ position: 'relative', height }}>
       <div
@@ -32,9 +51,21 @@ export function ProcessFlow({
             isActivated={item.isActivated}
             isFirst={index === 0}
             isLast={index === items.length - 1}
+            skeleton={skeleton}
           />
         ))}
       </div>
+      {skeleton && (
+        <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
+          <SkeletonItem
+            style={{
+              height: '100%',
+              borderRadius: rounded ? tokens.borderRadiusMedium : 0,
+            }}
+            className={styles.skeleton}
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -45,6 +76,7 @@ interface ProcessFlowItemProps {
   isFirst?: boolean;
   isLast?: boolean;
   height: number;
+  skeleton?: boolean;
 }
 
 const ProcessFlowItem: FC<ProcessFlowItemProps> = ({
@@ -53,10 +85,16 @@ const ProcessFlowItem: FC<ProcessFlowItemProps> = ({
   isActivated,
   isFirst,
   isLast,
+  skeleton,
 }) => {
-  const backgroundColor = isActivated
-    ? tokens.colorBrandBackground
-    : tokens.colorNeutralStrokeDisabled;
+  let backgroundColor = tokens.colorNeutralStencil1;
+
+  if (!skeleton) {
+    backgroundColor = isActivated
+      ? tokens.colorBrandBackground
+      : tokens.colorNeutralStrokeDisabled;
+  }
+
   return (
     <div
       style={{
@@ -136,19 +174,21 @@ const ProcessFlowItem: FC<ProcessFlowItemProps> = ({
           }}
         />
       </div>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          flex: 1,
-          alignItems: 'center',
-          gap: tokens.spacingVerticalS,
-          color: isActivated ? 'white' : undefined,
-          zIndex: 2,
-        }}
-      >
-        <Caption1>{label}</Caption1>
-      </div>
+      {!skeleton && (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1,
+            alignItems: 'center',
+            gap: tokens.spacingVerticalS,
+            color: isActivated ? 'white' : undefined,
+            zIndex: 2,
+          }}
+        >
+          <Caption1>{label}</Caption1>
+        </div>
+      )}
     </div>
   );
 };

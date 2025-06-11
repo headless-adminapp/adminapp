@@ -1,6 +1,7 @@
 import { Textarea, TextareaOnChangeData } from '@fluentui/react-components';
 import { useEffect, useRef } from 'react';
 
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 const DEFAULT_MAX_HEIGHT = 260;
@@ -26,6 +27,7 @@ export function TextAreaControl({
   textTransform,
   autoHeight,
   maxHeight,
+  skeleton,
 }: TextAreaControlProps) {
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -61,6 +63,10 @@ export function TextAreaControl({
 
     onChange?.(newValue);
   };
+
+  if (skeleton) {
+    return <SkeletonControl height={116} />;
+  }
 
   return (
     <Textarea

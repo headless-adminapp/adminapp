@@ -1,5 +1,6 @@
 import { Input, InputProps, mergeClasses } from '@fluentui/react-components';
 
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 export interface TextControlProps extends ControlProps<string> {
@@ -30,8 +31,13 @@ export function TextControl({
   readOnly,
   appearance = 'filled-darker',
   maxLength,
+  skeleton,
 }: TextControlProps) {
   const readonly = disabled || readOnly;
+
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
 
   return (
     <Input

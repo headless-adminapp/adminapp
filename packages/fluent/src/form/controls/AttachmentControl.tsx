@@ -24,6 +24,7 @@ import { Icons } from '@headless-adminapp/icons';
 import { useMutation } from '@tanstack/react-query';
 import { FC, useMemo } from 'react';
 
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 interface UseAttachmentSelectorOptions {
@@ -221,6 +222,7 @@ export const AttachmentControl: FC<AttachmentControlProps> = ({
   fileServiceContext,
   location,
   format,
+  skeleton,
 }) => {
   const { isProcessing, selectFile } = useAttachmentSelector({
     fileService,
@@ -255,6 +257,13 @@ export const AttachmentControl: FC<AttachmentControlProps> = ({
     }
   }, [format]);
 
+  if (skeleton) {
+    if (format === 'image') {
+      return <SkeletonControl height={100} width={100} />;
+    }
+    return <SkeletonControl />;
+  }
+
   if (format === 'image') {
     return (
       <AttachmentImageControl
@@ -286,7 +295,7 @@ export const AttachmentControl: FC<AttachmentControlProps> = ({
               width: '100%',
               height: 30,
               borderRadius: tokens.borderRadiusMedium,
-              backgroundColor: tokens.colorNeutralBackground2,
+              backgroundColor: tokens.colorNeutralBackground3,
               display: 'flex',
               paddingLeft: tokens.spacingHorizontalS,
               gap: tokens.spacingHorizontalS,
@@ -333,7 +342,7 @@ export const AttachmentControl: FC<AttachmentControlProps> = ({
             width: '100%',
             height: 30,
             borderRadius: tokens.borderRadiusMedium,
-            backgroundColor: tokens.colorNeutralBackground2,
+            backgroundColor: tokens.colorNeutralBackground3,
             display: 'flex',
             paddingLeft: tokens.spacingHorizontalS,
             gap: tokens.spacingHorizontalS,

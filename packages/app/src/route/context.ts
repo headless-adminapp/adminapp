@@ -10,7 +10,7 @@ export type InternalIsRouteActive = (
 ) => boolean;
 
 interface NavigateOptions {
-  scroll?: boolean;
+  state?: any;
 }
 export interface RouterInstance {
   back: () => void;
@@ -18,6 +18,10 @@ export interface RouterInstance {
   push(href: string, options?: NavigateOptions): void;
   replace(href: string, options?: NavigateOptions): void;
   prefetch(href: string): void;
+  setState(state: any): void;
+  setState(key: string, state: any): void;
+  getState<T = any>(): T;
+  getState<T = any>(key: string): T | undefined;
 }
 
 export const RouterContext = createContext<RouterInstance>(null as any);

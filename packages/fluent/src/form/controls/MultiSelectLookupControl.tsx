@@ -30,6 +30,7 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
 import { RecordCard } from '../../PageEntityForm/RecordCard';
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 import { useGetLookupView, useLookupData } from './useLookupData';
 
@@ -98,6 +99,7 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
   viewId,
   allowNavigation,
   allowNewRecord,
+  skeleton,
 }) => {
   const [lookupEnabled, setLookupEnabled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -215,6 +217,10 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
       onChange?.(newValue);
     }
   };
+
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
 
   return (
     <div

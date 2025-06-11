@@ -16,6 +16,7 @@ export interface OpenFormOptions {
   id?: string | number | null;
   formId?: string;
   parameters?: Record<string, unknown>; // Used while creating a new record
+  recordSetIds?: string[]; // Used to pass record set ids to the form
   useQuickCreateForm?: boolean; // Used while creating a new record and create create form should available
   replace?: boolean; // Replace the current form
 }

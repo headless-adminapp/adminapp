@@ -33,6 +33,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useAppStrings } from '../../App/AppStringContext';
 import { RecordCard } from '../../PageEntityForm/RecordCard';
 import { getAvatarColor } from '../../utils/avatar';
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 import { useGetLookupView, useLookupData } from './useLookupData';
 
@@ -102,6 +103,7 @@ const LookupControlMd: FC<LookupControlProps> = ({
   viewId,
   allowNavigation,
   allowNewRecord,
+  skeleton,
 }) => {
   const [lookupEnabled, setLookupEnabled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -204,6 +206,10 @@ const LookupControlMd: FC<LookupControlProps> = ({
       });
     }
   };
+
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
 
   return (
     <div style={{ position: 'relative', width: '100%' }}>

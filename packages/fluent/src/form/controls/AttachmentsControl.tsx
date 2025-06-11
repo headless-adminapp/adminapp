@@ -14,6 +14,7 @@ import { fileToObject } from '@headless-adminapp/core/utils';
 import { Icons } from '@headless-adminapp/icons';
 import { FC, useRef } from 'react';
 
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 export interface AttachmentsControlProps extends ControlProps<FileObject[]> {}
@@ -26,8 +27,13 @@ export const AttachmentsControl: FC<AttachmentsControlProps> = ({
   disabled,
   readOnly,
   value,
+  skeleton,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>

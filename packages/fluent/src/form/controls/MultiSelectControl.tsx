@@ -2,6 +2,7 @@ import { Dropdown, Option } from '@fluentui/react-components';
 import { useMemo } from 'react';
 
 import { Lookup } from './SelectControl';
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 export interface MultiSelectControlProps<T> extends ControlProps<T[]> {
@@ -18,6 +19,7 @@ export default function MultiSelectControl<T extends string | number>({
   onBlur,
   onFocus,
   placeholder,
+  skeleton,
 }: MultiSelectControlProps<T>) {
   const transformedOptions = useMemo(
     () => options.map((x) => ({ label: x.label, value: String(x.value) })),
@@ -35,6 +37,10 @@ export default function MultiSelectControl<T extends string | number>({
     () => options.filter((x) => value?.includes(x.value)),
     [options, value]
   );
+
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
 
   return (
     <Dropdown

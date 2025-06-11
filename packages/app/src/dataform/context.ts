@@ -12,10 +12,18 @@ import {
 } from '@headless-adminapp/core/schema';
 import { IEventManager } from '@headless-adminapp/core/store';
 import { Data } from '@headless-adminapp/core/transport';
-import { Nullable } from '@headless-adminapp/core/types';
+import { Localized, Nullable } from '@headless-adminapp/core/types';
 
 import { createContext } from '../mutable';
 import { SaveRecordFn } from './utils/saveRecord';
+
+export interface RelatedItemInfo {
+  key: string;
+  logicalName: string;
+  pluralLabel: string;
+  localizedPluralLabels?: Localized<string>;
+  attributeName: string;
+}
 
 export type DataFormContextState<
   SA extends SchemaAttributes = SchemaAttributes
@@ -33,7 +41,8 @@ export type DataFormContextState<
   // internal state (visual)
   // field visibilities
   // disabled fields
-  activeTab?: string;
+  activeTab: string;
+  selectedRelatedItem: RelatedItemInfo | null;
   disabledControls: Record<string, boolean>;
   requiredFields: Record<string, boolean>;
   hiddenControls: Record<string, boolean>;

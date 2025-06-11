@@ -2,6 +2,7 @@ import { Id } from '@headless-adminapp/core';
 import { IdTypes } from '@headless-adminapp/core/attributes/IdAttribute';
 
 import { IntegerControl } from './IntegerControl';
+import { SkeletonControl } from './SkeletonControl';
 import { TextControl } from './TextControl';
 import { ControlProps } from './types';
 
@@ -55,7 +56,15 @@ export interface IdControlProps extends ControlProps<Id> {
   idTypes: IdTypes;
 }
 
-export function IdControl({ idTypes, ...props }: Readonly<IdControlProps>) {
+export function IdControl({
+  idTypes,
+  skeleton,
+  ...props
+}: Readonly<IdControlProps>) {
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
+
   if ('string' in idTypes && idTypes.string) {
     return <TextControl {...props} value={props.value as string} />;
   } else if ('number' in idTypes && idTypes.number) {

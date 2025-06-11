@@ -4,6 +4,7 @@ import { parsePhoneNumber } from '@headless-adminapp/app/utils/phone';
 import { Icons } from '@headless-adminapp/icons';
 import { useEffect, useMemo, useState } from 'react';
 
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 export interface TelephoneControlProps extends ControlProps<string> {
@@ -21,6 +22,7 @@ export function TelephoneControl({
   disabled,
   readOnly,
   autoComplete,
+  skeleton,
 }: Readonly<TelephoneControlProps>) {
   const [internalValue, setInternalValue] = useState<string>('');
   const { region } = useLocale();
@@ -43,6 +45,10 @@ export function TelephoneControl({
     setInternalValue(parsedPhoneNumber.formattedInternationalValue);
     onChange?.(parsedPhoneNumber.rawValue);
   };
+
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
 
   return (
     <Input

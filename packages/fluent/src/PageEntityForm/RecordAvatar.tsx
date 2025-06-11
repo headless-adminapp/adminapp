@@ -1,4 +1,4 @@
-import { Avatar, tokens } from '@fluentui/react-components';
+import { Avatar, SkeletonItem, tokens } from '@fluentui/react-components';
 import { useAppContext } from '@headless-adminapp/app/app';
 import { DataFormContext } from '@headless-adminapp/app/dataform';
 import {
@@ -6,6 +6,7 @@ import {
   useRecordId,
   useRecordTitle,
 } from '@headless-adminapp/app/dataform/hooks';
+import { useIsFormDataFetching } from '@headless-adminapp/app/dataform/hooks/useIsDataFetching';
 import { useOpenErrorDialog } from '@headless-adminapp/app/dialog';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { useProgressIndicator } from '@headless-adminapp/app/progress-indicator';
@@ -29,6 +30,7 @@ export const RecordAvatar: FC = () => {
   const dataService = useDataService();
   const refresh = useContextSelector(DataFormContext, (state) => state.refresh);
   const [showAvatarChangeDialog, setShowAvatarChangeDialog] = useState(false);
+  const isDataFetching = useIsFormDataFetching();
 
   const fileService = useFileService();
 
@@ -75,6 +77,27 @@ export const RecordAvatar: FC = () => {
 
   if (!experienceSchema) {
     return null;
+  }
+
+  if (isDataFetching) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          marginRight: tokens.spacingHorizontalM,
+          marginTop: 2,
+        }}
+      >
+        <SkeletonItem
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: tokens.borderRadiusCircular,
+          }}
+        />
+      </div>
+    );
   }
 
   if (isPlaceholder && !value) {

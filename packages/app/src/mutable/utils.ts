@@ -3,14 +3,17 @@ import { useEffect, useRef, useState } from 'react';
 import { MutableValue } from './type';
 
 export function createMutableValue<T>(
-  initialValue: T,
+  initialValue: T | (() => T),
   isArray?: boolean
 ): MutableValue<T> {
   let storeValue = {
-    current: initialValue,
+    current:
+      typeof initialValue === 'function'
+        ? (initialValue as () => T)()
+        : initialValue,
   };
 
-  type StoreListener = (state: T) => void;
+  type StoreListener = (newState: T, prevState: T, changes: Partial<T>) => void;
 
   const listeners = new Set<StoreListener>();
 
@@ -21,13 +24,17 @@ export function createMutableValue<T>(
         value = value(storeValue.current);
       }
 
+      const prevState = storeValue.current;
+
       if (isArray) {
         storeValue.current = value as T;
       } else {
         storeValue.current = { ...storeValue.current, ...value };
       }
 
-      listeners.forEach((listener) => listener(storeValue.current));
+      listeners.forEach((listener) =>
+        listener(storeValue.current, prevState, value)
+      );
     },
     listeners,
     addListener: (listener) => listeners.add(listener),

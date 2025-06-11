@@ -13,7 +13,6 @@ import { LocaleProvider, LocaleProviderProps } from '../locale';
 import { MetadataProvider } from '../metadata';
 import { MetadataProviderProps } from '../metadata/MetadataProvider';
 import { ProgressIndicatorProvider } from '../progress-indicator';
-import { RecordSetProvider } from '../recordset';
 import { RouteProvider } from '../route';
 import { RouteProviderProps } from '../route/RouteProvider';
 import { ToastNotificationProvider } from '../toast-notification';
@@ -94,7 +93,7 @@ export const LayoutProvider: FC<PropsWithChildren<LayoutProviderProps>> = ({
                       <ToastNotificationContainer />
                       <AuthProvider {...authProps}>
                         <AuthWrapper Placeholder={authPlaceholder}>
-                          <RecordSetProvider>{children}</RecordSetProvider>
+                          {children}
                         </AuthWrapper>
                       </AuthProvider>
                     </ToastNotificationProvider>

@@ -8,6 +8,7 @@ import {
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useMemo, useState } from 'react';
 
+import { SkeletonControl } from '../SkeletonControl';
 import { ControlProps } from '../types';
 import { PopoverContent } from './PopoverContent';
 import { formatDateRange } from './utils';
@@ -34,6 +35,7 @@ export function DateRangeControl({
   maxDate,
   minDate,
   readOnly,
+  skeleton,
 }: Readonly<DateRangeControlProps>) {
   const [open, setOpen] = useState(false);
   const styles = useStyles();
@@ -43,6 +45,10 @@ export function DateRangeControl({
   const formattedValue = useMemo(() => {
     return formatDateRange(value, dateRangeFormats.short);
   }, [value, dateRangeFormats]);
+
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
 
   return (
     <Popover

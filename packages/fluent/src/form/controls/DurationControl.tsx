@@ -2,6 +2,7 @@ import { Combobox, makeStyles, Option } from '@fluentui/react-components';
 import { formatDuration } from '@headless-adminapp/app/utils';
 import { FC, useEffect, useMemo, useState } from 'react';
 
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 const useStyles = makeStyles({
@@ -115,6 +116,7 @@ export const DurationControl: FC<DurationControlProps> = ({
   disabled,
   autoFocus,
   readOnly,
+  skeleton,
 }) => {
   const [searchText, setSearchText] = useState('');
   const [filterEnabled, setFilterEnabled] = useState(false);
@@ -134,6 +136,10 @@ export const DurationControl: FC<DurationControlProps> = ({
       item.text.toLowerCase().includes(searchText.toLowerCase())
     );
   }, [searchText, filterEnabled]);
+
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
 
   return (
     <div style={{ position: 'relative', width: '100%' }}>

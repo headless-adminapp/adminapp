@@ -1,5 +1,6 @@
 import { Switch } from '@fluentui/react-components';
 
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 export interface SwitchControlProps extends ControlProps<boolean> {}
@@ -13,7 +14,12 @@ export function SwitchControl({
   readOnly,
   onBlur,
   onFocus,
+  skeleton,
 }: SwitchControlProps) {
+  if (skeleton) {
+    return <SkeletonControl width={80} />;
+  }
+
   return (
     <Switch
       checked={value ?? false}

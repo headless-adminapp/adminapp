@@ -12,6 +12,7 @@ import {
   useRecordId,
 } from '@headless-adminapp/app/dataform/hooks';
 import { useEventManager } from '@headless-adminapp/app/dataform/hooks/useEventManager';
+import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { localizedLabel } from '@headless-adminapp/app/locale/utils';
@@ -31,7 +32,10 @@ import { SubgridControl } from './SubgridControl';
 
 export function SectionContainer<
   S extends SchemaAttributes = SchemaAttributes
->({ section }: Readonly<{ section: Section<S>; readOnly: boolean }>) {
+>({
+  section,
+  skeleton,
+}: Readonly<{ section: Section<S>; readOnly: boolean; skeleton?: boolean }>) {
   const schema = useDataFormSchema<S>();
 
   const formInstance = useFormInstance();
@@ -193,6 +197,7 @@ export function SectionContainer<
                           }}
                           autoHeight={control.autoHeight}
                           maxHeight={control.maxHeight}
+                          skeleton={skeleton}
                         />
                       </SectionControlWrapper>
                     );
@@ -228,24 +233,28 @@ export function SectionContainer<
               }
             }
 
+            const key = control.key ?? `${control.logicalName}-${index}`;
+
             return (
-              <SubgridControl
-                key={index}
-                logicalName={control.logicalName}
-                allowViewSelection={control.allowViewSelection}
-                viewId={control.viewId}
-                availableViewIds={control.availableViewIds}
-                ContainerComponent={ContainerComponent}
-                associated={
-                  !control.associatedAttribute
-                    ? false
-                    : {
-                        logicalName: schema.logicalName,
-                        id: recordId,
-                        refAttributeName: control.associatedAttribute,
-                      }
-                }
-              />
+              <HistoryStateKeyProvider historyKey={`subgrid.${key}`} nested>
+                <SubgridControl
+                  key={key}
+                  logicalName={control.logicalName}
+                  allowViewSelection={control.allowViewSelection}
+                  viewId={control.viewId}
+                  availableViewIds={control.availableViewIds}
+                  ContainerComponent={ContainerComponent}
+                  associated={
+                    !control.associatedAttribute
+                      ? false
+                      : {
+                          logicalName: schema.logicalName,
+                          id: recordId,
+                          refAttributeName: control.associatedAttribute,
+                        }
+                  }
+                />
+              </HistoryStateKeyProvider>
             );
           }
           case 'component': {

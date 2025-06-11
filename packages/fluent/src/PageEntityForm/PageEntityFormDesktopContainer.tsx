@@ -10,6 +10,7 @@ import {
   tokens,
 } from '@fluentui/react-components';
 import { DataFormContext } from '@headless-adminapp/app/dataform';
+import { RelatedItemInfo } from '@headless-adminapp/app/dataform/context';
 import {
   useDataFormSchema,
   useFormInstance,
@@ -20,6 +21,7 @@ import {
   useRecordTitle,
   useSelectedForm,
 } from '@headless-adminapp/app/dataform/hooks';
+import { useFormDataState } from '@headless-adminapp/app/dataform/hooks/useFormDataState';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { localizedLabel } from '@headless-adminapp/app/locale/utils';
 import {
@@ -27,32 +29,23 @@ import {
   useContextValueSetter,
 } from '@headless-adminapp/app/mutable';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
-import { FC, Fragment, useEffect, useState } from 'react';
+import { FC, Fragment } from 'react';
 import { Controller } from 'react-hook-form';
 
 import { PageBroken } from '../components/PageBroken';
-import { PageLoading } from '../components/PageLoading';
 import { FormBody } from '../form/layout/FormBody';
 import { FormTab } from '../form/layout/FormTab';
+import { Body1Skeleton, Subtitle2Skeleton } from '../Skeleton/TextSkeleton';
 import { CommandContainer } from './CommandContainer';
 import { FormTabRelated } from './FormTabRelated';
 import { usePageEntityFormStrings } from './PageEntityFormStringContext';
 import { ProcessFlow } from './ProcessFlow';
 import { RecordAvatar } from './RecordAvatar';
-import { RelatedItemInfo, RelatedViewSelector } from './RelatedViewSelector';
+import { RelatedViewSelector } from './RelatedViewSelector';
 import { SectionContainer } from './SectionContainer';
 
-let previousCachedActiveTabInfo: {
-  logicalName: string;
-  name: string;
-  relatedItem: RelatedItemInfo | null;
-} | null = null;
-
 export const PageEntityFormDesktopContainer: FC = () => {
-  const dataState = useContextSelector(
-    DataFormContext,
-    (state) => state.dataState
-  );
+  const dataState = useFormDataState();
 
   const strings = usePageEntityFormStrings();
   const locale = useLocale();
@@ -61,6 +54,10 @@ export const PageEntityFormDesktopContainer: FC = () => {
   const activeTab = useContextSelector(
     DataFormContext,
     (state) => state.activeTab
+  );
+  const selectedRelatedItem = useContextSelector(
+    DataFormContext,
+    (state) => state.selectedRelatedItem
   );
   const { language } = useLocale();
 
@@ -72,29 +69,20 @@ export const PageEntityFormDesktopContainer: FC = () => {
   const setActiveTab = useContextValueSetter(
     DataFormContext,
     (setValue) => (value: string) => {
-      setValue((state) => ({
-        ...state,
+      setValue(() => ({
         activeTab: value,
       }));
     }
   );
 
-  useEffect(() => {
-    if (
-      previousCachedActiveTabInfo &&
-      previousCachedActiveTabInfo.logicalName === schema.logicalName
-    ) {
-      setActiveTab(previousCachedActiveTabInfo.name);
-      setSelectedRelatedItem(previousCachedActiveTabInfo.relatedItem);
-    } else {
-      setActiveTab(formConfig.experience.tabs[0].name);
-      previousCachedActiveTabInfo = {
-        logicalName: schema.logicalName,
-        name: formConfig.experience.tabs[0].name,
-        relatedItem: null,
-      };
+  const setSelectedRelatedItem = useContextValueSetter(
+    DataFormContext,
+    (setValue) => (item: RelatedItemInfo | null) => {
+      setValue(() => ({
+        selectedRelatedItem: item,
+      }));
     }
-  }, [setActiveTab, formConfig, schema]);
+  );
 
   const [recordTitle] = useRecordTitle();
 
@@ -105,18 +93,11 @@ export const PageEntityFormDesktopContainer: FC = () => {
   const isDirty = useFormIsDirty();
   const notifications = useFormNotifications();
 
-  const [selectedRelatedItem, setSelectedRelatedItem] =
-    useState<RelatedItemInfo | null>(null);
-
-  if (dataState.isFetching) {
-    return <PageLoading />;
-  }
-
-  if (dataState.isError) {
+  if (!dataState.isFetching && dataState.isError) {
     return <PageBroken title="Error" message="Unable to load page" />;
   }
 
-  if (recordId && !record) {
+  if (recordId && !record && !dataState.isFetching) {
     return (
       <PageBroken
         title="Record not found"
@@ -154,7 +135,7 @@ export const PageEntityFormDesktopContainer: FC = () => {
             // overflow: 'hidden',
           }}
         >
-          <CommandContainer />
+          <CommandContainer skeleton={dataState.isFetching} />
         </div>
         {notifications.length > 0 && (
           <div>
@@ -186,27 +167,42 @@ export const PageEntityFormDesktopContainer: FC = () => {
             }}
           >
             <RecordAvatar />
-            <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+            {dataState.isFetching ? (
               <div
                 style={{
                   display: 'flex',
-                  gap: tokens.spacingHorizontalXS,
-                  alignItems: 'center',
+                  flexDirection: 'column',
+                  flex: 1,
                 }}
               >
-                <Subtitle2>{recordTitle}</Subtitle2>
-                <Caption1 style={{ color: tokens.colorNeutralForeground4 }}>
-                  {isDirty
-                    ? `- ${strings.unsaved}`
-                    : !!record
-                    ? `- ${strings.saved}`
-                    : ''}
-                </Caption1>
+                <Subtitle2Skeleton width={200} />
+                <Body1Skeleton width={80} />
               </div>
-              <Body1 style={{ color: tokens.colorNeutralForeground3 }}>
-                {localizedLabel(language, schema)}
-              </Body1>
-            </div>
+            ) : (
+              <div
+                style={{ display: 'flex', flexDirection: 'column', flex: 1 }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: tokens.spacingHorizontalXS,
+                    alignItems: 'center',
+                  }}
+                >
+                  <Subtitle2>{recordTitle}</Subtitle2>
+                  <Caption1 style={{ color: tokens.colorNeutralForeground4 }}>
+                    {isDirty
+                      ? `- ${strings.unsaved}`
+                      : !!record
+                      ? `- ${strings.saved}`
+                      : ''}
+                  </Caption1>
+                </div>
+                <Body1 style={{ color: tokens.colorNeutralForeground3 }}>
+                  {localizedLabel(language, schema)}
+                </Body1>
+              </div>
+            )}
             <div style={{ display: 'flex', flexDirection: 'row' }}>
               {formConfig.experience.headerControls?.map(
                 (controlName, index) => {
@@ -238,6 +234,10 @@ export const PageEntityFormDesktopContainer: FC = () => {
                           control={formInstance.control}
                           name={controlName}
                           render={({ field }) => {
+                            if (dataState.isFetching) {
+                              return <Body1Skeleton width={100} />;
+                            }
+
                             return (
                               <Body1>
                                 {getAttributeFormattedValue(
@@ -257,7 +257,12 @@ export const PageEntityFormDesktopContainer: FC = () => {
             </div>
           </div>
           {!!processFlowSteps?.length && (
-            <ProcessFlow height={28} rounded={false} items={processFlowSteps} />
+            <ProcessFlow
+              height={28}
+              rounded={false}
+              items={processFlowSteps}
+              skeleton={dataState.isFetching}
+            />
           )}
           <div
             style={{ display: 'flex', paddingBottom: tokens.spacingVerticalS }}
@@ -266,11 +271,6 @@ export const PageEntityFormDesktopContainer: FC = () => {
               selectedValue={activeTab}
               onTabSelect={(e, value) => {
                 setActiveTab(value.value as string);
-                previousCachedActiveTabInfo = {
-                  logicalName: schema.logicalName,
-                  name: value.value as string,
-                  relatedItem: null,
-                };
               }}
             >
               {formConfig.experience.tabs.map((tab) => (
@@ -289,12 +289,6 @@ export const PageEntityFormDesktopContainer: FC = () => {
               onSelect={(item) => {
                 setSelectedRelatedItem(item);
                 setActiveTab('related');
-
-                previousCachedActiveTabInfo = {
-                  logicalName: schema.logicalName,
-                  name: 'related',
-                  relatedItem: item,
-                };
               }}
             />
           </div>
@@ -315,6 +309,7 @@ export const PageEntityFormDesktopContainer: FC = () => {
                     key={section.name}
                     section={section}
                     readOnly={false}
+                    skeleton={dataState.isFetching}
                   />
                 ))}
               </FormTab.Column>

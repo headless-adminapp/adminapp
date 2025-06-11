@@ -6,15 +6,41 @@ import {
   useContextSetValue,
   useCreateContextStore,
 } from '../mutable/context';
+import { useRouter } from '../route';
 import { RecordSetContext, RecordSetContextState } from './context';
 
 export const RecordSetProvider: FC<PropsWithChildren> = ({ children }) => {
-  const contextValue = useCreateContextStore<RecordSetContextState>({
-    logicalName: '',
-    ids: [],
+  const router = useRouter();
+  const contextValue = useCreateContextStore<RecordSetContextState>(() => ({
+    logicalName: router.getState('navigator')?.logicalName ?? '',
+    ids: router.getState('navigator')?.ids ?? [],
     cardView: null,
-    visibleNavigator: false,
-  });
+    visibleNavigator: router.getState('navigator')?.visible ?? false,
+  }));
+
+  useEffect(() => {
+    function listener(
+      state: RecordSetContextState,
+      prevState: RecordSetContextState,
+      changes: Partial<RecordSetContextState>
+    ) {
+      if (
+        ['ids', 'logicalName', 'visibleNavigator'].some((key) => key in changes)
+      ) {
+        router.setState('navigator', {
+          logicalName: state.logicalName,
+          ids: state.ids,
+          visible: state.visibleNavigator,
+        });
+      }
+    }
+
+    contextValue.addListener(listener);
+
+    return () => {
+      contextValue.removeListener(listener);
+    };
+  }, [contextValue, router]);
 
   return (
     <RecordSetContext.Provider value={contextValue}>

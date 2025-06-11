@@ -1,6 +1,7 @@
 import { Dropdown, Option } from '@fluentui/react-components';
 import { useMemo } from 'react';
 
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 export interface Lookup<T = string> {
@@ -22,6 +23,7 @@ export default function SelectControl<T extends string | number>({
   onBlur,
   onFocus,
   placeholder,
+  skeleton,
 }: Readonly<SelectControlProps<T>>) {
   const transformedOptions = useMemo(
     () => options.map((x) => ({ label: x.label, value: String(x.value) })),
@@ -41,6 +43,10 @@ export default function SelectControl<T extends string | number>({
     () => options.find((x) => x.value === value),
     [options, value]
   );
+
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
 
   return (
     <Dropdown

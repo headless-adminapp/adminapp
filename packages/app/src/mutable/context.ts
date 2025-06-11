@@ -18,7 +18,7 @@ export function createContext<T>() {
   return context;
 }
 
-export function useCreateContextStore<T>(initialValue: T) {
+export function useCreateContextStore<T>(initialValue: T | (() => T)) {
   const [state] = useState(() => createContextValue(initialValue));
   return state;
 }

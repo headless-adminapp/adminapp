@@ -1,3 +1,5 @@
+import { useHistoryStateKey } from '@headless-adminapp/app/historystate';
+import { useRouter } from '@headless-adminapp/app/route';
 import { EventManager } from '@headless-adminapp/app/store';
 import {
   EntityMainFormCommandItemExperience,
@@ -49,6 +51,16 @@ export interface DataFormProviderProps<
   saveRecordFn?: SaveRecordFn;
 }
 
+function mergeInitialWithHistory<T>(
+  initialValue: T,
+  historyState: Partial<T> | undefined
+): T {
+  return {
+    ...initialValue,
+    ...historyState,
+  };
+}
+
 export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
   props: PropsWithChildren<DataFormProviderProps<S>>
 ) {
@@ -57,6 +69,8 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
   const formValidationStrings = useFormValidationStrings();
   const eventManager = useMemo(() => new EventManager(), []);
   const contextKey = useRef(0);
+  const router = useRouter();
+  const historyKey = useHistoryStateKey();
 
   const [formReadOnly, setFormReadOnly] = useState(false); // A trick to provide readOnly info to formInstance
 
@@ -89,27 +103,54 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
     []
   );
 
-  const contextValue = useCreateContextStore<DataFormContextState<S>>({
-    contextKey: contextKey.current,
-    schema: props.schema,
-    form: props.form,
-    commands: props.commands,
-    dataState: { isFetching: false },
-    recordId: props.recordId,
-    refresh: async () => {}, // Initial value, will be overridden
-    cloneId: undefined,
-    // formInstance,
-    // formInstanceRenderCount: 0,
-    initialValues: {} as Nullable<InferredSchemaType<S>>,
-    saveRecordFn: saveRecordFnInternal,
-    eventManager,
-    disabledControls: {},
-    requiredFields: {},
-    hiddenControls: {},
-    hiddenSections: {},
-    hiddenTabs: {},
-    formInternal: transformFormInternal(props.form),
-  });
+  const contextValue = useCreateContextStore<DataFormContextState<S>>(() =>
+    mergeInitialWithHistory(
+      {
+        contextKey: contextKey.current,
+        schema: props.schema,
+        form: props.form,
+        commands: props.commands,
+        dataState: { isFetching: true },
+        recordId: props.recordId,
+        refresh: async () => {}, // Initial value, will be overridden
+        cloneId: undefined,
+        // formInstance,
+        // formInstanceRenderCount: 0,
+        initialValues: {} as Nullable<InferredSchemaType<S>>,
+        saveRecordFn: saveRecordFnInternal,
+        activeTab: props.form.experience.tabs[0]?.name,
+        selectedRelatedItem: null,
+        eventManager,
+        disabledControls: {},
+        requiredFields: {},
+        hiddenControls: {},
+        hiddenSections: {},
+        hiddenTabs: {},
+        formInternal: transformFormInternal(props.form),
+      },
+      router.getState<Partial<DataFormContextState<S>>>(historyKey)
+    )
+  );
+
+  useEffect(() => {
+    function listener(
+      state: DataFormContextState<S>,
+      prevState: DataFormContextState<S>,
+      changes: Partial<DataFormContextState<S>>
+    ) {
+      if (['activeTab', 'selectedRelatedItem'].some((key) => key in changes)) {
+        router.setState(historyKey, {
+          activeTab: state.activeTab,
+          selectedRelatedItem: state.selectedRelatedItem,
+        });
+      }
+    }
+
+    contextValue.addListener(listener);
+    return () => {
+      contextValue.removeListener(listener);
+    };
+  }, [contextValue, historyKey, router]);
 
   useEffect(() => {
     contextValue.setValue({

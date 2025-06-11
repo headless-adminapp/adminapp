@@ -1,6 +1,7 @@
 import { Button, Input, tokens } from '@fluentui/react-components';
 import { Icons } from '@headless-adminapp/icons';
 
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 export interface UrlControlProps extends ControlProps<string> {}
@@ -15,7 +16,12 @@ export function UrlControl({
   placeholder,
   disabled,
   readOnly,
+  skeleton,
 }: UrlControlProps) {
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
+
   return (
     <Input
       type="url"

@@ -26,6 +26,7 @@ export interface StandardControlProps {
   allowNewRecord?: boolean;
   autoHeight?: boolean;
   maxHeight?: number;
+  skeleton?: boolean; // For loading state
 }
 
 export interface BaseSectionControl {

@@ -1,17 +1,21 @@
+import { RouterInstance } from '@headless-adminapp/app/route/context';
 import { FormExperience } from '@headless-adminapp/core/experience/form';
 import { Schema } from '@headless-adminapp/core/schema';
 
-let formDefaultParameters: {
+interface DefaultParameters {
   logicalName: string;
   values: Record<string, any>;
-} | null = null;
+}
 
 export function getFormDefaultParameters(
   schema: Schema,
-  formExperience: FormExperience
+  formExperience: FormExperience,
+  router: RouterInstance
 ) {
-  const _values = formDefaultParameters?.values;
-  const _logicalName = formDefaultParameters?.logicalName;
+  const _values =
+    router.getState<DefaultParameters>('defaultParameters')?.values;
+  const _logicalName =
+    router.getState<DefaultParameters>('defaultParameters')?.logicalName;
 
   const schemaDefaultValues = Object.keys(schema.attributes).reduce(
     (acc, key) => {
@@ -56,24 +60,4 @@ export function getFormDefaultParameters(
   }
 
   return defaultValues;
-}
-
-let defaultParamsTimeout: NodeJS.Timeout | null = null;
-
-export function setFormDefaultParameters(
-  logicalName: string,
-  values: Record<string, any>
-) {
-  formDefaultParameters = {
-    logicalName,
-    values,
-  };
-
-  if (defaultParamsTimeout) {
-    clearTimeout(defaultParamsTimeout);
-  }
-
-  defaultParamsTimeout = setTimeout(() => {
-    formDefaultParameters = null;
-  }, 5000);
 }

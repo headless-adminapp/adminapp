@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { SkeletonControl } from '../SkeletonControl';
 import { ControlProps } from '../types';
 import { resolveTimeValue } from './utils';
 
@@ -22,6 +23,7 @@ export function TimeControl({
   placeholder,
   disabled,
   readOnly,
+  skeleton,
 }: Readonly<TimeControlProps>) {
   const {
     timeFormats: { short: timeFormat },
@@ -54,6 +56,10 @@ export function TimeControl({
 
     return dayjs().startOf('day').add(value, 'minutes').toDate();
   }, [value]);
+
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
 
   return (
     <div

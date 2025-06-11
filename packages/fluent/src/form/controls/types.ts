@@ -11,4 +11,5 @@ export interface ControlProps<T> {
   autoFocus?: boolean;
   borderOnFocusOnly?: boolean;
   readOnly?: boolean;
+  skeleton?: boolean; // For loading state
 }

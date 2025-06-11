@@ -1,3 +1,4 @@
+import { useRouter } from '@headless-adminapp/app/route';
 import { useEffect, useMemo, useRef } from 'react';
 
 import { useContextSelector, useContextSetValue } from '../../mutable';
@@ -17,10 +18,11 @@ export function InitialValueResolver() {
   const recordId = useRecordId();
   const record = useContextSelector(DataFormContext, (state) => state.record);
   const formInstance = useFormInstance();
+  const router = useRouter();
 
   const initialValues = useMemo(() => {
     const defaultParameters =
-      getFormDefaultParameters(schema, formConfig.experience) ?? {};
+      getFormDefaultParameters(schema, formConfig.experience, router) ?? {};
     return getInitialValues({
       cloneRecord: undefined,
       form: formConfig,
@@ -29,7 +31,7 @@ export function InitialValueResolver() {
       schema: schema,
       defaultParameters,
     });
-  }, [formConfig, record, recordId, schema]);
+  }, [formConfig, record, recordId, schema, router]);
 
   const setValue = useContextSetValue(DataFormContext);
 

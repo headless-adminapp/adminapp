@@ -1,4 +1,3 @@
-import { useRecordSetSetter } from '@headless-adminapp/app/recordset';
 import { useRouter, useRouteResolver } from '@headless-adminapp/app/route';
 import { PageType } from '@headless-adminapp/core/experience/app';
 import { useCallback, useRef } from 'react';
@@ -11,7 +10,6 @@ export function useOpenRecord() {
   const schema = useDataGridSchema();
   const routeResolver = useRouteResolver();
   const router = useRouter();
-  const recordSetSetter = useRecordSetSetter();
 
   const dataRef = useRef(data);
   dataRef.current = data;
@@ -24,22 +22,22 @@ export function useOpenRecord() {
         id,
       });
 
-      if (logicalName === schema.logicalName) {
-        recordSetSetter(
-          schema.logicalName,
-          dataRef.current?.records.map(
-            (x) => x[schema.idAttribute] as string
-          ) ?? []
-        );
-      }
-      router.push(path);
+      router.push(path, {
+        state: {
+          navigator:
+            logicalName === schema.logicalName
+              ? {
+                  ids:
+                    dataRef.current?.records.map(
+                      (x) => x[schema.idAttribute] as string
+                    ) ?? [],
+                  visible: false,
+                  logicalName: schema.logicalName,
+                }
+              : null,
+        },
+      });
     },
-    [
-      recordSetSetter,
-      routeResolver,
-      router,
-      schema.idAttribute,
-      schema.logicalName,
-    ]
+    [routeResolver, router, schema.idAttribute, schema.logicalName]
   );
 }

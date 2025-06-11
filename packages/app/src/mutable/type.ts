@@ -1,4 +1,4 @@
-type Listener<T> = (state: T) => void;
+type Listener<T> = (newState: T, prevState: T, changes: Partial<T>) => void;
 
 export interface MutableValue<T> {
   value: { current: T };

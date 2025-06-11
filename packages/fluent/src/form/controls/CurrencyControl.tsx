@@ -2,6 +2,7 @@ import { Input } from '@fluentui/react-components';
 import { useCurrencySymbol } from '@headless-adminapp/app/locale';
 import { useEffect, useRef, useState } from 'react';
 
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 export interface CurrencyControlProps extends ControlProps<number> {}
@@ -19,6 +20,7 @@ export function CurrencyControl({
   autoFocus,
   // borderOnFocusOnly,
   readOnly,
+  skeleton,
 }: CurrencyControlProps) {
   const symbol = useCurrencySymbol();
   const [internalValue, setInternalValue] = useState<string>(
@@ -69,6 +71,10 @@ export function CurrencyControl({
     setInternalValue(value);
     onChange?.(Number(value));
   };
+
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
 
   return (
     <Input

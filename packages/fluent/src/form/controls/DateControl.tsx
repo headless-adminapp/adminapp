@@ -8,6 +8,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 
 import { useAppStrings } from '../../App/AppStringContext';
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 dayjs.extend(utc);
@@ -28,9 +29,14 @@ export function DateControl({
   placeholder,
   disabled,
   readOnly,
+  skeleton,
 }: Readonly<DateControlProps>) {
   const { dateFormats } = useLocale();
   const { datePickerStrings } = useAppStrings();
+
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
 
   return (
     <DatePicker

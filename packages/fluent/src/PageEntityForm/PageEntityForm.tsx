@@ -1,6 +1,8 @@
 import { tokens } from '@fluentui/react-components';
 import { useLoadFormGridPage } from '@headless-adminapp/app/dataform/hooks';
+import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 import { PageEntityFormProvider } from '@headless-adminapp/app/providers/PageEntityFormProvider';
+import { RecordSetProvider } from '@headless-adminapp/app/recordset';
 import { Icons } from '@headless-adminapp/icons';
 import { FC } from 'react';
 
@@ -61,24 +63,28 @@ export const PageEntityForm: FC<PageEntityFormProps> = ({
   }
 
   return (
-    <PageEntityFormProvider
-      schema={schema}
-      form={form}
-      recordId={recordId}
-      commands={commands}
-    >
-      <div
-        style={{
-          display: 'flex',
-          flex: 1,
-          flexDirection: 'row',
-          backgroundColor: tokens.colorNeutralBackground2,
-          overflow: 'hidden',
-        }}
-      >
-        <RecordSetNavigatorContainer />
-        <PageEntityFormDesktopContainer />
-      </div>
-    </PageEntityFormProvider>
+    <HistoryStateKeyProvider historyKey={'page-entity-form.' + logicalName}>
+      <RecordSetProvider>
+        <PageEntityFormProvider
+          schema={schema}
+          form={form}
+          recordId={recordId}
+          commands={commands}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flex: 1,
+              flexDirection: 'row',
+              backgroundColor: tokens.colorNeutralBackground2,
+              overflow: 'hidden',
+            }}
+          >
+            <RecordSetNavigatorContainer />
+            <PageEntityFormDesktopContainer />
+          </div>
+        </PageEntityFormProvider>
+      </RecordSetProvider>
+    </HistoryStateKeyProvider>
   );
 };

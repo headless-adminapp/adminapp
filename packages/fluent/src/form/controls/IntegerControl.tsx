@@ -1,6 +1,7 @@
 /* eslint-disable unused-imports/no-unused-vars */
 import { SpinButton } from '@fluentui/react-components';
 
+import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
 export interface IntegerControlProps extends ControlProps<number> {}
@@ -17,7 +18,12 @@ export function IntegerControl({
   placeholder,
   borderOnFocusOnly,
   readOnly,
+  skeleton,
 }: IntegerControlProps) {
+  if (skeleton) {
+    return <SkeletonControl />;
+  }
+
   return (
     <SpinButton
       appearance="filled-darker"
