@@ -1,7 +1,9 @@
 import { tokens } from '@fluentui/react-components';
 import { RetriveRecordFn } from '@headless-adminapp/app/dataform/DataFormProvider/types';
 import { SaveRecordFn } from '@headless-adminapp/app/dataform/utils/saveRecord';
+import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 import { PageEntityFormProvider } from '@headless-adminapp/app/providers/PageEntityFormProvider';
+import { RecordSetProvider } from '@headless-adminapp/app/recordset';
 import {
   EntityMainFormCommandItemExperience,
   Form,
@@ -33,26 +35,32 @@ export function PageCustomEntityForm<
   saveRecordFn,
 }: Readonly<PageCustomEntityFormProps<SA>>) {
   return (
-    <PageEntityFormProvider
-      schema={schema}
-      form={form}
-      recordId={recordId}
-      commands={commands}
-      retriveRecordFn={retriveRecordFn}
-      saveRecordFn={saveRecordFn}
+    <HistoryStateKeyProvider
+      historyKey={'page-entity-form.' + schema.logicalName}
     >
-      <div
-        style={{
-          display: 'flex',
-          flex: 1,
-          flexDirection: 'row',
-          backgroundColor: tokens.colorNeutralBackground2,
-          overflow: 'hidden',
-        }}
-      >
-        <RecordSetNavigatorContainer />
-        <PageEntityFormDesktopContainer />
-      </div>
-    </PageEntityFormProvider>
+      <RecordSetProvider>
+        <PageEntityFormProvider
+          schema={schema}
+          form={form}
+          recordId={recordId}
+          commands={commands}
+          retriveRecordFn={retriveRecordFn}
+          saveRecordFn={saveRecordFn}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flex: 1,
+              flexDirection: 'row',
+              backgroundColor: tokens.colorNeutralBackground2,
+              overflow: 'hidden',
+            }}
+          >
+            <RecordSetNavigatorContainer />
+            <PageEntityFormDesktopContainer />
+          </div>
+        </PageEntityFormProvider>
+      </RecordSetProvider>
+    </HistoryStateKeyProvider>
   );
 }
