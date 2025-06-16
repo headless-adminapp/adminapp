@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Caption1, tokens } from '@fluentui/react-components';
+import { useLocale } from '@headless-adminapp/app/locale';
 import { RadarChartInfo } from '@headless-adminapp/core/experience/insights';
 import {
   PolarAngleAxis,
@@ -29,12 +30,13 @@ export function RadarChart({
   dataset: any[];
   chartInfo: RadarChartInfo;
 }>) {
+  const locale = useLocale();
   const data = dataset[0];
   const radar = chartInfo.radar[0];
 
-  const nameFormatter = createLongAxisFormatter(radar.nameTick);
-  const valueFormatter = createLongAxisFormatter(radar.dataTick);
-  const tickFormatter = createAxisFormatter(radar.dataTick);
+  const nameFormatter = createLongAxisFormatter(locale, radar.nameTick);
+  const valueFormatter = createLongAxisFormatter(locale, radar.dataTick);
+  const tickFormatter = createAxisFormatter(locale, radar.dataTick);
 
   return (
     <ResponsiveContainer width="100%" height="100%">

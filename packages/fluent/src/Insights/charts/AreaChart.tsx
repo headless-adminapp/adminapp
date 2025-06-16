@@ -1,4 +1,5 @@
 import { tokens } from '@fluentui/react-components';
+import { useLocale } from '@headless-adminapp/app/locale';
 import { AreaChartInfo } from '@headless-adminapp/core/experience/insights';
 import { useId } from 'react';
 import {
@@ -20,20 +21,21 @@ export function AreaChart({
   chartInfo: AreaChartInfo;
 }) {
   const id = useId();
+  const locale = useLocale();
   const xAxis = chartInfo.xAxis;
   const yAxis = chartInfo.yAxis;
 
   const areas = chartInfo.areas;
 
-  const xAxisFullFormatter = createLongAxisFormatter(xAxis.tick);
-  const yAxisFullFormatter = createLongAxisFormatter(yAxis.tick);
+  const xAxisFullFormatter = createLongAxisFormatter(locale, xAxis.tick);
+  const yAxisFullFormatter = createLongAxisFormatter(locale, yAxis.tick);
 
   return (
     <ResponsiveContainer width="100%" height="100%">
       <AreaChartInternal data={dataset[0]}>
         {renderGrid()}
-        {renderXAxis(xAxis)}
-        {renderYAxis(yAxis)}
+        {renderXAxis(locale, xAxis)}
+        {renderYAxis(locale, yAxis)}
         {renderAreas(areas, id)}
         <Tooltip
           cursor={{

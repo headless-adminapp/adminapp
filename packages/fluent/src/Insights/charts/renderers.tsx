@@ -6,6 +6,7 @@ import {
   XAxis,
   YAxis,
 } from '@headless-adminapp/core/experience/insights';
+import { Locale } from '@headless-adminapp/core/experience/locale';
 import { Fragment } from 'react';
 import {
   Area,
@@ -20,11 +21,12 @@ import {
 import { createAxisFormatter } from './formatters';
 
 export function renderXAxis(
+  locale: Locale,
   axis: XAxis,
   forceCategory = false,
   padding: XAxisProps['padding'] = 'gap'
 ) {
-  const xAxisFormatter = createAxisFormatter(axis.tick);
+  const xAxisFormatter = createAxisFormatter(locale, axis.tick);
 
   return (
     <XAxisInternal
@@ -53,8 +55,12 @@ export function renderXAxis(
   );
 }
 
-export function renderYAxis(axis: YAxis, axisId: 'left' | 'right' = 'left') {
-  const yAxisFormatter = createAxisFormatter(axis.tick);
+export function renderYAxis(
+  locale: Locale,
+  axis: YAxis,
+  axisId: 'left' | 'right' = 'left'
+) {
+  const yAxisFormatter = createAxisFormatter(locale, axis.tick);
 
   return (
     <YAxisInternal

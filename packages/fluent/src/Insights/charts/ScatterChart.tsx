@@ -1,4 +1,5 @@
 import { Caption1, Divider, tokens } from '@fluentui/react-components';
+import { useLocale } from '@headless-adminapp/app/locale';
 import { ScatterChartInfo } from '@headless-adminapp/core/experience/insights';
 import { useMemo } from 'react';
 import {
@@ -21,12 +22,14 @@ export function ScatterChart({
   dataset: any[];
   chartInfo: ScatterChartInfo;
 }>) {
+  const locale = useLocale();
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ScatterChartInternal>
         {renderGrid()}
-        {renderXAxis(chartInfo.xAxis, false, { left: 10, right: 10 })}
-        {renderYAxis(chartInfo.yAxis)}
+        {renderXAxis(locale, chartInfo.xAxis, false, { left: 10, right: 10 })}
+        {renderYAxis(locale, chartInfo.yAxis)}
         <ZAxis
           type="number"
           dataKey={chartInfo.zAxis.dataKey}
@@ -73,6 +76,7 @@ const ScatterTooltipContent = (props: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataset: any[];
 }) => {
+  const locale = useLocale();
   const chartInfo = props.chartInfo;
   const dataset = props.dataset;
 
@@ -140,9 +144,9 @@ const ScatterTooltipContent = (props: {
     zAxis.dataKey,
   ]);
 
-  const xAxisFormatter = createLongAxisFormatter(xAxis.tick);
-  const yAxisFormatter = createLongAxisFormatter(yAxis.tick);
-  const zAxisFormatter = createLongAxisFormatter(zAxis.tick);
+  const xAxisFormatter = createLongAxisFormatter(locale, xAxis.tick);
+  const yAxisFormatter = createLongAxisFormatter(locale, yAxis.tick);
+  const zAxisFormatter = createLongAxisFormatter(locale, zAxis.tick);
 
   return (
     <div

@@ -1,4 +1,5 @@
 import { tokens } from '@fluentui/react-components';
+import { useLocale } from '@headless-adminapp/app/locale';
 import { BarChartInfo } from '@headless-adminapp/core/experience/insights';
 import {
   BarChart as BarChartInternal,
@@ -18,19 +19,20 @@ export function BarChart({
   dataset: any[];
   chartInfo: BarChartInfo;
 }>) {
+  const locale = useLocale();
   const xAxis = chartInfo.xAxis;
   const yAxis = chartInfo.yAxis;
   const bars = chartInfo.bars;
 
-  const xAxisFullFormatter = createLongAxisFormatter(xAxis.tick);
-  const yAxisFullFormatter = createLongAxisFormatter(yAxis.tick);
+  const xAxisFullFormatter = createLongAxisFormatter(locale, xAxis.tick);
+  const yAxisFullFormatter = createLongAxisFormatter(locale, yAxis.tick);
 
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChartInternal data={dataset[0]} stackOffset={chartInfo.stackOffset}>
         {renderGrid()}
-        {renderYAxis(yAxis)}
-        {renderXAxis(xAxis)}
+        {renderYAxis(locale, yAxis)}
+        {renderXAxis(locale, xAxis)}
         {renderBars(bars, dataset)}
         <Tooltip
           cursor={{

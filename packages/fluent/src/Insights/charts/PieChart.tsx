@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Caption1, tokens } from '@fluentui/react-components';
+import { useLocale } from '@headless-adminapp/app/locale';
 import { PieChartInfo } from '@headless-adminapp/core/experience/insights';
 import {
   Cell,
@@ -25,6 +26,7 @@ export function PieChart({
   dataset: any[];
   chartInfo: PieChartInfo;
 }>) {
+  const locale = useLocale();
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
     cx,
@@ -58,8 +60,8 @@ export function PieChart({
 
   const item = chartInfo.pie[0];
 
-  const nameFormatter = createLongAxisFormatter(item.nameTick);
-  const valueFormatter = createLongAxisFormatter(item.dataTick);
+  const nameFormatter = createLongAxisFormatter(locale, item.nameTick);
+  const valueFormatter = createLongAxisFormatter(locale, item.dataTick);
 
   return (
     <ResponsiveContainer width="100%" height="100%">

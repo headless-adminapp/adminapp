@@ -4,6 +4,7 @@ import {
   DateAxisTick,
   DateAxisTickFormat,
 } from '@headless-adminapp/core/experience/insights';
+import { Locale } from '@headless-adminapp/core/experience/locale';
 import dayjs from 'dayjs';
 
 interface FormatNumberOptions {
@@ -37,6 +38,7 @@ function extractNumberInfo(value: number) {
 }
 
 export const formatCurrencyWithSuffix = (
+  locale: Locale,
   input: number | undefined | null,
   digit: number | FormatNumberOptions = 2
 ) => {
@@ -52,10 +54,11 @@ export const formatCurrencyWithSuffix = (
   if (abs >= 1000) {
     const i = Math.floor(Math.log(abs) / Math.log(1000));
     return (
-      formatCurrency(sign * (abs / Math.pow(1000, i)), digit) + suffix[i - 1]
+      formatCurrency(locale, sign * (abs / Math.pow(1000, i)), digit) +
+      suffix[i - 1]
     );
   } else {
-    return formatCurrency(input, digit);
+    return formatCurrency(locale, input, digit);
   }
 };
 
@@ -71,6 +74,7 @@ export const formatDate = (
 };
 
 export const formatCurrency = (
+  locale: Locale,
   input: number | undefined | null,
   digit: number | FormatNumberOptions = 2
 ) => {
@@ -83,9 +87,9 @@ export const formatCurrency = (
   const maxDigit =
     typeof digit === 'object' ? digit.maxDigit ?? digit.digit : digit;
 
-  const formatter = new Intl.NumberFormat('en-IN', {
-    currency: 'INR',
+  const formatter = new Intl.NumberFormat(locale.locale, {
     style: 'currency',
+    currency: locale.currency.currency,
     minimumFractionDigits: minDigit,
     maximumFractionDigits: maxDigit,
   });
@@ -94,6 +98,7 @@ export const formatCurrency = (
 };
 
 export const formatNumber = (
+  locale: Locale,
   input: number | undefined | null,
   digit: number | FormatNumberOptions = 2
 ) => {
@@ -106,7 +111,7 @@ export const formatNumber = (
   const maxDigit =
     typeof digit === 'object' ? digit.maxDigit ?? digit.digit : digit;
 
-  const formatter = new Intl.NumberFormat('en-IN', {
+  const formatter = new Intl.NumberFormat(locale.locale, {
     minimumFractionDigits: minDigit,
     maximumFractionDigits: maxDigit,
   });
@@ -159,31 +164,37 @@ function createFullTimeAxisFormatter(format: DateAxisTick['format']) {
   return (value: number) => formatDate(new Date(value), formatString);
 }
 
-function createNumberAxisFormatter(options: FormatNumberOptions) {
+function createNumberAxisFormatter(
+  locale: Locale,
+  options: FormatNumberOptions
+) {
   return (value: number) => {
     const info = extractNumberInfo(value);
     if (!info) {
       return '';
     }
 
-    return formatNumber(info.value, options) + info.symbol;
+    return formatNumber(locale, info.value, options) + info.symbol;
   };
 }
 
-function createLongNumberAxisFormatter(options: FormatNumberOptions) {
+function createLongNumberAxisFormatter(
+  locale: Locale,
+  options: FormatNumberOptions
+) {
   return (value: number) => {
-    return formatNumber(value, options);
+    return formatNumber(locale, value, options);
   };
 }
 
-function createCurrencyAxisFormatter() {
+function createCurrencyAxisFormatter(locale: Locale) {
   return (value: number) => {
     const info = extractNumberInfo(value);
     if (!info) {
       return '';
     }
 
-    return formatCurrency(info.value, 0) + info.symbol;
+    return formatCurrency(locale, info.value, 0) + info.symbol;
   };
 }
 
@@ -201,14 +212,14 @@ function createCategoryAxisFormatter(options: CategoryAxisTick['options']) {
   };
 }
 
-export function createAxisFormatter(tick: AllAxisTick) {
+export function createAxisFormatter(locale: Locale, tick: AllAxisTick) {
   switch (tick.type) {
     case 'time':
       return createTimeAxisFormatter(tick.format);
     case 'number':
-      return createNumberAxisFormatter(tick);
+      return createNumberAxisFormatter(locale, tick);
     case 'currency':
-      return createCurrencyAxisFormatter();
+      return createCurrencyAxisFormatter(locale);
     case 'category':
       return createCategoryAxisFormatter(tick.options);
     case 'weekday':
@@ -220,14 +231,17 @@ export function createAxisFormatter(tick: AllAxisTick) {
 
 export type Formatter = (value: unknown) => string;
 
-export function createLongAxisFormatter(tick: AllAxisTick): Formatter {
+export function createLongAxisFormatter(
+  locale: Locale,
+  tick: AllAxisTick
+): Formatter {
   switch (tick.type) {
     case 'time':
       return createFullTimeAxisFormatter(tick.format) as Formatter;
     case 'number':
-      return createLongNumberAxisFormatter(tick) as Formatter;
+      return createLongNumberAxisFormatter(locale, tick) as Formatter;
     case 'currency':
-      return createCurrencyAxisFormatter() as Formatter;
+      return createCurrencyAxisFormatter(locale) as Formatter;
     case 'category':
       return createCategoryAxisFormatter(tick.options) as Formatter;
     case 'weekday':

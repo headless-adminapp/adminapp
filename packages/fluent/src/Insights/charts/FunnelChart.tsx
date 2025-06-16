@@ -1,4 +1,5 @@
 import { tokens } from '@fluentui/react-components';
+import { useLocale } from '@headless-adminapp/app/locale';
 import { FunnelChartInfo } from '@headless-adminapp/core/experience/insights';
 import { useMemo, useRef } from 'react';
 import {
@@ -21,8 +22,9 @@ export function FunnelChart({
   dataset: any[];
   chartInfo: FunnelChartInfo;
 }>) {
+  const locale = useLocale();
   const item = chartInfo;
-  const nameFormatter = createLongAxisFormatter({
+  const nameFormatter = createLongAxisFormatter(locale, {
     type: 'category',
     options: item.nameTick?.options,
   });
@@ -32,7 +34,7 @@ export function FunnelChart({
 
   const data = dataset[0] as any[];
 
-  const valueFormatter = createLongAxisFormatter(item.dataTick);
+  const valueFormatter = createLongAxisFormatter(locale, item.dataTick);
 
   const transformedData = useMemo(() => {
     if (!data?.length) {

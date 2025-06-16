@@ -1,4 +1,5 @@
 import { tokens } from '@fluentui/react-components';
+import { useLocale } from '@headless-adminapp/app/locale';
 import { ComposedChartInfo } from '@headless-adminapp/core/experience/insights';
 import { useCallback, useId, useMemo } from 'react';
 import {
@@ -27,13 +28,15 @@ export function ComposedChart({
   chartInfo: ComposedChartInfo;
 }) {
   const id = useId();
+  const locale = useLocale();
   const xAxis = chartInfo.xAxis;
   const yAxis = chartInfo.yAxis;
   const rightYAxis = chartInfo.rightYAxis;
 
-  const xAxisFullFormatter = createLongAxisFormatter(xAxis.tick);
-  const yAxisFullFormatter = createLongAxisFormatter(yAxis.tick);
+  const xAxisFullFormatter = createLongAxisFormatter(locale, xAxis.tick);
+  const yAxisFullFormatter = createLongAxisFormatter(locale, yAxis.tick);
   const rightYAxisFullFormatter = createLongAxisFormatter(
+    locale,
     rightYAxis?.tick ?? yAxis.tick
   );
 
@@ -62,9 +65,9 @@ export function ComposedChart({
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChartInternal data={dataset[0]}>
         {renderGrid()}
-        {renderYAxis(yAxis)}
-        {!!rightYAxis && renderYAxis(rightYAxis, 'right')}
-        {renderXAxis(xAxis, !!chartInfo.bars?.length)}
+        {renderYAxis(locale, yAxis)}
+        {!!rightYAxis && renderYAxis(locale, rightYAxis, 'right')}
+        {renderXAxis(locale, xAxis, !!chartInfo.bars?.length)}
         {renderLines(chartInfo.lines ?? [])}
         {renderAreas(chartInfo.areas ?? [], id)}
         {renderBars(chartInfo.bars ?? [], dataset)}

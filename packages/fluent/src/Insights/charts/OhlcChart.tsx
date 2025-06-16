@@ -1,4 +1,5 @@
 import { Caption1, Divider, tokens } from '@fluentui/react-components';
+import { useLocale } from '@headless-adminapp/app/locale';
 import {
   DateAxisTickInterval,
   OhlcChartInfo,
@@ -43,6 +44,7 @@ export function OhlcChart({
   dataset: any[];
   chartInfo: OhlcChartInfo;
 }>) {
+  const locale = useLocale();
   const bar = chartInfo.bars[0];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data: any[] = dataset[bar.dataIndex ?? 0];
@@ -75,16 +77,22 @@ export function OhlcChart({
 
   const xAxis = chartInfo.xAxis;
 
-  const xAxisFormatter = createAxisFormatter(xAxis.tick);
+  const xAxisFormatter = createAxisFormatter(locale, xAxis.tick);
 
-  const xAxisLongFormatter = createLongAxisFormatter(chartInfo.xAxis.tick);
-  const yAxisLongFormatter = createLongAxisFormatter(chartInfo.yAxis.tick);
+  const xAxisLongFormatter = createLongAxisFormatter(
+    locale,
+    chartInfo.xAxis.tick
+  );
+  const yAxisLongFormatter = createLongAxisFormatter(
+    locale,
+    chartInfo.yAxis.tick
+  );
 
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ScatterChart data={data}>
         {renderGrid()}
-        {renderYAxis({
+        {renderYAxis(locale, {
           ...chartInfo.yAxis,
           domain,
         })}

@@ -1,4 +1,5 @@
 import { Caption1, Divider, tokens } from '@fluentui/react-components';
+import { useLocale } from '@headless-adminapp/app/locale';
 
 import { formatNumber } from './formatters';
 
@@ -12,6 +13,8 @@ export const FunnelCustomTooltipContent = ({
   payload?: any[];
   valueFormatter: (value: unknown) => string;
 }) => {
+  const locale = useLocale();
+
   if (!active || !payload?.length) {
     return null;
   }
@@ -51,7 +54,10 @@ export const FunnelCustomTooltipContent = ({
           </Caption1>
           <div style={{ flex: 1, minWidth: 50 }} />
           <Caption1 style={{ color: tokens.colorNeutralForeground4 }}>
-            {formatNumber(firstPayload.payload.perc * 100, { maxDigit: 2 })}%
+            {formatNumber(locale, firstPayload.payload.perc * 100, {
+              maxDigit: 2,
+            })}
+            %
           </Caption1>
         </div>
       </div>
