@@ -53,13 +53,14 @@ export function renderXAxis(
   );
 }
 
-export function renderYAxis(axis: YAxis) {
+export function renderYAxis(axis: YAxis, axisId: 'left' | 'right' = 'left') {
   const yAxisFormatter = createAxisFormatter(axis.tick);
 
   return (
     <YAxisInternal
-      yAxisId="left"
+      yAxisId={axisId}
       dataKey={axis.dataKey}
+      orientation={axisId === 'right' ? 'right' : 'left'}
       tickFormatter={yAxisFormatter}
       name={axis.name}
       tickLine={false}
@@ -96,7 +97,7 @@ export function renderLine(line: LineInfo) {
   return (
     <Line
       key={line.dataKey}
-      yAxisId={'left'}
+      yAxisId={line.yAxisId ?? 'left'}
       type={line.curveType}
       dataKey={line.dataKey}
       name={line.dataLabel}
@@ -132,7 +133,7 @@ export function renderArea(area: AreaInfo, chartId: string) {
         </linearGradient>
       </defs>
       <Area
-        yAxisId={'left'}
+        yAxisId={area.yAxisId ?? 'left'}
         type={area.curveType}
         dataKey={area.dataKey}
         name={area.dataLabel}
@@ -159,7 +160,7 @@ export function renderBar(bar: BarInfo, dataset: any[]) {
   return (
     <Bar
       key={bar.dataKey}
-      yAxisId={'left'}
+      yAxisId={bar.yAxisId ?? 'left'}
       type={bar.curveType}
       dataKey={bar.dataKey}
       name={bar.dataLabel}

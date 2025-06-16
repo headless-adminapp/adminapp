@@ -6,6 +6,8 @@ export const CustomTooltipContent = ({
   label,
   xAxisFormatter,
   yAxisFormatter,
+  rightYAxisFormatter,
+  yAxisIdResolver,
 }: {
   active?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,6 +15,8 @@ export const CustomTooltipContent = ({
   label: string;
   xAxisFormatter: (value: unknown) => string;
   yAxisFormatter: (value: unknown) => string;
+  rightYAxisFormatter?: (value: unknown) => string;
+  yAxisIdResolver?: (dataKey: string) => 'left' | 'right';
 }) => {
   if (!active || !payload?.length) {
     return null;
@@ -37,7 +41,12 @@ export const CustomTooltipContent = ({
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         {payload.map(
           (
-            item: { color: string; name: string; value: unknown },
+            item: {
+              color: string;
+              name: string;
+              value: unknown;
+              dataKey: string;
+            },
             index: number
           ) => (
             <div
@@ -59,7 +68,9 @@ export const CustomTooltipContent = ({
               </Caption1>
               <div style={{ flex: 1, minWidth: 50 }} />
               <Caption1 style={{ color: tokens.colorNeutralForeground4 }}>
-                {yAxisFormatter(item.value)}
+                {yAxisIdResolver?.(item.dataKey) === 'right'
+                  ? (rightYAxisFormatter ?? yAxisFormatter)(item.value)
+                  : yAxisFormatter(item.value)}
               </Caption1>
             </div>
           )

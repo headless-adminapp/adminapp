@@ -87,6 +87,7 @@ export type TickInfo = NumericAxisTick & {
   dataKey: string;
   dataLabel: string;
   color?: string;
+  yAxisId?: 'left' | 'right';
 };
 
 export type LineInfo = TickInfo & {
@@ -107,6 +108,7 @@ export interface BarInfo {
   barSize?: number;
   radius?: number;
   stackId?: string;
+  yAxisId?: 'left' | 'right';
 }
 
 export interface LineChartInfo {
@@ -141,6 +143,7 @@ export interface ComposedChartInfo {
   type: 'composed';
   xAxis: XAxis;
   yAxis: YAxis;
+  rightYAxis?: YAxis; // optional right Y axis
   lines?: LineInfo[];
   bars?: BarInfo[];
   areas?: AreaInfo[];
