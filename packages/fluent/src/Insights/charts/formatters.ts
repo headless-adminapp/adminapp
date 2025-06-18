@@ -194,7 +194,21 @@ function createCurrencyAxisFormatter(locale: Locale) {
       return '';
     }
 
-    return formatCurrency(locale, info.value, 0) + info.symbol;
+    let maxDigit: number = 0;
+
+    if (info.symbol) {
+      if (Math.abs(info.value) < 10) {
+        maxDigit = 2;
+      } else if (Math.abs(info.value) < 100) {
+        maxDigit = 1;
+      }
+    }
+
+    return (
+      formatCurrency(locale, info.value, {
+        maxDigit,
+      }) + info.symbol
+    );
   };
 }
 
