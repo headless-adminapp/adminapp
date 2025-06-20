@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/app",
-  "version": "1.4.3",
+  "version": "1.4.6",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
