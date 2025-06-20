@@ -157,6 +157,29 @@ export function mergeConditions<S extends SchemaAttributes = SchemaAttributes>(
   });
 }
 
+export function mergeFilters(
+  ...filters: Array<Filter | null | undefined>
+): Filter | null {
+  if (filters.length === 0) {
+    return null;
+  }
+
+  const nonNullFilters = filters.filter((f) => !!f);
+
+  if (nonNullFilters.length === 0) {
+    return null;
+  }
+
+  if (nonNullFilters.length === 1) {
+    return nonNullFilters[0];
+  }
+
+  return {
+    type: 'and',
+    filters: nonNullFilters as [Filter, ...Filter[]],
+  };
+}
+
 export function simplyfyFilter(filter: Filter): Filter | null {
   const conditions: Condition<any>[] = filter.conditions ?? [];
   const filters: Filter[] = [];

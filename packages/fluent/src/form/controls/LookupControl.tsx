@@ -15,17 +15,18 @@ import {
 } from '@fluentui/react-components';
 import { useAppContext } from '@headless-adminapp/app/app';
 import { useDebouncedValue } from '@headless-adminapp/app/hooks';
+import { useRecentItemStore } from '@headless-adminapp/app/metadata/hooks/useRecentItemStore';
 import {
   useRouter,
   useRouteResolver,
 } from '@headless-adminapp/app/route/hooks';
+import { Id } from '@headless-adminapp/core';
 import { PageType } from '@headless-adminapp/core/experience/app';
 import {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { ISchemaExperienceStore } from '@headless-adminapp/core/store';
 import { Data, IDataService } from '@headless-adminapp/core/transport';
 import { IconPlaceholder, Icons } from '@headless-adminapp/icons';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
@@ -35,7 +36,11 @@ import { RecordCard } from '../../PageEntityForm/RecordCard';
 import { getAvatarColor } from '../../utils/avatar';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
-import { useGetLookupView, useLookupData } from './useLookupData';
+import {
+  createLookupRecentKey,
+  useGetLookupView,
+  useLookupData,
+} from './useLookupData';
 
 export interface LookupOption {
   limit: number;
@@ -51,12 +56,8 @@ export type DataLookup = {
 };
 
 export type LookupControlProps = ControlProps<DataLookup> & {
-  async?: boolean;
-  lookupKey?: string;
-  openRecord?: (id: string) => void;
   dataService: IDataService;
   schema: Schema;
-  experienceStore: ISchemaExperienceStore;
   viewId?: string;
   allowNavigation?: boolean;
   allowNewRecord?: boolean;
@@ -108,9 +109,10 @@ const LookupControlMd: FC<LookupControlProps> = ({
   const [lookupEnabled, setLookupEnabled] = useState(false);
   const [open, setOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
-  const { loockupStrings } = useAppStrings();
+  const { lookupStrings } = useAppStrings();
   const routeResolver = useRouteResolver();
   const router = useRouter();
+  const recentItemStore = useRecentItemStore();
 
   const path = useMemo(() => {
     if (!value) {
@@ -149,26 +151,6 @@ const LookupControlMd: FC<LookupControlProps> = ({
   const [debouncedSearchText] = useDebouncedValue(searchText, 500);
 
   const styles = useStyles();
-
-  // const useLookupData = useMemo(
-  //   () =>
-  //     createUseLookupDataHook({
-  //       dataResolver: dataResolverRef.current,
-  //       useLookupQuery: undefined,
-  //       lookupKey,
-  //     }),
-  //   [lookupKey]
-  // );
-
-  // const {
-  //   data,
-  //   isLoading: loading,
-  //   isFetching,
-  // } = useLookupData({
-  //   limit: 10,
-  //   search: async ? debouncedSearchText : '',
-  //   enabled: lookupEnabled,
-  // });
 
   const { isLoading: isViewLoading, view } = useGetLookupView(
     schema.logicalName,
@@ -240,6 +222,14 @@ const LookupControlMd: FC<LookupControlProps> = ({
             (x) => String(x[schema.idAttribute]) === String(item.optionValue)
           );
 
+          if (_item) {
+            recentItemStore.addItem(
+              createLookupRecentKey(schema.logicalName),
+              _item[schema.idAttribute] as Id,
+              _item[schema.idAttribute] as string
+            );
+          }
+
           handleChange(_item ?? null);
         }}
         disableAutoFocus
@@ -273,7 +263,7 @@ const LookupControlMd: FC<LookupControlProps> = ({
               paddingBlock: tokens.spacingVerticalS,
             }}
           >
-            <Body1>{loockupStrings.noRecordsFound}</Body1>
+            <Body1>{lookupStrings.noRecordsFound}</Body1>
           </div>
         )}
         {allowNewRecord && (
@@ -292,7 +282,7 @@ const LookupControlMd: FC<LookupControlProps> = ({
                   );
                 }}
               >
-                {loockupStrings.newRecord}
+                {lookupStrings.newRecord}
               </ToolbarButton>
             </div>
           </>

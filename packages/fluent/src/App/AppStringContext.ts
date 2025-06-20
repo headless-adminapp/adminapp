@@ -10,7 +10,7 @@ import { createContext, useContext } from 'react';
 
 export interface AppStringSet {
   datePickerStrings: CalendarStrings;
-  loockupStrings: {
+  lookupStrings: {
     newRecord: string;
     noRecordsFound: string;
   };
@@ -23,7 +23,7 @@ export interface AppStringSet {
 export const defaultAppStrings: AppStringSet = {
   datePickerStrings: defaultDatePickerStrings,
   operatorStrings: defaultOperatorStrings,
-  loockupStrings: {
+  lookupStrings: {
     newRecord: 'New Record',
     noRecordsFound: 'No records found',
   },

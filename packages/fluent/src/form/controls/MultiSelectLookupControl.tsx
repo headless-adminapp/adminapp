@@ -104,7 +104,7 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
   const [lookupEnabled, setLookupEnabled] = useState(false);
   const [open, setOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
-  const { loockupStrings } = useAppStrings();
+  const { lookupStrings } = useAppStrings();
 
   useEffect(() => {
     if (open) setLookupEnabled(true);
@@ -296,7 +296,7 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
               paddingBlock: tokens.spacingVerticalS,
             }}
           >
-            <Body1>{loockupStrings.noRecordsFound}</Body1>
+            <Body1>{lookupStrings.noRecordsFound}</Body1>
           </div>
         )}
         {allowNewRecord && (
@@ -307,7 +307,7 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
                 style={{ fontWeight: 'normal' }}
                 icon={<Icons.Add />}
               >
-                {loockupStrings.newRecord}
+                {lookupStrings.newRecord}
               </ToolbarButton>
             </div>
           </>

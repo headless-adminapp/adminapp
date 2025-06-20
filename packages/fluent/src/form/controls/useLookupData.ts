@@ -1,5 +1,10 @@
+import { mergeFilters } from '@headless-adminapp/app/datagrid/DataGridProvider/utils';
 import { useDebouncedValue } from '@headless-adminapp/app/hooks';
 import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
+import { useRecentItemStore } from '@headless-adminapp/app/metadata/hooks/useRecentItemStore';
+import { RecentItem } from '@headless-adminapp/app/store';
+import { useRetriveRecords } from '@headless-adminapp/app/transport/hooks/useRetriveRecords';
+import { Id } from '@headless-adminapp/core';
 import { ViewExperience } from '@headless-adminapp/core/experience/view';
 import {
   InferredSchemaType,
@@ -11,22 +16,22 @@ import {
   RetriveRecordsResult,
 } from '@headless-adminapp/core/transport';
 import { keepPreviousData, useQueries, useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-interface UseLookupDataOptions {
+interface UseLookupDataOptions<S extends SchemaAttributes = SchemaAttributes> {
   dataService: IDataService;
   searchText?: string;
-  schema: Schema;
+  schema: Schema<S>;
   view: ViewExperience | null | undefined;
   enabled?: boolean;
 }
 
-function extractColumns(
-  schema: Schema,
+function extractColumns<S extends SchemaAttributes>(
+  schema: Schema<S>,
   view: ViewExperience | null | undefined
 ): string[] {
   if (!view?.card) {
-    return [schema.primaryAttribute];
+    return [schema.primaryAttribute as string];
   }
 
   return Array.from(
@@ -55,14 +60,14 @@ function extractExpand(view: ViewExperience | null | undefined) {
     }, {} as Record<string, string[]>);
 }
 
-function getKey({
+function getKey<S extends SchemaAttributes>({
   schema,
   view,
   columns,
   expand,
   search,
 }: {
-  schema: Schema;
+  schema: Schema<S>;
   view: ViewExperience | null | undefined;
   columns: string[];
   expand: Record<string, string[]>;
@@ -84,8 +89,11 @@ export function useLookupData<S extends SchemaAttributes = SchemaAttributes>({
   searchText,
   dataService,
   enabled,
-}: UseLookupDataOptions) {
+}: UseLookupDataOptions<S>) {
   const [search] = useDebouncedValue(searchText, 500);
+  const recentIds = useLookupRecentIds(
+    createLookupRecentKey(schema.logicalName)
+  );
 
   const columns = useMemo(() => {
     return extractColumns(schema, view);
@@ -125,9 +133,76 @@ export function useLookupData<S extends SchemaAttributes = SchemaAttributes>({
     enabled: enabled ?? false,
   });
 
+  const recentQueryFilter = useMemo(() => {
+    return mergeFilters(view?.filter, {
+      type: 'and',
+      conditions: [
+        {
+          field: schema.idAttribute as string,
+          operator: 'in',
+          value: recentIds,
+        },
+      ],
+    });
+  }, [view?.filter, schema.idAttribute, recentIds]);
+
+  const { data: recentData, isFetching: isRecentFetching } =
+    useRetriveRecords<S>({
+      columns,
+      expand,
+      schema,
+      search: '',
+      filter: recentQueryFilter,
+      disabled: !enabled || !recentIds.length,
+      sorting: view?.defaultSorting,
+      maxRecords: 5,
+    });
+
+  const mergedData = useMemo(() => {
+    const ids = new Set<Id>();
+
+    const items = [];
+
+    const idAttribute = schema.idAttribute as keyof InferredSchemaType<S>;
+
+    if (recentData?.records) {
+      for (const id of recentIds) {
+        if (ids.has(id as Id)) {
+          continue;
+        }
+
+        const item = recentData.records.find((x) => x[idAttribute] === id);
+
+        if (item) {
+          items.push(item);
+          ids.add(item[idAttribute] as Id);
+        }
+      }
+    }
+
+    if (data?.records) {
+      for (const item of data.records) {
+        if (ids.has(item[idAttribute] as Id)) {
+          continue;
+        }
+
+        ids.add(item[idAttribute] as Id);
+        items.push(item);
+      }
+    }
+
+    items.length = Math.min(items.length, 5);
+
+    return {
+      logicalName: schema.logicalName,
+      count: items.length,
+      records: items,
+    } as RetriveRecordsResult<InferredSchemaType<S>>;
+  }, [data, recentData, recentIds, schema.idAttribute, schema.logicalName]);
+
   return {
-    data,
-    isLoading: isFetching,
+    data: mergedData,
+    isLoading: isFetching || isRecentFetching,
   };
 }
 
@@ -207,4 +282,29 @@ export function useGetLookupView(logicalName: string, viewId?: string) {
     isLoading: isPending,
     view: data,
   };
+}
+
+function useLookupRecentIds(cacheKey: string) {
+  const store = useRecentItemStore();
+  const [items, setItems] = useState<unknown[]>(
+    store.getItems(cacheKey, 5).map((x) => x.value)
+  );
+
+  useEffect(() => {
+    const listener = (newItems: RecentItem<unknown>[]) => {
+      setItems(newItems.map((x) => x.value));
+    };
+
+    store.addListener(cacheKey, listener);
+
+    return () => {
+      store.removeListener(cacheKey, listener);
+    };
+  }, [store, cacheKey]);
+
+  return items;
+}
+
+export function createLookupRecentKey(logicalName: string) {
+  return `lookup-${logicalName}`;
 }

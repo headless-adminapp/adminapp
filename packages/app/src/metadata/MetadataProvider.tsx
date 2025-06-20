@@ -11,13 +11,18 @@ import { IconPlaceholder } from '@headless-adminapp/icons';
 import { FC, PropsWithChildren } from 'react';
 
 import { useCreateContextStore } from '../mutable/context';
-import { SchemaExperienceStore } from '../store';
+import {
+  IRecentItemStore,
+  RecentItemStore,
+  SchemaExperienceStore,
+} from '../store';
 import { MetadataContext, MetadataContextState } from './context';
 
 export interface MetadataProviderProps {
   schemaStore?: ISchemaStore;
   experienceStore?: ISchemaExperienceStore;
   appExperience?: AppExperience;
+  recentItemStore?: IRecentItemStore;
 }
 
 export const defaultSchemaStore = new SchemaStore();
@@ -38,16 +43,20 @@ const defaultApp: AppExperience = {
   logo: {},
 };
 
+const defaultRecentItemStore = new RecentItemStore();
+
 export const MetadataProvider: FC<PropsWithChildren<MetadataProviderProps>> = ({
   children,
   experienceStore = defaultExperienceStore,
   schemaStore = defaultSchemaStore,
   appExperience = defaultApp,
+  recentItemStore = defaultRecentItemStore,
 }) => {
   const contextValue = useCreateContextStore<MetadataContextState>({
     experienceStore,
     schemaStore,
     appExperience,
+    recentItemStore,
   });
 
   return (

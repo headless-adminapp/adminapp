@@ -1,3 +1,4 @@
+import { IRecentItemStore } from '@headless-adminapp/app/store';
 import type { AppExperience } from '@headless-adminapp/core/experience/app';
 import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import type {
@@ -14,6 +15,7 @@ interface UseMetadataResult {
   schemaStore: ISchemaStore<SchemaAttributes>;
   appExperience: AppExperience;
   experienceStore: ISchemaExperienceStore;
+  recentItemStore: IRecentItemStore;
 }
 
 export function useMetadata(): UseMetadataResult {
@@ -29,6 +31,10 @@ export function useMetadata(): UseMetadataResult {
     MetadataContext,
     (state) => state.experienceStore
   );
+  const recentItemStore = useContextSelector(
+    MetadataContext,
+    (state) => state.recentItemStore
+  );
 
   const schemas = schemaStore.getAllSchema();
 
@@ -38,7 +44,8 @@ export function useMetadata(): UseMetadataResult {
       schemaStore,
       appExperience,
       experienceStore,
+      recentItemStore,
     }),
-    [schemas, schemaStore, appExperience, experienceStore]
+    [schemas, schemaStore, appExperience, experienceStore, recentItemStore]
   );
 }

@@ -331,7 +331,6 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           disabled={isDisabled}
           dataService={dataService}
           schema={schemaStore.getSchema(attribute.entity)}
-          experienceStore={experienceStore}
           allowNavigation={allowNavigation}
           allowNewRecord={allowNewRecord}
           skeleton={skeleton}

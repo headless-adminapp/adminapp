@@ -115,7 +115,7 @@ const LookupControlMd: FC<RegardingControlProps> = ({
   const [lookupEnabled, setLookupEnabled] = useState(false);
   const [open, setOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
-  const { loockupStrings } = useAppStrings();
+  const { lookupStrings } = useAppStrings();
   const routeResolver = useRouteResolver();
   const router = useRouter();
 
@@ -322,7 +322,7 @@ const LookupControlMd: FC<RegardingControlProps> = ({
                 paddingBlock: tokens.spacingVerticalS,
               }}
             >
-              <Body1>{loockupStrings.noRecordsFound}</Body1>
+              <Body1>{lookupStrings.noRecordsFound}</Body1>
             </div>
           )}
       </Combobox>
