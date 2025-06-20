@@ -13,10 +13,12 @@ import {
   ToolbarButton,
 } from '@fluentui/react-components';
 import { useDebouncedValue } from '@headless-adminapp/app/hooks';
+import { useRecentItemStore } from '@headless-adminapp/app/metadata/hooks/useRecentItemStore';
 import {
   useRouter,
   useRouteResolver,
 } from '@headless-adminapp/app/route/hooks';
+import { Id } from '@headless-adminapp/core';
 import { PageType } from '@headless-adminapp/core/experience/app';
 import {
   InferredSchemaType,
@@ -32,7 +34,11 @@ import { useAppStrings } from '../../App/AppStringContext';
 import { RecordCard } from '../../PageEntityForm/RecordCard';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
-import { useGetLookupView, useLookupData } from './useLookupData';
+import {
+  createLookupRecentKey,
+  useGetLookupView,
+  useLookupData,
+} from './useLookupData';
 
 export interface LookupOption {
   limit: number;
@@ -105,6 +111,7 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
   const [open, setOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const { lookupStrings } = useAppStrings();
+  const recentItemStore = useRecentItemStore();
 
   useEffect(() => {
     if (open) setLookupEnabled(true);
@@ -266,6 +273,12 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
           );
 
           if (!_item) return;
+
+          recentItemStore.addItem(
+            createLookupRecentKey(schema.logicalName),
+            _item[schema.idAttribute] as Id,
+            _item[schema.idAttribute] as string
+          );
 
           handleAdd(_item);
         }}
