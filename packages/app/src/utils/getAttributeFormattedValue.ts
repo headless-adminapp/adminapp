@@ -36,7 +36,7 @@ export function getAttributeLookupsFormattedValue(
     maxCount?: number;
   }
 ) {
-  const items = (value as unknown as DataLookup<string>[])?.map((v) => v.name);
+  const items = (value as DataLookup<string>[])?.map((v) => v.name);
 
   if (options?.maxCount && items?.length > options.maxCount) {
     return (

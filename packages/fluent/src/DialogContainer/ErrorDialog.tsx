@@ -19,7 +19,7 @@ interface ErrorDialogProps {
   confirmText?: string;
 }
 
-export function ErrorDialog(props: ErrorDialogProps) {
+export function ErrorDialog(props: Readonly<ErrorDialogProps>) {
   return (
     <Dialog
       open={props.open}

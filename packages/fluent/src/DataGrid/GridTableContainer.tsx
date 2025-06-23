@@ -119,7 +119,6 @@ interface GridTableContainerProps {
   disableContextMenu?: boolean;
   disableColumnResize?: boolean;
   disableColumnSort?: boolean;
-  disableColumnReorder?: boolean;
   disableColumnFilter?: boolean;
   noPadding?: boolean;
   headerHeight?: number;

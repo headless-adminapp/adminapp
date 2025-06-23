@@ -46,9 +46,7 @@ export function dataUrlToFile(dataUrl: string, name: string): File {
 }
 
 export function urlToFileObject(url: string, name?: string): FileObject {
-  if (!name) {
-    name = url.split('/').pop() ?? 'file';
-  }
+  name = stringWithDefault(name, url.split('/').pop() ?? 'file');
 
   if (name.includes('?')) {
     name = name.split('?')[0];
@@ -71,4 +69,11 @@ export function createItemWithKey<T>(value: T): ItemWithKey<T> {
 
 export function createItemsWithKey<T>(value: T[]): ItemWithKey<T>[] {
   return value.map((x) => createItemWithKey(x));
+}
+
+export function stringWithDefault(
+  value: string | undefined | null,
+  defaultValue: string
+): string {
+  return value || defaultValue;
 }

@@ -37,7 +37,7 @@ export const CommandLabel: MemoExoticComponent<
       <ToolbarButton
         ref={ref}
         type="button"
-        icon={!!Icon ? <Icon size={20} /> : undefined}
+        icon={Icon ? <Icon size={20} /> : undefined}
         className={mergeClasses(styles.root)}
       >
         {text}

@@ -50,20 +50,23 @@ export function useFormSave() {
   const client = useQueryClient();
   const router = useRouter();
 
-  function showMessageAfterSave({ isCreatedMode }: { isCreatedMode: boolean }) {
+  function showMessageAfterSave({ mode }: { mode: 'create' | 'update' }) {
     // Show notification
-    if (!isCreatedMode) {
-      openToastNotification({
-        type: 'success',
-        title: 'Record updated',
-        text: 'Record updated successfully',
-      });
-    } else {
-      openToastNotification({
-        type: 'success',
-        title: 'Record created',
-        text: 'Record created successfully',
-      });
+    switch (mode) {
+      case 'create':
+        openToastNotification({
+          type: 'success',
+          title: 'Record created',
+          text: 'Record created successfully',
+        });
+        break;
+      case 'update':
+        openToastNotification({
+          type: 'success',
+          title: 'Record updated',
+          text: 'Record updated successfully',
+        });
+        break;
     }
   }
 
@@ -124,7 +127,7 @@ export function useFormSave() {
         });
 
         showMessageAfterSave({
-          isCreatedMode: !record,
+          mode: record ? 'update' : 'create',
         });
       } catch (err) {
         openToastNotification({

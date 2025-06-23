@@ -15,9 +15,7 @@ export function useExperienceViewSubgridCommands(logicalName: string) {
     queryFn: async () => {
       let commands = await experienceStore.getSubgridCommands(logicalName);
 
-      if (!commands) {
-        commands = subgridCommands;
-      }
+      commands ??= subgridCommands;
 
       return commands ?? [];
     },

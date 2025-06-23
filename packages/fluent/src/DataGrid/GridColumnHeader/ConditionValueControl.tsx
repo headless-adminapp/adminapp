@@ -19,7 +19,7 @@ export function ConditionValueControl({
   type,
   value,
   onChange,
-}: ConditionValueControlProps) {
+}: Readonly<ConditionValueControlProps>) {
   const dataService = useDataService();
   const { schemaStore, experienceStore } = useMetadata();
 
@@ -72,19 +72,6 @@ export function ConditionValueControl({
           }}
         />
       );
-    // return (
-    //   <FormControl
-    //     type="lookup"
-    //     async
-    //     dataService={dataService}
-    //     schema={schemaStore.getSchema(attribute.entity)}
-    //     experienceStore={experienceStore}
-    //     value={value?.[0] ?? null}
-    //     onChange={(value) => {
-    //       onChange?.(value ? [value] : []);
-    //     }}
-    //   />
-    // );
     case 'date':
       return (
         <FormControl
@@ -120,13 +107,12 @@ export function ConditionValueControl({
         />
       );
     case 'choice':
-    case 'choices':
+    case 'choices': {
       if (attribute.type !== 'choice' && attribute.type !== 'choices') {
         return null;
       }
 
       const isNumeric = 'number' in attribute && attribute.number === true;
-      // const isString = 'string' in attribute && attribute.string === true;
 
       return (
         <FormControl
@@ -141,6 +127,7 @@ export function ConditionValueControl({
           }}
         />
       );
+    }
     default:
       return null;
   }

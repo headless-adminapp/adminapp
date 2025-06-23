@@ -1,3 +1,5 @@
+import { stringWithDefault } from '@headless-adminapp/core/utils';
+
 import { PageType } from '../app';
 import { IsRouteActive, RouteInfo, RouteResolver } from './types';
 
@@ -9,9 +11,7 @@ export const defaultRouteInfo: RouteInfo = {
 
 export function createRouteResolver(routeInfo: RouteInfo): RouteResolver {
   const routeResolver: RouteResolver = (item, basePath) => {
-    if (!basePath) {
-      basePath = ''; // Replace with default base path
-    }
+    basePath = stringWithDefault(basePath, ''); // Replace with default base path
 
     switch (item.type) {
       case PageType.Dashboard:
@@ -58,9 +58,7 @@ export function createRouteResolver(routeInfo: RouteInfo): RouteResolver {
 
 export function createIsRouteActive(routeInfo: RouteInfo): IsRouteActive {
   const isRouteActive: IsRouteActive = (path, item, basePath) => {
-    if (!basePath) {
-      basePath = ''; // Replace with default base path
-    }
+    basePath = stringWithDefault(basePath, ''); // Replace with default base path
 
     switch (item.type) {
       case PageType.Dashboard:

@@ -56,7 +56,7 @@ export function useRecordSetResult() {
           type: 'and',
           conditions: [
             {
-              field: schema.idAttribute as string,
+              field: schema.idAttribute,
               operator: 'in',
               value: context.ids,
             },

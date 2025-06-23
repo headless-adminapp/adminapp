@@ -183,10 +183,6 @@ export namespace FormCommandBuilder {
           return;
         }
 
-        // if (typeof stringSet === 'function') {
-        //   stringSet = stringSet(context);
-        // }
-
         const localizeSelector = createLocalizedSelector(
           stringSet,
           localizedStringSet,

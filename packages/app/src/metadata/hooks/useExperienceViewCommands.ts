@@ -15,9 +15,7 @@ export function useExperienceViewCommands(logicalName: string) {
     queryFn: async () => {
       let commands = await experienceStore.getViewCommands(logicalName);
 
-      if (!commands) {
-        commands = viewCommands;
-      }
+      commands ??= viewCommands;
 
       return commands ?? [];
     },

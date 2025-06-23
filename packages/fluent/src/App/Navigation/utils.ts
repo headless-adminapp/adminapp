@@ -109,14 +109,9 @@ export function transformNavPageItem({
   if (item.type === 'entityview') {
     const metadata = schemaMetadataObject?.[item.logicalName];
     if (metadata) {
-      if (!label) {
-        label =
-          metadata.localizedPluralLabels?.[language] ?? metadata.pluralLabel;
-      }
-
-      if (!Icon) {
-        Icon = metadata.Icon;
-      }
+      label ??=
+        metadata.localizedPluralLabels?.[language] ?? metadata.pluralLabel;
+      Icon ??= metadata.Icon;
     }
   }
 

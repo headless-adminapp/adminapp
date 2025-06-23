@@ -26,7 +26,7 @@ export function parsePhoneNumber(input: string, defaultCountry?: string) {
       isValid: phoneNumber.isPossible(),
       uri: phoneNumber.getURI(),
     };
-  } catch (error) {
+  } catch {
     return {
       formattedInternationalValue: input,
       formattedNationalValue: input,

@@ -4,10 +4,7 @@ import {
   useDataFormSchema,
   useRecordId,
 } from '@headless-adminapp/app/dataform/hooks';
-import {
-  HistoryStateKeyProvider,
-  useHistoryStateKey,
-} from '@headless-adminapp/app/historystate';
+import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 
 import { FormTab } from '../form/layout/FormTab';
 import { SubgridControl } from './SubgridControl';
@@ -16,10 +13,11 @@ interface FormTabRelatedProps {
   selectedRelatedItem: RelatedItemInfo | null;
 }
 
-export function FormTabRelated({ selectedRelatedItem }: FormTabRelatedProps) {
+export function FormTabRelated({
+  selectedRelatedItem,
+}: Readonly<FormTabRelatedProps>) {
   const recordId = useRecordId();
   const schema = useDataFormSchema();
-  const historyKey = useHistoryStateKey();
 
   return (
     <FormTab value="related" noWrapper>

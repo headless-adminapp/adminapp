@@ -13,7 +13,7 @@ import { InsightsContext } from '../context';
 
 export function useInsightsState<
   S extends SchemaAttributes = SchemaAttributes
->() {
+>(): InsightsState<S> {
   return useContextSelector(
     InsightsContext,
     (state) => state as unknown as InsightsState<S>
@@ -22,7 +22,7 @@ export function useInsightsState<
 
 export function useInsightConfig<
   S extends SchemaAttributes = SchemaAttributes
->() {
+>(): InsightConfig<S> {
   return useContextSelector(
     InsightsContext,
     (state) => state.config as unknown as InsightConfig<S>
@@ -31,7 +31,7 @@ export function useInsightConfig<
 
 export function useInsightFilterValues<
   S extends SchemaAttributes = SchemaAttributes
->() {
+>(): InferredSchemaType<S> {
   return useContextSelector(
     InsightsContext,
     (state) => state.filterValues as unknown as InferredSchemaType<S>

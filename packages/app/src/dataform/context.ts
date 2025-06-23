@@ -78,8 +78,6 @@ export type DataFormContextState<
 
   // form
   initialValues: Nullable<InferredSchemaType<SA>>;
-  // formInstance: UseFormReturn<any, any, undefined>;
-  // formInstanceRenderCount: number;
 
   // other
   // config: FormConfig;

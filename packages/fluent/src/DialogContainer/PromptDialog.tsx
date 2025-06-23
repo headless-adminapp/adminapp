@@ -38,7 +38,7 @@ interface PromptDialogProps<SA extends SchemaAttributes = SchemaAttributes> {
   onDismiss?: PromptDialogOptions<SA>['onDismiss'];
 }
 
-export function PromptDialog(props: PromptDialogProps) {
+export function PromptDialog(props: Readonly<PromptDialogProps>) {
   const { language, region } = useLocale();
   const formValidationStrings = useFormValidationStrings();
 
@@ -79,9 +79,9 @@ export function PromptDialog(props: PromptDialogProps) {
                 ([attributeName, attribute]) => {
                   return (
                     <Controller
-                      key={attributeName as string}
+                      key={attributeName}
                       control={form.control}
-                      name={attributeName as string}
+                      name={attributeName}
                       render={({ field, fieldState, formState }) => {
                         const isError =
                           (fieldState.isTouched || formState.isSubmitted) &&

@@ -17,7 +17,7 @@ export function OperatorSelect({
   attribute,
   value,
   onChange,
-}: OperatorSelectProps) {
+}: Readonly<OperatorSelectProps>) {
   const { operatorStrings } = useAppStrings();
   const dataService = useDataService();
   const operatorOptions = useMemo(() => {

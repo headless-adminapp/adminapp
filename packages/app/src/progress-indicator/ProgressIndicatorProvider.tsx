@@ -24,12 +24,10 @@ export const ProgressIndicatorProvider: FC<PropsWithChildren> = ({
       setMessage(message);
 
       if (delay) {
-        if (!showTimeoutRef.current) {
-          showTimeoutRef.current = setTimeout(() => {
-            setVisible(true);
-            showTimeoutRef.current = undefined;
-          }, delay);
-        }
+        showTimeoutRef.current ??= setTimeout(() => {
+          setVisible(true);
+          showTimeoutRef.current = undefined;
+        }, delay);
       } else {
         if (showTimeoutRef.current) {
           clearTimeout(showTimeoutRef.current);

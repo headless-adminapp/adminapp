@@ -20,7 +20,6 @@ import {
   useGridColumnFilter,
 } from '@headless-adminapp/app/datagrid/hooks';
 import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
-import type { Attribute } from '@headless-adminapp/core/attributes';
 import { ColumnCondition } from '@headless-adminapp/core/experience/view';
 import { Icons } from '@headless-adminapp/icons';
 import {
@@ -81,13 +80,8 @@ const useStyles = makeStyles({
 
 interface TableHeaderFilterCellProps {
   sortDirection?: 'asc' | 'desc';
-  columnName: string;
   onChangeSortDirection?: (direction: 'asc' | 'desc') => void;
-  filterCondition?: ColumnCondition;
-  onChangeFilterCondition?: (condition: ColumnCondition | undefined) => void;
-  attribute: Attribute;
   minWidth?: number;
-  onChangeWidth?: (width: number) => void;
   column: TransformedViewColumn;
   onResetSize?: () => void;
   resizeHandler?: (event: unknown) => void;
@@ -101,12 +95,8 @@ export const TableHeaderFilterCell: FC<
 > = ({
   children,
   sortDirection,
-  // onChangeFilterCondition,
   onChangeSortDirection,
-  // attribute,
-  // filterCondition,
   minWidth,
-  // onChangeWidth,
   column,
   onResetSize,
   resizeHandler,

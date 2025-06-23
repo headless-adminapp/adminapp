@@ -74,7 +74,7 @@ export function useGridControlContext(): EntityMainGridCommandContext['primaryCo
 
   const selectedRecords = useMemo(() => {
     return (data?.records ?? []).filter(
-      (record) => selectedIdsObj[record[schema.idAttribute as string] as string]
+      (record) => selectedIdsObj[record[schema.idAttribute] as string]
     );
   }, [data, schema, selectedIdsObj]);
 
@@ -130,13 +130,7 @@ const emptyCommands: CommandItemExperience<EntityMainGridCommandContext>[][] =
   [];
 
 function useGridCommands() {
-  const commands = useContextSelector(
-    GridContext,
-    (state) =>
-      state.commands as
-        | CommandItemExperience<EntityMainGridCommandContext>[][]
-        | undefined
-  );
+  const commands = useContextSelector(GridContext, (state) => state.commands);
   const {
     appExperience: { viewCommands: defaultCommands },
   } = useAppContext();

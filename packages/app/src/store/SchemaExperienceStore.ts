@@ -23,6 +23,7 @@ import {
   ISchemaExperienceStore,
   ISchemaStore,
 } from '@headless-adminapp/core/store';
+import { stringWithDefault } from '@headless-adminapp/core/utils';
 
 export function getDefaultCardView<
   S extends SchemaAttributes = SchemaAttributes
@@ -140,9 +141,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
       validViewIds = [experience.defaultViewId];
     }
 
-    if (!viewId) {
-      viewId = experience.defaultViewId;
-    }
+    viewId = stringWithDefault(viewId, experience.defaultViewId);
 
     if (!validViewIds.includes(viewId)) {
       viewId = validViewIds[0];
@@ -193,9 +192,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
       validViewIds = [experience.defaultViewId];
     }
 
-    if (!viewId) {
-      viewId = experience.defaultAssociatedViewId;
-    }
+    viewId = stringWithDefault(viewId, experience.defaultAssociatedViewId);
 
     if (!validViewIds.includes(viewId)) {
       viewId = validViewIds[0];
@@ -234,9 +231,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
   ): Promise<View<S>> {
     const experience = await this.getExperience(logicalName);
 
-    if (!viewId) {
-      viewId = experience.defaultLookupId;
-    }
+    viewId = stringWithDefault(viewId, experience.defaultLookupId);
 
     const view = experience.lookups.find((v) => v.id === viewId);
 

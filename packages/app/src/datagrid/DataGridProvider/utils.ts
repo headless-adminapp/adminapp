@@ -133,9 +133,9 @@ export function mergeConditions<S extends SchemaAttributes = SchemaAttributes>(
           ([field, condition]) => {
             return {
               field,
-              operator: condition!.operator,
-              value: condition!.value,
-              extendedKey: condition!.extendedKey,
+              operator: condition.operator,
+              value: condition.value,
+              extendedKey: condition.extendedKey,
             };
           }
         ),

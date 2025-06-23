@@ -129,6 +129,7 @@ function getPackagesDeps(packages: string[]): Record<string, string> {
   }, {});
 }
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 async function installPackageDeps(
   deps: Record<string, string>,
   directory: string

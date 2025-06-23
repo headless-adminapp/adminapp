@@ -19,7 +19,7 @@ interface ConfirmDialogProps {
   cancelText?: string;
 }
 
-export function ConfirmDialog(props: ConfirmDialogProps) {
+export function ConfirmDialog(props: Readonly<ConfirmDialogProps>) {
   return (
     <Dialog
       open={props.open}

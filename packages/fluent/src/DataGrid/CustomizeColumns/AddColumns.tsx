@@ -40,7 +40,7 @@ export function AddColumns({
   columns,
   opened,
   onClose,
-}: AddColumnsProps) {
+}: Readonly<AddColumnsProps>) {
   const schema = useDataGridSchema();
   const { schemaStore } = useMetadata();
   const { language } = useLocale();

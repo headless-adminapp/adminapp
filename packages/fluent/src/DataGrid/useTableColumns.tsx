@@ -337,7 +337,6 @@ export function useTableColumns({
             disableColumnFilter,
             disableColumnSort,
             onChangeSortDirection,
-            attribute: schema.attributes[column.name],
           });
         },
         cell: (info) =>
@@ -384,7 +383,6 @@ function renderCellHeaderContent({
   disableColumnFilter,
   disableColumnSort,
   onChangeSortDirection,
-  attribute,
 }: {
   column: TransformedViewColumn<SchemaAttributes>;
   props: HeaderContext<UniqueRecord, unknown>;
@@ -392,12 +390,10 @@ function renderCellHeaderContent({
   disableColumnFilter?: boolean;
   disableColumnSort?: boolean;
   onChangeSortDirection: (direction: 'asc' | 'desc') => void;
-  attribute: Attribute;
 }) {
   return (
     <TableHeaderFilterCell
       key={column.id}
-      columnName={column.name}
       sortDirection={props.column.getIsSorted() || undefined}
       minWidth={props.header.getSize()}
       column={column}
@@ -405,7 +401,6 @@ function renderCellHeaderContent({
       disableFilter={disableColumnFilter}
       disableSort={disableColumnSort}
       onChangeSortDirection={onChangeSortDirection}
-      attribute={attribute}
       onResetSize={props.column.resetSize}
       resizeHandler={props.header.getResizeHandler()}
     >
@@ -570,9 +565,6 @@ function renderCellContent({
     case 'choice':
       return (
         <TableCellChoice
-          column={column}
-          schema={schema}
-          record={info.row.original}
           value={value}
           attribute={attribute}
           formattedValue={formattedValue}

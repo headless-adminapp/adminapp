@@ -5,7 +5,7 @@ export function useDebouncedValue<T = any>(
   wait: number,
   options = { leading: false }
 ) {
-  const [_value, setValue] = useState(value);
+  const [internalValue, setInternalValue] = useState(value);
   const mountedRef = useRef(false);
   const timeoutRef = useRef<number | null>(null);
   const cooldownRef = useRef(false);
@@ -16,12 +16,12 @@ export function useDebouncedValue<T = any>(
     if (mountedRef.current) {
       if (!cooldownRef.current && options.leading) {
         cooldownRef.current = true;
-        setValue(value);
+        setInternalValue(value);
       } else {
         cancel();
         timeoutRef.current = window.setTimeout(() => {
           cooldownRef.current = false;
-          setValue(value);
+          setInternalValue(value);
         }, wait);
       }
     }
@@ -32,5 +32,5 @@ export function useDebouncedValue<T = any>(
     return cancel;
   }, []);
 
-  return [_value, cancel] as const;
+  return [internalValue, cancel] as const;
 }

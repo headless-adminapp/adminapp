@@ -50,9 +50,7 @@ export function useLoadFormGridPage(
     queryFn: async () => {
       let commands = await experienceStore.getFormCommands(logicalName);
 
-      if (!commands) {
-        commands = formCommands;
-      }
+      commands ??= formCommands;
 
       return commands ?? [];
     },
