@@ -157,6 +157,7 @@ const AttachmentImageControl: FC<AttachmentImageControlProps> = ({
       >
         <img
           src={value.url}
+          alt={value.name ?? 'Attachment'}
           style={{
             maxHeight: '100%',
             maxWidth: '100%',
@@ -317,7 +318,7 @@ export const AttachmentControl: FC<AttachmentControlProps> = ({
                 flex: 1,
               }}
             >
-              {placeholder || 'Select a file'}
+              {placeholder ?? 'Select a file'}
             </Body1>
             {isProcessing && (
               <div style={{ paddingRight: tokens.spacingHorizontalS }}>
@@ -359,7 +360,7 @@ export const AttachmentControl: FC<AttachmentControlProps> = ({
               flex: 1,
             }}
           >
-            {value.name || value.url}
+            {value.name ?? value.url}
           </Body1>
           {isProcessing && (
             <div style={{ paddingRight: tokens.spacingHorizontalS }}>

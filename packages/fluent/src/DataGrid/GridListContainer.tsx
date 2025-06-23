@@ -184,7 +184,6 @@ export const GridListContainer: FC<GridListContainerProps> = () => {
                   <RecordCardLoading
                     key={index}
                     cardView={view.experience.card}
-                    schema={schema}
                   />
                 ))}
               </div>

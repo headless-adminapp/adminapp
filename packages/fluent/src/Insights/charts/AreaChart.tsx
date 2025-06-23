@@ -15,11 +15,11 @@ import { renderAreas, renderGrid, renderXAxis, renderYAxis } from './renderers';
 export function AreaChart({
   dataset,
   chartInfo,
-}: {
+}: Readonly<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataset: any[];
   chartInfo: AreaChartInfo;
-}) {
+}>) {
   const id = useId();
   const locale = useLocale();
   const xAxis = chartInfo.xAxis;

@@ -28,7 +28,7 @@ interface SubgridControlProps {
   ContainerComponent?: React.ComponentType<any> | null;
 }
 
-export function SubgridControl(props: SubgridControlProps) {
+export function SubgridControl(props: Readonly<SubgridControlProps>) {
   const schema = useSchema(props.logicalName);
 
   const [viewId, setViewId] = useState<string | undefined>(props.viewId);

@@ -193,7 +193,7 @@ export const PageEntityFormDesktopContainer: FC = () => {
                   <Caption1 style={{ color: tokens.colorNeutralForeground4 }}>
                     {isDirty
                       ? `- ${strings.unsaved}`
-                      : !!record
+                      : record
                       ? `- ${strings.saved}`
                       : ''}
                   </Caption1>

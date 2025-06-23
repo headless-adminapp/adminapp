@@ -20,7 +20,7 @@ export default function MultiSelectControl<T extends string | number>({
   onFocus,
   placeholder,
   skeleton,
-}: MultiSelectControlProps<T>) {
+}: Readonly<MultiSelectControlProps<T>>) {
   const transformedOptions = useMemo(
     () => options.map((x) => ({ label: x.label, value: String(x.value) })),
     [options]

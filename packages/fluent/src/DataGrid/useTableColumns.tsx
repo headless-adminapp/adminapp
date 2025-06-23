@@ -394,7 +394,7 @@ function renderCellHeaderContent({
   return (
     <TableHeaderFilterCell
       key={column.id}
-      sortDirection={props.column.getIsSorted() || undefined}
+      sortDirection={props.column.getIsSorted()}
       minWidth={props.header.getSize()}
       column={column}
       resizable={!disableColumnResize}

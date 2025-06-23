@@ -31,15 +31,11 @@ export const DndProvider: FC<PropsWithChildren> = ({ children }) => {
   const [context, setContext] = useState<DndContextState | null>(null);
 
   useEffect(() => {
-    if (!HTML5BackendPromise) {
-      HTML5BackendPromise = import('react-dnd-html5-backend').then(
-        (mod) => mod.HTML5Backend
-      );
-    }
+    HTML5BackendPromise ??= import('react-dnd-html5-backend').then(
+      (mod) => mod.HTML5Backend
+    );
 
-    if (!ReactDndPromise) {
-      ReactDndPromise = import('react-dnd');
-    }
+    ReactDndPromise ??= import('react-dnd');
 
     Promise.all([HTML5BackendPromise, ReactDndPromise])
       .then(([backend, mod]) => {

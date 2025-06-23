@@ -8,6 +8,7 @@ import {
   DialogTitle,
   tokens,
 } from '@fluentui/react-components';
+import { stringWithDefault } from '@headless-adminapp/core/utils';
 import { Icons } from '@headless-adminapp/icons';
 
 interface ErrorDialogProps {
@@ -41,7 +42,7 @@ export function ErrorDialog(props: Readonly<ErrorDialogProps>) {
             >
               <Icons.Error />
             </span>
-            {props.title || 'Error'}
+            {stringWithDefault(props.title, 'Error')}
           </DialogTitle>
           <DialogContent>{props.message}</DialogContent>
           <DialogActions>

@@ -13,7 +13,7 @@ export const TableCellText: FC<TableCellTextProps> = memo(
     return (
       <TableCellBase
         style={{
-          textAlign: textAlignment || 'left',
+          textAlign: textAlignment ?? 'left',
           textOverflow: 'ellipsis',
           overflow: 'hidden',
           whiteSpace: 'nowrap',

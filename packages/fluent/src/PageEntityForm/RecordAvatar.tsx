@@ -63,7 +63,7 @@ export const RecordAvatar: FC = () => {
       });
 
       await refresh();
-    } catch (error) {
+    } catch {
       openErrorDialog({
         title: 'Error',
         text: 'Unable to update record',

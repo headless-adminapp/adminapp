@@ -10,7 +10,10 @@ interface WidgetTitleBarProps {
   commands?: CommandItemState[][];
 }
 
-export function WidgetTitleBar({ title, commands }: WidgetTitleBarProps) {
+export function WidgetTitleBar({
+  title,
+  commands,
+}: Readonly<WidgetTitleBarProps>) {
   const { language } = useLocale();
 
   return (

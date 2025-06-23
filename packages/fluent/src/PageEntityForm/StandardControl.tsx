@@ -4,7 +4,7 @@ import {
   useFileService,
 } from '@headless-adminapp/app/transport';
 import type { StandardControlProps } from '@headless-adminapp/core/experience/form/SectionControl';
-import { FC, Fragment } from 'react';
+import { FC } from 'react';
 
 import { componentStore } from '../componentStore';
 import { AttachmentControl } from '../form/controls/AttachmentControl';
@@ -61,17 +61,13 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     skeleton,
   } = props;
   const isDisabled = readOnly;
-  // const label = hideLabel ? undefined : _label ?? attribute.label;
   const placeholder = hidePlaceholder
     ? undefined
     : _placeholder ?? _label ?? attribute.label;
-  // const required = quickViewControl ? false : attribute.required;
 
   const dataService = useDataService();
   const fileService = useFileService();
-  const { schemaStore, experienceStore } = useMetadata();
-
-  // const { openQuickCreate } = useQuickCreateForm();
+  const { schemaStore } = useMetadata();
 
   switch (attribute.type) {
     case 'id': {
@@ -158,7 +154,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           return <Control {...controlProps} />;
         }
         default:
-          return <Fragment />;
+          return null;
       }
     }
     case 'number': {
@@ -245,7 +241,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           );
         }
         default: {
-          return <Fragment />;
+          return null;
         }
       }
     }
@@ -353,7 +349,6 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           disabled={isDisabled}
           dataService={dataService}
           schema={schemaStore.getSchema(attribute.entity)}
-          experienceStore={experienceStore}
           allowNavigation={allowNavigation}
           allowNewRecord={allowNewRecord}
           skeleton={skeleton}
@@ -376,9 +371,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           dataService={dataService}
           entities={attribute.entities}
           schemaStore={schemaStore}
-          experienceStore={experienceStore}
           allowNavigation={allowNavigation}
-          allowNewRecord={allowNewRecord}
           skeleton={skeleton}
         />
       );
@@ -507,5 +500,5 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     return <FallBackControl {...props} />;
   }
 
-  return <Fragment />;
+  return null;
 };

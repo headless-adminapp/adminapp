@@ -17,7 +17,7 @@ interface AlertDialogProps {
   confirmText?: string;
 }
 
-export function AlertDialog(props: AlertDialogProps) {
+export function AlertDialog(props: Readonly<AlertDialogProps>) {
   return (
     <Dialog
       open={props.open}

@@ -25,7 +25,6 @@ import {
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { ISchemaExperienceStore } from '@headless-adminapp/core/store';
 import { Data, IDataService } from '@headless-adminapp/core/transport';
 import { Icons } from '@headless-adminapp/icons';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -53,12 +52,8 @@ export type DataLookup = {
 };
 
 export type MultiSelectLookupControlProps = ControlProps<DataLookup[]> & {
-  async?: boolean;
-  lookupKey?: string;
-  openRecord?: (id: string) => void;
   dataService: IDataService;
   schema: Schema;
-  experienceStore: ISchemaExperienceStore;
   viewId?: string;
   allowNavigation?: boolean;
   allowNewRecord?: boolean;
@@ -179,14 +174,6 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
       clearInterval(timer);
     };
   }, []);
-
-  // useEffect(() => {
-  //   if (value) {
-  //     // setSearchText(value.name); // TODO:
-  //   } else {
-  //     setSearchText('');
-  //   }
-  // }, [value]);
 
   const handleAdd = (
     selectedValue: Data<InferredSchemaType<SchemaAttributes>>
@@ -362,13 +349,13 @@ function TagItem({
   value,
   onRemove,
   allowNavigation,
-}: {
+}: Readonly<{
   disabled?: boolean;
   readOnly?: boolean;
   value: DataLookup;
   onRemove?: (id: string) => void;
   allowNavigation?: boolean;
-}) {
+}>) {
   const routeResolver = useRouteResolver();
   const router = useRouter();
 

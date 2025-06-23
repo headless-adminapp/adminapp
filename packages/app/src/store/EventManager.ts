@@ -1,6 +1,6 @@
 import { IEventManager } from '@headless-adminapp/core/store';
 
-type EventHandler = (...args: any[]) => any | Promise<any>;
+type EventHandler = (...args: any[]) => any;
 
 export class EventManager implements IEventManager {
   private handlers: Record<string, unknown[]> = {};

@@ -27,6 +27,17 @@ export function EmailControl({
     return <SkeletonControl />;
   }
 
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    if (textTransform === 'uppercase') {
+      value = value.toUpperCase();
+    } else if (textTransform === 'lowercase') {
+      value = value.toLowerCase();
+    }
+
+    onChange?.(value);
+  };
+
   return (
     <Input
       type="email"
@@ -35,14 +46,8 @@ export function EmailControl({
       appearance="filled-darker"
       name={name}
       // size="sm"
-      value={value || ''}
-      onChange={(e) => {
-        textTransform === 'uppercase'
-          ? onChange?.(e.target.value.toUpperCase())
-          : textTransform === 'lowercase'
-          ? onChange?.(e.target.value.toLowerCase())
-          : onChange?.(e.target.value);
-      }}
+      value={value ?? ''}
+      onChange={handleOnChange}
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}
       // invalid={error}
@@ -54,7 +59,7 @@ export function EmailControl({
         width: '100%',
       }}
       contentAfter={
-        !!value ? (
+        value ? (
           <Button
             onClick={() => window.open(`mailto:${value}`, '_blank')}
             color="primary"

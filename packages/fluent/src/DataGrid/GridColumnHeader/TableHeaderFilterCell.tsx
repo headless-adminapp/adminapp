@@ -79,7 +79,7 @@ const useStyles = makeStyles({
 });
 
 interface TableHeaderFilterCellProps {
-  sortDirection?: 'asc' | 'desc';
+  sortDirection?: 'asc' | 'desc' | false;
   onChangeSortDirection?: (direction: 'asc' | 'desc') => void;
   minWidth?: number;
   column: TransformedViewColumn;
@@ -309,7 +309,7 @@ export const TableHeaderFilterCell: FC<
   );
 };
 
-const getSortDirection = (direction?: 'asc' | 'desc') => {
+const getSortDirection = (direction?: 'asc' | 'desc' | false) => {
   if (direction === 'asc') {
     return 'ascending';
   } else if (direction === 'desc') {

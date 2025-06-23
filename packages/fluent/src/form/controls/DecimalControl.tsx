@@ -23,7 +23,7 @@ export function DecimalControl({
   readOnly,
   decimalPlaces,
   skeleton,
-}: DecimalControlProps) {
+}: Readonly<DecimalControlProps>) {
   const [internalValue, setInternalValue] = useState<string>(
     value ? value.toString() : ''
   );

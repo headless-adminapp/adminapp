@@ -210,7 +210,7 @@ function resolveValue(value: string) {
     return numberValue;
   }
 
-  const timeFormat = /^(\d+):[0-5][0-9]$/;
+  const timeFormat = /^(\d+):[0-5]\d$/;
 
   if (timeFormat.test(value)) {
     const [hours, minutes] = value.split(':').map(Number);
@@ -220,21 +220,21 @@ function resolveValue(value: string) {
   const minutesFormat = /^(\d+(\.\d+)?) m/;
 
   if (minutesFormat.test(value)) {
-    const [, minutes] = value.match(minutesFormat)!;
+    const [, minutes] = minutesFormat.exec(value)!;
     return Math.floor(Number(minutes));
   }
 
   const hoursFormat = /^(\d+(\.\d+)?) h/;
 
   if (hoursFormat.test(value)) {
-    const [, hours] = value.match(hoursFormat)!;
+    const [, hours] = hoursFormat.exec(value)!;
     return Math.floor(Number(hours) * 60);
   }
 
   const daysFormat = /^(\d+(\.\d+)?) d/;
 
   if (daysFormat.test(value)) {
-    const [, days] = value.match(daysFormat)!;
+    const [, days] = daysFormat.exec(value)!;
     return Math.floor(Number(days) * 1440);
   }
 

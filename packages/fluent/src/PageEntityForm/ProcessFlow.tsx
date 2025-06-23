@@ -31,7 +31,7 @@ export function ProcessFlow({
   rounded = true,
   items,
   skeleton,
-}: ProcessFlowProps) {
+}: Readonly<ProcessFlowProps>) {
   const styles = useStyles();
 
   return (

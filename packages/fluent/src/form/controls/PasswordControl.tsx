@@ -19,7 +19,7 @@ export function PasswordControl({
   disabled,
   autoFocus,
   appearance = 'filled-darker',
-}: PasswordControlProps) {
+}: Readonly<PasswordControlProps>) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -30,7 +30,7 @@ export function PasswordControl({
       appearance={appearance}
       type={showPassword ? 'text' : 'password'}
       autoFocus={autoFocus}
-      value={value || ''}
+      value={value ?? ''}
       onChange={(e) => onChange?.(e.target.value)}
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}

@@ -29,7 +29,7 @@ export function UrlControl({
       id={id}
       appearance="filled-darker"
       name={name}
-      value={value || ''}
+      value={value ?? ''}
       onChange={(e) => onChange?.(e.target.value)}
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}
@@ -42,7 +42,7 @@ export function UrlControl({
       }}
       // size="sm"
       contentAfter={
-        !!value ? (
+        value ? (
           <Button
             appearance="transparent"
             size="small"

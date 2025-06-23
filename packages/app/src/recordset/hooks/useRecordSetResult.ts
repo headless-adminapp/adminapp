@@ -1,4 +1,8 @@
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
+import { Id } from '@headless-adminapp/core';
+import {
+  InferredSchemaType,
+  SchemaAttributes,
+} from '@headless-adminapp/core/schema';
 import { useQuery } from '@tanstack/react-query';
 import { sortBy } from 'lodash';
 import { useMemo } from 'react';
@@ -50,7 +54,9 @@ export function useRecordSetResult() {
 
       const schema = schemaStore.getSchema(context.logicalName);
 
-      const result = await dataService.retriveRecords<SchemaAttributes>({
+      const result = await dataService.retriveRecords<
+        InferredSchemaType<SchemaAttributes>
+      >({
         logicalName: context.logicalName,
         filter: {
           type: 'and',
@@ -68,7 +74,7 @@ export function useRecordSetResult() {
       });
 
       const sortedData = sortBy(result.records, (x) =>
-        context.ids.indexOf((x as any)[schema.idAttribute])
+        context.ids.indexOf(x[schema.idAttribute as keyof typeof x] as Id)
       );
 
       return sortedData;

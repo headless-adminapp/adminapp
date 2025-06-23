@@ -40,7 +40,7 @@ interface LoginFormProps {
   defaultValues?: LoginFormData;
 }
 
-export function LoginForm(props: LoginFormProps) {
+export function LoginForm(props: Readonly<LoginFormProps>) {
   const form = useForm<LoginFormData>({
     defaultValues: props.defaultValues ?? initialValues,
     resolver: yupResolver(validationSchema),

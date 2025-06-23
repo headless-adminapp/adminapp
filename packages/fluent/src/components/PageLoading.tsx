@@ -4,7 +4,7 @@ interface PageLoadingProps {
   message?: string;
 }
 
-export function PageLoading({ message }: PageLoadingProps) {
+export function PageLoading({ message }: Readonly<PageLoadingProps>) {
   return (
     <div
       style={{

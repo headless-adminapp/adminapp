@@ -73,7 +73,7 @@ export function TelephoneControl({
       }}
       // size="sm"
       contentAfter={
-        !!number?.uri ? (
+        number?.uri ? (
           <Button
             appearance="transparent"
             size="small"

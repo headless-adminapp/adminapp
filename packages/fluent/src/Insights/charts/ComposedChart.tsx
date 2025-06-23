@@ -22,11 +22,11 @@ import {
 export function ComposedChart({
   dataset,
   chartInfo,
-}: {
+}: Readonly<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataset: any[];
   chartInfo: ComposedChartInfo;
-}) {
+}>) {
   const id = useId();
   const locale = useLocale();
   const xAxis = chartInfo.xAxis;

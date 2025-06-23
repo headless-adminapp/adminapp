@@ -7,12 +7,12 @@ export const FunnelCustomTooltipContent = ({
   active,
   payload,
   valueFormatter,
-}: {
+}: Readonly<{
   active?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload?: any[];
   valueFormatter: (value: unknown) => string;
-}) => {
+}>) => {
   const locale = useLocale();
 
   if (!active || !payload?.length) {

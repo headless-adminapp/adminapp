@@ -32,12 +32,23 @@ export function TextControl({
   appearance = 'filled-darker',
   maxLength,
   skeleton,
-}: TextControlProps) {
+}: Readonly<TextControlProps>) {
   const readonly = disabled || readOnly;
 
   if (skeleton) {
     return <SkeletonControl />;
   }
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    if (textTransform === 'uppercase') {
+      value = value.toUpperCase();
+    } else if (textTransform === 'lowercase') {
+      value = value.toLowerCase();
+    }
+
+    onChange?.(value);
+  };
 
   return (
     <Input
@@ -46,14 +57,8 @@ export function TextControl({
       name={name}
       autoFocus={autoFocus}
       appearance={appearance}
-      value={value || ''}
-      onChange={(e) => {
-        textTransform === 'uppercase'
-          ? onChange?.(e.target.value.toUpperCase())
-          : textTransform === 'lowercase'
-          ? onChange?.(e.target.value.toLowerCase())
-          : onChange?.(e.target.value);
-      }}
+      value={value ?? ''}
+      onChange={handleOnChange}
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}
       // invalid={error}

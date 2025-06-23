@@ -7,7 +7,7 @@ export type BoardColumnProps = {
   config: BoardColumnConfig;
 };
 
-export function BoardColumn(props: BoardColumnProps) {
+export function BoardColumn(props: Readonly<BoardColumnProps>) {
   return (
     <BoardColumnProvider config={props.config}>
       <BoardColumnUI />

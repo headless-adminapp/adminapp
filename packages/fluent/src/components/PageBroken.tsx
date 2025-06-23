@@ -7,7 +7,11 @@ interface PageBrokenProps {
   Icon?: Icon;
 }
 
-export function PageBroken({ title, message, Icon }: PageBrokenProps) {
+export function PageBroken({
+  title,
+  message,
+  Icon,
+}: Readonly<PageBrokenProps>) {
   return (
     <div
       style={{

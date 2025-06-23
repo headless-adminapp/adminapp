@@ -16,7 +16,7 @@ export function useInsightsState<
 >(): InsightsState<S> {
   return useContextSelector(
     InsightsContext,
-    (state) => state as unknown as InsightsState<S>
+    (state) => state as InsightsState<S>
   );
 }
 
@@ -25,7 +25,7 @@ export function useInsightConfig<
 >(): InsightConfig<S> {
   return useContextSelector(
     InsightsContext,
-    (state) => state.config as unknown as InsightConfig<S>
+    (state) => state.config as InsightConfig<S>
   );
 }
 
@@ -34,7 +34,7 @@ export function useInsightFilterValues<
 >(): InferredSchemaType<S> {
   return useContextSelector(
     InsightsContext,
-    (state) => state.filterValues as unknown as InferredSchemaType<S>
+    (state) => state.filterValues as InferredSchemaType<S>
   );
 }
 

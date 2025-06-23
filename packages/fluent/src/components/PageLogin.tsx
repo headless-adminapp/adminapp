@@ -12,7 +12,7 @@ interface LoginPageProps {
   defaultValues?: LoginFormData;
 }
 
-export function PageLogin(props: LoginPageProps) {
+export function PageLogin(props: Readonly<LoginPageProps>) {
   return (
     <div
       style={{

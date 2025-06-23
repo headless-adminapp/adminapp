@@ -80,7 +80,7 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
   let avatarSrc = '';
 
   if (cardView.showAvatar) {
-    const avatarColumn = cardView.avatarColumn || schema.avatarAttribute;
+    const avatarColumn = cardView.avatarColumn ?? schema.avatarAttribute;
 
     if (avatarColumn) {
       const avatarAttribute = schema.attributes[avatarColumn];

@@ -21,7 +21,7 @@ export function ConditionValueControl({
   onChange,
 }: Readonly<ConditionValueControlProps>) {
   const dataService = useDataService();
-  const { schemaStore, experienceStore } = useMetadata();
+  const { schemaStore } = useMetadata();
 
   switch (type) {
     case 'string':
@@ -62,10 +62,8 @@ export function ConditionValueControl({
       return (
         <FormControl
           type="lookups"
-          async
           dataService={dataService}
           schema={schemaStore.getSchema(attribute.entity)}
-          experienceStore={experienceStore}
           value={value ?? null}
           onChange={(value) => {
             onChange?.(value ?? []);

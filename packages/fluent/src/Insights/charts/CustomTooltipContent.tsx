@@ -8,7 +8,7 @@ export const CustomTooltipContent = ({
   yAxisFormatter,
   rightYAxisFormatter,
   yAxisIdResolver,
-}: {
+}: Readonly<{
   active?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload?: any[];
@@ -17,7 +17,7 @@ export const CustomTooltipContent = ({
   yAxisFormatter: (value: unknown) => string;
   rightYAxisFormatter?: (value: unknown) => string;
   yAxisIdResolver?: (dataKey: string) => 'left' | 'right';
-}) => {
+}>) => {
   if (!active || !payload?.length) {
     return null;
   }

@@ -6,7 +6,10 @@ interface ComponentBrokenProps {
   Icon?: Icon;
 }
 
-export function ComponentBroken({ message, Icon }: ComponentBrokenProps) {
+export function ComponentBroken({
+  message,
+  Icon,
+}: Readonly<ComponentBrokenProps>) {
   return (
     <div
       style={{

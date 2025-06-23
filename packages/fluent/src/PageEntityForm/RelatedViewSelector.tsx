@@ -109,7 +109,7 @@ interface RelatedViewSelectorProps {
   onSelect: (item: RelatedItemInfo) => void;
 }
 
-export function RelatedViewSelector(props: RelatedViewSelectorProps) {
+export function RelatedViewSelector(props: Readonly<RelatedViewSelectorProps>) {
   const schema = useDataFormSchema();
   const recordId = useRecordId();
   const formConfig = useSelectedForm();

@@ -101,7 +101,7 @@ export function PromptDialog(props: Readonly<PromptDialogProps>) {
                           >
                             <StandardControl
                               attribute={attribute}
-                              name={attributeName as string}
+                              name={attributeName}
                               value={field.value}
                               onChange={field.onChange}
                               onBlur={field.onBlur}

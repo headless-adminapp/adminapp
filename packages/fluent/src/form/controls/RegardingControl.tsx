@@ -26,10 +26,7 @@ import {
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import {
-  ISchemaExperienceStore,
-  ISchemaStore,
-} from '@headless-adminapp/core/store';
+import { ISchemaStore } from '@headless-adminapp/core/store';
 import {
   Data,
   IDataService,
@@ -60,14 +57,10 @@ export type DataLookup = {
 };
 
 export type RegardingControlProps = ControlProps<DataLookup> & {
-  lookupKey?: string;
   dataService: IDataService;
   entities: string[];
   schemaStore: ISchemaStore;
-  experienceStore: ISchemaExperienceStore;
-  viewId?: string;
   allowNavigation?: boolean;
-  allowNewRecord?: boolean;
 };
 
 export function RegardingControl(props: RegardingControlProps) {

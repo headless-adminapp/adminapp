@@ -28,7 +28,7 @@ export function TextAreaControl({
   autoHeight,
   maxHeight,
   skeleton,
-}: TextAreaControlProps) {
+}: Readonly<TextAreaControlProps>) {
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
