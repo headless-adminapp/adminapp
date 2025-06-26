@@ -61,12 +61,12 @@ import {
 import { FC, Fragment, useEffect, useMemo, useRef } from 'react';
 
 import { componentStore } from '../componentStore';
-import { TableHeaderFilterCell } from '../DataGrid/GridColumnHeader';
-import { TableCellText } from '../DataGrid/TableCell';
-import { TableCellLink } from '../DataGrid/TableCell/TableCellLink';
 import { getAvatarColor } from '../utils/avatar';
 import { ActionCell } from './ActionCell';
+import { TableHeaderFilterCell } from './GridColumnHeader';
+import { TableCellText } from './TableCell';
 import { TableCellChoice } from './TableCell/TableCellChoice';
+import { TableCellLink } from './TableCell/TableCellLink';
 import { UniqueRecord } from './types';
 
 const columnHelper = createColumnHelper<UniqueRecord>();

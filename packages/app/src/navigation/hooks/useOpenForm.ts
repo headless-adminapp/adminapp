@@ -2,7 +2,7 @@ import { PageType } from '@headless-adminapp/core/experience/app';
 import { OpenFormOptions } from '@headless-adminapp/core/experience/command';
 import { useCallback } from 'react';
 
-import { useRouter } from '../../route/hooks/';
+import { useRouter } from '../../route/hooks';
 import { useRouteResolver } from '../../route/hooks/useRouteResolver';
 
 export function useOpenForm() {

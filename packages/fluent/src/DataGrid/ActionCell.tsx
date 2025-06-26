@@ -8,8 +8,8 @@ import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
 import { memo } from 'react';
 
 import { MenuItemProps } from '../CommandBar/MenuItem';
-import { TableCellAction } from '../DataGrid/TableCell';
 import { transformMenuItems } from '../OverflowCommandBar';
+import { TableCellAction } from './TableCell';
 
 interface ActionCellProps {
   onOpen: () => void;

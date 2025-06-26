@@ -8,7 +8,7 @@ import {
   SchemaStore,
 } from '@headless-adminapp/core/store';
 import { IconPlaceholder } from '@headless-adminapp/icons';
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useEffect } from 'react';
 
 import { useCreateContextStore } from '../mutable/context';
 import {
@@ -58,6 +58,14 @@ export const MetadataProvider: FC<PropsWithChildren<MetadataProviderProps>> = ({
     appExperience,
     recentItemStore,
   });
+
+  useEffect(() => {
+    contextValue.setValue({
+      appExperience,
+      experienceStore,
+      schemaStore,
+    });
+  }, [contextValue, appExperience, experienceStore, schemaStore]);
 
   return (
     <MetadataContext.Provider value={contextValue}>

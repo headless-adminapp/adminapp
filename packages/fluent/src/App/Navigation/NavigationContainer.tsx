@@ -79,20 +79,6 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
     ]
   );
 
-  // const activeCategories = useMemo(
-  //   () =>
-  //     sections
-  //       .map((section) => section.items)
-  //       .flat()
-  //       .filter(
-  //         (item) =>
-  //           item.type === 'category' &&
-  //           item.items.some((subItem) => subItem.active)
-  //       )
-  //       .map((item) => item.key),
-  //   [sections]
-  // );
-
   const handleNavigation = (item: NavItemInfo | NavSubItemInfo) => {
     if (type === 'overlay') {
       onOpenChange(false);

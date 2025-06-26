@@ -12,7 +12,7 @@ import { ISchemaStore } from '@headless-adminapp/core/store';
 import { IDataService } from '@headless-adminapp/core/transport';
 import { Nullable } from '@headless-adminapp/core/types';
 
-import { getControls } from '../../dataform/DataFormProvider/utils';
+import { getControls } from '../DataFormProvider/utils';
 
 export function getModifiedValues(
   initialValues: any,
