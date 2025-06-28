@@ -168,7 +168,7 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
             if (column.variant === 'strong') {
               return (
                 <Body1Strong key={column.name as string}>
-                  {getAttributeFormattedValue(value, attribute, locale)}
+                  {getAttributeFormattedValue(attribute, value, locale)}
                 </Body1Strong>
               );
             }
@@ -178,7 +178,7 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
                 key={column.name as string}
                 style={{ color: tokens.colorNeutralForeground4 }}
               >
-                {getAttributeFormattedValue(value, attribute, locale)}
+                {getAttributeFormattedValue(attribute, value, locale)}
               </Caption1>
             );
           })}

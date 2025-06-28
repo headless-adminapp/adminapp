@@ -1,11 +1,13 @@
 import { Divider, Input } from '@fluentui/react-components';
 import { useSearchText } from '@headless-adminapp/app/datagrid/hooks';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { Icons } from '@headless-adminapp/icons';
 import { FC } from 'react';
 
 import { useAppStrings } from '../App/AppStringContext';
 import { FormSubgridCommandContainer } from '../DataGrid/FormSubgridCommandContainer';
 import { FormSubgridViewSelector } from '../DataGrid/FormSubgridViewSelector';
+import { GridListContainer } from '../DataGrid/GridListContainer';
 import { GridPaginationContainer } from '../DataGrid/GridPaginationContainer';
 import { GridTableContainer } from '../DataGrid/GridTableContainer';
 
@@ -14,7 +16,17 @@ interface FormSubgridContainerProps {
   hideSearch?: boolean;
 }
 
-export const FormSubgridContainer: FC<FormSubgridContainerProps> = ({
+export const FormSubgridContainer: FC<FormSubgridContainerProps> = (props) => {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <FormSubgridMobileContainer {...props} />;
+  } else {
+    return <FormSubgridDesktopContainer {...props} />;
+  }
+};
+
+export const FormSubgridDesktopContainer: FC<FormSubgridContainerProps> = ({
   hideCommandBar,
   hideSearch,
 }) => {
@@ -125,6 +137,108 @@ export const FormSubgridContainer: FC<FormSubgridContainerProps> = ({
           >
             <Divider style={{ opacity: 0.5 }} />
             <GridPaginationContainer />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const FormSubgridMobileContainer: FC<FormSubgridContainerProps> = ({
+  hideCommandBar,
+  hideSearch,
+}) => {
+  const appStrings = useAppStrings();
+  const [searchText, setSearchText] = useSearchText();
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'column',
+        gap: 8,
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            height: 40,
+          }}
+        >
+          <FormSubgridViewSelector />
+        </div>
+        <div>
+          <Divider style={{ opacity: 0.2 }} />
+        </div>
+        {(!hideCommandBar || !hideSearch) && (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: 10,
+              overflow: 'hidden',
+              width: '100%',
+              paddingBlock: 4,
+            }}
+          >
+            <div
+              style={{
+                flex: 1,
+                minWidth: 0,
+              }}
+            >
+              {!hideCommandBar && <FormSubgridCommandContainer />}
+            </div>
+            {!hideSearch && (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'end',
+                  flexShrink: 0,
+                  paddingInline: 8,
+                }}
+              >
+                <Input
+                  contentBefore={<Icons.Search size={16} />}
+                  placeholder={appStrings.searchPlaceholder}
+                  appearance="filled-darker"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                />
+              </div>
+            )}
+          </div>
+        )}
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <div
+            style={{
+              gap: 16,
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 1,
+            }}
+          >
+            <div style={{ flex: 1, display: 'flex', minHeight: 300 }}>
+              <GridListContainer />
+            </div>
           </div>
         </div>
       </div>

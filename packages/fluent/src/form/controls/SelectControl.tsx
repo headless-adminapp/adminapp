@@ -63,7 +63,11 @@ export default function SelectControl<T extends string | number>({
       }}
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}
-      style={{ pointerEvents: disabled ? 'none' : undefined, width: '100%' }}
+      style={{
+        pointerEvents: disabled ? 'none' : undefined,
+        width: '100%',
+        minWidth: 'unset',
+      }}
     >
       {transformedOptions.map((x) => (
         <Option key={x.value} value={x.value}>

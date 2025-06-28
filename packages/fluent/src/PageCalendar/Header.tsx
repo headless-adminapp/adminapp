@@ -104,7 +104,7 @@ export function Header<SA extends SchemaAttributes = SchemaAttributes>({
                       name={attributeName as Path<InferredSchemaType<SA>>}
                       render={({ field }) => {
                         return (
-                          <div>
+                          <div style={{ width: 210, minWidth: 210 }}>
                             <StandardControl
                               attribute={attribute}
                               name={attributeName}
