@@ -125,6 +125,9 @@ export function useFormSave() {
         await client.invalidateQueries({
           queryKey: ['data', 'retriveRecords'],
         });
+        await client.invalidateQueries({
+          queryKey: ['data', 'recordset'],
+        });
 
         showMessageAfterSave({
           mode: record ? 'update' : 'create',
