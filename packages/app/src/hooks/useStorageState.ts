@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { safeLocalStorage } from '../utils/localStorage';
 
 function getStorageValue<S>(key: string, store: Storage): S | undefined {
   const value = store.getItem(key);
@@ -15,7 +16,7 @@ function setStorageValue<S>(key: string, value: S, store: Storage): void {
 export function useStorageState<S = undefined>(
   initialState: S,
   key: string,
-  store: Storage = localStorage
+  store: Storage = safeLocalStorage
 ): [S, Dispatch<SetStateAction<S>>] {
   const [state, setState] = useState(
     getStorageValue(key, store) ?? initialState

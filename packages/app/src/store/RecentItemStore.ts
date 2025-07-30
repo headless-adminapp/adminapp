@@ -1,4 +1,5 @@
 import { Id } from '@headless-adminapp/core';
+import { safeLocalStorage } from '../utils/localStorage';
 
 export interface IRecentItemStore {
   getItems: <T = unknown>(cacheKey: string, limit?: number) => RecentItem<T>[];
@@ -32,13 +33,14 @@ export class RecentItemStore implements IRecentItemStore {
     string,
     Array<(items: RecentItem<unknown>[]) => void>
   > = {};
+  private readonly localStorage: Storage = safeLocalStorage;
 
   constructor() {
     this.init();
   }
 
   private init() {
-    const _data = localStorage.getItem(this.storageKey);
+    const _data = this.localStorage.getItem(this.storageKey);
 
     if (_data) {
       this.data = JSON.parse(_data) as Record<string, RecentItem<unknown>[]>;
@@ -48,7 +50,7 @@ export class RecentItemStore implements IRecentItemStore {
   }
 
   private sync() {
-    localStorage.setItem(this.storageKey, JSON.stringify(this.data));
+    this.localStorage.setItem(this.storageKey, JSON.stringify(this.data));
   }
 
   getItems<T = unknown>(cacheKey: string, limit?: number): RecentItem<T>[] {
