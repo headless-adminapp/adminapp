@@ -459,7 +459,7 @@ export async function exportRecordsToExcel(
       fileName: context.primaryControl.view.name + '.xlsx',
       gridColumns: context.primaryControl.gridColumns,
       records: result.records,
-      schema: context.primaryControl.schema,
+      attributes: context.primaryControl.schema.attributes,
       schemaStore: context.stores.schemaStore,
       locale: context.locale,
     });
@@ -479,7 +479,7 @@ export async function exportRecordsToCSV(
       fileName: context.primaryControl.view.name + '.csv',
       gridColumns: context.primaryControl.gridColumns,
       records: result.records,
-      schema: context.primaryControl.schema,
+      attributes: context.primaryControl.schema.attributes,
       schemaStore: context.stores.schemaStore,
       locale: context.locale,
     });

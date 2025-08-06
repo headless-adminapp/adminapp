@@ -1,13 +1,14 @@
 import { ChoiceAttribute } from '@headless-adminapp/core/attributes';
 
 import { ChoiceBadge } from '../../components/ChoiceBadge';
-import { TableCellBase } from './TableCellBase';
+import { CellDisplayType, TableCellBase } from './TableCellBase';
 
 interface TableCellChoiceProps {
   value: unknown;
   attribute: ChoiceAttribute<string | number>;
   formattedValue: string;
-  width: number;
+  width?: number;
+  display?: CellDisplayType;
 }
 
 export function TableCellChoice(props: Readonly<TableCellChoiceProps>) {
@@ -21,6 +22,7 @@ export function TableCellChoice(props: Readonly<TableCellChoiceProps>) {
         minWidth: props.width,
         maxWidth: props.width,
       }}
+      display={props.display}
     >
       <ChoiceBadge
         attribute={props.attribute}

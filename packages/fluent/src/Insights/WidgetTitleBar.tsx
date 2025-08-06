@@ -8,11 +8,13 @@ import { renderCommandItem } from '../OverflowCommandBar';
 interface WidgetTitleBarProps {
   title: string;
   commands?: CommandItemState[][];
+  rightContent?: React.ReactNode;
 }
 
 export function WidgetTitleBar({
   title,
   commands,
+  rightContent,
 }: Readonly<WidgetTitleBarProps>) {
   const { language } = useLocale();
 
@@ -21,7 +23,7 @@ export function WidgetTitleBar({
       <div
         style={{
           display: 'flex',
-          paddingInline: 16,
+          paddingLeft: 16,
           paddingBlock: 8,
           height: 40,
           alignItems: 'center',
@@ -30,14 +32,13 @@ export function WidgetTitleBar({
         <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           <Body1Strong>{title}</Body1Strong>
           <div style={{ flex: 1 }} />
+          {rightContent}
           {!!commands && commands[0]?.length > 0 && (
-            <div style={{ marginRight: -20 }}>
-              <CommandBar.Wrapper>
-                {commands[0].map((command, index) =>
-                  renderCommandItem(index, command, language)
-                )}
-              </CommandBar.Wrapper>
-            </div>
+            <CommandBar.Wrapper>
+              {commands[0].map((command, index) =>
+                renderCommandItem(index, command, language)
+              )}
+            </CommandBar.Wrapper>
           )}
         </div>
       </div>

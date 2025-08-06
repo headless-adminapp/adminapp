@@ -10,11 +10,18 @@ import {
 } from '@fluentui/react-components';
 import { CommandItemState } from '@headless-adminapp/app/command';
 import { useLocale } from '@headless-adminapp/app/locale';
+import { useMetadata } from '@headless-adminapp/app/metadata';
+import { useRouter, useRouteResolver } from '@headless-adminapp/app/route';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
 import { Attribute } from '@headless-adminapp/core';
+import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
 import { FC } from 'react';
 
 import { BodyLoading } from '../components/BodyLoading';
+import { TableCellText } from '../DataGrid/TableCell';
+import { TableCellChoice } from '../DataGrid/TableCell/TableCellChoice';
+import { TableCellLink } from '../DataGrid/TableCell/TableCellLink';
+import { renderLookupAttribute } from '../DataGrid/useTableColumns';
 import { WidgetSection } from './WidgetSection';
 import { WidgetTitleBar } from './WidgetTitleBar';
 
@@ -54,6 +61,7 @@ interface WidgetTableContainerProps {
   isPending?: boolean;
   isFetching?: boolean;
   commands?: CommandItemState[][];
+  headerRightContent?: React.ReactNode;
   data: any[];
 }
 
@@ -64,85 +72,142 @@ export const WidgetTableContainer: FC<WidgetTableContainerProps> = ({
   isPending,
   isFetching,
   commands,
+  headerRightContent,
   data,
 }) => {
-  const locale = useLocale();
-  const styles = useStyles();
-
   return (
     <WidgetSection>
-      <WidgetTitleBar title={title} commands={commands} />
+      <WidgetTitleBar
+        title={title}
+        commands={commands}
+        rightContent={headerRightContent}
+      />
       <div style={{ flex: 1, position: 'relative', overflow: 'auto' }}>
         {!isPending && (
-          <Table className={styles.table}>
-            <TableHeader
-              style={{
-                position: 'sticky',
-                top: 0,
-                background: tokens.colorNeutralBackground3,
-                zIndex: 2,
-              }}
-            >
-              <TableRow
-                style={{
-                  position: 'sticky',
-                  top: 0,
-                  minWidth: 'calc(100% - 16px)',
-                }}
-              >
-                {columns.map((column, index) => {
-                  const attribute = attributes[column];
-
-                  return (
-                    <TableHeaderCell
-                      key={column + String(index)}
-                      align="right"
-                      className={
-                        attribute?.type === 'money'
-                          ? styles.headerAlignRight
-                          : ''
-                      }
-                    >
-                      {attribute.label}
-                    </TableHeaderCell>
-                  );
-                })}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.map((row, index) => (
-                <TableRow key={index}>
-                  {columns.map((column) => {
-                    const attribute = attributes[column];
-                    const value = row[column];
-
-                    const formattedValue =
-                      getAttributeFormattedValue(attribute, value, locale) ??
-                      '';
-
-                    switch (attribute?.type) {
-                      case 'money':
-                        return (
-                          <TableCell
-                            key={column}
-                            style={{ textAlign: 'right' }}
-                          >
-                            {formattedValue}
-                          </TableCell>
-                        );
-                      case 'lookup':
-                        return null;
-                    }
-
-                    return <TableCell key={column}>{formattedValue}</TableCell>;
-                  })}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <WidgetTable columns={columns} attributes={attributes} data={data} />
         )}
         <BodyLoading loading={isFetching} />
       </div>
     </WidgetSection>
+  );
+};
+
+interface WidgetTableProps {
+  columns: string[];
+  attributes: Record<string, Attribute>;
+  data: any[];
+}
+
+export const WidgetTable: FC<WidgetTableProps> = ({
+  columns,
+  attributes,
+  data,
+}) => {
+  const locale = useLocale();
+  const styles = useStyles();
+  const router = useRouter();
+  const routeResolver = useRouteResolver();
+  const { schemaStore } = useMetadata();
+
+  return (
+    <Table className={styles.table}>
+      <TableHeader
+        style={{
+          position: 'sticky',
+          top: 0,
+          background: tokens.colorNeutralBackground3,
+          zIndex: 2,
+        }}
+      >
+        <TableRow
+          style={{
+            position: 'sticky',
+            top: 0,
+            minWidth: 'calc(100% - 16px)',
+          }}
+        >
+          {columns.map((column, index) => {
+            const attribute = attributes[column];
+
+            return (
+              <TableHeaderCell
+                key={column + String(index)}
+                align="right"
+                className={
+                  attribute?.type === 'money' ? styles.headerAlignRight : ''
+                }
+              >
+                {attribute.label}
+              </TableHeaderCell>
+            );
+          })}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {data.map((row, index) => (
+          <TableRow key={index}>
+            {columns.map((column) => {
+              const attribute = attributes[column];
+              const value = row[column];
+
+              const formattedValue =
+                getAttributeFormattedValue(attribute, value, locale) ?? '';
+
+              switch (attribute?.type) {
+                case 'money':
+                  return (
+                    <TableCell key={column} style={{ textAlign: 'right' }}>
+                      {formattedValue}
+                    </TableCell>
+                  );
+                case 'lookup':
+                  return renderLookupAttribute({
+                    column: {
+                      id: column,
+                      label: attribute.label,
+                      name: column,
+                    },
+                    value,
+                    attribute,
+                    router,
+                    routeResolver,
+                    schemaStore,
+                    formattedValue,
+                    display: 'table-cell',
+                  });
+                case 'choice':
+                  return (
+                    <TableCellChoice
+                      key={column}
+                      value={value}
+                      attribute={attribute}
+                      formattedValue={formattedValue}
+                      display="table-cell"
+                    />
+                  );
+                case 'attachment': {
+                  const url = (value as FileObject)?.url;
+                  if (!url) {
+                    return <TableCellText key={column} value="" />;
+                  }
+
+                  return (
+                    <TableCellLink
+                      key={column}
+                      value={formattedValue}
+                      href={url}
+                      target="_blank"
+                      display="table-cell"
+                    />
+                  );
+                }
+              }
+
+              return <TableCell key={column}>{formattedValue}</TableCell>;
+            })}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 };

@@ -62,10 +62,15 @@ export function ChoiceBadge(props: Readonly<ChoiceBadgeProps>) {
         backgroundColor: bgColor ?? tokens.colorNeutralBackground3,
         color: color ?? tokens.colorNeutralForeground2,
         fontWeight: tokens.fontWeightRegular,
+        minWidth: 'unset',
+        maxWidth: 'max-content',
+        width: '100%',
       }}
       size={props.size}
     >
-      {formattedValue}
+      <div style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>
+        {formattedValue}
+      </div>
     </Badge>
   );
 }

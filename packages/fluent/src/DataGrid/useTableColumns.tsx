@@ -51,7 +51,7 @@ import { RegardingAttribute } from '@headless-adminapp/core/attributes/LookupAtt
 import { PageType } from '@headless-adminapp/core/experience/app';
 import { Locale } from '@headless-adminapp/core/experience/locale';
 import { ViewColumnProps } from '@headless-adminapp/core/experience/view/ViewColumn';
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { ISchemaStore } from '@headless-adminapp/core/store';
 import {
   CellContext,
@@ -64,7 +64,7 @@ import { componentStore } from '../componentStore';
 import { getAvatarColor } from '../utils/avatar';
 import { ActionCell } from './ActionCell';
 import { TableHeaderFilterCell } from './GridColumnHeader';
-import { TableCellText } from './TableCell';
+import { CellDisplayType, TableCellText } from './TableCell';
 import { TableCellChoice } from './TableCell/TableCellChoice';
 import { TableCellLink } from './TableCell/TableCellLink';
 import { UniqueRecord } from './types';
@@ -343,12 +343,15 @@ export function useTableColumns({
           renderCellContent({
             info,
             column,
-            schema,
+            attributes: schema.attributes,
             locale,
             schemaStore,
             routeResolver,
             openRecord,
             router,
+            primaryAttributeName: schema.primaryAttribute,
+            idAttributeName: schema.idAttribute,
+            avatarAttributeName: schema.avatarAttribute,
           }),
         enableResizing: true,
         size: columnWidths[index],
@@ -412,33 +415,39 @@ function renderCellHeaderContent({
 function renderCellContent({
   info,
   column,
-  schema,
+  attributes,
   schemaStore,
   locale,
   routeResolver,
   openRecord,
   router,
+  primaryAttributeName,
+  idAttributeName,
+  avatarAttributeName,
 }: {
   info: CellContext<UniqueRecord, unknown>;
   column: TransformedViewColumn<SchemaAttributes>;
-  schema: Schema;
+  attributes: SchemaAttributes;
   schemaStore: ISchemaStore;
   locale: Locale;
   routeResolver: InternalRouteResolver;
-  openRecord: (id: string, logicalName: string) => void;
+  openRecord?: (id: string, logicalName: string) => void;
   router: RouterInstance;
+  primaryAttributeName?: string;
+  idAttributeName?: string;
+  avatarAttributeName?: string;
 }) {
   let attribute: Attribute | undefined;
   let value: unknown;
   if (column.expandedKey) {
     const lookup = column.name;
     const field = column.expandedKey;
-    const entity = (schema.attributes[lookup] as LookupAttribute).entity;
+    const entity = (attributes[lookup] as LookupAttribute).entity;
     const lookupSchema = schemaStore.getSchema(entity);
     attribute = lookupSchema.attributes[field];
     value = info.row.original.$expand?.[lookup]?.[field];
   } else {
-    attribute = schema.attributes[column.name];
+    attribute = attributes[column.name];
     value = info.getValue();
   }
 
@@ -479,7 +488,6 @@ function renderCellContent({
     return (
       <Component
         column={column}
-        schema={schema}
         record={info.row.original}
         value={value}
         attribute={attribute}
@@ -489,13 +497,15 @@ function renderCellContent({
     );
   }
 
-  if (schema.primaryAttribute === column.name) {
+  if (idAttributeName && primaryAttributeName === column.name) {
     return renderPrimaryAttribute({
       info,
       column,
       routeResolver,
       openRecord,
-      schema,
+      attributes,
+      idAttributeName,
+      avatarAttributeName,
       value: value as string,
     });
   }
@@ -616,22 +626,26 @@ function renderCellContent({
 function renderPrimaryAttribute({
   info,
   column,
-  schema,
+  attributes,
   routeResolver,
   openRecord,
   value,
+  idAttributeName,
+  avatarAttributeName,
 }: {
   info: CellContext<UniqueRecord, unknown>;
   column: TransformedViewColumn<SchemaAttributes>;
-  schema: Schema;
+  attributes: SchemaAttributes;
   routeResolver: InternalRouteResolver;
-  openRecord: (id: string, logicalName: string) => void;
+  openRecord?: (id: string, logicalName: string) => void;
   value: string;
+  idAttributeName: string;
+  avatarAttributeName: string | undefined;
 }) {
   const path = routeResolver({
     logicalName: info.row.original.$entity,
     type: PageType.EntityForm,
-    id: info.row.original[schema.idAttribute] as string,
+    id: info.row.original[idAttributeName] as string,
   });
 
   return (
@@ -641,8 +655,9 @@ function renderPrimaryAttribute({
         <Fragment>
           {renderPrimaryAttributeAvatar({
             info,
-            schema,
             value,
+            avatarAttributeName,
+            attributes,
           })}
           {value}
         </Fragment>
@@ -650,8 +665,8 @@ function renderPrimaryAttribute({
       width={info.column.getSize()}
       href={path}
       onClick={() => {
-        openRecord(
-          info.row.original[schema.idAttribute] as string,
+        openRecord?.(
+          info.row.original[idAttributeName] as string,
           info.row.original.$entity
         );
       }}
@@ -661,24 +676,26 @@ function renderPrimaryAttribute({
 
 function renderPrimaryAttributeAvatar({
   info,
-  schema,
   value,
+  avatarAttributeName,
+  attributes,
 }: {
   info: CellContext<UniqueRecord, unknown>;
-  schema: Schema;
   value: string;
+  avatarAttributeName: string | undefined;
+  attributes: SchemaAttributes;
 }) {
-  if (!schema.avatarAttribute) {
+  if (!avatarAttributeName) {
     return null;
   }
 
-  const avatarAttribute = schema.attributes[schema.avatarAttribute];
+  const avatarAttribute = attributes[avatarAttributeName];
 
   if (avatarAttribute.type !== 'attachment') {
     return null;
   }
 
-  const avatarValue = info.row.original[schema.avatarAttribute] as
+  const avatarValue = info.row.original[avatarAttributeName] as
     | FileObject
     | undefined;
 
@@ -698,7 +715,7 @@ function renderPrimaryAttributeAvatar({
   );
 }
 
-function renderLookupAttribute({
+export function renderLookupAttribute({
   value,
   info,
   column,
@@ -707,19 +724,26 @@ function renderLookupAttribute({
   router,
   attribute,
   formattedValue,
+  display,
 }: {
   value: unknown;
-  info: CellContext<UniqueRecord, unknown>;
-  column: TransformedViewColumn<SchemaAttributes>;
+  info?: CellContext<UniqueRecord, unknown>;
+  column?: TransformedViewColumn<SchemaAttributes>;
   schemaStore: ISchemaStore;
   routeResolver: InternalRouteResolver;
   router: RouterInstance;
   attribute: LookupAttribute;
   formattedValue: string;
+  display?: CellDisplayType;
 }) {
   if (!value) {
     return (
-      <TableCellText key={column.id} value="" width={info.column.getSize()} />
+      <TableCellText
+        key={column?.id}
+        value=""
+        width={info?.column.getSize()}
+        display={display}
+      />
     );
   }
 
@@ -733,7 +757,8 @@ function renderLookupAttribute({
 
   return (
     <TableCellLink
-      key={column.id}
+      key={column?.id}
+      display={display}
       value={
         <Fragment>
           {!!lookupSchema.avatarAttribute && (
@@ -753,7 +778,7 @@ function renderLookupAttribute({
           {formattedValue}
         </Fragment>
       }
-      width={info.column.getSize()}
+      width={info?.column.getSize()}
       href={path}
       onClick={() => {
         router.push(path);

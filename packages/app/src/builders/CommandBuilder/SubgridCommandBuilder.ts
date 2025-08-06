@@ -325,7 +325,7 @@ export namespace SubgridCommandBuilder {
                   fileName: context.secondaryControl.view.name + '.xlsx',
                   gridColumns: context.secondaryControl.gridColumns,
                   records: result.records,
-                  schema: context.secondaryControl.schema,
+                  attributes: context.secondaryControl.schema.attributes,
                   schemaStore: context.stores.schemaStore,
                   locale: context.locale,
                 });
@@ -359,7 +359,7 @@ export namespace SubgridCommandBuilder {
                   fileName: context.secondaryControl.view.name + '.csv',
                   gridColumns: context.secondaryControl.gridColumns,
                   records: result.records,
-                  schema: context.secondaryControl.schema,
+                  attributes: context.secondaryControl.schema.attributes,
                   schemaStore: context.stores.schemaStore,
                   locale: context.locale,
                 });

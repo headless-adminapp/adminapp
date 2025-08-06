@@ -1,17 +1,19 @@
 import { FC, memo } from 'react';
 
-import { TableCellBase } from './TableCellBase';
+import { CellDisplayType, TableCellBase } from './TableCellBase';
 
 export interface TableCellTextProps {
   value: string;
-  width: number;
+  width?: number;
   textAlignment?: 'left' | 'center' | 'right';
+  display?: CellDisplayType;
 }
 
 export const TableCellText: FC<TableCellTextProps> = memo(
-  ({ value, width, textAlignment }) => {
+  ({ value, width, textAlignment, display }) => {
     return (
       <TableCellBase
+        display={display}
         style={{
           textAlign: textAlignment ?? 'left',
           textOverflow: 'ellipsis',

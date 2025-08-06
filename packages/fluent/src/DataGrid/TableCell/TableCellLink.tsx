@@ -2,16 +2,19 @@ import { Link, TableCell, tokens } from '@fluentui/react-components';
 import { useRouter } from '@headless-adminapp/app/route/hooks';
 import { FC, memo } from 'react';
 
+import { CellDisplayType } from './TableCellBase';
+
 export interface TableCellLinkProps {
   value: React.ReactNode | undefined | null;
   href?: string;
   onClick?: () => void;
-  width: number;
+  width?: number;
   target?: string;
+  display?: CellDisplayType;
 }
 
 export const TableCellLink: FC<TableCellLinkProps> = memo(
-  ({ value, href, onClick, width, target }) => {
+  ({ value, href, onClick, width, target, display = 'flex' }) => {
     const router = useRouter();
 
     return (
@@ -23,7 +26,7 @@ export const TableCellLink: FC<TableCellLinkProps> = memo(
           width,
           minWidth: width,
           maxWidth: width,
-          display: 'flex',
+          display,
           alignItems: 'center',
           height: '100%',
         }}

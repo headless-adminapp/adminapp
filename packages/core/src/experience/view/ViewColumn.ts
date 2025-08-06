@@ -1,10 +1,9 @@
 import { Attribute } from '../../attributes';
-import { InferredSchemaType, Schema, SchemaAttributes } from '../../schema';
+import { InferredSchemaType, SchemaAttributes } from '../../schema';
 import { Data } from '../../transport';
 
 export interface ViewColumnProps {
   column: ViewColumn;
-  schema: Schema;
   record: Data<InferredSchemaType<SchemaAttributes>>;
   value: unknown;
   attribute: Attribute;

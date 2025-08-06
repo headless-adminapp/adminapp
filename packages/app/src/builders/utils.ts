@@ -20,29 +20,34 @@ import {
 } from '../datagrid/DataGridProvider/utils';
 import { getAttributeFormattedValue } from '../utils';
 
-type ExportFn<S extends SchemaAttributes = SchemaAttributes> = (option: {
-  schema: Schema<S>;
+export type ExportColumn<S extends SchemaAttributes = SchemaAttributes> = Omit<
+  TransformedViewColumn<S>,
+  'id' | 'component' | 'width' | 'maxWidth'
+>;
+
+export type ExportFn<S extends SchemaAttributes = SchemaAttributes> = (option: {
+  attributes: S;
   records: unknown[];
-  gridColumns: TransformedViewColumn<SchemaAttributes>[];
+  gridColumns: ExportColumn<S>[];
   schemaStore: ISchemaStore;
   fileName: string;
   locale: Locale;
 }) => Promise<void>;
 
 const getHeaders = (
-  schema: Schema,
-  gridColumns: TransformedViewColumn<SchemaAttributes>[],
+  attributes: SchemaAttributes,
+  gridColumns: ExportColumn<SchemaAttributes>[],
   schemaStore: ISchemaStore
 ) => {
   const headers = gridColumns.map((column) => {
     if (column.name.indexOf('.') !== -1) {
       const [lookup, field] = column.name.split('.');
-      const entity = (schema.attributes[lookup] as LookupAttribute).entity;
+      const entity = (attributes[lookup] as LookupAttribute).entity;
       const lookupSchema = schemaStore.getSchema(entity);
-      return `${lookupSchema.attributes[field]?.label} (${schema.attributes[lookup]?.label})`;
+      return `${lookupSchema.attributes[field]?.label} (${attributes[lookup]?.label})`;
     }
 
-    return column.label ?? schema.attributes[column.name]?.label;
+    return column.label ?? attributes[column.name]?.label;
   });
 
   return headers;
@@ -50,22 +55,22 @@ const getHeaders = (
 
 function getAttribute({
   column,
-  schema,
+  attributes,
   schemaStore,
 }: {
-  schema: Schema;
-  column: TransformedViewColumn<SchemaAttributes>;
+  attributes: SchemaAttributes;
+  column: ExportColumn<SchemaAttributes>;
   schemaStore: ISchemaStore;
 }) {
   let attribute: Attribute | undefined;
   if (column.expandedKey) {
     const lookup = column.name;
     const field = column.expandedKey;
-    const entity = (schema.attributes[lookup] as LookupAttribute).entity;
+    const entity = (attributes[lookup] as LookupAttribute).entity;
     const lookupSchema = schemaStore.getSchema(entity);
     attribute = lookupSchema.attributes[field];
   } else {
-    attribute = schema.attributes[column.name];
+    attribute = attributes[column.name];
   }
 
   return attribute;
@@ -74,15 +79,19 @@ function getAttribute({
 function extractAttributeData({
   column,
   record,
-  schema,
+  attributes,
   schemaStore,
 }: {
-  schema: Schema;
-  column: TransformedViewColumn<SchemaAttributes>;
+  attributes: SchemaAttributes;
+  column: ExportColumn<SchemaAttributes>;
   schemaStore: ISchemaStore;
   record: any;
 }) {
-  const attribute = getAttribute({ column, schema, schemaStore });
+  const attribute = getAttribute({
+    column,
+    attributes,
+    schemaStore,
+  });
   let value: unknown;
   if (column.expandedKey) {
     const lookup = column.name;
@@ -99,7 +108,7 @@ function extractAttributeData({
 }
 
 export const exportRecordsCSV: ExportFn = async ({
-  schema,
+  attributes,
   records,
   gridColumns,
   schemaStore,
@@ -108,14 +117,14 @@ export const exportRecordsCSV: ExportFn = async ({
 }) => {
   const csvDownload = await import('json-to-csv-export');
 
-  const headers = getHeaders(schema, gridColumns, schemaStore);
+  const headers = getHeaders(attributes, gridColumns, schemaStore);
 
   const cellData = records.map((record: any) => {
     return gridColumns.map((column) => {
       const { attribute, value } = extractAttributeData({
         column,
         record,
-        schema,
+        attributes,
         schemaStore,
       });
 
@@ -139,19 +148,19 @@ export const exportRecordsXLS: ExportFn = async ({
   fileName,
   gridColumns,
   records,
-  schema,
+  attributes,
   schemaStore,
   locale,
 }) => {
   const ExcelJS = await import('exceljs');
-  const headers = getHeaders(schema, gridColumns, schemaStore);
+  const headers = getHeaders(attributes, gridColumns, schemaStore);
 
   const cellData = records.map((item: any) => {
     return gridColumns.map((column) => {
       const { attribute, value } = extractAttributeData({
         column,
         record: item,
-        schema,
+        attributes,
         schemaStore,
       });
 
@@ -184,7 +193,11 @@ export const exportRecordsXLS: ExportFn = async ({
   });
 
   gridColumns.forEach((column, index) => {
-    const attribute = getAttribute({ column, schema, schemaStore });
+    const attribute = getAttribute({
+      column,
+      attributes: attributes,
+      schemaStore,
+    });
 
     const sheetColumn = worksheet.getColumn(index + 1);
 

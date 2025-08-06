@@ -49,7 +49,18 @@ export function getAttributeLookupsFormattedValue(
 }
 
 export function getAttributeAttachmentFormattedValue(value: unknown) {
-  return (value as FileObject)?.url ?? null;
+  const name = (value as FileObject)?.name;
+  const url = (value as FileObject)?.url;
+
+  if (name) {
+    return name;
+  }
+
+  if (url) {
+    return url;
+  }
+
+  return null;
 }
 
 export function getAttributeDateFormattedValue(

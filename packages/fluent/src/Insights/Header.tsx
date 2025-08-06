@@ -65,10 +65,10 @@ export const Header: FC<HeaderProps> = () => {
           <div>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <Subtitle2 style={{ color: tokens.colorNeutralForeground1 }}>
-                Dashboard
+                {config.title}
               </Subtitle2>
               <Caption1 style={{ color: tokens.colorNeutralForeground2 }}>
-                Dashboard for insights
+                {config.subtitle}
               </Caption1>
             </div>
           </div>
