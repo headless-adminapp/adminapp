@@ -1,14 +1,14 @@
 import { tokens } from '@fluentui/react-components';
 import React, { FC } from 'react';
 
+import { MobileHeaderRightContainer } from '../DataGrid/MobileHeaderRightContainer';
+
 interface PageEntityViewMobileFrameProps {
-  commandBar: React.ReactNode;
   header: React.ReactNode;
   content: React.ReactNode;
 }
 
 export const PageEntityViewMobileFrame: FC<PageEntityViewMobileFrameProps> = ({
-  commandBar,
   header,
   content,
 }) => {
@@ -22,6 +22,7 @@ export const PageEntityViewMobileFrame: FC<PageEntityViewMobileFrameProps> = ({
         overflow: 'hidden',
       }}
     >
+      <MobileHeaderRightContainer />
       <div
         style={{
           gap: 4,
@@ -38,10 +39,10 @@ export const PageEntityViewMobileFrame: FC<PageEntityViewMobileFrameProps> = ({
             minHeight: 40,
             flexDirection: 'column',
             gap: 4,
+            paddingTop: 8,
             paddingBottom: 8,
           }}
         >
-          {commandBar}
           {header}
         </div>
         <div

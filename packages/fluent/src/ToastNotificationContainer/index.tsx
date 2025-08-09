@@ -8,6 +8,7 @@ import {
   useId,
   useToastController,
 } from '@fluentui/react-components';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { ToastNotificationItem } from '@headless-adminapp/app/toast-notification';
 import {
   useCloseToastNotification,
@@ -40,6 +41,7 @@ const Item = ({
   const closeToastNotification = useCloseToastNotification();
 
   const opened = useRef(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (!item.isOpen) {
@@ -72,7 +74,7 @@ const Item = ({
         intent: item.type,
         pauseOnHover: true,
         pauseOnWindowBlur: true,
-        position: 'top-end',
+        position: isMobile ? 'bottom' : 'top-end',
         onStatusChange: (event, data) => {
           if (data.status === 'dismissed') {
             closeToastNotification(item.id);
@@ -80,7 +82,7 @@ const Item = ({
         },
       }
     );
-  }, [dispatchToast, closeToastNotification, item, dismissToast]);
+  }, [dispatchToast, closeToastNotification, item, dismissToast, isMobile]);
 
   return null;
 };

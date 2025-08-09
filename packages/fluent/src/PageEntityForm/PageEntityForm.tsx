@@ -1,5 +1,6 @@
 import { tokens } from '@fluentui/react-components';
 import { useLoadFormGridPage } from '@headless-adminapp/app/dataform/hooks';
+import { useMobileHeader } from '@headless-adminapp/app/header/hooks';
 import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 import { PageEntityFormProvider } from '@headless-adminapp/app/providers/PageEntityFormProvider';
 import { RecordSetProvider } from '@headless-adminapp/app/recordset';
@@ -23,6 +24,7 @@ export const PageEntityForm: FC<PageEntityFormProps> = ({
   recordId,
 }) => {
   const result = useLoadFormGridPage(logicalName, formId);
+  useMobileHeader(true);
 
   if (result.loading) {
     return <PageLoading />;

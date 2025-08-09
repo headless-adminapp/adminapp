@@ -5,12 +5,10 @@ import {
   MessageBar,
   MessageBarBody,
   Subtitle2,
-  Tab,
-  TabList,
   tokens,
 } from '@fluentui/react-components';
+import { ScrollView } from '@headless-adminapp/app/components/ScrollView';
 import { DataFormContext } from '@headless-adminapp/app/dataform';
-import { RelatedItemInfo } from '@headless-adminapp/app/dataform/context';
 import {
   useDataFormSchema,
   useFormInstance,
@@ -22,14 +20,13 @@ import {
   useSelectedForm,
 } from '@headless-adminapp/app/dataform/hooks';
 import { useFormDataState } from '@headless-adminapp/app/dataform/hooks/useFormDataState';
+import { useMobileHeaderSetValue } from '@headless-adminapp/app/header/hooks/useMobileHeaderSetValue';
+import { useElementSize, useIsMobile } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { localizedLabel } from '@headless-adminapp/app/locale/utils';
-import {
-  useContextSelector,
-  useContextValueSetter,
-} from '@headless-adminapp/app/mutable';
+import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
-import { FC, Fragment } from 'react';
+import { FC, Fragment, PropsWithChildren, useRef } from 'react';
 import { Controller } from 'react-hook-form';
 
 import { PageBroken } from '../components/PageBroken';
@@ -38,23 +35,23 @@ import { FormTab } from '../form/layout/FormTab';
 import { Body1Skeleton, Subtitle2Skeleton } from '../Skeleton/TextSkeleton';
 import { CommandContainer } from './CommandContainer';
 import { FormTabRelated } from './FormTabRelated';
+import { MobileHeaderRightContainer } from './MobileHeaderRightContainer';
+import { MobileHeaderTitleContainer } from './MobileHeaderTitleContainer';
 import { usePageEntityFormStrings } from './PageEntityFormStringContext';
 import { ProcessFlow } from './ProcessFlow';
 import { RecordAvatar } from './RecordAvatar';
-import { RelatedViewSelector } from './RelatedViewSelector';
 import { SectionContainer } from './SectionContainer';
+import { TabContainer } from './TabContainer';
 
 export const PageEntityFormDesktopContainer: FC = () => {
+  const formHeaderDivRef = useRef<HTMLDivElement>(null);
   const dataState = useFormDataState();
+  const isMobile = useIsMobile();
 
   const strings = usePageEntityFormStrings();
   const locale = useLocale();
   const recordId = useRecordId();
   const record = useContextSelector(DataFormContext, (state) => state.record);
-  const activeTab = useContextSelector(
-    DataFormContext,
-    (state) => state.activeTab
-  );
   const selectedRelatedItem = useContextSelector(
     DataFormContext,
     (state) => state.selectedRelatedItem
@@ -63,26 +60,10 @@ export const PageEntityFormDesktopContainer: FC = () => {
 
   const schema = useDataFormSchema();
 
+  useMobileHeaderSetValue(schema.label, 2, 'title');
+
   const formConfig = useSelectedForm();
   const processFlowSteps = useProcessFlowSteps();
-
-  const setActiveTab = useContextValueSetter(
-    DataFormContext,
-    (setValue) => (value: string) => {
-      setValue(() => ({
-        activeTab: value,
-      }));
-    }
-  );
-
-  const setSelectedRelatedItem = useContextValueSetter(
-    DataFormContext,
-    (setValue) => (item: RelatedItemInfo | null) => {
-      setValue(() => ({
-        selectedRelatedItem: item,
-      }));
-    }
-  );
 
   const [recordTitle] = useRecordTitle();
 
@@ -116,208 +97,242 @@ export const PageEntityFormDesktopContainer: FC = () => {
         overflow: 'hidden',
       }}
     >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: tokens.spacingVerticalM,
-          paddingTop: tokens.spacingVerticalM,
-          paddingInline: tokens.spacingHorizontalM,
-        }}
-      >
-        <div
-          style={{
-            // padding: 4,
-            boxShadow: tokens.shadow2,
-            borderRadius: tokens.borderRadiusMedium,
-            background: tokens.colorNeutralBackground1,
-            display: 'flex',
-            // overflow: 'hidden',
-          }}
-        >
-          <CommandContainer skeleton={dataState.isFetching} />
-        </div>
-        {notifications.length > 0 && (
-          <div>
-            {notifications.map((notification, index) => (
-              <MessageBar key={index} intent={notification.level} icon={null}>
-                <MessageBarBody>{notification.message}</MessageBarBody>
-              </MessageBar>
-            ))}
-          </div>
-        )}
+      <Wrapper formHeaderDivRef={formHeaderDivRef}>
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            boxShadow: tokens.shadow4,
-            borderRadius: tokens.borderRadiusMedium,
-            background: tokens.colorNeutralBackground1,
-            overflow: 'hidden',
-            zIndex: 2,
+            gap: tokens.spacingVerticalM,
+            paddingTop: tokens.spacingVerticalM,
+            paddingInline: tokens.spacingHorizontalM,
           }}
         >
+          {!isMobile && (
+            <div
+              style={{
+                // padding: 4,
+                boxShadow: tokens.shadow2,
+                borderRadius: tokens.borderRadiusMedium,
+                background: tokens.colorNeutralBackground1,
+                display: 'flex',
+                // overflow: 'hidden',
+              }}
+            >
+              <CommandContainer skeleton={dataState.isFetching} />
+            </div>
+          )}
+          {notifications.length > 0 && (
+            <div>
+              {notifications.map((notification, index) => (
+                <MessageBar key={index} intent={notification.level} icon={null}>
+                  <MessageBarBody>{notification.message}</MessageBarBody>
+                </MessageBar>
+              ))}
+            </div>
+          )}
           <div
             style={{
               display: 'flex',
-              flexDirection: 'row',
-              paddingInline: tokens.spacingHorizontalM,
-              paddingTop: tokens.spacingVerticalS,
-              marginBottom: tokens.spacingVerticalS,
+              flexDirection: 'column',
+              boxShadow: tokens.shadow4,
+              borderRadius: tokens.borderRadiusMedium,
+              background: tokens.colorNeutralBackground1,
+              overflow: 'hidden',
+              zIndex: 2,
             }}
+            ref={formHeaderDivRef}
           >
-            <RecordAvatar />
-            {dataState.isFetching ? (
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flex: 1,
-                }}
-              >
-                <Subtitle2Skeleton width={200} />
-                <Body1Skeleton width={80} />
-              </div>
-            ) : (
-              <div
-                style={{ display: 'flex', flexDirection: 'column', flex: 1 }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    gap: tokens.spacingHorizontalXS,
-                    alignItems: 'center',
-                  }}
-                >
-                  <Subtitle2>{recordTitle}</Subtitle2>
-                  <Caption1 style={{ color: tokens.colorNeutralForeground4 }}>
-                    {isDirty
-                      ? `- ${strings.unsaved}`
-                      : record
-                      ? `- ${strings.saved}`
-                      : ''}
-                  </Caption1>
-                </div>
-                <Body1 style={{ color: tokens.colorNeutralForeground3 }}>
-                  {localizedLabel(language, schema)}
-                </Body1>
-              </div>
-            )}
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
-              {formConfig.experience.headerControls?.map(
-                (controlName, index) => {
-                  const attribute = schema.attributes[controlName];
-
-                  if (!attribute) {
-                    console.warn(`Attribute ${controlName} not found`);
-                    return null;
-                  }
-
-                  return (
-                    <Fragment key={controlName}>
-                      {index > 0 && (
-                        <Divider
-                          vertical
-                          style={{
-                            width: tokens.spacingHorizontalXXL,
-                            opacity: 0.5,
-                          }}
-                        />
-                      )}
-                      <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <Body1
-                          style={{ color: tokens.colorNeutralForeground4 }}
-                        >
-                          {attribute.label}
-                        </Body1>
-                        <Controller
-                          control={formInstance.control}
-                          name={controlName}
-                          render={({ field }) => {
-                            if (dataState.isFetching) {
-                              return <Body1Skeleton width={100} />;
-                            }
-
-                            return (
-                              <Body1>
-                                {getAttributeFormattedValue(
-                                  attribute,
-                                  field.value,
-                                  locale
-                                )}
-                              </Body1>
-                            );
-                          }}
-                        ></Controller>
-                      </div>
-                    </Fragment>
-                  );
-                }
-              )}
-            </div>
-          </div>
-          {!!processFlowSteps?.length && (
-            <ProcessFlow
-              height={28}
-              rounded={false}
-              items={processFlowSteps}
-              skeleton={dataState.isFetching}
-            />
-          )}
-          <div
-            style={{ display: 'flex', paddingBottom: tokens.spacingVerticalS }}
-          >
-            <TabList
-              selectedValue={activeTab}
-              onTabSelect={(e, value) => {
-                setActiveTab(value.value as string);
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                paddingInline: tokens.spacingHorizontalM,
+                paddingTop: tokens.spacingVerticalS,
+                marginBottom: tokens.spacingVerticalS,
               }}
             >
-              {formConfig.experience.tabs.map((tab) => (
-                <Tab key={tab.name} value={tab.name}>
-                  {localizedLabel(language, tab)}
-                </Tab>
-              ))}
-              {!!selectedRelatedItem && (
-                <Tab value="related">
-                  {selectedRelatedItem.localizedPluralLabels?.[language] ??
-                    selectedRelatedItem.pluralLabel}
-                </Tab>
+              {!isMobile && (
+                <>
+                  <RecordAvatar />
+                  {dataState.isFetching ? (
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flex: 1,
+                      }}
+                    >
+                      <Subtitle2Skeleton width={200} />
+                      <Body1Skeleton width={80} />
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flex: 1,
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: tokens.spacingHorizontalXS,
+                          alignItems: 'center',
+                        }}
+                      >
+                        <Subtitle2>{recordTitle}</Subtitle2>
+                        <Caption1
+                          style={{ color: tokens.colorNeutralForeground4 }}
+                        >
+                          {isDirty
+                            ? `- ${strings.unsaved}`
+                            : record
+                            ? `- ${strings.saved}`
+                            : ''}
+                        </Caption1>
+                      </div>
+                      <Body1 style={{ color: tokens.colorNeutralForeground3 }}>
+                        {localizedLabel(language, schema)}
+                      </Body1>
+                    </div>
+                  )}
+                </>
               )}
-            </TabList>
-            <RelatedViewSelector
-              onSelect={(item) => {
-                setSelectedRelatedItem(item);
-                setActiveTab('related');
-              }}
-            />
+              <MobileHeaderTitleContainer />
+              <MobileHeaderRightContainer />
+              <div style={{ display: 'flex', flexDirection: 'row' }}>
+                {formConfig.experience.headerControls?.map(
+                  (controlName, index) => {
+                    const attribute = schema.attributes[controlName];
+
+                    if (!attribute) {
+                      console.warn(`Attribute ${controlName} not found`);
+                      return null;
+                    }
+
+                    return (
+                      <Fragment key={controlName}>
+                        {index > 0 && (
+                          <Divider
+                            vertical
+                            style={{
+                              width: tokens.spacingHorizontalXXL,
+                              opacity: 0.5,
+                            }}
+                          />
+                        )}
+                        <div
+                          style={{ display: 'flex', flexDirection: 'column' }}
+                        >
+                          <Body1
+                            style={{ color: tokens.colorNeutralForeground4 }}
+                          >
+                            {attribute.label}
+                          </Body1>
+                          <Controller
+                            control={formInstance.control}
+                            name={controlName}
+                            render={({ field }) => {
+                              if (dataState.isFetching) {
+                                return <Body1Skeleton width={100} />;
+                              }
+
+                              return (
+                                <Body1>
+                                  {getAttributeFormattedValue(
+                                    attribute,
+                                    field.value,
+                                    locale
+                                  )}
+                                </Body1>
+                              );
+                            }}
+                          ></Controller>
+                        </div>
+                      </Fragment>
+                    );
+                  }
+                )}
+              </div>
+            </div>
+            {!!processFlowSteps?.length && (
+              <ProcessFlow
+                height={28}
+                rounded={false}
+                items={processFlowSteps}
+                skeleton={dataState.isFetching}
+              />
+            )}
+            <TabContainer />
           </div>
         </div>
-      </div>
-      <FormBody>
-        {formConfig.experience.tabs.map((tab) => (
-          <FormTab
-            key={tab.name}
-            value={tab.name}
-            columnCount={tab.columnCount}
-            columnWidths={tab.columnWidths}
-          >
-            {tab.tabColumns.map((tabColumn, index) => (
-              <FormTab.Column key={index}>
-                {tabColumn.sections.map((section) => (
-                  <SectionContainer
-                    key={section.name}
-                    section={section}
-                    readOnly={false}
-                    skeleton={dataState.isFetching}
-                  />
-                ))}
-              </FormTab.Column>
-            ))}
-          </FormTab>
-        ))}
-        <FormTabRelated selectedRelatedItem={selectedRelatedItem} />
-      </FormBody>
+        <FormBody>
+          {formConfig.experience.tabs.map((tab) => (
+            <FormTab
+              key={tab.name}
+              value={tab.name}
+              columnCount={tab.columnCount}
+              columnWidths={tab.columnWidths}
+            >
+              {tab.tabColumns.map((tabColumn, index) => (
+                <FormTab.Column key={index}>
+                  {tabColumn.sections.map((section) => (
+                    <SectionContainer
+                      key={section.name}
+                      section={section}
+                      readOnly={false}
+                      skeleton={dataState.isFetching}
+                    />
+                  ))}
+                </FormTab.Column>
+              ))}
+            </FormTab>
+          ))}
+          <FormTabRelated selectedRelatedItem={selectedRelatedItem} />
+        </FormBody>
+      </Wrapper>
     </div>
   );
+};
+
+interface WrapperProps {
+  formHeaderDivRef: React.RefObject<HTMLDivElement>;
+}
+
+const Wrapper: FC<PropsWithChildren<WrapperProps>> = ({
+  children,
+  formHeaderDivRef,
+}) => {
+  const isMobile = useIsMobile();
+
+  const rect = useElementSize(formHeaderDivRef, isMobile ? 100 : 5000);
+
+  const headerHeight = 50;
+  const tabContainerHeight = 36;
+
+  const visible = !!rect && rect.bottom < headerHeight + tabContainerHeight;
+
+  if (isMobile) {
+    return (
+      <ScrollView>
+        <div
+          style={{
+            background: tokens.colorNeutralBackground1,
+            position: 'fixed',
+            transition: 'all 0.2s',
+            top: visible ? headerHeight : -headerHeight,
+            left: 0,
+            right: 0,
+            zIndex: visible ? 3 : 0,
+            boxShadow: tokens.shadow4,
+          }}
+        >
+          <TabContainer />
+        </div>
+        {children}
+      </ScrollView>
+    );
+  }
+
+  return children;
 };

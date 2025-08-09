@@ -9,6 +9,7 @@ import {
 } from '../auth';
 import { queryClient as defaultQueryClient } from '../defaults';
 import { DialogProvider } from '../dialog';
+import { HeaderProvider } from '../header';
 import { LocaleProvider, LocaleProviderProps } from '../locale';
 import { MetadataProvider } from '../metadata';
 import { MetadataProviderProps } from '../metadata/MetadataProvider';
@@ -92,9 +93,11 @@ export const LayoutProvider: FC<PropsWithChildren<LayoutProviderProps>> = ({
                       <ProgressIndicatorContainer />
                       <ToastNotificationContainer />
                       <AuthProvider {...authProps}>
-                        <AuthWrapper Placeholder={authPlaceholder}>
-                          {children}
-                        </AuthWrapper>
+                        <HeaderProvider>
+                          <AuthWrapper Placeholder={authPlaceholder}>
+                            {children}
+                          </AuthWrapper>
+                        </HeaderProvider>
                       </AuthProvider>
                     </ToastNotificationProvider>
                   </ProgressIndicatorProvider>

@@ -4,9 +4,9 @@ import {
   DialogContent,
   DialogSurface,
 } from '@fluentui/react-components';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 
 import { LoginForm } from './LoginForm';
-import { useIsMobile } from '@headless-adminapp/app/hooks';
 
 interface LoginFormProps {
   logoImageUrl?: string;

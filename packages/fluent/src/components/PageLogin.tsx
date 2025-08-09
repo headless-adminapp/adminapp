@@ -1,4 +1,5 @@
 import { tokens } from '@fluentui/react-components';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 
 import { LoginForm, LoginFormData } from './LoginForm';
 
@@ -13,11 +14,48 @@ interface LoginPageProps {
 }
 
 export function PageLogin(props: Readonly<LoginPageProps>) {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: tokens.colorNeutralBackground2,
+        }}
+      >
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            padding: 24,
+            maxWidth: 360,
+            maxHeight: '100vh',
+            height: 'fit-content',
+            margin: 'auto',
+          }}
+        >
+          <LoginForm
+            onLogin={props.onLogin}
+            logoImageUrl={props.logoImageUrl}
+            afterLoginContent={props.afterLoginContent}
+            beforeLoginContent={props.beforeLoginContent}
+            subtitle={props.subtitle}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       style={{
-        height: '100vh',
-        width: '100vw',
+        position: 'fixed',
+        inset: 0,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

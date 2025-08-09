@@ -98,6 +98,7 @@ export namespace ViewCommandBuilder {
       Icon,
       text,
       localizedText: localizedTexts,
+      isQuickAction: true,
       onClick: (context) => {
         context.navigation.openForm({
           logicalName: context.primaryControl.schema.logicalName,

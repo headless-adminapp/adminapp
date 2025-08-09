@@ -1,4 +1,6 @@
 import { useLoadMainGridPage } from '@headless-adminapp/app/datagrid';
+import { useMobileHeader } from '@headless-adminapp/app/header';
+import { MobileHeaderTitle } from '@headless-adminapp/app/header/components/MobileHeaderTitle';
 import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { PageEntityViewProvider } from '@headless-adminapp/app/providers/PageEntityViewProvider';
@@ -28,6 +30,7 @@ export const PageEntityView: FC<PageEntityViewProps> = ({
 }) => {
   const result = useLoadMainGridPage(logicalName, viewId);
   const isMobile = useIsMobile();
+  useMobileHeader(false);
 
   if (result.loading) {
     return <PageLoading />;
@@ -64,6 +67,7 @@ export const PageEntityView: FC<PageEntityViewProps> = ({
         commands={commands}
         onChangeView={onChangeView}
       >
+        <MobileHeaderTitle title={schema.label} order={2} />
         {content}
       </PageEntityViewProvider>
     </HistoryStateKeyProvider>

@@ -3,6 +3,7 @@ import {
   BadgeProps,
   Button,
   makeStyles,
+  tokens,
 } from '@fluentui/react-components';
 import { useBasePath, useRouter } from '@headless-adminapp/app/route';
 import { Icon } from '@headless-adminapp/icons';
@@ -35,6 +36,7 @@ interface QuickActionItemProps {
   onClick?: () => void;
   badgeCount?: number;
   badgeColor?: BadgeProps['color'];
+  type?: 'button' | 'icon';
 }
 
 export const QuickActionItem: FC<QuickActionItemProps> = ({
@@ -44,6 +46,7 @@ export const QuickActionItem: FC<QuickActionItemProps> = ({
   link,
   badgeCount,
   badgeColor = 'informative',
+  type = 'icon',
 }) => {
   const styles = useStyles();
   const router = useRouter();
@@ -68,7 +71,11 @@ export const QuickActionItem: FC<QuickActionItemProps> = ({
         </>
       }
       appearance="transparent"
-      style={{ position: 'relative' }}
+      style={{
+        position: 'relative',
+        fontWeight: tokens.fontWeightRegular,
+        minWidth: 'unset',
+      }}
       as="a"
       href={fullLink}
       title={label}
@@ -82,6 +89,8 @@ export const QuickActionItem: FC<QuickActionItemProps> = ({
           onClick();
         }
       }}
-    />
+    >
+      {type === 'button' ? label : ''}
+    </Button>
   );
 };

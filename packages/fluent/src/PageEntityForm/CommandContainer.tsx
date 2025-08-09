@@ -22,7 +22,7 @@ interface CommandContainerProps {
 
 export const CommandContainer: FC<CommandContainerProps> = ({ skeleton }) => {
   const { language } = useLocale();
-  const gridCommands = useMainFormCommands();
+  const formCommands = useMainFormCommands();
 
   const router = useRouter();
   const isMobile = useIsMobile();
@@ -72,8 +72,8 @@ export const CommandContainer: FC<CommandContainerProps> = ({ skeleton }) => {
   ]);
 
   const extendedCommands = useMemo(() => {
-    return [...navigationCommands, ...gridCommands];
-  }, [gridCommands, navigationCommands]);
+    return [...navigationCommands, ...formCommands];
+  }, [formCommands, navigationCommands]);
 
   if (skeleton) {
     return (
