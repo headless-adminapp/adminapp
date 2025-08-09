@@ -121,7 +121,7 @@ interface BottomDrawerMenuProps {
   actions: CommandItemState[][];
 }
 
-const BottomDrawerMenu: FC<BottomDrawerMenuProps> = ({
+export const BottomDrawerMenu: FC<BottomDrawerMenuProps> = ({
   open,
   onClose,
   actions,
@@ -301,6 +301,7 @@ const BottomDrawerMenu: FC<BottomDrawerMenuProps> = ({
             </MenuList>
           )}
         </div>
+        <div style={{ height: 'env(safe-area-inset-bottom)' }} />
       </DrawerBody>
     </Drawer>
   );

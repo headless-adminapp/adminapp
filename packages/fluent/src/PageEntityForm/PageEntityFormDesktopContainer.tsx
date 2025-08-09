@@ -142,119 +142,123 @@ export const PageEntityFormDesktopContainer: FC = () => {
             }}
             ref={formHeaderDivRef}
           >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                paddingInline: tokens.spacingHorizontalM,
-                paddingTop: tokens.spacingVerticalS,
-                marginBottom: tokens.spacingVerticalS,
-              }}
-            >
-              {!isMobile && (
-                <>
-                  <RecordAvatar />
-                  {dataState.isFetching ? (
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        flex: 1,
-                      }}
-                    >
-                      <Subtitle2Skeleton width={200} />
-                      <Body1Skeleton width={80} />
-                    </div>
-                  ) : (
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        flex: 1,
-                      }}
-                    >
+            {(!!formConfig.experience.headerControls?.length || !isMobile) && (
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  paddingInline: tokens.spacingHorizontalM,
+                  paddingTop: tokens.spacingVerticalS,
+                  marginBottom: tokens.spacingVerticalS,
+                }}
+              >
+                {!isMobile && (
+                  <>
+                    <RecordAvatar />
+                    {dataState.isFetching ? (
                       <div
                         style={{
                           display: 'flex',
-                          gap: tokens.spacingHorizontalXS,
-                          alignItems: 'center',
+                          flexDirection: 'column',
+                          flex: 1,
                         }}
                       >
-                        <Subtitle2>{recordTitle}</Subtitle2>
-                        <Caption1
-                          style={{ color: tokens.colorNeutralForeground4 }}
-                        >
-                          {isDirty
-                            ? `- ${strings.unsaved}`
-                            : record
-                            ? `- ${strings.saved}`
-                            : ''}
-                        </Caption1>
+                        <Subtitle2Skeleton width={200} />
+                        <Body1Skeleton width={80} />
                       </div>
-                      <Body1 style={{ color: tokens.colorNeutralForeground3 }}>
-                        {localizedLabel(language, schema)}
-                      </Body1>
-                    </div>
-                  )}
-                </>
-              )}
-              <MobileHeaderTitleContainer />
-              <MobileHeaderRightContainer />
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                {formConfig.experience.headerControls?.map(
-                  (controlName, index) => {
-                    const attribute = schema.attributes[controlName];
-
-                    if (!attribute) {
-                      console.warn(`Attribute ${controlName} not found`);
-                      return null;
-                    }
-
-                    return (
-                      <Fragment key={controlName}>
-                        {index > 0 && (
-                          <Divider
-                            vertical
-                            style={{
-                              width: tokens.spacingHorizontalXXL,
-                              opacity: 0.5,
-                            }}
-                          />
-                        )}
+                    ) : (
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          flex: 1,
+                        }}
+                      >
                         <div
-                          style={{ display: 'flex', flexDirection: 'column' }}
+                          style={{
+                            display: 'flex',
+                            gap: tokens.spacingHorizontalXS,
+                            alignItems: 'center',
+                          }}
                         >
-                          <Body1
+                          <Subtitle2>{recordTitle}</Subtitle2>
+                          <Caption1
                             style={{ color: tokens.colorNeutralForeground4 }}
                           >
-                            {attribute.label}
-                          </Body1>
-                          <Controller
-                            control={formInstance.control}
-                            name={controlName}
-                            render={({ field }) => {
-                              if (dataState.isFetching) {
-                                return <Body1Skeleton width={100} />;
-                              }
-
-                              return (
-                                <Body1>
-                                  {getAttributeFormattedValue(
-                                    attribute,
-                                    field.value,
-                                    locale
-                                  )}
-                                </Body1>
-                              );
-                            }}
-                          ></Controller>
+                            {isDirty
+                              ? `- ${strings.unsaved}`
+                              : record
+                              ? `- ${strings.saved}`
+                              : ''}
+                          </Caption1>
                         </div>
-                      </Fragment>
-                    );
-                  }
+                        <Body1
+                          style={{ color: tokens.colorNeutralForeground3 }}
+                        >
+                          {localizedLabel(language, schema)}
+                        </Body1>
+                      </div>
+                    )}
+                  </>
                 )}
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  {formConfig.experience.headerControls?.map(
+                    (controlName, index) => {
+                      const attribute = schema.attributes[controlName];
+
+                      if (!attribute) {
+                        console.warn(`Attribute ${controlName} not found`);
+                        return null;
+                      }
+
+                      return (
+                        <Fragment key={controlName}>
+                          {index > 0 && (
+                            <Divider
+                              vertical
+                              style={{
+                                width: tokens.spacingHorizontalXXL,
+                                opacity: 0.5,
+                              }}
+                            />
+                          )}
+                          <div
+                            style={{ display: 'flex', flexDirection: 'column' }}
+                          >
+                            <Body1
+                              style={{ color: tokens.colorNeutralForeground4 }}
+                            >
+                              {attribute.label}
+                            </Body1>
+                            <Controller
+                              control={formInstance.control}
+                              name={controlName}
+                              render={({ field }) => {
+                                if (dataState.isFetching) {
+                                  return <Body1Skeleton width={100} />;
+                                }
+
+                                return (
+                                  <Body1>
+                                    {getAttributeFormattedValue(
+                                      attribute,
+                                      field.value,
+                                      locale
+                                    )}
+                                  </Body1>
+                                );
+                              }}
+                            ></Controller>
+                          </div>
+                        </Fragment>
+                      );
+                    }
+                  )}
+                </div>
               </div>
-            </div>
+            )}
+            <MobileHeaderTitleContainer />
+            <MobileHeaderRightContainer />
             {!!processFlowSteps?.length && (
               <ProcessFlow
                 height={28}
@@ -330,6 +334,7 @@ const Wrapper: FC<PropsWithChildren<WrapperProps>> = ({
           <TabContainer />
         </div>
         {children}
+        <div style={{ height: 'env(safe-area-inset-bottom)' }} />
       </ScrollView>
     );
   }

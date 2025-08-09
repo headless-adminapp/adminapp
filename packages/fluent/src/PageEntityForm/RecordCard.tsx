@@ -32,25 +32,22 @@ interface RecordCardProps<S extends SchemaAttributes = SchemaAttributes> {
 
 const useStyles = makeStyles({
   root: {
+    minHeight: '44px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inner: {
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
     paddingInline: tokens.spacingHorizontalL,
     paddingBlock: tokens.spacingVerticalS,
     gap: tokens.spacingHorizontalS,
-    // cursor: 'pointer',
-
-    // '&:hover': {
-    //   background: tokens.colorNeutralBackground1Hover,
-    // },
-    // '&:active': {
-    //   background: tokens.colorNeutralBackground1Pressed,
-    // },
   },
-  // selected: {
-  //   background: tokens.colorNeutralBackground1Selected,
-  // },
-  selected: {},
+  selected: {
+    background: tokens.colorNeutralBackground1Hover,
+  },
 });
 
 function createIntial(name: string) {
@@ -101,89 +98,91 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
 
   return (
     <div className={mergeClasses(styles.root, selected && styles.selected)}>
-      {cardView.showAvatar && (
-        <Avatar
-          initials={initials}
-          color="neutral"
-          size={!cardView.secondaryColumns?.length ? 20 : 32}
-          style={{ cursor: 'pointer' }}
-          image={{
-            src: avatarSrc,
-          }}
-        />
-      )}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          flex: 1,
-        }}
-      >
-        <Body1 style={{ wordBreak: 'break-all' }}>
-          {getAttributeFormattedValue(
-            schema.attributes[cardView.primaryColumn],
-            _record[cardView.primaryColumn],
-            locale
-          )}
-        </Body1>
-        {cardView.secondaryColumns?.map((column) => (
-          <SecondaryColumnContent
-            key={column.name as string}
-            record={_record}
-            column={column}
-            schema={schema}
-            locale={locale}
+      <div className={styles.inner}>
+        {cardView.showAvatar && (
+          <Avatar
+            initials={initials}
+            color="neutral"
+            size={!cardView.secondaryColumns?.length ? 20 : 32}
+            style={{ cursor: 'pointer' }}
+            image={{
+              src: avatarSrc,
+            }}
           />
-        ))}
-      </div>
-      {!!cardView.rightColumn?.length && (
+        )}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'flex-end',
+            flex: 1,
           }}
         >
-          {cardView.rightColumn.map((column) => {
-            const value = _record[column.name];
+          <Body1 style={{ wordBreak: 'break-all' }}>
+            {getAttributeFormattedValue(
+              schema.attributes[cardView.primaryColumn],
+              _record[cardView.primaryColumn],
+              locale
+            )}
+          </Body1>
+          {cardView.secondaryColumns?.map((column) => (
+            <SecondaryColumnContent
+              key={column.name as string}
+              record={_record}
+              column={column}
+              schema={schema}
+              locale={locale}
+            />
+          ))}
+        </div>
+        {!!cardView.rightColumn?.length && (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+            }}
+          >
+            {cardView.rightColumn.map((column) => {
+              const value = _record[column.name];
 
-            if (!value) {
-              return null;
-            }
+              if (!value) {
+                return null;
+              }
 
-            const attribute = schema.attributes[column.name];
+              const attribute = schema.attributes[column.name];
 
-            if (column.variant === 'choice') {
-              if (attribute.type === 'choice') {
+              if (column.variant === 'choice') {
+                if (attribute.type === 'choice') {
+                  return (
+                    <ChoiceTag
+                      key={column.name as string}
+                      attribute={attribute}
+                      value={value}
+                    />
+                  );
+                }
+              }
+
+              if (column.variant === 'strong') {
                 return (
-                  <ChoiceTag
-                    key={column.name as string}
-                    attribute={attribute}
-                    value={value}
-                  />
+                  <Body1Strong key={column.name as string}>
+                    {getAttributeFormattedValue(attribute, value, locale)}
+                  </Body1Strong>
                 );
               }
-            }
 
-            if (column.variant === 'strong') {
               return (
-                <Body1Strong key={column.name as string}>
+                <Caption1
+                  key={column.name as string}
+                  style={{ color: tokens.colorNeutralForeground4 }}
+                >
                   {getAttributeFormattedValue(attribute, value, locale)}
-                </Body1Strong>
+                </Caption1>
               );
-            }
-
-            return (
-              <Caption1
-                key={column.name as string}
-                style={{ color: tokens.colorNeutralForeground4 }}
-              >
-                {getAttributeFormattedValue(attribute, value, locale)}
-              </Caption1>
-            );
-          })}
-        </div>
-      )}
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

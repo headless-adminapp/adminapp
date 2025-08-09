@@ -4,21 +4,29 @@ import {
   mergeClasses,
   tokens,
 } from '@fluentui/react-components';
+import { CommandItemState } from '@headless-adminapp/app/command';
 import { ScrollbarWithMoreDataRequest } from '@headless-adminapp/app/components/ScrollbarWithMoreDataRequest';
 import { GridContext } from '@headless-adminapp/app/datagrid';
 import {
   useDataGridSchema,
   useGridData,
   useGridDataState,
+  useGridSelection,
+  useMainGridContextCommands,
   useSelectedView,
+  useSubGridContextCommands,
 } from '@headless-adminapp/app/datagrid/hooks';
+import { useLongPress } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { useOpenForm } from '@headless-adminapp/app/navigation';
+import { CardView } from '@headless-adminapp/core/experience/view';
+import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { FC, useCallback, useMemo, useRef } from 'react';
+import { FC, useCallback, useMemo, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
+import { BottomDrawerMenu } from '../Header/MobileHeaderCommandContainer';
 import { RecordCard } from '../PageEntityForm/RecordCard';
 import { RecordCardLoading } from '../PageEntityForm/RecordCardLoading';
 import { UniqueRecord } from './types';
@@ -44,7 +52,6 @@ interface GridListContainerProps {
 }
 
 export const GridListContainer: FC<GridListContainerProps> = () => {
-  const styles = useStyles();
   const data = useGridData();
   const dataState = useGridDataState();
   const fetchNextPage = useContextSelector(
@@ -53,6 +60,9 @@ export const GridListContainer: FC<GridListContainerProps> = () => {
   );
   const schema = useDataGridSchema();
   const view = useSelectedView();
+  const [showContextMenu, setShowContextMenu] = useState(false);
+
+  const [selectedIds, setSelectedIds] = useGridSelection();
 
   const tableWrapperRef = useRef<HTMLDivElement>(null);
 
@@ -97,6 +107,14 @@ export const GridListContainer: FC<GridListContainerProps> = () => {
     },
     [openFormInternal, schema.idAttribute, schema.logicalName]
   );
+
+  const isSubgrid = useContextSelector(GridContext, (state) => state.isSubGrid);
+
+  const contextCommands = isSubgrid
+    ? // eslint-disable-next-line react-hooks/rules-of-hooks
+      useSubGridContextCommands()
+    : // eslint-disable-next-line react-hooks/rules-of-hooks
+      useMainGridContextCommands();
 
   return (
     <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
@@ -147,25 +165,23 @@ export const GridListContainer: FC<GridListContainerProps> = () => {
                         <Divider style={{ opacity: 0.2 }} />
                       </div>
                     )}
-                    <div
-                      className={mergeClasses(styles.root)}
-                      style={{
-                        width: '100%',
-                        cursor: 'pointer',
-                        borderRadius: tokens.borderRadiusMedium,
-                      }}
+                    <Item
+                      card={view.experience.card}
+                      record={row}
+                      schema={schema}
                       onClick={() => {
                         const id = row[schema.idAttribute] as string;
                         openRecord(id);
                       }}
-                    >
-                      <RecordCard
-                        cardView={view.experience.card}
-                        record={row}
-                        schema={schema}
-                        selected={false}
-                      />
-                    </div>
+                      onLongPress={() => {
+                        const id = row[schema.idAttribute] as string;
+                        setSelectedIds([id]);
+                        setShowContextMenu(true);
+                      }}
+                      selected={selectedIds.includes(
+                        row[schema.idAttribute] as string
+                      )}
+                    />
                   </div>
                 );
               })}
@@ -190,7 +206,66 @@ export const GridListContainer: FC<GridListContainerProps> = () => {
             )}
           </div>
         </div>
+        <div style={{ height: 'env(safe-area-inset-bottom)' }} />
+        <BottomDrawerMenu
+          open={showContextMenu}
+          onClose={() => setShowContextMenu(false)}
+          actions={contextCommands as CommandItemState[][]}
+        />
       </ScrollbarWithMoreDataRequest>
+    </div>
+  );
+};
+
+interface ItemProps {
+  card: CardView<SchemaAttributes>;
+  onClick?: () => void;
+  onLongPress?: () => void;
+  record: UniqueRecord;
+  schema: Schema<SchemaAttributes>;
+  selected?: boolean;
+}
+
+const Item: FC<ItemProps> = ({
+  onClick,
+  onLongPress,
+  card,
+  record,
+  schema,
+  selected,
+}) => {
+  const styles = useStyles();
+  const isLongPress = useRef(false);
+
+  const onLongPressInternal = () => {
+    onLongPress?.();
+    isLongPress.current = true;
+  };
+
+  const longPressEvent = useLongPress(onLongPressInternal, {
+    isPreventDefault: false,
+    delay: 500,
+  });
+
+  return (
+    <div
+      className={mergeClasses(styles.root)}
+      style={{
+        width: '100%',
+        cursor: 'pointer',
+        borderRadius: tokens.borderRadiusMedium,
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+      }}
+      {...longPressEvent}
+      onClick={onClick}
+    >
+      <RecordCard
+        cardView={card}
+        record={record}
+        schema={schema}
+        selected={selected}
+      />
     </div>
   );
 };
