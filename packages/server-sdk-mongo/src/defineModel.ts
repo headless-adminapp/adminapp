@@ -50,10 +50,13 @@ function resolveIdAttribute(attribute: IdAttribute<Id>) {
   return { type: resolveIdType(attribute) };
 }
 
-function resolveLookupAttribute(attribute: LookupAttribute) {
+function resolveLookupAttribute(
+  attribute: LookupAttribute,
+  modelNameResolver: (logicalName: string) => string
+) {
   return {
     type: resolveIdType(attribute),
-    ref: attribute.entity,
+    ref: modelNameResolver(attribute.entity),
   };
 }
 
@@ -71,7 +74,8 @@ function applyRequiredAttribute(attribute: AttributeBase, _defination: any) {
 
 export function defineModel<S extends MongoRequiredSchemaAttributes>(
   name: string,
-  schema: Schema<S>
+  schema: Schema<S>,
+  modelNameResolver: (logicalName: string) => string
 ) {
   if (!models[name]) {
     const { _id, ...rest } = schema.attributes;
@@ -108,7 +112,7 @@ export function defineModel<S extends MongoRequiredSchemaAttributes>(
           acc[key] = resolveChoicesAttribute(attribute);
           break;
         case 'lookup':
-          acc[key] = resolveLookupAttribute(attribute);
+          acc[key] = resolveLookupAttribute(attribute, modelNameResolver);
           break;
         case 'mixed':
           acc[key] = { type: MongoSchema.Types.Mixed };

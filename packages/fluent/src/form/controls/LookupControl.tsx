@@ -322,6 +322,8 @@ const LookupControlMd: FC<LookupControlProps> = ({
               primaryText={{
                 style: {
                   paddingBottom: 0,
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
                 },
               }}
             >

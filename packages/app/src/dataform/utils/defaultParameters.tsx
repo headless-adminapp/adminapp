@@ -29,6 +29,8 @@ export function getFormDefaultParameters(
 
       if (defaultValue instanceof Date) {
         defaultValue = defaultValue.toISOString();
+      } else if (attribute.type === 'date' && defaultValue === '@now') {
+        defaultValue = new Date().toISOString();
       }
 
       return {

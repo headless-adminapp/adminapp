@@ -30,15 +30,7 @@ export const FormBody: FC<PropsWithChildren> = ({ children }) => {
         className="FormBody_scrollview"
         rtl={direction === 'rtl'}
       >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            padding: tokens.spacingVerticalM,
-          }}
-        >
-          {children}
-        </div>
+        {children}
       </ScrollView>
     </div>
   );

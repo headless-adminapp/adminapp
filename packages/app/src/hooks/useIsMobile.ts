@@ -1,12 +1,20 @@
 import debounce from 'lodash/debounce';
 import { useLayoutEffect, useState } from 'react';
 
+function getInnerWidth() {
+  if (typeof window !== 'undefined') {
+    return window.innerWidth;
+  }
+
+  return 0;
+}
+
 export function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(getInnerWidth() < 768);
 
   useLayoutEffect(() => {
     const updateSize = (): void => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(getInnerWidth() < 768);
     };
 
     window.addEventListener('resize', debounce(updateSize, 250));
@@ -23,7 +31,7 @@ export function useIsTablet() {
 
   useLayoutEffect(() => {
     const updateSize = (): void => {
-      setIsTablet(window.innerWidth < 1024);
+      setIsTablet(getInnerWidth() < 1024);
     };
 
     window.addEventListener('resize', debounce(updateSize, 250));

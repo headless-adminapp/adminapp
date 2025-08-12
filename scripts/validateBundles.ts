@@ -198,6 +198,7 @@ async function run() {
         'server-sdk',
         'server-sdk-mongo',
         'server-sdk-sequelize',
+        'next-router',
       ];
 
       const optionalDeps = getPackagesDeps(packages);

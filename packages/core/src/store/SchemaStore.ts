@@ -39,11 +39,17 @@ export class SchemaStore<SA extends SchemaAttributes = SchemaAttributes>
         );
       }
 
-      if (primaryAttribute.type !== 'string') {
+      if (
+        !['string', 'choice', 'number', 'lookup'].includes(
+          primaryAttribute.type
+        )
+      ) {
         throw new Error(
           `Primary attribute ${schema.primaryAttribute as string} of schema ${
             schema.logicalName
-          } must be of type string`
+          } must be of type string, choice, number or lookup but got ${
+            primaryAttribute.type
+          }`
         );
       }
 

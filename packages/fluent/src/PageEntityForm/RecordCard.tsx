@@ -19,7 +19,7 @@ import {
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 
 import { ChoiceBadge } from '../components/ChoiceBadge';
 
@@ -50,7 +50,7 @@ const useStyles = makeStyles({
   },
 });
 
-function createIntial(name: string) {
+function createIntial(name: string | null | undefined) {
   return name
     ?.split(' ')
     .map((x) => x[0])
@@ -70,7 +70,19 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
 
   const _record = record as any;
 
-  const recordTitle = _record[schema.primaryAttribute];
+  const recordTitle = useMemo(() => {
+    const _title = _record[schema.primaryAttribute];
+
+    if (_title === undefined || _title === null) {
+      return null;
+    }
+
+    if (typeof _title !== 'string') {
+      return String(_title);
+    }
+
+    return _title;
+  }, [_record, schema.primaryAttribute]);
 
   const initials = createIntial(recordTitle);
 

@@ -20,7 +20,11 @@ export class MongoSchemaStore<
   public override register<S extends SA>(schema: Schema<S>) {
     super.register(schema);
 
-    const model = defineModel(`${this.key}:${schema.logicalName}`, schema);
+    const model = defineModel(
+      `${this.key}:${schema.logicalName}`,
+      schema,
+      (logicalName: string) => `${this.key}:${logicalName}`
+    );
 
     this.models[schema.logicalName] = model as unknown as Model<
       InferredDbSchemaType<MongoRequiredSchemaAttributes>

@@ -124,6 +124,10 @@ export const TableHeaderFilterCell: FC<
   }, [column.expandedKey, column.name, schemaStore, schema.attributes]);
 
   const align = useMemo(() => {
+    if (column.name === schema.primaryAttribute) {
+      return 'left';
+    }
+
     switch (attribute.type) {
       case 'money':
       case 'number':

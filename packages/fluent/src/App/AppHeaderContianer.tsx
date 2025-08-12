@@ -115,6 +115,7 @@ const NavActions: FC = () => {
 
   const initials = useMemo(() => {
     return authSession?.fullName
+      .toUpperCase()
       .split(' ')
       .map((item) => item[0])
       .slice(0, 2)
