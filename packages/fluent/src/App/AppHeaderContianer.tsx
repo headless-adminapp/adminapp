@@ -24,6 +24,7 @@ import {
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { useBasePath, useRouter } from '@headless-adminapp/app/route';
+import { isColorDark } from '@headless-adminapp/app/utils/color';
 import { Icons } from '@headless-adminapp/icons';
 import { FC, ReactNode, useMemo } from 'react';
 
@@ -94,7 +95,7 @@ const NavTitle: FC = () => {
         display: 'flex',
         alignItems: 'center',
         cursor: 'pointer',
-        color: 'white',
+        color: 'inherit',
       }}
     >
       <div style={{ display: 'flex', paddingLeft: 4, paddingRight: 6 }}>
@@ -237,6 +238,16 @@ const NavActions: FC = () => {
 
 const AppDesktopHeader: FC<AppHeaderContainerProps> = ({ onNavToggle }) => {
   const isTablet = useIsTablet();
+  const { appExperience: app } = useAppContext();
+  const background = app.headerColor ?? tokens.colorBrandBackground;
+
+  const color = useMemo(() => {
+    if (!background) {
+      return;
+    }
+
+    return isColorDark(background) ? '#FFFFFF' : '#000000';
+  }, [background]);
 
   return (
     <div
@@ -245,10 +256,10 @@ const AppDesktopHeader: FC<AppHeaderContainerProps> = ({ onNavToggle }) => {
         alignItems: 'center',
         height: 50,
         minHeight: 50,
-        background: tokens.colorBrandBackground,
+        background,
         paddingInline: 8,
         gap: 8,
-        color: 'white',
+        color,
       }}
     >
       <div style={{ display: 'flex', flex: 1, alignItems: 'center', gap: 8 }}>
@@ -265,9 +276,20 @@ const AppMobileHeader: FC<AppHeaderContainerProps> = ({ onNavToggle }) => {
     HeaderContext,
     (state) => state.showBackButton.length > 0
   );
+  const { appExperience: app } = useAppContext();
   const headerTitle = useHeaderValue<ReactNode>('title');
   const rightComponent = useHeaderValue<ReactNode>('rightComponent');
   const showBackButton = useHeaderValue<boolean>('showBackButton');
+
+  const background = app.headerColor ?? tokens.colorBrandBackground;
+
+  const color = useMemo(() => {
+    if (!background) {
+      return;
+    }
+
+    return isColorDark(background) ? '#FFFFFF' : '#000000';
+  }, [background]);
 
   return (
     <div
@@ -276,10 +298,10 @@ const AppMobileHeader: FC<AppHeaderContainerProps> = ({ onNavToggle }) => {
         alignItems: 'center',
         height: 50,
         minHeight: 50,
-        background: tokens.colorBrandBackground,
+        background,
         paddingInline: 8,
         gap: 8,
-        color: 'white',
+        color,
         zIndex: 10,
       }}
     >

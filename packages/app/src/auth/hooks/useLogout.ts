@@ -15,6 +15,7 @@ export function useLogout() {
       initialized: true,
       authenticated: false,
       session: null,
+      reason: 'logout',
     });
     onUnauthenticated?.('logout');
   }, [setValue, onUnauthenticated]);

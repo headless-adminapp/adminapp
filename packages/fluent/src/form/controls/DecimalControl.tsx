@@ -98,6 +98,11 @@ export function DecimalControl({
       style={{
         width: '100%',
       }}
+      input={{
+        style: {
+          width: '100%',
+        },
+      }}
     />
   );
 }

@@ -390,6 +390,8 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
                       height: `${virtualRow.size}px`,
                       minWidth: `calc(100% - ${hPadding * 2}px)`,
                       position: 'absolute',
+                      left: 0,
+                      right: 0,
                       transform: `translateY(${virtualRow.start}px)`,
                     }}
                     onClick={() => {

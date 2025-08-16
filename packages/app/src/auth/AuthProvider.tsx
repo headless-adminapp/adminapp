@@ -69,6 +69,7 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({
           authenticated: false,
           sessionExpired: false,
           session: null,
+          reason: 'load',
         });
 
         onUnauthenticatedRef.current?.('load');
@@ -110,6 +111,7 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({
         authenticated: false,
         sessionExpired: true,
         session: null,
+        reason: 'sessionExpired',
       });
 
       onUnauthenticatedRef.current?.('sessionExpired');
@@ -128,6 +130,7 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({
         authenticated: false,
         sessionExpired: true,
         session: null,
+        reason: 'sessionExpired',
       });
 
       onUnauthenticatedRef.current?.('sessionExpired');

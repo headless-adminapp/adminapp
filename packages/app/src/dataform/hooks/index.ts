@@ -14,8 +14,6 @@ export * from './useProcessFlowSteps';
 export * from './useEventManager';
 export * from './useIsControlHiddenByAttributeName';
 export * from './useIsControlHiddenByKey';
-export * from './useHiddenControlsManager';
-export * from './useDisabledControlsManager';
 export * from './useContextKey';
 export * from './useIsControlDisabled';
 export * from './useIsFieldRequired';

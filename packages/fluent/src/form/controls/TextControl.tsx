@@ -72,6 +72,11 @@ export function TextControl({
         width: '100%',
       }}
       maxLength={maxLength}
+      input={{
+        style: {
+          width: '100%',
+        },
+      }}
       // styles={{
       //   input: {
       //     ...(borderOnFocusOnly &&

@@ -1,4 +1,4 @@
-import { Input } from '@fluentui/react-components';
+import { Input, mergeClasses } from '@fluentui/react-components';
 import { useCurrencySymbol } from '@headless-adminapp/app/locale';
 import { useEffect, useRef, useState } from 'react';
 
@@ -22,6 +22,7 @@ export function CurrencyControl({
   readOnly,
   skeleton,
 }: CurrencyControlProps) {
+  const isReadOnly = readOnly || disabled;
   const symbol = useCurrencySymbol();
   const [internalValue, setInternalValue] = useState<string>(
     value ? value.toString() : ''
@@ -88,9 +89,15 @@ export function CurrencyControl({
       appearance="filled-darker"
       onFocus={() => onFocus?.()}
       contentBefore={<div>{symbol}</div>}
-      readOnly={readOnly || disabled}
+      readOnly={isReadOnly}
+      className={mergeClasses(isReadOnly && 'TextControl_readonly')}
       style={{
         width: '100%',
+      }}
+      input={{
+        style: {
+          width: '100%',
+        },
       }}
     />
   );

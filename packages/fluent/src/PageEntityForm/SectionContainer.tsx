@@ -16,6 +16,7 @@ import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { localizedLabel } from '@headless-adminapp/app/locale/utils';
+import { useCalculatedAttributeStore } from '@headless-adminapp/app/metadata/hooks/useCalculatedAttributeStore';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { Section } from '@headless-adminapp/core/experience/form';
 import type { StandardControlProps } from '@headless-adminapp/core/experience/form/SectionControl';
@@ -61,6 +62,8 @@ export function SectionContainer<
     DataFormContext,
     (state) => state.hiddenSections
   );
+
+  const calculatedAttributeStore = useCalculatedAttributeStore();
 
   const visibleControls = useMemo(
     () =>
@@ -120,6 +123,11 @@ export function SectionContainer<
               disabledFields: disabledControls,
               attribute,
               control,
+              calculatedAttribute:
+                calculatedAttributeStore?.getCalculatedAttributeInfo(
+                  schema.logicalName,
+                  control.attributeName as string
+                ),
             });
 
             const required = getIsFieldRequired({
@@ -212,6 +220,7 @@ export function SectionContainer<
               disabledFields: disabledControls,
               attribute: null,
               control,
+              calculatedAttribute: undefined,
             });
 
             return (

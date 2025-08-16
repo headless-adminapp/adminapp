@@ -208,6 +208,11 @@ const LookupControlMd: FC<LookupControlProps> = ({
         placeholder={!value ? placeholder : ''}
         inputMode="search"
         style={{ width: '100%', minWidth: 'unset' }}
+        input={{
+          style: {
+            width: '100%',
+          },
+        }}
         autoComplete="off"
         readOnly={readOnly || disabled}
         // disabled={disabled}

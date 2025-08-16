@@ -32,6 +32,7 @@ import {
   SaveRecordFn,
   SaveRecordFnOptions,
 } from '../utils/saveRecord';
+import { CalculatedField } from './CalculatedField';
 import { CustomHookExecuter } from './CustomHookExecuter';
 import { DataResolver } from './DataResolver';
 import { getRecord } from './getRecord';
@@ -193,6 +194,7 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
         <InitialValueResolver />
         <ReadonlyInfoResolver setFormReadOnly={setFormReadOnly} />
         <CustomHookExecuter useHookFn={props.form.experience.useHookFn} />
+        <CalculatedField />
         {props.children}
       </FormProvider>
     </DataFormContext.Provider>

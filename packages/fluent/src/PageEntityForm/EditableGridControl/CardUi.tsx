@@ -1,16 +1,7 @@
-import {
-  Button,
-  makeStyles,
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableHeaderCell,
-  TableRow,
-  tokens,
-} from '@fluentui/react-components';
+import { Button, Divider, tokens } from '@fluentui/react-components';
 import { useEventManager } from '@headless-adminapp/app/dataform';
 import { EVENT_KEY_ON_FIELD_CHANGE } from '@headless-adminapp/app/dataform/constants';
+import { useIsMobile, useIsTablet } from '@headless-adminapp/app/hooks';
 import { useCalculatedAttributeStore } from '@headless-adminapp/app/metadata/hooks/useCalculatedAttributeStore';
 import { SectionEditableGridControl } from '@headless-adminapp/core/experience/form';
 import { Schema } from '@headless-adminapp/core/schema';
@@ -21,40 +12,7 @@ import { Control, Controller } from 'react-hook-form';
 import { SectionControlWrapper } from '../../DataForm/SectionControl';
 import { StandardControl } from '../StandardControl';
 
-const useStyles = makeStyles({
-  table: {
-    '& tbody tr:hover': {
-      backgroundColor: 'transparent',
-    },
-    '& tr': {
-      borderBottom: `${tokens.strokeWidthThin} solid transparent`,
-    },
-    '& th': {
-      fontWeight: tokens.fontWeightMedium,
-      paddingInline: tokens.spacingHorizontalXS,
-    },
-    '& td': {
-      paddingInline: tokens.spacingHorizontalXS,
-    },
-    '& tbody tr:last-child': {
-      borderBottom: 'none',
-    },
-    '& td:first-child': {
-      paddingLeft: 0,
-    },
-    '& th:first-child': {
-      paddingLeft: 0,
-    },
-    '& td:last-child': {
-      paddingRight: 0,
-    },
-    '& th:last-child': {
-      paddingRight: 0,
-    },
-  },
-});
-
-interface TableUiProps {
+interface CardUiProps {
   schema: Schema;
   control: SectionEditableGridControl;
   formControl: Control;
@@ -65,7 +23,7 @@ interface TableUiProps {
   readOnly?: boolean;
 }
 
-export const TableUi: FC<TableUiProps> = ({
+export const CardUi: FC<CardUiProps> = ({
   schema,
   control,
   formControl,
@@ -75,50 +33,51 @@ export const TableUi: FC<TableUiProps> = ({
   alias,
   readOnly,
 }) => {
-  const styles = useStyles();
   const eventManager = useEventManager();
   const calculatedAttributeStore = useCalculatedAttributeStore();
 
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+
+  let controlsPerRow: number;
+  if (isMobile) {
+    controlsPerRow = 1;
+  } else if (isTablet) {
+    controlsPerRow = 3;
+  } else {
+    controlsPerRow = 6;
+  }
+
   return (
-    <Table className={styles.table}>
-      <colgroup>
-        {control.controls.map((_, index) => (
-          <col key={index} />
-        ))}
-        {!readOnly && <col style={{ width: 36 }}></col>}
-      </colgroup>
-      <TableHeader>
-        <TableRow>
-          {control.controls.map((control) => {
-            const attributeName =
-              typeof control === 'string' ? control : control.attributeName;
-
-            const attribute = schema.attributes[attributeName];
-
-            if (!attribute) {
-              return null;
-            }
-
-            return (
-              <TableHeaderCell key={attributeName}>
-                {attribute.label ?? attribute.label}
-              </TableHeaderCell>
-            );
-          })}
-          {!readOnly && (
-            <TableHeaderCell>
-              <Button
-                icon={<Icons.Add size={16} />}
-                appearance="subtle"
-                onClick={onAddRow}
-              />
-            </TableHeaderCell>
-          )}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {rows.map((item, index) => (
-          <TableRow key={item.__key}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: tokens.spacingVerticalM,
+      }}
+    >
+      {rows.map((item, index) => (
+        <div
+          key={item.__key}
+          style={{
+            boxShadow: tokens.shadow4,
+            borderRadius: tokens.borderRadiusMedium,
+            padding: tokens.spacingVerticalM,
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: tokens.spacingVerticalM,
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'flex-start',
+              alignItems: 'stretch',
+              margin: -8,
+            }}
+          >
             {control.controls.map((control) => {
               const attributeName =
                 typeof control === 'string' ? control : control.attributeName;
@@ -140,7 +99,15 @@ export const TableUi: FC<TableUiProps> = ({
                 (calculatedAttribute && !calculatedAttribute.allowUserToEdit);
 
               return (
-                <TableCell key={attributeName}>
+                <div
+                  key={attributeName}
+                  style={{
+                    flexShrink: 0,
+                    flex: `0 0 ${100 / controlsPerRow}%`,
+                    maxWidth: `${100 / controlsPerRow}%`,
+                    padding: 8,
+                  }}
+                >
                   <Controller
                     name={`${alias}.${index}.${attributeName}`}
                     control={formControl}
@@ -152,7 +119,6 @@ export const TableUi: FC<TableUiProps> = ({
                       return (
                         <SectionControlWrapper
                           label={attribute.label}
-                          labelHidden
                           labelPosition="top"
                           isError={isError}
                         >
@@ -178,21 +144,41 @@ export const TableUi: FC<TableUiProps> = ({
                       );
                     }}
                   />
-                </TableCell>
+                </div>
               );
             })}
-            {!readOnly && (
-              <TableCell>
-                <Button
-                  icon={<Icons.Delete size={16} />}
-                  appearance="subtle"
-                  onClick={() => onRemoveRow?.(index)}
-                />
-              </TableCell>
-            )}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+          </div>
+          <Divider style={{ opacity: 0.2 }} />
+          {!readOnly && (
+            <Button
+              icon={<Icons.Delete size={16} />}
+              appearance="primary"
+              onClick={() => onRemoveRow?.(index)}
+              style={{
+                fontWeight: tokens.fontWeightRegular,
+                alignSelf: 'flex-start',
+                color: tokens.colorStatusDangerForeground1,
+                backgroundColor: tokens.colorStatusDangerBackground1,
+                minWidth: 0,
+              }}
+              size="small"
+            >
+              Remove
+            </Button>
+          )}
+        </div>
+      ))}
+      {!readOnly && (
+        <Button
+          icon={<Icons.Add size={16} />}
+          appearance="primary"
+          onClick={onAddRow}
+          style={{ alignSelf: 'flex-start', minWidth: 0 }}
+          size="small"
+        >
+          Add
+        </Button>
+      )}
+    </div>
   );
 };

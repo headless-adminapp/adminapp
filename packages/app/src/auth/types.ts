@@ -11,6 +11,7 @@ export interface AuthProviderPlaceholderProps {
   loadingError?: boolean;
   unauthorized?: boolean;
   sessionExpired?: boolean;
+  reason?: UnauthorizeReason;
   retry: () => void;
 }
 

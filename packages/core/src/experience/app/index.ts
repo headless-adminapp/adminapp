@@ -134,6 +134,7 @@ export interface AppExperience {
     Icon?: Icon;
     image?: string;
   };
+  headerColor?: string;
   title: string;
   shortTitle?: string;
   navItems: NavPageSection[];

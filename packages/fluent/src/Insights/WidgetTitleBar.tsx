@@ -30,11 +30,11 @@ export function WidgetTitleBar({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-          <Body1Strong>{title}</Body1Strong>
+          <Body1Strong style={{ flexShrink: 0 }}>{title}</Body1Strong>
           <div style={{ flex: 1 }} />
           {rightContent}
           {!!commands && commands[0]?.length > 0 && (
-            <CommandBar.Wrapper>
+            <CommandBar.Wrapper align="end">
               {commands[0].map((command, index) =>
                 renderCommandItem(index, command, language)
               )}

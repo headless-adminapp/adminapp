@@ -10,7 +10,7 @@ export class PluginStore<
   DbContext extends DatabaseContext = DatabaseContext
 > implements IPluginStore<SdkContext, DbContext>
 {
-  private plugins: PluginStep[] = [];
+  private readonly plugins: PluginStep[] = [];
 
   public register<Data extends Record<string, any> = Record<string, any>>(
     plugin: PluginStep<Data, SdkContext, DbContext>

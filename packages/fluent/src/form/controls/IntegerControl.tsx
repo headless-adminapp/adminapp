@@ -35,6 +35,11 @@ export function IntegerControl({
       style={{
         width: '100%',
       }}
+      input={{
+        style: {
+          width: '100%',
+        },
+      }}
       onChange={(e, data) => {
         if (data.value !== undefined) {
           onChange?.(data.value);

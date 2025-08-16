@@ -11,19 +11,19 @@ import { FC } from 'react';
 
 const useStyles = makeStyles({
   root: {
-    color: 'rgba(255, 255, 255, 1) !important',
+    color: 'inherit !important',
     background: 'rgba(0, 0, 0, 0)',
     transition: 'background 0.3s',
     '&:hover': {
-      color: 'rgba(255, 255, 255, 1)',
+      color: 'inherit',
       background: 'rgba(0, 0, 0, 0.1)',
     },
     '&:active': {
-      color: 'rgba(255, 255, 255, 1)',
+      color: 'inherit',
       background: 'rgba(0, 0, 0, 0.2)',
     },
     '&:focus': {
-      color: 'rgba(255, 255, 255, 1)',
+      color: 'inherit',
       background: 'rgba(0, 0, 0, 0.2)',
     },
   },

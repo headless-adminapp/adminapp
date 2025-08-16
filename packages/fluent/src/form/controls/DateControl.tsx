@@ -59,6 +59,11 @@ export function DateControl({
       style={{
         width: '100%',
       }}
+      input={{
+        style: {
+          width: '100%',
+        },
+      }}
       contentAfter={
         <div
           style={{

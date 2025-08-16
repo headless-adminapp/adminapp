@@ -7,6 +7,7 @@ import {
   ISchemaStore,
   SchemaStore,
 } from '@headless-adminapp/core/store';
+import { ICalculatedAttributeStore } from '@headless-adminapp/core/store/ICalculatedAttributeStore';
 import { IconPlaceholder } from '@headless-adminapp/icons';
 import { FC, PropsWithChildren, useEffect } from 'react';
 
@@ -23,6 +24,7 @@ export interface MetadataProviderProps {
   experienceStore?: ISchemaExperienceStore;
   appExperience?: AppExperience;
   recentItemStore?: IRecentItemStore;
+  calculatedAttributeStore?: ICalculatedAttributeStore;
 }
 
 export const defaultSchemaStore = new SchemaStore();
@@ -51,12 +53,14 @@ export const MetadataProvider: FC<PropsWithChildren<MetadataProviderProps>> = ({
   schemaStore = defaultSchemaStore,
   appExperience = defaultApp,
   recentItemStore = defaultRecentItemStore,
+  calculatedAttributeStore,
 }) => {
   const contextValue = useCreateContextStore<MetadataContextState>({
     experienceStore,
     schemaStore,
     appExperience,
     recentItemStore,
+    calculatedAttributeStore,
   });
 
   useEffect(() => {

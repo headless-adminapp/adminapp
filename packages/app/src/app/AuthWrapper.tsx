@@ -27,10 +27,22 @@ export const AuthWrapper: FC<PropsWithChildren<AuthWrapperProps>> = ({
 
   if (!state.authenticated) {
     if (state.sessionExpired) {
-      return <Placeholder sessionExpired retry={state.loadSession} />;
+      return (
+        <Placeholder
+          sessionExpired
+          retry={state.loadSession}
+          reason={state.reason}
+        />
+      );
     }
 
-    return <Placeholder unauthorized retry={state.loadSession} />;
+    return (
+      <Placeholder
+        unauthorized
+        retry={state.loadSession}
+        reason={state.reason}
+      />
+    );
   }
 
   return children;

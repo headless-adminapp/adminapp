@@ -6,6 +6,7 @@ import {
 } from '@headless-adminapp/core/experience/form/SectionControl';
 import { Tab } from '@headless-adminapp/core/experience/form/Tab';
 import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import { CalculatedAttributeInfo } from '@headless-adminapp/core/schema/CalculatedAttributeInfo';
 
 import { DataFormContextState } from '../context';
 
@@ -97,11 +98,13 @@ export function getIsFieldDisabled<
   isFormReadonly,
   disabledFields,
   control,
+  calculatedAttribute,
 }: {
   attribute: AttributeBase | null;
   isFormReadonly: boolean | undefined;
   disabledFields: Record<string, boolean>;
   control: Section<S>['controls'][0];
+  calculatedAttribute: CalculatedAttributeInfo | undefined;
 }): boolean {
   let disabled = isFormReadonly ?? false;
 
@@ -117,6 +120,14 @@ export function getIsFieldDisabled<
     } else if (attribute?.readonly !== undefined) {
       disabled = attribute.readonly;
     }
+  }
+
+  if (
+    !disabled &&
+    calculatedAttribute &&
+    !calculatedAttribute.allowUserToEdit
+  ) {
+    disabled = true;
   }
 
   return disabled;

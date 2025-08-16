@@ -13,6 +13,7 @@ interface AuthStoreUnauthorizedState {
   authenticated: false;
   sessionExpired: boolean;
   session: null;
+  reason?: UnauthorizeReason;
 }
 
 interface AuthStoreAuthorizedState<T extends AuthSession = AuthSession> {

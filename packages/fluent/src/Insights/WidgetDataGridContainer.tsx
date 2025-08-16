@@ -5,8 +5,11 @@ import { DataGridProvider } from '@headless-adminapp/app/datagrid/DataGridProvid
 import { useGridControlContext } from '@headless-adminapp/app/datagrid/hooks';
 import {
   useExperienceView,
+  useExperienceViewCommands,
   useSchema,
 } from '@headless-adminapp/app/metadata/hooks';
+import { View } from '@headless-adminapp/core/experience/view';
+import { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { Filter } from '@headless-adminapp/core/transport';
 
 import { GridTableContainer } from '../DataGrid';
@@ -18,6 +21,9 @@ interface WidgetDataGridContainerProps {
   maxRecords?: number;
   filter?: Filter;
   commands?: any[][];
+  view?: View<SchemaAttributes>;
+  viewId?: string;
+  allowContextMenu?: boolean;
 }
 
 /*** @deprecated Need refactoring */
@@ -27,12 +33,22 @@ export function WidgetDataGridContainer({
   filter,
   commands,
   title,
+  view,
+  viewId,
+  allowContextMenu,
 }: Readonly<WidgetDataGridContainerProps>) {
   const schema = useSchema(logicalName);
-  const { view } = useExperienceView(logicalName);
+  const { view: _view, isLoadingView } = useExperienceView(logicalName, viewId);
+  const { commands: contextCommands } = useExperienceViewCommands(logicalName);
+
+  view ??= _view;
+
+  if (!view && isLoadingView) {
+    return <div>Loading...</div>;
+  }
 
   if (!view) {
-    return <div>Loading...</div>;
+    return <div>View not found</div>;
   }
 
   if (!schema) {
@@ -56,12 +72,16 @@ export function WidgetDataGridContainer({
         view={view}
         views={[]}
         onChangeView={() => {}}
-        commands={[]}
+        commands={contextCommands}
         allowViewSelection={false}
         maxRecords={maxRecords}
         extraFilter={filter}
       >
-        <FormSubgridContainer title={title} commands={commands} />
+        <FormSubgridContainer
+          title={title}
+          commands={commands}
+          allowContextMenu={allowContextMenu}
+        />
       </DataGridProvider>
     </div>
   );
@@ -70,7 +90,11 @@ export function WidgetDataGridContainer({
 const FormSubgridContainer = ({
   title,
   commands,
-}: Pick<WidgetDataGridContainerProps, 'title' | 'commands'>) => {
+  allowContextMenu,
+}: Pick<
+  WidgetDataGridContainerProps,
+  'title' | 'commands' | 'allowContextMenu'
+>) => {
   const baseCommandHandleContext = useBaseCommandHandlerContext();
   const primaryControl = useGridControlContext();
 
@@ -117,7 +141,7 @@ const FormSubgridContainer = ({
                 disableColumnSort
                 disableColumnFilter
                 disableSelection
-                disableContextMenu
+                disableContextMenu={!allowContextMenu}
               />
             </div>
           </div>

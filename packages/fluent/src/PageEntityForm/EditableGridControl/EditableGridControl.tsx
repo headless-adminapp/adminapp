@@ -1,12 +1,15 @@
 import { Body1Strong, Button, Divider } from '@fluentui/react-components';
 import {
   editableSubgridFormValidator,
+  useEventManager,
   useFormInstance,
   useRecordId,
 } from '@headless-adminapp/app/dataform';
+import { EVENT_KEY_ON_FIELD_CHANGE } from '@headless-adminapp/app/dataform/constants';
 import { getEditableSubgridRecords } from '@headless-adminapp/app/dataform/DataFormProvider/getRecord';
 import { saveEditableGridControl } from '@headless-adminapp/app/dataform/utils/saveRecord';
 import { useFormValidationStrings } from '@headless-adminapp/app/form';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useMetadata } from '@headless-adminapp/app/metadata';
 import { useDataService } from '@headless-adminapp/app/transport';
@@ -17,6 +20,7 @@ import { useEffect, useRef } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 
 import { BodyLoading } from '../../components/BodyLoading';
+import { CardUi } from './CardUi';
 import { TableUi } from './TableUi';
 
 interface EditableGridControlProps {
@@ -30,6 +34,8 @@ export function EditableGridControl({
 }: Readonly<EditableGridControlProps>) {
   const recordId = useRecordId();
   const dataService = useDataService();
+
+  const isMobile = useIsMobile();
 
   const { schemaStore } = useMetadata();
   const { language, region } = useLocale();
@@ -73,6 +79,8 @@ export function EditableGridControl({
     enabled: !!recordId && !control.alias,
   });
 
+  const eventManager = useEventManager();
+
   const formInstanceRef = useRef(localFormInstance);
   formInstanceRef.current = localFormInstance;
 
@@ -115,6 +123,12 @@ export function EditableGridControl({
     });
 
     fieldArray.append(newItem);
+    eventManager.emit(
+      EVENT_KEY_ON_FIELD_CHANGE,
+      `${alias}.${fieldArray.fields.length}`,
+      newItem,
+      null
+    );
   };
 
   const handleSave = async () => {
@@ -187,17 +201,49 @@ export function EditableGridControl({
         <Divider style={{ opacity: 0.2 }} />
       </div>
       <div style={{ padding: 16, position: 'relative' }}>
-        <TableUi
-          schema={schema}
-          control={control}
-          formControl={formControl}
-          alias={alias}
-          onAddRow={handleAddRow}
-          onRemoveRow={(index) => {
-            fieldArray.remove(index);
-          }}
-          rows={fieldArray.fields}
-        />
+        {!isMobile &&
+        control.format === 'grid' &&
+        control.controls.length < 10 ? (
+          <TableUi
+            schema={schema}
+            control={control}
+            formControl={formControl}
+            alias={alias}
+            onAddRow={handleAddRow}
+            onRemoveRow={(index) => {
+              const previousValue = fieldArray.fields[index];
+              fieldArray.remove(index);
+              eventManager.emit(
+                EVENT_KEY_ON_FIELD_CHANGE,
+                `${alias}.${index}`,
+                null,
+                previousValue
+              );
+            }}
+            rows={fieldArray.fields}
+            readOnly={readOnly}
+          />
+        ) : (
+          <CardUi
+            schema={schema}
+            control={control}
+            formControl={formControl}
+            alias={alias}
+            onAddRow={handleAddRow}
+            onRemoveRow={(index) => {
+              const previousValue = fieldArray.fields[index];
+              fieldArray.remove(index);
+              eventManager.emit(
+                EVENT_KEY_ON_FIELD_CHANGE,
+                `${alias}.${index}`,
+                null,
+                previousValue
+              );
+            }}
+            rows={fieldArray.fields}
+            readOnly={readOnly}
+          />
+        )}
       </div>
       <BodyLoading
         loading={isFetching || localFormInstance.formState.isSubmitting}
