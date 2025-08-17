@@ -35,5 +35,6 @@ export function useIsControlDisabled(attributeName: string): boolean {
     control: controls[attributeName],
     disabledFields: disabledFields,
     isFormReadonly: isFormReadonly,
+    calculatedAttribute: undefined,
   });
 }

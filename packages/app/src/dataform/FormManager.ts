@@ -163,6 +163,7 @@ class Control<SA extends SchemaAttributes = SchemaAttributes> {
       attribute: this.context.schema.attributes[attributeName],
       disabledFields: this.context.disabledControls,
       isFormReadonly: this.context.isReadonly,
+      calculatedAttribute: undefined,
     });
   }
   public setDisabled(state: boolean) {
