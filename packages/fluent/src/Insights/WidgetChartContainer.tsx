@@ -6,6 +6,7 @@ import {
   lazy,
   LazyExoticComponent,
   PropsWithChildren,
+  ReactNode,
   Suspense,
 } from 'react';
 
@@ -62,17 +63,24 @@ function getChartComponent(
 
 interface WidgetChartContainerProps {
   title: string;
+  subtitle?: string;
   commands?: CommandItemState[][];
   dataset: any[];
   chartInfo: ChartInfo;
   isPending?: boolean;
   isFetching?: boolean;
+  rightContent?: ReactNode;
 }
 
 export const WidgetChart: FC<WidgetChartContainerProps> = (props) => {
   return (
     <WidgetSection>
-      <WidgetTitleBar title={props.title} commands={props.commands} />
+      <WidgetTitleBar
+        title={props.title}
+        subtitle={props.subtitle}
+        commands={props.commands}
+        rightContent={props.rightContent}
+      />
       <WidgetChartBody
         dataset={props.dataset}
         chartInfo={props.chartInfo}

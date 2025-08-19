@@ -1,4 +1,3 @@
-import { tokens } from '@fluentui/react-components';
 import { useCommands } from '@headless-adminapp/app/command';
 import { useBaseCommandHandlerContext } from '@headless-adminapp/app/command/hooks';
 import { DataGridProvider } from '@headless-adminapp/app/datagrid/DataGridProvider';
@@ -12,7 +11,9 @@ import { View } from '@headless-adminapp/core/experience/view';
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { Filter } from '@headless-adminapp/core/transport';
 
+import { BodyLoading } from '../components/BodyLoading';
 import { GridTableContainer } from '../DataGrid';
+import { WidgetSection } from './WidgetSection';
 import { WidgetTitleBar } from './WidgetTitleBar';
 
 interface WidgetDataGridContainerProps {
@@ -44,46 +45,52 @@ export function WidgetDataGridContainer({
   view ??= _view;
 
   if (!view && isLoadingView) {
-    return <div>Loading...</div>;
+    return (
+      <WidgetSection>
+        <div style={{ display: 'flex', flex: 1, position: 'relative' }}>
+          <BodyLoading />
+        </div>
+      </WidgetSection>
+    );
   }
 
   if (!view) {
-    return <div>View not found</div>;
+    return (
+      <WidgetSection>
+        <div style={{ display: 'flex', flex: 1, position: 'relative' }}>
+          View not found
+        </div>
+      </WidgetSection>
+    );
   }
 
   if (!schema) {
-    return <div>Schema not found</div>;
+    return (
+      <WidgetSection>
+        <div style={{ display: 'flex', flex: 1, position: 'relative' }}>
+          Schema not found
+        </div>
+      </WidgetSection>
+    );
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flex: 1,
-        background: tokens.colorNeutralBackground1,
-        boxShadow: tokens.shadow2,
-        borderRadius: tokens.borderRadiusMedium,
-        // padding: tokens.spacingHorizontalM,
-        flexDirection: 'column',
-      }}
+    <DataGridProvider
+      schema={schema}
+      view={view}
+      views={[]}
+      onChangeView={() => {}}
+      commands={contextCommands}
+      allowViewSelection={false}
+      maxRecords={maxRecords}
+      extraFilter={filter}
     >
-      <DataGridProvider
-        schema={schema}
-        view={view}
-        views={[]}
-        onChangeView={() => {}}
-        commands={contextCommands}
-        allowViewSelection={false}
-        maxRecords={maxRecords}
-        extraFilter={filter}
-      >
-        <FormSubgridContainer
-          title={title}
-          commands={commands}
-          allowContextMenu={allowContextMenu}
-        />
-      </DataGridProvider>
-    </div>
+      <FormSubgridContainer
+        title={title}
+        commands={commands}
+        allowContextMenu={allowContextMenu}
+      />
+    </DataGridProvider>
   );
 }
 
@@ -104,14 +111,7 @@ const FormSubgridContainer = ({
   });
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flex: 1,
-        flexDirection: 'column',
-        overflow: 'hidden',
-      }}
-    >
+    <WidgetSection>
       <WidgetTitleBar title={title} commands={transformedCommands} />
       <div
         style={{
@@ -147,6 +147,6 @@ const FormSubgridContainer = ({
           </div>
         </div>
       </div>
-    </div>
+    </WidgetSection>
   );
 };

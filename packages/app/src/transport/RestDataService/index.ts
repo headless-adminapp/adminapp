@@ -36,7 +36,7 @@ export class RestDataService implements IDataService {
   public constructor(protected readonly options: RestDataServiceOptions) {}
   protected readonly headers: Record<string, string> = {};
 
-  private getHeaders() {
+  protected getHeaders() {
     return {
       'content-type': 'application/json',
       ...this.headers,
@@ -51,6 +51,10 @@ export class RestDataService implements IDataService {
     delete this.headers[name];
   }
 
+  protected handleResponseError(response: Response) {
+    return handleResponseError(response);
+  }
+
   protected async execute<T = unknown, D = unknown>(data: D): Promise<T> {
     const response: Response = await fetch(this.options.endpoint, {
       headers: this.getHeaders(),
@@ -58,7 +62,7 @@ export class RestDataService implements IDataService {
       body: JSON.stringify(data),
     });
 
-    await handleResponseError(response);
+    await this.handleResponseError(response);
 
     return response.json();
   }

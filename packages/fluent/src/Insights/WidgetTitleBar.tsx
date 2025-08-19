@@ -1,4 +1,9 @@
-import { Body1Strong, Divider } from '@fluentui/react-components';
+import {
+  Body1Strong,
+  Caption2,
+  Divider,
+  tokens,
+} from '@fluentui/react-components';
 import { CommandItemState } from '@headless-adminapp/app/command';
 import { useLocale } from '@headless-adminapp/app/locale';
 
@@ -7,12 +12,14 @@ import { renderCommandItem } from '../OverflowCommandBar';
 
 interface WidgetTitleBarProps {
   title: string;
+  subtitle?: string;
   commands?: CommandItemState[][];
   rightContent?: React.ReactNode;
 }
 
 export function WidgetTitleBar({
   title,
+  subtitle,
   commands,
   rightContent,
 }: Readonly<WidgetTitleBarProps>) {
@@ -30,7 +37,14 @@ export function WidgetTitleBar({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-          <Body1Strong style={{ flexShrink: 0 }}>{title}</Body1Strong>
+          <div
+            style={{ flexShrink: 0, display: 'flex', flexDirection: 'column' }}
+          >
+            <Body1Strong>{title}</Body1Strong>
+            <Caption2 style={{ color: tokens.colorNeutralForeground3 }}>
+              {subtitle}
+            </Caption2>
+          </div>
           <div style={{ flex: 1 }} />
           {rightContent}
           {!!commands && commands[0]?.length > 0 && (
