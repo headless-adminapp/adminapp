@@ -20,6 +20,10 @@ function getColorHexCode(color: string) {
     return color;
   }
 
+  if (typeof document === 'undefined') {
+    return null;
+  }
+
   const tempDiv = document.createElement('div');
   tempDiv.style.color = color; // Accepts color name, rgb(), hsl(), etc.
   document.body.appendChild(tempDiv);

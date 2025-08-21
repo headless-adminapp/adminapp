@@ -1,5 +1,4 @@
-import { tokens } from '@fluentui/react-components';
-import { NavItem } from '@fluentui/react-nav-preview';
+import { NavItem, tokens } from '@fluentui/react-components';
 import { FC } from 'react';
 
 import { NavItemInfo } from './types';

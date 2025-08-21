@@ -1,5 +1,8 @@
-import { makeStyles, tokens } from '@fluentui/react-components';
-import { NavCategoryItem } from '@fluentui/react-nav-preview';
+import {
+  makeStyles,
+  NavCategoryItem,
+  tokens,
+} from '@fluentui/react-components';
 import { IconPlaceholder } from '@headless-adminapp/icons';
 import { FC } from 'react';
 

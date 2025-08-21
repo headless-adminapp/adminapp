@@ -64,9 +64,6 @@ importers:
       '@fluentui/react-icons':
         specifier: ^2.0.274
         version: 2.0.274(react@18.3.1)
-      '@fluentui/react-nav-preview':
-        specifier: 0.5.1
-        version: 0.5.1(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.23.2)
       '@fluentui/react-timepicker-compat':
         specifier: 0.2.46
         version: 0.2.46(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.23.2)
@@ -452,15 +449,6 @@ packages:
       '@types/react-dom': '>=16.8.0 <19.0.0'
       react: '>=16.14.0 <19.0.0'
       react-dom: '>=16.8.0 <19.0.0'
-
-  '@fluentui/react-nav-preview@0.5.1':
-    resolution: {integrity: sha512-WBKXqsDrwWNR1qjh3UckOyjil/gqxxrlmmFBCv/50MpIev6JNhCJJPLkNyw4dQxA5z4NbIRhRVHHM9JjXnCQRA==, tarball: https://registry.npmjs.org/@fluentui/react-nav-preview/-/react-nav-preview-0.5.1.tgz}
-    deprecated: Deprecated in favor of stable release - use/migrate to @fluentui/react-nav
-    peerDependencies:
-      '@types/react': '>=16.14.0 <19.0.0'
-      '@types/react-dom': '>=16.9.0 <19.0.0'
-      react: '>=16.14.0 <19.0.0'
-      react-dom: '>=16.14.0 <19.0.0'
 
   '@fluentui/react-overflow@9.2.8':
     resolution: {integrity: sha512-x9RsbQWFv8cgJ8scU6G61IVltliiY/07TT3t1nNtHBJP3tECttphn6EmJHIaKwmCpNzLq8pCYobj8/GxGZ0Kkw==, tarball: https://registry.npmjs.org/@fluentui/react-overflow/-/react-overflow-9.2.8.tgz}
@@ -3668,29 +3656,6 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-is: 17.0.2
-    optional: true
-
-  '@fluentui/react-nav-preview@0.5.1(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.23.2)':
-    dependencies:
-      '@fluentui/react-aria': 9.13.14(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@fluentui/react-button': 9.3.102(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@fluentui/react-context-selector': 9.1.72(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.23.2)
-      '@fluentui/react-divider': 9.2.82(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@fluentui/react-drawer': 9.6.11(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.23.2)
-      '@fluentui/react-icons': 2.0.274(react@18.3.1)
-      '@fluentui/react-jsx-runtime': 9.0.50(@types/react@18.3.18)(react@18.3.1)
-      '@fluentui/react-shared-contexts': 9.21.2(@types/react@18.3.18)(react@18.3.1)
-      '@fluentui/react-tabster': 9.23.3(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@fluentui/react-theme': 9.1.24
-      '@fluentui/react-utilities': 9.18.20(@types/react@18.3.18)(react@18.3.1)
-      '@griffel/react': 1.5.29(react@18.3.1)
-      '@swc/helpers': 0.5.15
-      '@types/react': 18.3.18
-      '@types/react-dom': 18.3.5(@types/react@18.3.18)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-    transitivePeerDependencies:
-      - scheduler
     optional: true
 
   '@fluentui/react-overflow@9.2.8(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.23.2)':

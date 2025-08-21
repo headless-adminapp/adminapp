@@ -2,6 +2,7 @@ import {
   Avatar,
   Caption1,
   Caption1Strong,
+  Hamburger,
   MenuDivider,
   MenuItem,
   MenuList,
@@ -11,7 +12,6 @@ import {
   Subtitle2,
   tokens,
 } from '@fluentui/react-components';
-import { Hamburger } from '@fluentui/react-nav-preview';
 import { useAppContext } from '@headless-adminapp/app/app';
 import { useAuthSession, useLogout } from '@headless-adminapp/app/auth/hooks';
 import { useIsSkipAuthCheck } from '@headless-adminapp/app/auth/hooks/useIsSkipAuthCheck';

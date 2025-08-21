@@ -1,11 +1,13 @@
-import { Divider, makeStyles, tokens } from '@fluentui/react-components';
 import {
+  Divider,
+  makeStyles,
   NavCategory,
   NavDrawer,
   NavDrawerBody,
   NavSectionHeader,
   NavSubItemGroup,
-} from '@fluentui/react-nav-preview';
+  tokens,
+} from '@fluentui/react-components';
 import { useAppContext } from '@headless-adminapp/app/app';
 import { useLocale } from '@headless-adminapp/app/locale';
 import {
