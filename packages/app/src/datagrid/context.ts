@@ -55,6 +55,7 @@ export interface GridContextState<
 
   // internal state (selection)
   selectedIds: string[];
+  cellSelectionRange?: CellSelectionRange | null;
 
   // internal state (data)
   data: RetriveRecordsResult<InferredSchemaType<S>> | null;
@@ -69,3 +70,15 @@ export interface GridContextState<
 }
 
 export const GridContext = createContext<GridContextState>();
+
+export interface CellSelectionRange {
+  start: {
+    row: number;
+    column: number;
+  };
+  end: {
+    row: number;
+    column: number;
+  };
+  active: boolean;
+}

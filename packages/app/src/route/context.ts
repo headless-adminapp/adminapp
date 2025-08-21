@@ -30,9 +30,7 @@ export const RouterPathnameContext = createContext<string>(null as any);
 export const RouterSearchParamsContext = createContext<ReadonlyURLSearchParams>(
   null as any
 );
-export const RouterBasePathContext = createContext<string | undefined>(
-  undefined
-);
+export const RouterBasePathContext = createContext<string>('');
 
 export interface RouteHelperContext {
   routeResolver: InternalRouteResolver;

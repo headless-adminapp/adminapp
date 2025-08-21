@@ -25,6 +25,7 @@ import { useLocale } from '@headless-adminapp/app/locale';
 import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
 import {
   useContextSelector,
+  useContextSetValue,
   useMutableState,
 } from '@headless-adminapp/app/mutable';
 import {
@@ -64,9 +65,10 @@ import { componentStore } from '../componentStore';
 import { getAvatarColor } from '../utils/avatar';
 import { ActionCell } from './ActionCell';
 import { TableHeaderFilterCell } from './GridColumnHeader';
-import { CellDisplayType, TableCellText } from './TableCell';
-import { TableCellChoice } from './TableCell/TableCellChoice';
-import { TableCellLink } from './TableCell/TableCellLink';
+import { TableCellTextContent } from './TableCell';
+import { TableCellChoiceContent } from './TableCell/TableCellChoice';
+import { TableCellLinkContent } from './TableCell/TableCellLink';
+import { TableCellWrapper } from './TableCell/TableCellWrapper';
 import { UniqueRecord } from './types';
 
 const columnHelper = createColumnHelper<UniqueRecord>();
@@ -166,6 +168,7 @@ export function useTableColumns({
   const openRecord = useOpenRecord();
 
   const locale = useLocale();
+  const setValue = useContextSetValue(GridContext);
 
   const dataRef = useRef(data);
   dataRef.current = data;
@@ -216,6 +219,7 @@ export function useTableColumns({
             onOpen={() => {
               const id = info.row.original[schema.idAttribute] as string;
               setSelectedIdsRef.current([id]);
+              setValue({ cellSelectionRange: null });
             }}
             mutableState={mutableContextCommandState as any}
           />
@@ -247,6 +251,7 @@ export function useTableColumns({
 
         return getAllIds();
       });
+      setValue({ cellSelectionRange: null });
     }
 
     function excludeId(ids: string[], id: string) {
@@ -262,6 +267,7 @@ export function useTableColumns({
 
         return [...ids, id];
       });
+      setValue({ cellSelectionRange: null });
     }
 
     return [
@@ -314,6 +320,7 @@ export function useTableColumns({
     headingSelectionState,
     schema.idAttribute,
     styles.selectionCell,
+    setValue,
   ]);
 
   const restColumns = useMemo(() => {
@@ -352,6 +359,7 @@ export function useTableColumns({
             primaryAttributeName: schema.primaryAttribute,
             idAttributeName: schema.idAttribute,
             avatarAttributeName: schema.avatarAttribute,
+            disableSelection,
           }),
         enableResizing: true,
         size: columnWidths[index],
@@ -372,6 +380,7 @@ export function useTableColumns({
     routeResolver,
     openRecord,
     router,
+    disableSelection,
   ]);
 
   return useMemo(() => {
@@ -424,6 +433,7 @@ function renderCellContent({
   primaryAttributeName,
   idAttributeName,
   avatarAttributeName,
+  disableSelection,
 }: {
   info: CellContext<UniqueRecord, unknown>;
   column: TransformedViewColumn<SchemaAttributes>;
@@ -433,6 +443,7 @@ function renderCellContent({
   routeResolver: InternalRouteResolver;
   openRecord?: (id: string, logicalName: string) => void;
   router: RouterInstance;
+  disableSelection?: boolean;
   primaryAttributeName?: string;
   idAttributeName?: string;
   avatarAttributeName?: string;
@@ -454,13 +465,19 @@ function renderCellContent({
   const formattedValue =
     getAttributeFormattedValue(attribute, value, locale) ?? '';
 
+  const rowIndex = info.row.index;
+  const columnIndex = info.column.getIndex() + (disableSelection ? 0 : -1);
+
   if (column.plainText) {
     return (
-      <TableCellText
+      <TableCellWrapper
         key={column.id}
-        value={formattedValue}
         width={info.column.getSize()}
-      />
+        rowIndex={rowIndex}
+        columnIndex={columnIndex}
+      >
+        <TableCellTextContent>{formattedValue}</TableCellTextContent>
+      </TableCellWrapper>
     );
   }
 
@@ -507,6 +524,8 @@ function renderCellContent({
       idAttributeName,
       avatarAttributeName,
       value: value as string,
+      rowIndex,
+      columnIndex,
     });
   }
 
@@ -514,72 +533,100 @@ function renderCellContent({
     case 'money':
     case 'number':
       return (
-        <TableCellText
+        <TableCellWrapper
           key={column.id}
-          value={formattedValue}
           width={info.column.getSize()}
+          rowIndex={rowIndex}
+          columnIndex={columnIndex}
           textAlignment={
             attribute.type === 'number' &&
             ['duration', 'time'].includes(attribute.format)
               ? 'left'
               : 'right'
           }
-        />
+        >
+          <TableCellTextContent>{formattedValue}</TableCellTextContent>
+        </TableCellWrapper>
       );
     case 'lookup': {
-      return renderLookupAttribute({
-        info,
-        column,
-        schemaStore,
-        routeResolver,
-        router,
-        value,
-        attribute,
-        formattedValue,
-      });
+      return (
+        <TableCellWrapper
+          key={column?.id}
+          width={info?.column.getSize()}
+          rowIndex={rowIndex}
+          columnIndex={columnIndex}
+        >
+          {renderLookupAttribute({
+            schemaStore,
+            routeResolver,
+            router,
+            value,
+            attribute,
+            formattedValue,
+          })}
+        </TableCellWrapper>
+      );
     }
     case 'regarding': {
-      return renderRegardingAttribute({
-        info,
-        column,
-        schemaStore,
-        routeResolver,
-        router,
-        value,
-        attribute,
-        formattedValue,
-      });
+      return (
+        <TableCellWrapper
+          key={column?.id}
+          width={info?.column.getSize()}
+          rowIndex={rowIndex}
+          columnIndex={columnIndex}
+        >
+          {renderRegardingAttribute({
+            schemaStore,
+            routeResolver,
+            router,
+            value,
+            attribute,
+            formattedValue,
+          })}
+        </TableCellWrapper>
+      );
     }
     case 'attachment': {
       const url = (value as FileObject)?.url;
       if (!url) {
         return (
-          <TableCellText
+          <TableCellWrapper
             key={column.id}
-            value=""
             width={info.column.getSize()}
-          />
+            rowIndex={rowIndex}
+            columnIndex={columnIndex}
+          >
+            <TableCellTextContent />
+          </TableCellWrapper>
         );
       }
 
       return (
-        <TableCellLink
+        <TableCellWrapper
           key={column.id}
-          value={formattedValue}
           width={info.column.getSize()}
-          href={url}
-          target="_blank"
-        />
+          rowIndex={rowIndex}
+          columnIndex={columnIndex}
+        >
+          <TableCellLinkContent href={url} target="_blank" />
+          {formattedValue}
+        </TableCellWrapper>
       );
     }
     case 'choice':
       return (
-        <TableCellChoice
-          value={value}
-          attribute={attribute}
-          formattedValue={formattedValue}
+        <TableCellWrapper
+          key={column.id}
           width={info.column.getSize()}
-        />
+          rowIndex={rowIndex}
+          columnIndex={columnIndex}
+        >
+          <TableCellChoiceContent
+            value={value}
+            attribute={attribute}
+            formattedValue={formattedValue}
+          />
+        </TableCellWrapper>
       );
   }
 
@@ -588,12 +635,16 @@ function renderCellContent({
 
     if (parsedNumber.isValid && parsedNumber.uri) {
       return (
-        <TableCellLink
+        <TableCellWrapper
           key={column.id}
-          value={formattedValue}
           width={info.column.getSize()}
-          href={parsedNumber.uri}
-        />
+          rowIndex={rowIndex}
+          columnIndex={columnIndex}
+        >
+          <TableCellLinkContent href={parsedNumber.uri}>
+            {formattedValue}
+          </TableCellLinkContent>
+        </TableCellWrapper>
       );
     }
   }
@@ -605,21 +656,28 @@ function renderCellContent({
     typeof value === 'string'
   ) {
     return (
-      <TableCellLink
+      <TableCellWrapper
         key={column.id}
-        value={formattedValue}
         width={info.column.getSize()}
-        href={`mailto:${value}`}
-      />
+        rowIndex={rowIndex}
+        columnIndex={columnIndex}
+      >
+        <TableCellLinkContent href={`mailto:${value}`}>
+          {formattedValue}
+        </TableCellLinkContent>
+      </TableCellWrapper>
     );
   }
 
   return (
-    <TableCellText
+    <TableCellWrapper
       key={column.id}
-      value={formattedValue}
       width={info.column.getSize()}
-    />
+      rowIndex={rowIndex}
+      columnIndex={columnIndex}
+    >
+      <TableCellTextContent>{formattedValue}</TableCellTextContent>
+    </TableCellWrapper>
   );
 }
 
@@ -632,6 +690,8 @@ function renderPrimaryAttribute({
   value,
   idAttributeName,
   avatarAttributeName,
+  rowIndex,
+  columnIndex,
 }: {
   info: CellContext<UniqueRecord, unknown>;
   column: TransformedViewColumn<SchemaAttributes>;
@@ -641,6 +701,8 @@ function renderPrimaryAttribute({
   value: string;
   idAttributeName: string;
   avatarAttributeName: string | undefined;
+  rowIndex: number;
+  columnIndex: number;
 }) {
   const path = routeResolver({
     logicalName: info.row.original.$entity,
@@ -649,9 +711,21 @@ function renderPrimaryAttribute({
   });
 
   return (
-    <TableCellLink
+    <TableCellWrapper
       key={column.id}
-      value={
+      width={info.column.getSize()}
+      rowIndex={rowIndex}
+      columnIndex={columnIndex}
+    >
+      <TableCellLinkContent
+        href={path}
+        onClick={() => {
+          openRecord?.(
+            info.row.original[idAttributeName] as string,
+            info.row.original.$entity
+          );
+        }}
+      >
         <Fragment>
           {renderPrimaryAttributeAvatar({
             info,
@@ -661,16 +735,8 @@ function renderPrimaryAttribute({
           })}
           {value}
         </Fragment>
-      }
-      width={info.column.getSize()}
-      href={path}
-      onClick={() => {
-        openRecord?.(
-          info.row.original[idAttributeName] as string,
-          info.row.original.$entity
-        );
-      }}
-    />
+      </TableCellLinkContent>
+    </TableCellWrapper>
   );
 }
 
@@ -717,34 +783,21 @@ function renderPrimaryAttributeAvatar({
 
 export function renderLookupAttribute({
   value,
-  info,
-  column,
   schemaStore,
   routeResolver,
   router,
   attribute,
   formattedValue,
-  display,
 }: {
   value: unknown;
-  info?: CellContext<UniqueRecord, unknown>;
-  column?: TransformedViewColumn<SchemaAttributes>;
   schemaStore: ISchemaStore;
   routeResolver: InternalRouteResolver;
   router: RouterInstance;
   attribute: LookupAttribute;
   formattedValue: string;
-  display?: CellDisplayType;
 }) {
   if (!value) {
-    return (
-      <TableCellText
-        key={column?.id}
-        value=""
-        width={info?.column.getSize()}
-        display={display}
-      />
-    );
+    return <TableCellTextContent />;
   }
 
   const lookupSchema = schemaStore.getSchema(attribute.entity);
@@ -756,49 +809,41 @@ export function renderLookupAttribute({
   });
 
   return (
-    <TableCellLink
-      key={column?.id}
-      display={display}
-      value={
-        <Fragment>
-          {!!lookupSchema.avatarAttribute && (
-            <Avatar
-              style={{
-                width: 24,
-                height: 24,
-                fontSize: tokens.fontSizeBase100,
-              }}
-              name={formattedValue}
-              color={getAvatarColor(formattedValue)}
-              image={{
-                src: (value as unknown as DataLookup<Id>).avatar as string,
-              }}
-            />
-          )}
-          {formattedValue}
-        </Fragment>
-      }
-      width={info?.column.getSize()}
+    <TableCellLinkContent
       href={path}
       onClick={() => {
         router.push(path);
       }}
-    />
+    >
+      <Fragment>
+        {!!lookupSchema.avatarAttribute && (
+          <Avatar
+            style={{
+              width: 24,
+              height: 24,
+              fontSize: tokens.fontSizeBase100,
+            }}
+            name={formattedValue}
+            color={getAvatarColor(formattedValue)}
+            image={{
+              src: (value as unknown as DataLookup<Id>).avatar as string,
+            }}
+          />
+        )}
+        {formattedValue}
+      </Fragment>
+    </TableCellLinkContent>
   );
 }
 
 function renderRegardingAttribute({
   value,
-  info,
-  column,
   schemaStore,
   routeResolver,
   router,
   formattedValue,
 }: {
   value: unknown;
-  info: CellContext<UniqueRecord, unknown>;
-  column: TransformedViewColumn<SchemaAttributes>;
   schemaStore: ISchemaStore;
   routeResolver: InternalRouteResolver;
   router: RouterInstance;
@@ -806,17 +851,13 @@ function renderRegardingAttribute({
   formattedValue: string;
 }) {
   if (!value) {
-    return (
-      <TableCellText key={column.id} value="" width={info.column.getSize()} />
-    );
+    return <TableCellTextContent />;
   }
 
   const hasSchema = schemaStore.hasSchema((value as any).logicalName as string);
 
   if (!hasSchema) {
-    return (
-      <TableCellText key={column.id} value="" width={info.column.getSize()} />
-    );
+    return <TableCellTextContent />;
   }
 
   const logicalName = (value as any).logicalName as string;
@@ -830,32 +871,29 @@ function renderRegardingAttribute({
   });
 
   return (
-    <TableCellLink
-      key={column.id}
-      value={
-        <Fragment>
-          {!!lookupSchema.avatarAttribute && (
-            <Avatar
-              style={{
-                width: 24,
-                height: 24,
-                fontSize: tokens.fontSizeBase100,
-              }}
-              name={formattedValue}
-              color={getAvatarColor(formattedValue)}
-              image={{
-                src: (value as unknown as DataLookup<Id>).avatar as string,
-              }}
-            />
-          )}
-          {formattedValue}
-        </Fragment>
-      }
-      width={info.column.getSize()}
+    <TableCellLinkContent
       href={path}
       onClick={() => {
         router.push(path);
       }}
-    />
+    >
+      <Fragment>
+        {!!lookupSchema.avatarAttribute && (
+          <Avatar
+            style={{
+              width: 24,
+              height: 24,
+              fontSize: tokens.fontSizeBase100,
+            }}
+            name={formattedValue}
+            color={getAvatarColor(formattedValue)}
+            image={{
+              src: (value as unknown as DataLookup<Id>).avatar as string,
+            }}
+          />
+        )}
+        {formattedValue}
+      </Fragment>
+    </TableCellLinkContent>
   );
 }

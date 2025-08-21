@@ -1,4 +1,5 @@
 import { ChoiceAttribute } from '@headless-adminapp/core/attributes';
+import { FC } from 'react';
 
 import { ChoiceBadge } from '../../components/ChoiceBadge';
 import { CellDisplayType, TableCellBase } from './TableCellBase';
@@ -24,7 +25,7 @@ export function TableCellChoice(props: Readonly<TableCellChoiceProps>) {
       }}
       display={props.display}
     >
-      <ChoiceBadge
+      <TableCellChoiceContent
         attribute={props.attribute}
         formattedValue={props.formattedValue}
         value={props.value}
@@ -32,3 +33,21 @@ export function TableCellChoice(props: Readonly<TableCellChoiceProps>) {
     </TableCellBase>
   );
 }
+
+interface TableCellChoiceContentProps {
+  attribute: ChoiceAttribute<string | number>;
+  formattedValue: string;
+  value: unknown;
+}
+
+export const TableCellChoiceContent: FC<TableCellChoiceContentProps> = (
+  props
+) => {
+  return (
+    <ChoiceBadge
+      attribute={props.attribute}
+      formattedValue={props.formattedValue}
+      value={props.value}
+    />
+  );
+};

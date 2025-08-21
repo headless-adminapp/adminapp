@@ -36,7 +36,7 @@ export const RouteProvider: FC<PropsWithChildren<RouteProviderProps>> = ({
   pathname,
   router,
   searchParams,
-  basePath,
+  basePath = '',
   routeResolver = defaultRouteResolver,
   isRouteActive = defaultIsRouteActive,
 }) => {

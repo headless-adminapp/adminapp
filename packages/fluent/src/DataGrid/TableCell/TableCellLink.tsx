@@ -1,6 +1,6 @@
 import { Link, TableCell, tokens } from '@fluentui/react-components';
 import { useRouter } from '@headless-adminapp/app/route/hooks';
-import { FC, memo } from 'react';
+import { FC, memo, PropsWithChildren } from 'react';
 
 import { CellDisplayType } from './TableCellBase';
 
@@ -15,8 +15,6 @@ export interface TableCellLinkProps {
 
 export const TableCellLink: FC<TableCellLinkProps> = memo(
   ({ value, href, onClick, width, target, display = 'flex' }) => {
-    const router = useRouter();
-
     return (
       <TableCell
         style={{
@@ -31,41 +29,59 @@ export const TableCellLink: FC<TableCellLinkProps> = memo(
           height: '100%',
         }}
       >
-        <Link
-          as="a"
-          href={href}
-          target={target}
-          onClick={(event) => {
-            if (target === '_blank') {
-              return;
-            }
-
-            if (event.metaKey || event.ctrlKey) {
-              return;
-            }
-
-            if (onClick) {
-              event.preventDefault();
-              onClick();
-              return;
-            }
-
-            if (href?.startsWith('/')) {
-              router.push(href);
-              event.preventDefault();
-            }
-          }}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: tokens.spacingHorizontalXS,
-          }}
-        >
+        <TableCellLinkContent target={target} href={href} onClick={onClick}>
           {value}
-        </Link>
+        </TableCellLinkContent>
       </TableCell>
     );
   }
 );
 
 TableCellLink.displayName = 'TableCellLink';
+
+interface TableCellLinkContentProps {
+  target?: string;
+  href?: string;
+  onClick?: () => void;
+}
+
+export const TableCellLinkContent: FC<
+  PropsWithChildren<TableCellLinkContentProps>
+> = ({ children, target, href, onClick }) => {
+  const router = useRouter();
+
+  return (
+    <Link
+      as="a"
+      href={href}
+      target={target}
+      onClick={(event) => {
+        if (target === '_blank') {
+          return;
+        }
+
+        if (event.metaKey || event.ctrlKey) {
+          return;
+        }
+
+        if (onClick) {
+          event.preventDefault();
+          onClick();
+          return;
+        }
+
+        if (href?.startsWith('/')) {
+          router.push(href);
+          event.preventDefault();
+        }
+      }}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: tokens.spacingHorizontalXS,
+      }}
+    >
+      {children}
+    </Link>
+  );
+};

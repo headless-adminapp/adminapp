@@ -161,20 +161,18 @@ export const WidgetTable: FC<WidgetTableProps> = ({
                     </TableCell>
                   );
                 case 'lookup':
-                  return renderLookupAttribute({
-                    column: {
-                      id: column,
-                      label: attribute.label,
-                      name: column,
-                    },
-                    value,
-                    attribute,
-                    router,
-                    routeResolver,
-                    schemaStore,
-                    formattedValue,
-                    display: 'table-cell',
-                  });
+                  return (
+                    <TableCell key={column}>
+                      {renderLookupAttribute({
+                        value,
+                        attribute,
+                        router,
+                        routeResolver,
+                        schemaStore,
+                        formattedValue,
+                      })}
+                    </TableCell>
+                  );
                 case 'choice':
                   return (
                     <TableCellChoice

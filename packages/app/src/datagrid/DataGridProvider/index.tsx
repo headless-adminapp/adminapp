@@ -18,6 +18,7 @@ import { ContextValue, useCreateContextStore } from '../../mutable/context';
 import { GridContext, GridContextState } from '../context';
 import { DataResolver } from './DataResolver';
 import { transformViewColumns } from './transformViewColumns';
+import { useGridCellRangeResolver } from './useGridCellRangeResolver';
 
 export interface DataGridProviderProps<
   S extends SchemaAttributes = SchemaAttributes,
@@ -111,6 +112,7 @@ export function DataGridProvider<
         maxRecords: props.maxRecords,
         associated: props.associated,
         disabled: props.disabled ?? false,
+        cellSelectionRange: null,
       },
       router.getState<Partial<GridContextState<S, CommandContext>>>(historyKey)
     )
@@ -191,6 +193,8 @@ export function DataGridProvider<
       disabled: props.disabled ?? false,
     });
   }, [props.disabled, contextValue]);
+
+  useGridCellRangeResolver(contextValue);
 
   return (
     <GridContext.Provider

@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC, memo, PropsWithChildren } from 'react';
 
 import { CellDisplayType, TableCellBase } from './TableCellBase';
 
@@ -19,30 +19,29 @@ export const TableCellText: FC<TableCellTextProps> = memo(
           textOverflow: 'ellipsis',
           overflow: 'hidden',
           whiteSpace: 'nowrap',
-          // maxWidth: 50,
-          // width: 50,
-          // width: '100%',
           width,
           minWidth: width,
           maxWidth: width,
-          // minWidth: 200,
-          // display: 'flex',
-          // alignItems: 'center',
-          // borderBottom: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke3}`,
         }}
       >
-        <div
-          style={{
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            width: '100%',
-          }}
-        >
-          {value}
-        </div>
+        <TableCellTextContent>{value}</TableCellTextContent>
       </TableCellBase>
     );
   }
 );
 
 TableCellText.displayName = 'TableCellText';
+
+export const TableCellTextContent: FC<PropsWithChildren> = ({ children }) => {
+  return (
+    <div
+      style={{
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        width: '100%',
+      }}
+    >
+      {children}
+    </div>
+  );
+};

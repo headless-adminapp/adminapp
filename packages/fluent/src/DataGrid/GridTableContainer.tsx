@@ -39,6 +39,7 @@ import {
   DEFAULT_TABLE_ROW_HEIGHT,
 } from './constants';
 import { UniqueRecord } from './types';
+import { useDataGridKeyboardEvent } from './useDataGridKeyboardEvent';
 import { useTableColumns } from './useTableColumns';
 import { adjustTableHeight } from './utils';
 
@@ -294,6 +295,8 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
     if (isScrollNearBottom) handlePseudoResize();
   }, [isScrollNearBottom, virtualItems.length, handlePseudoResize]);
 
+  useDataGridKeyboardEvent(tableElementRef);
+
   const isScrolledToRight =
     tableWrapperRef.current?.parentElement?.parentElement?.scrollLeft ===
     (tableWrapperRef.current?.parentElement?.parentElement?.scrollWidth ?? 0) -
@@ -328,8 +331,10 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
               ['--action-shadow' as any]: !isScrolledToRight
                 ? '-2px 0px 6px rgba(0, 0, 0, 0.12)'
                 : 'none',
+              userSelect: 'none',
             }}
             ref={tableElementRef}
+            tabIndex={0}
             className="table-pseduo"
           >
             <TableHeader
