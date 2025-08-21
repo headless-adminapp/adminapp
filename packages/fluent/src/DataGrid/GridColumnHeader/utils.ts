@@ -5,7 +5,7 @@ import { OperatorKey } from '@headless-adminapp/core/transport';
 export function getDefaultOperator(
   operator: OperatorKey | undefined,
   attributeType: AttributeType
-) {
+): OperatorKey {
   if (operator) {
     return operator;
   }
@@ -16,6 +16,10 @@ export function getDefaultOperator(
 
   if (attributeType === 'choice' || attributeType === 'lookup') {
     return 'in';
+  }
+
+  if (attributeType === 'string') {
+    return 'like';
   }
 
   return 'eq';

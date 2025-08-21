@@ -151,7 +151,7 @@ export function useLookupData<S extends SchemaAttributes = SchemaAttributes>({
       columns,
       expand,
       schema,
-      search: '',
+      search,
       filter: recentQueryFilter,
       disabled: !enabled || !recentIds.length,
       sorting: view?.defaultSorting,
