@@ -24,5 +24,14 @@ export function useGridColumnFilter() {
     [setValue]
   );
 
-  return [columnFilters, setColumnFilter] as const;
+  const replaceColumnFilters = useCallback(
+    (columnFilters: Partial<Record<string, ColumnCondition>>) => {
+      setValue({
+        columnFilters,
+      });
+    },
+    [setValue]
+  );
+
+  return [columnFilters, setColumnFilter, replaceColumnFilters] as const;
 }

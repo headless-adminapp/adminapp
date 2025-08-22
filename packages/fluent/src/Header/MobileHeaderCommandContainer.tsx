@@ -158,7 +158,11 @@ export const BottomDrawerMenu: FC<BottomDrawerMenuProps> = ({
         borderTopRightRadius: tokens.borderRadiusXLarge,
         height: 'unset',
       }}
-      onOpenChange={() => {}}
+      onOpenChange={() => {
+        if (!subMenuStack.length) {
+          onClose();
+        }
+      }}
     >
       <DrawerBody
         style={{

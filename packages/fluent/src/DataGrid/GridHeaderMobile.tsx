@@ -1,32 +1,21 @@
+import { Badge, Button, Input } from '@fluentui/react-components';
 import {
-  Button,
-  Input,
-  Menu,
-  MenuItem,
-  MenuList,
-  MenuPopover,
-  MenuTrigger,
-} from '@fluentui/react-components';
-import {
-  useChangeView,
-  useGridViewLookupData,
+  useGridColumnFilter,
   useSearchText,
-  useSelectedView,
 } from '@headless-adminapp/app/datagrid/hooks';
-import { useLocale } from '@headless-adminapp/app/locale';
 import { Icons } from '@headless-adminapp/icons';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { useAppStrings } from '../App/AppStringContext';
+import { CustomFilter } from './CustomFilter';
+import { MobileHeaderTitleContainer } from './MobileHeaderTitleContainer';
 
 interface GridHeaderMobileProps {}
 
 export const GridHeaderMobile: FC<GridHeaderMobileProps> = () => {
-  const viewLookup = useGridViewLookupData();
-  const selectedView = useSelectedView();
-  const changeView = useChangeView();
+  const [columnFilters] = useGridColumnFilter();
+  const [showCustomFilters, setShowCustomFilters] = useState(false);
   const [searchText, setSearchText] = useSearchText();
-  const { language } = useLocale();
   const appStrings = useAppStrings();
 
   return (
@@ -38,6 +27,7 @@ export const GridHeaderMobile: FC<GridHeaderMobileProps> = () => {
         display: 'flex',
       }}
     >
+      <MobileHeaderTitleContainer />
       <div style={{ alignItems: 'center', display: 'flex', gap: 16, flex: 1 }}>
         <Input
           contentBefore={<Icons.Search size={16} />}
@@ -55,32 +45,28 @@ export const GridHeaderMobile: FC<GridHeaderMobileProps> = () => {
           display: 'flex',
         }}
       >
-        <Menu hasIcons>
-          <MenuTrigger>
-            <Button
-              appearance="subtle"
-              icon={<Icons.Filter />}
-              iconPosition="after"
-            />
-          </MenuTrigger>
-          <MenuPopover>
-            <MenuList>
-              {viewLookup.map((view) => (
-                <MenuItem
-                  key={view.id}
-                  onClick={() => changeView(view.id as string)}
-                  icon={
-                    selectedView.id === view.id ? (
-                      <Icons.Checkmark />
-                    ) : undefined
-                  }
-                >
-                  {view.localizedNames?.[language] ?? view.name}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </MenuPopover>
-        </Menu>
+        <Button
+          appearance="subtle"
+          style={{ position: 'relative' }}
+          icon={
+            <>
+              <Icons.Filter />
+              {Object.keys(columnFilters).length > 0 && (
+                <Badge
+                  style={{ position: 'absolute', top: 0, right: 0 }}
+                  color="danger"
+                  size="tiny"
+                />
+              )}
+            </>
+          }
+          iconPosition="after"
+          onClick={() => setShowCustomFilters(true)}
+        />
+        <CustomFilter
+          open={showCustomFilters}
+          onClose={() => setShowCustomFilters(false)}
+        />
       </div>
     </div>
   );

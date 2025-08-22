@@ -138,7 +138,7 @@ export const TableHeaderFilterCell: FC<
       default:
         return 'left';
     }
-  }, [attribute]);
+  }, [attribute, column.name, schema.primaryAttribute]);
 
   const styles = useStyles();
 

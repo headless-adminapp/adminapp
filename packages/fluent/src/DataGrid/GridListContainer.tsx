@@ -209,7 +209,10 @@ export const GridListContainer: FC<GridListContainerProps> = () => {
         <div style={{ height: 'env(safe-area-inset-bottom)' }} />
         <BottomDrawerMenu
           open={showContextMenu}
-          onClose={() => setShowContextMenu(false)}
+          onClose={() => {
+            setShowContextMenu(false);
+            setSelectedIds([]);
+          }}
           actions={contextCommands as CommandItemState[][]}
         />
       </ScrollbarWithMoreDataRequest>

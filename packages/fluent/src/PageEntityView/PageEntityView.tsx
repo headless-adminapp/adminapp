@@ -67,7 +67,7 @@ export const PageEntityView: FC<PageEntityViewProps> = ({
         commands={commands}
         onChangeView={onChangeView}
       >
-        <MobileHeaderTitle title={schema.label} order={2} />
+        <MobileHeaderTitle title={schema.pluralLabel} order={2} />
         {content}
       </PageEntityViewProvider>
     </HistoryStateKeyProvider>
