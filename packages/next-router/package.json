@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/next-router",
-  "version": "1.4.20",
+  "version": "1.4.21",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
