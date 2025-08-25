@@ -17,6 +17,9 @@ function excludeDialogItemById(items: DialogItemState[], id: string) {
   return items.filter((item) => item.id !== id);
 }
 
+/**
+ * @zero-deps
+ */
 export function useCloseDialog() {
   const setValue = useContextSetValue(DialogContext);
 

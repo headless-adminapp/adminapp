@@ -131,7 +131,7 @@ const LookupControlMd: FC<LookupControlProps> = ({
   }, [allowNavigation, routeResolver, schema.logicalName, value]);
 
   const handleOpenRecord = useCallback(
-    (event: React.MouseEvent) => {
+    async (event: React.MouseEvent) => {
       event.preventDefault();
       event.stopPropagation();
 
@@ -139,7 +139,7 @@ const LookupControlMd: FC<LookupControlProps> = ({
         return;
       }
 
-      router.push(path);
+      await router.push(path);
     },
     [path, router]
   );
@@ -278,8 +278,8 @@ const LookupControlMd: FC<LookupControlProps> = ({
               <ToolbarButton
                 style={{ fontWeight: 'normal' }}
                 icon={<Icons.Add />}
-                onClick={() => {
-                  router.push(
+                onClick={async () => {
+                  await router.push(
                     routeResolver({
                       logicalName: schema.logicalName,
                       type: PageType.EntityForm,

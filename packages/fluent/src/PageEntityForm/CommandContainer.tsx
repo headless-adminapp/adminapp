@@ -40,8 +40,8 @@ export const CommandContainer: FC<CommandContainerProps> = ({ skeleton }) => {
         {
           type: 'icon',
           Icon: Icons.ArrowLeft,
-          onClick: () => {
-            router.back();
+          onClick: async () => {
+            await router.back();
           },
         } as CommandItemState,
       ],

@@ -6,6 +6,9 @@ import { useContextSetValue } from '../../mutable/context';
 import { DialogContext, DialogItemState } from '../context';
 import { useCloseDialog } from './useCloseDialog';
 
+/**
+ * @zero-deps
+ */
 export function useOpenDialog() {
   const setValue = useContextSetValue(DialogContext);
   const closeDialog = useCloseDialog();

@@ -36,3 +36,22 @@ export class ConflictError extends HttpError {
     super(409, message);
   }
 }
+
+export function isHttpError(error: unknown): error is HttpError {
+  if (error instanceof HttpError) {
+    return true;
+  }
+
+  if (
+    typeof error === 'object' &&
+    !!error &&
+    'status' in error &&
+    typeof error.status === 'number' &&
+    'message' in error &&
+    typeof error.message === 'string'
+  ) {
+    return true;
+  }
+
+  return false;
+}

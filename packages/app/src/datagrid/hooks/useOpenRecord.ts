@@ -15,14 +15,14 @@ export function useOpenRecord() {
   dataRef.current = data;
 
   return useCallback(
-    (id: string, logicalName: string) => {
+    async (id: string, logicalName: string) => {
       const path = routeResolver({
         logicalName: logicalName,
         type: PageType.EntityForm,
         id,
       });
 
-      router.push(path, {
+      await router.push(path, {
         state: {
           navigator:
             logicalName === schema.logicalName

@@ -1,4 +1,4 @@
-import { RouterInstance } from '@headless-adminapp/app/route/context';
+import { GuardFn, RouterInstance } from '@headless-adminapp/app/route/context';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 
@@ -50,6 +50,19 @@ function unpatchHistory() {
   isPatched = false;
 }
 
+const guards: Set<GuardFn> = new Set();
+
+async function checkNavigationGuard(): Promise<boolean> {
+  for (const guard of guards) {
+    const guardResult = await guard();
+    if (!guardResult) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 export function useNextRouter() {
   const router = useRouter();
 
@@ -96,8 +109,24 @@ export function useNextRouter() {
     };
 
     return {
-      ...router,
-      push: (href, options) => {
+      prefetch: router.prefetch,
+      back: async () => {
+        if (!(await checkNavigationGuard())) {
+          return;
+        }
+        router.back();
+      },
+      forward: async () => {
+        if (!(await checkNavigationGuard())) {
+          return;
+        }
+        router.forward();
+      },
+      push: async (href, options) => {
+        if (!(await checkNavigationGuard())) {
+          return;
+        }
+
         isPushNavigating = true;
 
         if (options?.state) {
@@ -127,7 +156,11 @@ export function useNextRouter() {
         }
         window.addEventListener('onPushState', onPushState);
       },
-      replace: (href, options) => {
+      replace: async (href, options) => {
+        if (!(await checkNavigationGuard())) {
+          return;
+        }
+
         router.replace(href);
         if (options?.state) {
           window.history.replaceState(
@@ -141,6 +174,12 @@ export function useNextRouter() {
       },
       getState,
       setState,
+      registerGuard: (fn) => {
+        guards.add(fn);
+      },
+      unregisterGuard: (fn) => {
+        guards.delete(fn);
+      },
     } as RouterInstance;
   }, [router]);
 

@@ -13,6 +13,7 @@ import { HeaderProvider } from '../header';
 import { LocaleProvider, LocaleProviderProps } from '../locale';
 import { MetadataProvider } from '../metadata';
 import { MetadataProviderProps } from '../metadata/MetadataProvider';
+import { UnsavedChangesRouteGuard } from '../navigation/unsaved-changes';
 import { ProgressIndicatorProvider } from '../progress-indicator';
 import { RouteProvider } from '../route';
 import { RouteProviderProps } from '../route/RouteProvider';
@@ -95,6 +96,7 @@ export const LayoutProvider: FC<PropsWithChildren<LayoutProviderProps>> = ({
                       <AuthProvider {...authProps}>
                         <HeaderProvider>
                           <AuthWrapper Placeholder={authPlaceholder}>
+                            <UnsavedChangesRouteGuard />
                             {children}
                           </AuthWrapper>
                         </HeaderProvider>

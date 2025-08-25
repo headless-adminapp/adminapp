@@ -1,14 +1,17 @@
 import {
   Divider,
+  Hamburger,
   makeStyles,
   NavCategory,
   NavDrawer,
   NavDrawerBody,
+  NavDrawerHeader,
   NavSectionHeader,
   NavSubItemGroup,
   tokens,
 } from '@fluentui/react-components';
 import { useAppContext } from '@headless-adminapp/app/app';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import {
   useIsRouteActive,
@@ -53,6 +56,7 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
   const { appExperience: app } = useAppContext();
 
   const { schemaMetadataDic } = useAppContext();
+  const isMobile = useIsMobile();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -81,7 +85,7 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
     ]
   );
 
-  const handleNavigation = (item: NavItemInfo | NavSubItemInfo) => {
+  const handleNavigation = async (item: NavItemInfo | NavSubItemInfo) => {
     if (type === 'overlay') {
       onOpenChange(false);
     }
@@ -89,7 +93,7 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
     if (item.isExternal) {
       window.open(item.link, '_blank');
     } else {
-      router.push(item.link);
+      await router.push(item.link);
     }
   };
 
@@ -107,6 +111,22 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
         }}
         style={{ width: isMini ? 60 : undefined }}
       >
+        {isMobile && (
+          <NavDrawerHeader style={{ padding: 0 }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                height: 50,
+                minHeight: 50,
+                paddingInline: 12,
+                gap: 8,
+              }}
+            >
+              <Hamburger onClick={() => onOpenChange(false)} />
+            </div>
+          </NavDrawerHeader>
+        )}
         <NavDrawerBody
           style={{
             paddingTop: 8,

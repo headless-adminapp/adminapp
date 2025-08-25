@@ -79,8 +79,8 @@ const NavBackButton: FC = () => {
         maxWidth: !isMobile ? 44 : undefined,
       }}
       icon={<Icons.ArrowLeft />}
-      onClick={() => {
-        router.back();
+      onClick={async () => {
+        await router.back();
       }}
     />
   );
@@ -211,11 +211,11 @@ const NavActions: FC = () => {
                   <MenuItem
                     key={item.__key}
                     icon={<Icon size="inherit" />}
-                    onClick={() => {
+                    onClick={async () => {
                       if (item.onClick) {
                         item.onClick();
                       } else if (item.link) {
-                        router.push(basePath + item.link);
+                        await router.push(basePath + item.link);
                       }
                     }}
                   >

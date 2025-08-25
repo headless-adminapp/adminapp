@@ -46,6 +46,9 @@ export function useContextSelector<T, R>(
   return useContextSelectorInternal(contextValue, selector);
 }
 
+/**
+ * @zero-deps
+ */
 export function useContextSetValue<T>(context: React.Context<ContextValue<T>>) {
   const contextValue = useContext(context);
 

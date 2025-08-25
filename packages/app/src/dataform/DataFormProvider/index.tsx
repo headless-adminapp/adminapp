@@ -39,6 +39,7 @@ import { getRecord } from './getRecord';
 import { InitialValueResolver } from './InitialValueResolver';
 import { ReadonlyInfoResolver } from './ReadonlyInfoResolver';
 import { RetriveRecordFn } from './types';
+import { UnsavedChangesInfoSetter } from './UnsavedChangesInfoSetter';
 import { transformFormInternal } from './utils';
 
 export interface DataFormProviderProps<
@@ -195,6 +196,7 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
         <ReadonlyInfoResolver setFormReadOnly={setFormReadOnly} />
         <CustomHookExecuter useHookFn={props.form.experience.useHookFn} />
         <CalculatedField />
+        <UnsavedChangesInfoSetter />
         {props.children}
       </FormProvider>
     </DataFormContext.Provider>

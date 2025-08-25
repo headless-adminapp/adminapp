@@ -10,7 +10,7 @@ export function useOpenForm() {
   const router = useRouter();
 
   return useCallback(
-    (options: OpenFormOptions) => {
+    async (options: OpenFormOptions) => {
       const path = routeResolver({
         logicalName: options.logicalName,
         type: PageType.EntityForm,
@@ -35,14 +35,14 @@ export function useOpenForm() {
       }
 
       if (options.replace) {
-        router.replace(path, {
+        await router.replace(path, {
           state: {
             ...router.getState(),
             ...state,
           },
         });
       } else {
-        router.push(path, {
+        await router.push(path, {
           state,
         });
       }

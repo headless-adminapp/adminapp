@@ -121,6 +121,7 @@ export const CardUi: FC<CardUiProps> = ({
                           label={attribute.label}
                           labelPosition="top"
                           isError={isError}
+                          required={attribute.required}
                         >
                           <StandardControl
                             attribute={attribute}

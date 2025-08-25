@@ -58,7 +58,7 @@ interface BaseCommandState {
 }
 
 interface ActionableCommandState {
-  onClick?: () => void;
+  onClick?: () => void | Promise<void>;
   disabled?: boolean;
   hidden?: boolean;
 }

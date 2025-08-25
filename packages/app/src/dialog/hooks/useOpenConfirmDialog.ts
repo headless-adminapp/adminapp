@@ -6,6 +6,9 @@ import { useCallback } from 'react';
 
 import { useOpenDialog } from './useOpenDialog';
 
+/**
+ * @zero-deps
+ */
 export function useOpenConfirmDialog() {
   const openDialog = useOpenDialog();
 
