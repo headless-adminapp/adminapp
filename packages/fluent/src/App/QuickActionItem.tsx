@@ -79,6 +79,7 @@ export const QuickActionItem: FC<QuickActionItemProps> = ({
       as="a"
       href={fullLink}
       title={label}
+      aria-label={label}
       className={styles.root}
       onClick={(event) => {
         event.preventDefault();

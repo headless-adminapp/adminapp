@@ -4,8 +4,6 @@ import {
   Divider,
   Drawer,
   DrawerBody,
-  DrawerHeader,
-  DrawerHeaderTitle,
   Dropdown,
   Input,
   Option,
@@ -21,9 +19,11 @@ import { localizedLabel } from '@headless-adminapp/app/locale/utils';
 import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
 import { LookupAttribute } from '@headless-adminapp/core/attributes';
 import { Icons } from '@headless-adminapp/icons';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
+import { DrawerFooter } from '../../components/DrawerFooter';
+import { DrawerHeader } from '../../components/DrawerHeader';
 import { usePageEntityViewStrings } from '../../PageEntityView/PageEntityViewStringContext';
 
 interface AddColumnsProps {
@@ -123,59 +123,52 @@ export function AddColumns({
 
   return (
     <Drawer separator open={opened} position="end">
-      <DrawerHeader>
-        <DrawerHeaderTitle
-          action={
-            <Button
-              appearance="subtle"
-              aria-label="Close"
-              icon={<Icons.Close />}
-              onClick={onClose}
-            />
-          }
-        >
-          {strings.addColumns}
-        </DrawerHeaderTitle>
-      </DrawerHeader>
-      <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column-reverse',
-            gap: 8,
-            marginBottom: tokens.spacingVerticalXS,
-            paddingInline: tokens.spacingHorizontalS,
-          }}
-        >
-          <Input
-            contentBefore={<Icons.Search size={16} />}
-            placeholder={appStrings.searchPlaceholder}
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
-          <Dropdown
-            value={selectedGroupItem?.label ?? ''}
-            selectedOptions={
-              selectedGroupItem ? [String(selectedGroupItem.key)] : []
-            }
-            onOptionSelect={(event, data) => {
-              setSelectedGroup(data.optionValue as string);
-            }}
-            style={{ flex: 1, minWidth: 'unset' }}
-            positioning={{
-              align: 'bottom',
-              position: 'below',
-            }}
-          >
-            {tableItems.map((x) => (
-              <Option key={x.key} value={x.key}>
-                {x.label}
-              </Option>
-            ))}
-          </Dropdown>
-        </div>
-        <Divider />
-      </div>
+      <DrawerHeader
+        title={strings.addColumns}
+        showCloseButton
+        onClose={onClose}
+        bottomContent={
+          <Fragment>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column-reverse',
+                gap: 8,
+                marginBlock: tokens.spacingVerticalS,
+                paddingInline: tokens.spacingHorizontalS,
+              }}
+            >
+              <Input
+                contentBefore={<Icons.Search size={16} />}
+                placeholder={appStrings.searchPlaceholder}
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+              />
+              <Dropdown
+                value={selectedGroupItem?.label ?? ''}
+                selectedOptions={
+                  selectedGroupItem ? [String(selectedGroupItem.key)] : []
+                }
+                onOptionSelect={(event, data) => {
+                  setSelectedGroup(data.optionValue as string);
+                }}
+                style={{ flex: 1, minWidth: 'unset' }}
+                positioning={{
+                  align: 'bottom',
+                  position: 'below',
+                }}
+              >
+                {tableItems.map((x) => (
+                  <Option key={x.key} value={x.key}>
+                    {x.label}
+                  </Option>
+                ))}
+              </Dropdown>
+            </div>
+            <Divider />
+          </Fragment>
+        }
+      />
       <DrawerBody style={{ paddingInline: 0 }}>
         {filteredColumns.map((column) => (
           <Button
@@ -200,19 +193,9 @@ export function AddColumns({
           </Button>
         ))}
       </DrawerBody>
-      <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-        <Divider />
-        <div
-          style={{
-            display: 'flex',
-            padding: 8,
-            gap: 8,
-            justifyContent: 'flex-end',
-          }}
-        >
-          <Button onClick={onClose}>{strings.close}</Button>
-        </div>
-      </div>
+      <DrawerFooter>
+        <Button onClick={onClose}>{strings.close}</Button>
+      </DrawerFooter>
     </Drawer>
   );
 }

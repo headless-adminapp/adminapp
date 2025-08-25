@@ -3,7 +3,6 @@ import {
   Divider,
   Drawer,
   DrawerBody,
-  DrawerFooter,
   tokens,
 } from '@fluentui/react-components';
 import {
@@ -14,11 +13,12 @@ import {
 import { operatorOptions } from '@headless-adminapp/app/datagrid/column-filter/constants';
 import { FC, Fragment, useEffect, useMemo, useState } from 'react';
 
+import { DrawerFooter } from '../../components/DrawerFooter';
+import { DrawerHeader } from '../../components/DrawerHeader';
 import { SectionControlWrapper } from '../../DataForm/SectionControl';
 import SelectControl from '../../form/controls/SelectControl';
 import { getDefaultOperator } from '../GridColumnHeader/utils';
 import { ColumnFilterItem } from './ColumnFilterItem';
-import { Header } from './Header';
 
 interface CustomFilterProps {
   open: boolean;
@@ -130,7 +130,11 @@ const DrawerContent: FC<DrawerContentProps> = ({ onClose }) => {
 
   return (
     <Fragment>
-      <Header onClose={handleCancel} />
+      <DrawerHeader
+        title="Sort and Filter"
+        onClose={handleCancel}
+        showCloseButton
+      />
       <DrawerBody style={{ padding: tokens.spacingHorizontalM }}>
         <div
           style={{
@@ -231,12 +235,7 @@ const DrawerContent: FC<DrawerContentProps> = ({ onClose }) => {
           </div>
         </div>
       </DrawerBody>
-      <DrawerFooter
-        style={{
-          padding: tokens.spacingHorizontalM,
-          gap: tokens.spacingHorizontalM,
-        }}
-      >
+      <DrawerFooter>
         <Button appearance="primary" disabled={!isValid} onClick={handleApply}>
           Apply
         </Button>

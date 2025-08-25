@@ -1,12 +1,4 @@
-import {
-  Button,
-  Divider,
-  Drawer,
-  DrawerBody,
-  DrawerHeader,
-  DrawerHeaderTitle,
-  tokens,
-} from '@fluentui/react-components';
+import { Button, Drawer, DrawerBody, tokens } from '@fluentui/react-components';
 import {
   GridContext,
   TransformedViewColumn,
@@ -17,7 +9,11 @@ import { Icons } from '@headless-adminapp/icons';
 import update from 'immutability-helper';
 import { useCallback, useMemo, useState } from 'react';
 
+import { CommandButton } from '../../CommandBar/Button';
+import { CommandBarWrapper } from '../../CommandBar/Wrapper';
 import { DndProvider } from '../../components/DndProvider';
+import { DrawerFooter } from '../../components/DrawerFooter';
+import { DrawerHeader } from '../../components/DrawerHeader';
 import { usePageEntityViewStrings } from '../../PageEntityView/PageEntityViewStringContext';
 import { AddColumns } from './AddColumns';
 import { ColumnItem } from './ColumnItem';
@@ -66,62 +62,36 @@ export function CustomizeColumns({ onClose, opened }: CustomizeColumnsProps) {
 
   return (
     <Drawer separator open={opened} position="end" size="small">
-      <DrawerHeader>
-        <DrawerHeaderTitle
-          action={
-            <Button
-              appearance="subtle"
-              aria-label="Close"
-              icon={<Icons.Close />}
-              onClick={onClose}
+      <DrawerHeader
+        title={strings.editColumns}
+        showCloseButton
+        onClose={onClose}
+      />
+      <DrawerBody style={{ paddingInline: tokens.spacingHorizontalM }}>
+        <div style={{ marginInline: -8, marginTop: 8 }}>
+          <CommandBarWrapper>
+            <CommandButton
+              Icon={Icons.Add}
+              text={strings.add}
+              onClick={() => setShowAddColumns(true)}
             />
-          }
-        >
-          {strings.editColumns}
-        </DrawerHeaderTitle>
-      </DrawerHeader>
-      <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-        <div
-          style={{
-            display: 'flex',
-            gap: 8,
-            marginBottom: tokens.spacingVerticalXS,
-            paddingInline: tokens.spacingHorizontalS,
-          }}
-        >
-          <Button
-            appearance="subtle"
-            icon={<Icons.Add />}
-            style={{
-              fontWeight: tokens.fontSizeBase400,
-              minWidth: 'unset',
-            }}
-            onClick={() => setShowAddColumns(true)}
-          >
-            {strings.add}
-          </Button>
-          <Button
-            appearance="subtle"
-            icon={<Icons.Edit />}
-            style={{ fontWeight: tokens.fontSizeBase400, minWidth: 'unset' }}
-            disabled={!isDirty}
-            onClick={() => {
-              setItems(columns);
-            }}
-          >
-            {strings.reset}
-          </Button>
+            <CommandButton
+              Icon={Icons.Edit}
+              text={strings.reset}
+              disabled={!isDirty}
+              onClick={() => {
+                setItems(columns);
+              }}
+            />
+          </CommandBarWrapper>
+          <AddColumns
+            onColumnAdd={onColumnAdd}
+            onColumnRemove={onColumnRemove}
+            columns={items}
+            opened={showAddColumns}
+            onClose={() => setShowAddColumns(false)}
+          />
         </div>
-        <AddColumns
-          onColumnAdd={onColumnAdd}
-          onColumnRemove={onColumnRemove}
-          columns={items}
-          opened={showAddColumns}
-          onClose={() => setShowAddColumns(false)}
-        />
-        <Divider />
-      </div>
-      <DrawerBody style={{ paddingInline: tokens.spacingHorizontalS }}>
         <DndProvider>
           <div
             style={{
@@ -148,36 +118,26 @@ export function CustomizeColumns({ onClose, opened }: CustomizeColumnsProps) {
           </div>
         </DndProvider>
       </DrawerBody>
-      <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-        <Divider />
-        <div
-          style={{
-            display: 'flex',
-            padding: 8,
-            gap: 8,
-            justifyContent: 'flex-end',
+      <DrawerFooter>
+        <Button
+          onClick={() => {
+            setContextValue({
+              columns: items,
+            });
+            onClose();
+          }}
+          appearance="primary"
+        >
+          {strings.apply}
+        </Button>
+        <Button
+          onClick={() => {
+            onClose();
           }}
         >
-          <Button
-            onClick={() => {
-              setContextValue({
-                columns: items,
-              });
-              onClose();
-            }}
-            appearance="primary"
-          >
-            {strings.apply}
-          </Button>
-          <Button
-            onClick={() => {
-              onClose();
-            }}
-          >
-            {strings.cancel}
-          </Button>
-        </div>
-      </div>
+          {strings.cancel}
+        </Button>
+      </DrawerFooter>
     </Drawer>
   );
 }
