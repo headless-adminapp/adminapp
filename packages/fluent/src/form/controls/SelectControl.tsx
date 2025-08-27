@@ -11,6 +11,7 @@ export interface Lookup<T = string> {
 
 export interface SelectControlProps<T> extends ControlProps<T> {
   options: Lookup<T>[];
+  clearable?: boolean;
 }
 
 export default function SelectControl<T extends string | number>({
@@ -24,6 +25,7 @@ export default function SelectControl<T extends string | number>({
   onFocus,
   placeholder,
   skeleton,
+  clearable,
 }: Readonly<SelectControlProps<T>>) {
   const transformedOptions = useMemo(
     () => options.map((x) => ({ label: x.label, value: String(x.value) })),
@@ -68,6 +70,7 @@ export default function SelectControl<T extends string | number>({
         width: '100%',
         minWidth: 'unset',
       }}
+      clearable={clearable}
     >
       {transformedOptions.map((x) => (
         <Option key={x.value} value={x.value}>

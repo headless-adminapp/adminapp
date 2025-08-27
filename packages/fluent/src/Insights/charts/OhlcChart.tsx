@@ -103,7 +103,7 @@ export function OhlcChart({
           tickFormatter={xAxisFormatter}
           tickLine={false}
           minTickGap={10}
-          padding="gap"
+          padding="no-gap"
           axisLine={{
             stroke: tokens.colorNeutralBackground6,
           }}

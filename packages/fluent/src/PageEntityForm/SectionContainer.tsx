@@ -206,6 +206,7 @@ export function SectionContainer<
                           autoHeight={control.autoHeight}
                           maxHeight={control.maxHeight}
                           skeleton={skeleton}
+                          required={required}
                         />
                       </SectionControlWrapper>
                     );

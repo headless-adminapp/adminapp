@@ -32,7 +32,7 @@ export function BarChart({
       <BarChartInternal data={dataset[0]} stackOffset={chartInfo.stackOffset}>
         {renderGrid()}
         {renderYAxis(locale, yAxis)}
-        {renderXAxis(locale, xAxis)}
+        {renderXAxis(locale, xAxis, dataset[0].length < 3)}
         {renderBars(bars, dataset)}
         <Tooltip
           cursor={{

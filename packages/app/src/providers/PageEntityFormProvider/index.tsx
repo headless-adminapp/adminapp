@@ -7,6 +7,7 @@ import { PropsWithChildren } from 'react';
 
 import { DataFormProvider } from '../../dataform/DataFormProvider';
 import { RetriveRecordFn } from '../../dataform/DataFormProvider/types';
+import { UnsavedChangesInfoSetter } from '../../dataform/DataFormProvider/UnsavedChangesInfoSetter';
 import { SaveRecordFn } from '../../dataform/utils/saveRecord';
 
 interface PageEntityFormProviderProps<S extends SchemaAttributes> {
@@ -36,6 +37,7 @@ export function PageEntityFormProvider<S extends SchemaAttributes>({
       retriveRecordFn={retriveRecordFn}
       saveRecordFn={saveRecordFn}
     >
+      <UnsavedChangesInfoSetter />
       {children}
     </DataFormProvider>
   );

@@ -9,6 +9,7 @@
 // Wrapper - Loader, response message
 // Core - Extract modified fields, prepare operations, perform operations
 
+import { setUnsavedChangesInfo } from '@headless-adminapp/app/navigation/unsaved-changes';
 import { useRouter, useRouteResolver } from '@headless-adminapp/app/route';
 import { PageType } from '@headless-adminapp/core/experience/app';
 import { SaveMode } from '@headless-adminapp/core/experience/form';
@@ -101,11 +102,13 @@ export function useFormSave() {
           return;
         }
 
+        setUnsavedChangesInfo(null);
+
         if (mode === 'save') {
           if (record) {
             await refresh();
           } else {
-            router.replace(
+            await router.replace(
               routeResolver({
                 type: PageType.EntityForm,
                 logicalName: schema.logicalName,
@@ -118,7 +121,7 @@ export function useFormSave() {
             queryKey: ['data', 'retriveRecord'],
           });
           if (mode === 'saveandclose') {
-            router.back();
+            await router.back();
           }
         }
 

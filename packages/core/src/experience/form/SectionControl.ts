@@ -27,6 +27,7 @@ export interface StandardControlProps {
   autoHeight?: boolean;
   maxHeight?: number;
   skeleton?: boolean; // For loading state
+  required?: boolean;
 }
 
 export interface BaseSectionControl {

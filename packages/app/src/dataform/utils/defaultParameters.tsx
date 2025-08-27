@@ -1,6 +1,7 @@
 import { RouterInstance } from '@headless-adminapp/app/route/context';
 import { FormExperience } from '@headless-adminapp/core/experience/form';
 import { Schema } from '@headless-adminapp/core/schema';
+import dayjs from 'dayjs';
 
 interface DefaultParameters {
   logicalName: string;
@@ -30,7 +31,11 @@ export function getFormDefaultParameters(
       if (defaultValue instanceof Date) {
         defaultValue = defaultValue.toISOString();
       } else if (attribute.type === 'date' && defaultValue === '@now') {
-        defaultValue = new Date().toISOString();
+        if (attribute.format === 'date') {
+          defaultValue = dayjs().format('YYYY-MM-DD');
+        } else {
+          defaultValue = new Date().toISOString();
+        }
       }
 
       return {

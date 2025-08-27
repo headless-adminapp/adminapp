@@ -29,7 +29,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@headless-adminapp/core": "workspace:*"
+    "@headless-adminapp/core": "workspace:*",
+    "dayjs": "^1.11.13"
   },
   "gitHead": "e2723ae74a1800c33a6790204bb2d1ae114e5310"
 }

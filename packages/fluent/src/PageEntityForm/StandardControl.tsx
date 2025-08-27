@@ -59,6 +59,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     autoHeight,
     maxHeight,
     skeleton,
+    required,
   } = props;
   const isDisabled = readOnly;
   const placeholder = hidePlaceholder
@@ -416,6 +417,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           borderOnFocusOnly={borderOnFocusOnly}
           readOnly={readOnly}
           skeleton={skeleton}
+          clearable={!required}
         />
       );
     }

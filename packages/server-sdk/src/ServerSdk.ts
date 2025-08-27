@@ -19,6 +19,7 @@ import {
   UpdateRecordParams,
   UpdateRecordResult,
 } from '@headless-adminapp/core/transport';
+import dayjs from 'dayjs';
 
 import { ChangedValues } from './types/ChangedValues';
 import { DatabaseContext } from './types/DatabaseContext';
@@ -250,7 +251,11 @@ export abstract class ServerSdk<
       }
 
       if (attribute.type === 'date' && attribute.default === '@now') {
-        acc[key] = new Date().toISOString();
+        if (attribute.format === 'date') {
+          acc[key] = dayjs().format('YYYY-MM-DD');
+        } else {
+          acc[key] = new Date().toISOString();
+        }
       }
 
       acc[key] = attribute.default;

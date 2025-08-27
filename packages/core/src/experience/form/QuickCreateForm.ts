@@ -1,16 +1,17 @@
 import { InferredSchemaType, SchemaAttributes } from '../../schema';
 import { AllowAsync } from '../../types';
 import { Metadata } from '../types';
+import { FormExperience } from './Form';
 
 export interface QuickCreateForm<S extends SchemaAttributes = SchemaAttributes>
   extends Metadata {
-  experience: QuickCreateFormExperience<S>;
+  experience: FormExperience<S>;
 }
 
 export interface AsyncQuickCreateForm<
   S extends SchemaAttributes = SchemaAttributes
 > extends Metadata {
-  experience: AllowAsync<QuickCreateFormExperience<S>>;
+  experience: AllowAsync<FormExperience<S>>;
 }
 
 export type QuickCreateFormExperience<

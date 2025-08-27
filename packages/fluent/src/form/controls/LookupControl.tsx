@@ -17,6 +17,10 @@ import { useAppContext } from '@headless-adminapp/app/app';
 import { useDebouncedValue } from '@headless-adminapp/app/hooks';
 import { useRecentItemStore } from '@headless-adminapp/app/metadata/hooks/useRecentItemStore';
 import {
+  useIsQuickCreateSupported,
+  useOpenQuickCreate,
+} from '@headless-adminapp/app/quickcreate/hooks';
+import {
   useRouter,
   useRouteResolver,
 } from '@headless-adminapp/app/route/hooks';
@@ -87,6 +91,20 @@ const useStyles = makeStyles({
     },
   },
 });
+
+const recordToDataLookup = (
+  value: Data<InferredSchemaType<SchemaAttributes>>,
+  schema: Schema<SchemaAttributes>
+) => {
+  return {
+    id: value[schema.idAttribute] as string,
+    name: value[schema.primaryAttribute] as string,
+    logicalName: schema.logicalName,
+    avatar: schema.avatarAttribute
+      ? (value[schema.avatarAttribute] as string)
+      : undefined,
+  };
+};
 
 const LookupControlMd: FC<LookupControlProps> = ({
   value,
@@ -166,6 +184,9 @@ const LookupControlMd: FC<LookupControlProps> = ({
       lookupEnabled && !isViewLoading && !value && !readOnly && !disabled,
   });
 
+  const isQuickCreateSupported = useIsQuickCreateSupported(schema.logicalName);
+  const openQuickCreate = useOpenQuickCreate();
+
   useEffect(() => {
     if (value) {
       setSearchText(value.name);
@@ -181,11 +202,7 @@ const LookupControlMd: FC<LookupControlProps> = ({
     if (!value) {
       return onChange?.(null);
     } else {
-      return onChange?.({
-        id: value[schema.idAttribute] as string,
-        name: value[schema.primaryAttribute] as string,
-        logicalName: schema.logicalName,
-      });
+      return onChange?.(recordToDataLookup(value, schema));
     }
   };
 
@@ -242,6 +259,9 @@ const LookupControlMd: FC<LookupControlProps> = ({
         onFocus={onFocus}
         id={id}
         autoFocus={autoFocus}
+        autoCapitalize="none"
+        autoCorrect="off"
+        spellCheck={false}
       >
         {data?.records.map((item) => (
           <Option
@@ -279,12 +299,28 @@ const LookupControlMd: FC<LookupControlProps> = ({
                 style={{ fontWeight: 'normal' }}
                 icon={<Icons.Add />}
                 onClick={async () => {
-                  await router.push(
-                    routeResolver({
+                  if (isQuickCreateSupported) {
+                    const result = await openQuickCreate({
                       logicalName: schema.logicalName,
-                      type: PageType.EntityForm,
-                    })
-                  );
+                    });
+
+                    if (result) {
+                      setSearchText('');
+                      onChange?.(result as DataLookup);
+                      recentItemStore.addItem(
+                        createLookupRecentKey(schema.logicalName),
+                        result.id,
+                        result.id
+                      );
+                    }
+                  } else {
+                    await router.push(
+                      routeResolver({
+                        logicalName: schema.logicalName,
+                        type: PageType.EntityForm,
+                      })
+                    );
+                  }
                 }}
               >
                 {lookupStrings.newRecord}

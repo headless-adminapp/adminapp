@@ -32,7 +32,7 @@ export function LineChart({
       <LineChartInternal data={dataset[0]}>
         {renderGrid()}
         {renderYAxis(locale, yAxis)}
-        {renderXAxis(locale, xAxis)}
+        {renderXAxis(locale, xAxis, dataset[0].length < 3)}
         {renderLines(lines)}
         <Tooltip
           cursor={{

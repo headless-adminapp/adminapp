@@ -48,6 +48,12 @@ export interface ISchemaExperienceStore {
 
   getDefaultViewLookupId(logicalName: string): Promise<string>;
 
+  getDefaultFormId(logicalName: string): Promise<string>;
+
+  getDefaultQuickCreateFormId(logicalName: string): Promise<string | null>;
+
+  getIsQuickCreateSupported(logicalName: string): Promise<boolean>;
+
   getForm<S extends SchemaAttributes = SchemaAttributes>(
     logicalName: string,
     formId?: string
@@ -55,7 +61,7 @@ export interface ISchemaExperienceStore {
 
   getQuickCreateForm<S extends SchemaAttributes = SchemaAttributes>(
     logicalName: string,
-    formId: string
+    formId?: string
   ): Promise<QuickCreateForm<S>>;
 
   getViewCommands(

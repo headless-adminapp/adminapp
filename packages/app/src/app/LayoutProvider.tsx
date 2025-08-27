@@ -15,11 +15,13 @@ import { MetadataProvider } from '../metadata';
 import { MetadataProviderProps } from '../metadata/MetadataProvider';
 import { UnsavedChangesRouteGuard } from '../navigation/unsaved-changes';
 import { ProgressIndicatorProvider } from '../progress-indicator';
+import { QuickCreateProvider } from '../quickcreate';
 import { RouteProvider } from '../route';
 import { RouteProviderProps } from '../route/RouteProvider';
 import { ToastNotificationProvider } from '../toast-notification';
 import { DataServiceContext } from '../transport';
 import { FileServiceContext } from '../transport/context';
+import { AppProvider } from './AppProvider';
 import { AuthWrapper } from './AuthWrapper';
 
 export interface LayoutProviderProps {
@@ -97,7 +99,11 @@ export const LayoutProvider: FC<PropsWithChildren<LayoutProviderProps>> = ({
                         <HeaderProvider>
                           <AuthWrapper Placeholder={authPlaceholder}>
                             <UnsavedChangesRouteGuard />
-                            {children}
+                            <AppProvider>
+                              <QuickCreateProvider>
+                                {children}
+                              </QuickCreateProvider>
+                            </AppProvider>
                           </AuthWrapper>
                         </HeaderProvider>
                       </AuthProvider>

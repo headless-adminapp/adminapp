@@ -196,7 +196,6 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
         <ReadonlyInfoResolver setFormReadOnly={setFormReadOnly} />
         <CustomHookExecuter useHookFn={props.form.experience.useHookFn} />
         <CalculatedField />
-        <UnsavedChangesInfoSetter />
         {props.children}
       </FormProvider>
     </DataFormContext.Provider>

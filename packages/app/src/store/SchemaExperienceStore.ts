@@ -265,9 +265,32 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
     return experience.defaultLookupId;
   }
 
+  async getDefaultFormId(logicalName: string): Promise<string> {
+    const experience = await this.getExperience(logicalName);
+
+    return experience.defaultFormId;
+  }
+
+  async getDefaultQuickCreateFormId(
+    logicalName: string
+  ): Promise<string | null> {
+    const experience = await this.getExperience(logicalName);
+
+    return experience.defaultQuickCreateFormId ?? null;
+  }
+
+  async getIsQuickCreateSupported(logicalName: string): Promise<boolean> {
+    const experience = await this.getExperience(logicalName);
+
+    return (
+      !!experience.defaultQuickCreateFormId &&
+      experience.quickCreateForms.length > 0
+    );
+  }
+
   async getForm<S extends SchemaAttributes = SchemaAttributes>(
     logicalName: string,
-    formId: string
+    formId?: string
   ): Promise<Form<S>> {
     const experience = await this.getExperience(logicalName);
 
@@ -297,9 +320,19 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
 
   async getQuickCreateForm<S extends SchemaAttributes = SchemaAttributes>(
     logicalName: string,
-    formId: string
+    formId?: string
   ): Promise<QuickCreateForm<S>> {
     const experience = await this.getExperience(logicalName);
+
+    if (!formId) {
+      if (!experience.defaultQuickCreateFormId) {
+        throw new Error(
+          `No quick create form ID provided and no default quick create form ID found for ${logicalName}`
+        );
+      }
+
+      formId = experience.defaultQuickCreateFormId;
+    }
 
     const form = experience.quickCreateForms.find((f) => f.id === formId);
 

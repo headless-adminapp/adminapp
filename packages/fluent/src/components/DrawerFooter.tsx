@@ -16,9 +16,10 @@ export const DrawerFooter: FC<PropsWithChildren<DrawerFooterProps>> = ({
     <DrawerFooterInternal
       style={{
         padding: tokens.spacingHorizontalM,
-        gap: tokens.spacingHorizontalM,
         background: tokens.colorNeutralBackground2,
+        gap: tokens.spacingHorizontalM,
         justifyContent: justify,
+        paddingBottom: `max(env(safe-area-inset-bottom), ${tokens.spacingHorizontalM})`,
       }}
     >
       {children}

@@ -18,7 +18,7 @@ export const BodyLoading: FC<BodyLoadingProps> = ({ loading }) => {
           inset: 0,
           backgroundColor: tokens.colorNeutralBackground1,
           opacity: 0.7,
-          zIndex: 1,
+          zIndex: 10,
         }}
       />
       <div
@@ -28,6 +28,7 @@ export const BodyLoading: FC<BodyLoadingProps> = ({ loading }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          zIndex: 11,
         }}
       >
         <Spinner size="small" />

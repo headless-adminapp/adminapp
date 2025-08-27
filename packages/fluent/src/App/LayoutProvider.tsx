@@ -11,6 +11,7 @@ import { FC, PropsWithChildren } from 'react';
 
 import { DialogContainer } from '../DialogContainer';
 import { ProgressIndicatorContainer } from '../ProgressIndicatorContainer';
+import { QuickCreateContainer } from '../QuickCreateContainer';
 import { ToastNotificationContainer } from '../ToastNotificationContainer';
 
 export type LayoutProviderProps = Omit<
@@ -36,6 +37,7 @@ export const LayoutProvider: FC<PropsWithChildren<LayoutProviderProps>> = ({
         }}
       >
         {children}
+        <QuickCreateContainer />
       </LayoutProviderInternal>
     </FluentProvider>
   );
