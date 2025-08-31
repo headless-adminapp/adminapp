@@ -75,6 +75,7 @@ export const MenuItem: React.FC<MenuItemProps> = memo(
             <InternalMenuItem
               icon={<Icon size={20} />}
               className={mergeClasses(danger && styles.danger)}
+              onClick={onClick}
             >
               {text}
             </InternalMenuItem>

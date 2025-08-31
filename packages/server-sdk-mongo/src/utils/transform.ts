@@ -124,6 +124,12 @@ const transformExpandedRecord = ({
           } else {
             acc[column] = null;
           }
+        } else if (attribute.type === 'attachment') {
+          if (expandedRecord[column]) {
+            acc[column] = urlToFileObject(expandedRecord[column]);
+          } else {
+            acc[column] = null;
+          }
         } else {
           acc[column] = expandedRecord[column];
         }

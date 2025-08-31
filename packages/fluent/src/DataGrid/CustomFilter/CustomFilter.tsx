@@ -236,10 +236,20 @@ const DrawerContent: FC<DrawerContentProps> = ({ onClose }) => {
         </div>
       </DrawerBody>
       <DrawerFooter>
-        <Button appearance="primary" disabled={!isValid} onClick={handleApply}>
+        <Button
+          appearance="primary"
+          disabled={!isValid}
+          onClick={handleApply}
+          style={{ fontWeight: tokens.fontWeightRegular }}
+        >
           Apply
         </Button>
-        <Button onClick={handleCancel}>Cancel</Button>
+        <Button
+          onClick={handleCancel}
+          style={{ fontWeight: tokens.fontWeightRegular }}
+        >
+          Cancel
+        </Button>
       </DrawerFooter>
     </Fragment>
   );

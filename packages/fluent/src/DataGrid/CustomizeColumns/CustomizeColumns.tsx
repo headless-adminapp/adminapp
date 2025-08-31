@@ -127,6 +127,7 @@ export function CustomizeColumns({ onClose, opened }: CustomizeColumnsProps) {
             onClose();
           }}
           appearance="primary"
+          style={{ fontWeight: tokens.fontWeightRegular }}
         >
           {strings.apply}
         </Button>
@@ -134,6 +135,7 @@ export function CustomizeColumns({ onClose, opened }: CustomizeColumnsProps) {
           onClick={() => {
             onClose();
           }}
+          style={{ fontWeight: tokens.fontWeightRegular }}
         >
           {strings.cancel}
         </Button>

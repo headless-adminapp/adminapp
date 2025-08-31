@@ -19,29 +19,60 @@ import { MenuList } from './MenuList';
 
 const useStyles = makeStyles({
   splitButton: {
+    borderRadius: tokens.borderRadiusMedium,
     '& > button:first-child': {
       fontWeight: tokens.fontWeightRegular,
-      borderRightColor: tokens.colorNeutralStroke3,
+      paddingRight: 0,
+      minWidth: 'unset',
+      backgroundColor: 'transparent !important',
+    },
+
+    '&:hover:not(:has(:last-child:hover))': {
+      backgroundColor: tokens.colorSubtleBackgroundHover,
+
+      '&:active': {
+        backgroundColor: tokens.colorSubtleBackgroundPressed,
+      },
     },
   },
   menuButton: {
     fontWeight: tokens.fontWeightRegular,
   },
   splitButtonDanger: {
-    '& > button:first-child:hover': {
-      color: tokens.colorPaletteRedForeground1,
-      background: tokens.colorPaletteRedBackground1,
-
-      '& .fui-Button__icon': {
-        color: tokens.colorPaletteRedForeground1,
-      },
+    '&:hover:not(:has(:last-child:hover))': {
+      backgroundColor: tokens.colorStatusDangerBackground1,
 
       '&:active': {
-        color: tokens.colorPaletteRedForeground2,
-        background: tokens.colorPaletteRedBackground2,
+        backgroundColor: tokens.colorStatusDangerBackground2,
+      },
+    },
+    '&:hover': {
+      '& > button:first-child': {
+        color: tokens.colorStatusDangerForeground1,
+        // color: tokens.colorPaletteRedForeground1,
+        // background: tokens.colorPaletteRedBackground1,
 
         '& .fui-Button__icon': {
-          color: tokens.colorPaletteRedForeground2,
+          color: tokens.colorStatusDangerForeground1,
+        },
+
+        '&:active': {
+          color: tokens.colorStatusDangerForeground2,
+          // background: tokens.colorPaletteRedBackground2,
+
+          '& .fui-Button__icon': {
+            color: tokens.colorStatusDangerForeground2,
+          },
+        },
+      },
+    },
+
+    '& > button:last-child': {
+      '&:hover, &[aria-expanded="true"]': {
+        backgroundColor: tokens.colorStatusDangerBackground1,
+
+        '&:active': {
+          backgroundColor: tokens.colorStatusDangerBackground2,
         },
       },
     },
@@ -68,7 +99,6 @@ export const CommandMenuButton: MemoExoticComponent<
     const styles = useStyles();
 
     return (
-      // <div ref={ref}>
       <Menu hasIcons positioning="below-end">
         {onClick ? (
           <MenuTrigger disableButtonEnhancement>
@@ -83,6 +113,9 @@ export const CommandMenuButton: MemoExoticComponent<
                 )}
                 menuButton={triggerProps}
                 disabled={disabled}
+                primaryActionButton={{
+                  onClick,
+                }}
               >
                 {text}
               </SplitButton>
@@ -105,7 +138,6 @@ export const CommandMenuButton: MemoExoticComponent<
           <MenuList items={items} />
         </MenuPopover>
       </Menu>
-      // </div>
     );
   })
 );

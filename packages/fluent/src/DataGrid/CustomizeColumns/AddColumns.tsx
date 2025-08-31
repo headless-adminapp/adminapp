@@ -194,7 +194,12 @@ export function AddColumns({
         ))}
       </DrawerBody>
       <DrawerFooter>
-        <Button onClick={onClose}>{strings.close}</Button>
+        <Button
+          onClick={onClose}
+          style={{ fontWeight: tokens.fontWeightRegular }}
+        >
+          {strings.close}
+        </Button>
       </DrawerFooter>
     </Drawer>
   );
