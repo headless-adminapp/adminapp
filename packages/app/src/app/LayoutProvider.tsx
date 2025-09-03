@@ -92,21 +92,19 @@ export const LayoutProvider: FC<PropsWithChildren<LayoutProviderProps>> = ({
                 <DialogProvider>
                   <ProgressIndicatorProvider>
                     <ToastNotificationProvider>
-                      <DialogContainer />
-                      <ProgressIndicatorContainer />
-                      <ToastNotificationContainer />
-                      <AuthProvider {...authProps}>
-                        <HeaderProvider>
-                          <AuthWrapper Placeholder={authPlaceholder}>
-                            <UnsavedChangesRouteGuard />
-                            <AppProvider>
-                              <QuickCreateProvider>
-                                {children}
-                              </QuickCreateProvider>
-                            </AppProvider>
-                          </AuthWrapper>
-                        </HeaderProvider>
-                      </AuthProvider>
+                      <QuickCreateProvider>
+                        <DialogContainer />
+                        <ProgressIndicatorContainer />
+                        <ToastNotificationContainer />
+                        <AuthProvider {...authProps}>
+                          <HeaderProvider>
+                            <AuthWrapper Placeholder={authPlaceholder}>
+                              <UnsavedChangesRouteGuard />
+                              <AppProvider>{children}</AppProvider>
+                            </AuthWrapper>
+                          </HeaderProvider>
+                        </AuthProvider>
+                      </QuickCreateProvider>
                     </ToastNotificationProvider>
                   </ProgressIndicatorProvider>
                 </DialogProvider>
