@@ -1,5 +1,5 @@
-import { RouterInstance } from '@headless-adminapp/app/route/context';
 import { FormExperience } from '@headless-adminapp/core/experience/form';
+import { RouterInstance } from '@headless-adminapp/core/navigation';
 import { Schema } from '@headless-adminapp/core/schema';
 import dayjs from 'dayjs';
 

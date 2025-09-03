@@ -5,6 +5,7 @@ import {
   IsRouteActive,
   RouteResolver,
 } from '@headless-adminapp/core/experience/route';
+import { RouterInstance } from '@headless-adminapp/core/navigation';
 import { FC, PropsWithChildren, useCallback, useMemo, useRef } from 'react';
 
 import {
@@ -13,7 +14,6 @@ import {
   RouteHelperContext,
   RouterBasePathContext,
   RouterContext,
-  RouterInstance,
   RouterPathnameContext,
   RouterSearchParamsContext,
 } from './context';

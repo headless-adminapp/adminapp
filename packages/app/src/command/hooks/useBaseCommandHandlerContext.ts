@@ -16,6 +16,7 @@ import { useProgressIndicator } from '../../progress-indicator/hooks';
 import { useOpenToastNotification } from '../../toast-notification/hooks/useOpenToastNotification';
 import { useDataService } from '../../transport';
 import { UtilityContextState } from '../types';
+import { useRouter, useRouteResolver } from '@headless-adminapp/app/route';
 
 export function useUtility(): UtilityContextState {
   const { hideProgressIndicator, showProgressIndicator } =
@@ -50,12 +51,14 @@ export function useUtility(): UtilityContextState {
 
 function useNavigation() {
   const openForm = useOpenForm();
+  const router = useRouter();
 
   return useMemo(
     () => ({
       openForm,
+      router,
     }),
-    [openForm]
+    [openForm, router]
   );
 }
 

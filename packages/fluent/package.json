@@ -64,5 +64,8 @@
     "uuid": "11.0.3",
     "yup": "^1.4.0"
   },
+  "devDependencies": {
+    "@types/lodash": "4.17.20"
+  },
   "gitHead": "a28ee863fccb6157774e75b4cc421c6940cda469"
 }

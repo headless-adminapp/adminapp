@@ -111,6 +111,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
             <Control
               {...controlProps}
               textTransform={attribute.textTransform}
+              suggestions={attribute.suggestions}
             />
           );
         }

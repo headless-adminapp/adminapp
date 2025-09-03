@@ -28,10 +28,7 @@ import {
   useContextSetValue,
   useMutableState,
 } from '@headless-adminapp/app/mutable';
-import {
-  InternalRouteResolver,
-  RouterInstance,
-} from '@headless-adminapp/app/route/context';
+import { InternalRouteResolver } from '@headless-adminapp/app/route/context';
 import {
   useRouter,
   useRouteResolver,
@@ -52,6 +49,7 @@ import { RegardingAttribute } from '@headless-adminapp/core/attributes/LookupAtt
 import { PageType } from '@headless-adminapp/core/experience/app';
 import { Locale } from '@headless-adminapp/core/experience/locale';
 import { ViewColumnProps } from '@headless-adminapp/core/experience/view/ViewColumn';
+import { RouterInstance } from '@headless-adminapp/core/navigation';
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { ISchemaStore } from '@headless-adminapp/core/store';
 import {
@@ -230,7 +228,12 @@ export function useTableColumns({
         maxSize: 32,
       }),
     ];
-  }, [disableContextMenu, mutableContextCommandState, schema.idAttribute]);
+  }, [
+    disableContextMenu,
+    mutableContextCommandState,
+    schema.idAttribute,
+    setValue,
+  ]);
 
   const selectionColumns = useMemo(() => {
     if (disableSelection) return [];
@@ -441,7 +444,7 @@ function renderCellContent({
   schemaStore: ISchemaStore;
   locale: Locale;
   routeResolver: InternalRouteResolver;
-  openRecord?: (id: string, logicalName: string) => void;
+  openRecord?: (id: string, logicalName: string) => Promise<void>;
   router: RouterInstance;
   disableSelection?: boolean;
   primaryAttributeName?: string;
@@ -811,8 +814,8 @@ export function renderLookupAttribute({
   return (
     <TableCellLinkContent
       href={path}
-      onClick={() => {
-        router.push(path);
+      onClick={async () => {
+        await router.push(path);
       }}
     >
       <Fragment>
@@ -873,8 +876,8 @@ function renderRegardingAttribute({
   return (
     <TableCellLinkContent
       href={path}
-      onClick={() => {
-        router.push(path);
+      onClick={async () => {
+        await router.push(path);
       }}
     >
       <Fragment>

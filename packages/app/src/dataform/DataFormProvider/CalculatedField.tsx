@@ -87,18 +87,6 @@ export const CalculatedField: FC = () => {
 
         const newValue = item.handler(record, relatedRecords);
 
-        console.log(
-          'Recalculated main record field:',
-          item.attributeName,
-          item,
-          record,
-          relatedRecords,
-          {
-            currentValue,
-            newValue,
-          }
-        );
-
         if (currentValue !== newValue) {
           formInstanceRef.current.setValue(item.attributeName, newValue);
           eventManager.emit(
@@ -125,17 +113,6 @@ export const CalculatedField: FC = () => {
         );
 
         const newValue = item.handler(record, {});
-
-        console.log(
-          'Subgrid row level calculation:',
-          item.attributeName,
-          item,
-          record,
-          {
-            currentValue,
-            newValue,
-          }
-        );
 
         if (currentValue !== newValue) {
           formInstanceRef.current.setValue(

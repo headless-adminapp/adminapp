@@ -1,3 +1,4 @@
+import { attributesFormValidator } from '@headless-adminapp/app/dataform';
 import { useFormValidationStrings } from '@headless-adminapp/app/form';
 import { useLocale } from '@headless-adminapp/app/locale';
 import {
@@ -6,8 +7,6 @@ import {
 } from '@headless-adminapp/core/schema';
 import { Nullable } from '@headless-adminapp/core/types';
 import { DefaultValues, useForm } from 'react-hook-form';
-
-import { formValidator } from '../DialogContainer/PromptDialog';
 
 interface UseFormForAttributesProps<
   SA extends SchemaAttributes = SchemaAttributes
@@ -28,7 +27,7 @@ export function useFormForAttributes<
       Nullable<InferredSchemaType<SA>>
     >,
     shouldUnregister: false,
-    resolver: formValidator({
+    resolver: attributesFormValidator({
       attributes: props.attributes,
       language,
       strings: formValidationStrings,

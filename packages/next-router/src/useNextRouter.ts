@@ -1,4 +1,4 @@
-import { GuardFn, RouterInstance } from '@headless-adminapp/app/route/context';
+import { GuardFn, RouterInstance } from '@headless-adminapp/core/navigation';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 

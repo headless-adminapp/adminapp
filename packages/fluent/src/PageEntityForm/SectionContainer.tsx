@@ -28,6 +28,7 @@ import { componentStore } from '../componentStore';
 import { SectionControlWrapper } from '../DataForm/SectionControl';
 import { FormSection } from '../form/layout';
 import { EditableGridControl } from './EditableGridControl/EditableGridControl';
+import { QuickViewControl } from './QuickViewControl';
 import { StandardControl } from './StandardControl';
 import { SubgridControl } from './SubgridControl';
 
@@ -229,7 +230,12 @@ export function SectionContainer<
             );
           }
           case 'quickview':
-            return null;
+            return (
+              <QuickViewControl
+                control={control}
+                labelPosition={section.labelPosition}
+              />
+            );
           case 'subgrid': {
             let ContainerComponent: React.ComponentType | null = null;
 

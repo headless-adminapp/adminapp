@@ -1,3 +1,4 @@
+import { RouterInstance } from '@headless-adminapp/core/navigation';
 import type { QueryClient } from '@tanstack/react-query';
 
 import type { InferredSchemaType, SchemaAttributes } from '../../schema';
@@ -23,6 +24,7 @@ export interface OpenFormOptions {
 
 interface Navigation {
   openForm: (options: OpenFormOptions) => void;
+  router: RouterInstance;
 }
 
 interface Utiltity {

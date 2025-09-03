@@ -26,7 +26,7 @@ import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { useBasePath, useRouter } from '@headless-adminapp/app/route';
 import { isColorDark } from '@headless-adminapp/app/utils/color';
 import { Icons } from '@headless-adminapp/icons';
-import { FC, ReactNode, useMemo } from 'react';
+import { FC, ReactNode, useMemo, useState } from 'react';
 
 import { AppLogo } from './AppLogo';
 import { useAppStrings } from './AppStringContext';
@@ -113,6 +113,7 @@ const NavActions: FC = () => {
   const logout = useLogout();
   const strings = useAppStrings();
   const { language } = useLocale();
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 
   const initials = useMemo(() => {
     return authSession?.fullName
@@ -154,7 +155,10 @@ const NavActions: FC = () => {
         })}
       </div>
       {(!isSkipAuthCheck || !!accountMenuItems?.length) && (
-        <Popover>
+        <Popover
+          open={accountMenuOpen}
+          onOpenChange={(e, data) => setAccountMenuOpen(data.open)}
+        >
           <PopoverTrigger disableButtonEnhancement>
             <Avatar
               initials={initials}
@@ -212,6 +216,7 @@ const NavActions: FC = () => {
                     key={item.__key}
                     icon={<Icon size="inherit" />}
                     onClick={async () => {
+                      setAccountMenuOpen(false);
                       if (item.onClick) {
                         item.onClick();
                       } else if (item.link) {

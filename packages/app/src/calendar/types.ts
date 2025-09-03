@@ -1,12 +1,13 @@
 import type { EventContentArg } from '@fullcalendar/core';
 import { AuthSession } from '@headless-adminapp/core/experience/auth';
 import { OpenFormOptions } from '@headless-adminapp/core/experience/command';
+import { RouterInstance } from '@headless-adminapp/core/navigation';
 import {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
 
-import { InternalRouteResolver, RouterInstance } from '../route/context';
+import { InternalRouteResolver } from '../route/context';
 
 export interface CalendarEvent {
   id: string;

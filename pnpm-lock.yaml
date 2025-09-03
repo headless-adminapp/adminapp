@@ -227,6 +227,10 @@ importers:
       yup:
         specifier: ^1.4.0
         version: 1.4.0
+    devDependencies:
+      '@types/lodash':
+        specifier: 4.17.20
+        version: 4.17.20
     publishDirectory: dist
 
   packages/icons:
@@ -248,9 +252,9 @@ importers:
 
   packages/next-router:
     dependencies:
-      '@headless-adminapp/app':
+      '@headless-adminapp/core':
         specifier: workspace:*
-        version: link:../app/dist
+        version: link:../core/dist
       next:
         specifier: 14.1.4
         version: 14.1.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.81.0)
@@ -1877,6 +1881,9 @@ packages:
 
   '@types/lodash@4.17.11':
     resolution: {integrity: sha512-jzqWo/uQP/iqeGGTjhgFp2yaCrCYTauASQcpdzESNCkHjSprBJVcZP9KG9aQ0q+xcsXiKd/iuw/4dLjS3Odc7Q==}
+
+  '@types/lodash@4.17.20':
+    resolution: {integrity: sha512-H3MHACvFUEiujabxhaI/ImO6gUrd8oOurg7LQtS7mbwIXA/cUqWrvBsaeJ23aZEPk1TAYkurjfMbSELfoCXlGA==}
 
   '@types/minimatch@3.0.5':
     resolution: {integrity: sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==}
@@ -7801,6 +7808,8 @@ snapshots:
   '@types/json5@0.0.29': {}
 
   '@types/lodash@4.17.11': {}
+
+  '@types/lodash@4.17.20': {}
 
   '@types/minimatch@3.0.5': {}
 

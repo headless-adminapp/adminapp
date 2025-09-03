@@ -72,7 +72,7 @@ export interface SectionQuickViewControl<
   S extends SchemaAttributes = SchemaAttributes
 > extends BaseSectionControl {
   type: 'quickview';
-  logicalName: string;
+  // logicalName: string;
   attributeName: string;
   form: QuickViewForm<S>;
 }

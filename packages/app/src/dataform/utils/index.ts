@@ -565,7 +565,7 @@ function extendAttributeStringValidationSchema({
     );
   }
 
-  if (attribute.pattern) {
+  if ('pattern' in attribute && attribute.pattern) {
     // extend the validation schema with the pattern
     validationSchema = validationSchema.matches(
       new RegExp(attribute.pattern),
@@ -694,4 +694,70 @@ export const generateAttributeValidationSchema = memoize(
 
     return validationSchema;
   }
+);
+
+export const generateAttributesValidationSchema = memoize(
+  function generateAttributesValidationSchema<
+    A extends SchemaAttributes = SchemaAttributes
+  >({
+    attributes,
+    language,
+    strings,
+    region,
+  }: {
+    attributes: A;
+    language: string;
+    strings: FormValidationStringSet;
+    region: string;
+  }) {
+    const columns = Object.keys(attributes);
+    return yup.object().shape({
+      ...(columns.reduce((acc, column) => {
+        const attribute = attributes[column];
+
+        const validationSchema = generateAttributeValidationSchema(
+          attribute,
+          language,
+          strings,
+          region
+        );
+
+        return {
+          ...acc,
+          [column]: validationSchema,
+        };
+      }, {} as Record<string, yup.Schema<any>>) as any),
+    });
+  },
+  (options) => JSON.stringify(options)
+);
+
+export const attributesFormValidator = memoize(
+  function formValidator<A extends SchemaAttributes = SchemaAttributes>({
+    attributes,
+    language,
+    strings,
+    region,
+  }: {
+    attributes: A;
+    language: string;
+    strings: FormValidationStringSet;
+    region: string;
+  }) {
+    return async (values: Record<string, any>, context: any, options: any) => {
+      const validator = generateAttributesValidationSchema({
+        attributes,
+        language,
+        strings,
+        region,
+      });
+
+      const resolver = yupResolver(validator);
+
+      const result = await resolver(values, context, options);
+
+      return result;
+    };
+  },
+  (options) => JSON.stringify(options)
 );
