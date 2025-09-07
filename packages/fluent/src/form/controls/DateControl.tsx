@@ -60,6 +60,7 @@ export function DateControl({
       style={{
         width: '100%',
         borderRadius: extendedTokens.controlBorderRadius,
+        minHeight: extendedTokens.controlMinHeightM,
       }}
       input={{
         style: {

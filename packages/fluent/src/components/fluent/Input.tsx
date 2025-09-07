@@ -13,6 +13,7 @@ import { extendedTokens } from './tokens';
 const useStyles = makeStyles({
   root: {
     borderRadius: extendedTokens.controlBorderRadius,
+    minHeight: extendedTokens.controlMinHeightM,
     '&::after': {
       borderBottomLeftRadius: extendedTokens.controlBorderRadius,
       borderBottomRightRadius: extendedTokens.controlBorderRadius,

@@ -12,6 +12,7 @@ import { extendedTokens } from './tokens';
 const useStyles = makeStyles({
   root: {
     borderRadius: extendedTokens.controlBorderRadius,
+    minHeight: extendedTokens.controlMinHeightM,
   },
   listbox: {
     borderRadius: extendedTokens.paperBorderRadius,

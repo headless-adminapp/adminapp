@@ -26,7 +26,8 @@ import { isColorDark } from '@headless-adminapp/app/utils/color';
 import { Icons } from '@headless-adminapp/icons';
 import { FC, ReactNode, useMemo, useState } from 'react';
 
-import { MenuItem, PopoverSurface } from '../components/fluent';
+import { extendedTokens, MenuItem, PopoverSurface } from '../components/fluent';
+import { useExtendedThemeContext } from '../components/fluent/FluentProvider';
 import { AppLogo } from './AppLogo';
 import { useAppStrings } from './AppStringContext';
 import { QuickActionItem } from './QuickActionItem';
@@ -69,13 +70,26 @@ const NavHamburger: FC<NavHamburgerProps> = ({ onNavToggle }) => {
 const NavBackButton: FC = () => {
   const isMobile = useIsMobile();
   const router = useRouter();
+  const { density } = useExtendedThemeContext();
+
+  let size: number | undefined = undefined;
+
+  if (isMobile) {
+    size = 44;
+  }
+
+  if (density === 'comfortable') {
+    size = 48;
+  }
 
   return (
     <Hamburger
       style={{
         color: 'inherit',
-        width: !isMobile ? 44 : undefined,
-        maxWidth: !isMobile ? 44 : undefined,
+        width: size,
+        maxWidth: size,
+        flexShrink: 0,
+        height: size,
       }}
       icon={<Icons.ArrowLeft />}
       onClick={async () => {
@@ -266,8 +280,8 @@ const AppDesktopHeader: FC<AppHeaderContainerProps> = ({ onNavToggle }) => {
         style={{
           display: 'flex',
           alignItems: 'center',
-          height: 50,
-          minHeight: 50,
+          height: extendedTokens.appBarHeight,
+          minHeight: extendedTokens.appBarHeight,
           background,
           paddingInline: 8,
           gap: 8,
@@ -309,8 +323,8 @@ const AppMobileHeader: FC<AppHeaderContainerProps> = ({ onNavToggle }) => {
       style={{
         display: 'flex',
         alignItems: 'center',
-        height: 50,
-        minHeight: 50,
+        height: extendedTokens.appBarHeight,
+        minHeight: extendedTokens.appBarHeight,
         background,
         paddingInline: 8,
         gap: 8,

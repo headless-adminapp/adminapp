@@ -145,7 +145,11 @@ export function DateTimeControl({
             <Icons.Calendar size={20} />
           </div>
         }
-        style={{ flex: 1, borderRadius: extendedTokens.controlBorderRadius }}
+        style={{
+          flex: 1,
+          borderRadius: extendedTokens.controlBorderRadius,
+          minHeight: extendedTokens.controlMinHeightM,
+        }}
         input={{
           style: { minWidth: 0, width: '100%' },
         }}
@@ -162,6 +166,7 @@ export function DateTimeControl({
           minWidth: 0,
           pointerEvents: isReadonly ? 'none' : 'auto',
           borderRadius: extendedTokens.controlBorderRadius,
+          minHeight: extendedTokens.controlMinHeightM,
         }}
         input={{
           style: { minWidth: 0 },

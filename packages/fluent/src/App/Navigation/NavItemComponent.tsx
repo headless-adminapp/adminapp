@@ -30,6 +30,7 @@ export const NavItemComponent: FC<NavItemComponentProps> = ({
           ? tokens.colorNeutralBackground4Hover
           : undefined,
         borderRadius: extendedTokens.paperBorderRadius,
+        paddingBlock: extendedTokens.navItempaddingVertical,
       }}
       icon={
         <item.Icon

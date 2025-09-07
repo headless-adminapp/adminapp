@@ -75,7 +75,7 @@ export const QuickActionItem: FC<QuickActionItemProps> = ({
       style={{
         position: 'relative',
         fontWeight: tokens.fontWeightRegular,
-        minWidth: 'unset',
+        minWidth: type === 'button' ? 'unset' : undefined,
       }}
       as="a"
       href={fullLink}

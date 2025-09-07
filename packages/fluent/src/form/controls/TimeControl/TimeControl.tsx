@@ -77,6 +77,7 @@ export function TimeControl({
           minWidth: 0,
           pointerEvents: isReadonly ? 'none' : 'auto',
           borderRadius: extendedTokens.controlBorderRadius,
+          minHeight: extendedTokens.controlMinHeightM,
         }}
         placeholder={placeholder}
         id={id}

@@ -7,6 +7,7 @@ import { Icons } from '@headless-adminapp/icons';
 import { FC } from 'react';
 
 import { QuickActionItem } from '../App/QuickActionItem';
+import { extendedTokens } from './fluent';
 
 interface DrawerHeaderProps {
   title: string;
@@ -35,8 +36,8 @@ export const DrawerHeader: FC<DrawerHeaderProps> = ({
           style={{
             display: 'flex',
             alignItems: 'center',
-            height: 50,
-            minHeight: 50,
+            height: extendedTokens.appBarHeight,
+            minHeight: extendedTokens.appBarHeight,
             background: tokens.colorNeutralBackground3,
             paddingInline: 8,
             gap: 8,

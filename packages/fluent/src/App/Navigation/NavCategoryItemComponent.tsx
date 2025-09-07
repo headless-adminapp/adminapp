@@ -6,6 +6,7 @@ import {
 import { IconPlaceholder } from '@headless-adminapp/icons';
 import { FC } from 'react';
 
+import { extendedTokens } from '../../components/fluent';
 import { NavCategoryInfo } from './types';
 
 const useStyles = makeStyles({
@@ -40,6 +41,9 @@ export const NavCategoryItemComponent: FC<NavCategoryItemComponentProps> = ({
         />
       }
       className={isActive ? styles.activeNavCategoryItem : undefined}
+      style={{
+        paddingBlock: extendedTokens.navItempaddingVertical,
+      }}
     >
       {item.label}
     </NavCategoryItem>

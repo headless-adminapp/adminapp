@@ -30,6 +30,7 @@ import { FC, Fragment, PropsWithChildren, useRef } from 'react';
 import { Controller } from 'react-hook-form';
 
 import { extendedTokens } from '../components/fluent';
+import { useExtendedThemeContext } from '../components/fluent/FluentProvider';
 import { PageBroken } from '../components/PageBroken';
 import { FormBody } from '../form/layout/FormBody';
 import { FormTab } from '../form/layout/FormTab';
@@ -312,7 +313,9 @@ const Wrapper: FC<PropsWithChildren<WrapperProps>> = ({
 
   const rect = useElementSize(formHeaderDivRef, isMobile ? 100 : 5000);
 
-  const headerHeight = 50;
+  const { density } = useExtendedThemeContext();
+
+  const headerHeight = density === 'compact' ? 48 : 64;
   const tabContainerHeight = 36;
 
   const visible = !!rect && rect.bottom < headerHeight + tabContainerHeight;

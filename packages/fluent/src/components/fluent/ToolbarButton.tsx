@@ -15,6 +15,11 @@ const useStyles = makeStyles({
   root: {
     fontWeight: tokens.fontWeightRegular,
     borderRadius: extendedTokens.buttonBorderRadius,
+    minHeight: extendedTokens.buttonMinHeightM,
+    '&[data-icon-only="true"]': {
+      minWidth: extendedTokens.buttonMinHeightM,
+      maxWidth: extendedTokens.buttonMinHeightM,
+    },
   },
 });
 
@@ -29,6 +34,7 @@ export const ToolbarButton: ForwardRefComponent<ExtendedToolbarButtonProps> =
       <ToolbarButtonInternal
         {...rest}
         className={mergeClasses(className, styles.root)}
+        data-icon-only={!rest.children && !!rest.icon ? 'true' : undefined}
         ref={ref}
       />
     );

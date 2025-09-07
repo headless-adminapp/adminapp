@@ -15,6 +15,27 @@ const useStyles = makeStyles({
     fontWeight: tokens.fontWeightRegular,
     borderRadius: extendedTokens.buttonBorderRadius,
   },
+  small: {
+    minHeight: extendedTokens.buttonMinHeightS,
+    '&[data-icon-only="true"]': {
+      minWidth: extendedTokens.buttonMinHeightS,
+      maxWidth: extendedTokens.buttonMinHeightS,
+    },
+  },
+  medium: {
+    minHeight: extendedTokens.buttonMinHeightM,
+    '&[data-icon-only="true"]': {
+      minWidth: extendedTokens.buttonMinHeightM,
+      maxWidth: extendedTokens.buttonMinHeightM,
+    },
+  },
+  large: {
+    minHeight: extendedTokens.buttonMinHeightL,
+    '&[data-icon-only="true"]': {
+      minWidth: extendedTokens.buttonMinHeightL,
+      maxWidth: extendedTokens.buttonMinHeightL,
+    },
+  },
 });
 
 type ExtendedButtonProps = ButtonProps;
@@ -25,7 +46,12 @@ export const Button: ForwardRefComponent<ExtendedButtonProps> = forwardRef(
     return (
       <ButtonInternal
         {...rest}
-        className={mergeClasses(className, styles.root)}
+        className={mergeClasses(
+          className,
+          styles.root,
+          styles[rest.size || 'medium']
+        )}
+        data-icon-only={!rest.children && !!rest.icon ? 'true' : undefined}
         ref={ref}
       />
     );
