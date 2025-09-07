@@ -47,9 +47,9 @@ export const Button: ForwardRefComponent<ExtendedButtonProps> = forwardRef(
       <ButtonInternal
         {...rest}
         className={mergeClasses(
-          className,
           styles.root,
-          styles[rest.size || 'medium']
+          styles[rest.size || 'medium'],
+          className
         )}
         data-icon-only={!rest.children && !!rest.icon ? 'true' : undefined}
         ref={ref}

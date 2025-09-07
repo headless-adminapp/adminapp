@@ -49,13 +49,12 @@ export const Dropdown: ForwardRefComponent<ExtendedDropdownProps> = forwardRef(
       <DropdownInternal
         {...rest}
         className={mergeClasses(
-          className,
           styles.root,
-          (rest.appearance === 'outline' || !rest.appearance) && styles.outlined
+          (rest.appearance === 'outline' || !rest.appearance) &&
+            styles.outlined,
+          className
         )}
         ref={ref}
-        // open
-        // onOpenChange={() => {}}
         listbox={{
           className: styles.listbox,
         }}

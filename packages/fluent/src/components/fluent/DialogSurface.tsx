@@ -23,7 +23,7 @@ export const DialogSurface: ForwardRefComponent<ExtendedDialogSurfaceProps> =
     return (
       <DialogSurfaceInternal
         {...rest}
-        className={mergeClasses(className, styles.root)}
+        className={mergeClasses(styles.root, className)}
         ref={ref}
       />
     );

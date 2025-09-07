@@ -54,10 +54,11 @@ export const Input: ForwardRefComponent<ExtendedInputProps> = forwardRef(
       <InputInternal
         {...rest}
         className={mergeClasses(
-          className,
           styles.root,
           rest.readOnly && styles.readonly,
-          (rest.appearance === 'outline' || !rest.appearance) && styles.outlined
+          (rest.appearance === 'outline' || !rest.appearance) &&
+            styles.outlined,
+          className
         )}
         ref={ref}
       />

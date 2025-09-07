@@ -39,9 +39,9 @@ export const Textarea: ForwardRefComponent<ExtendedTextareaProps> = forwardRef(
       <TextareaInternal
         {...rest}
         className={mergeClasses(
-          className,
           styles.root,
-          rest.readOnly && styles.readonly
+          rest.readOnly && styles.readonly,
+          className
         )}
         ref={ref}
       />

@@ -25,7 +25,7 @@ export const MenuPopover: ForwardRefComponent<ExtendedMenuPopoverProps> =
     return (
       <MenuPopoverInternal
         {...rest}
-        className={mergeClasses(className, styles.root)}
+        className={mergeClasses(styles.root, className)}
         ref={ref}
       />
     );

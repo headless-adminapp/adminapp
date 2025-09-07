@@ -24,7 +24,7 @@ export const MenuItem: ForwardRefComponent<ExtendedMenuItemProps> = forwardRef(
     return (
       <MenuItemInternal
         {...rest}
-        className={mergeClasses(className, styles.root)}
+        className={mergeClasses(styles.root, className)}
         ref={ref}
       />
     );

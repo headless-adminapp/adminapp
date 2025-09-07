@@ -33,7 +33,7 @@ export const ToolbarButton: ForwardRefComponent<ExtendedToolbarButtonProps> =
     return (
       <ToolbarButtonInternal
         {...rest}
-        className={mergeClasses(className, styles.root)}
+        className={mergeClasses(styles.root, className)}
         data-icon-only={!rest.children && !!rest.icon ? 'true' : undefined}
         ref={ref}
       />

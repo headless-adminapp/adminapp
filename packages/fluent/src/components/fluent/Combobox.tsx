@@ -27,7 +27,7 @@ export const Combobox: ForwardRefComponent<ExtendedComboboxProps> = forwardRef(
     return (
       <ComboboxInternal
         {...rest}
-        className={mergeClasses(className, styles.root)}
+        className={mergeClasses(styles.root, className)}
         ref={ref}
         listbox={{
           className: styles.listbox,

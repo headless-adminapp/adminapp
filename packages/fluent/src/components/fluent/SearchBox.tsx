@@ -53,10 +53,10 @@ export const SearchBox: ForwardRefComponent<ExtendedSearchBoxProps> =
       <SearchBoxInternal
         {...rest}
         className={mergeClasses(
-          className,
           styles.root,
           rest.readOnly && styles.readonly,
-          rest.appearance === 'outline' && styles.outlined
+          rest.appearance === 'outline' && styles.outlined,
+          className
         )}
         ref={ref}
       />

@@ -24,7 +24,7 @@ export const SpinButton: ForwardRefComponent<ExtendedSpinButtonProps> =
     return (
       <SpinButtonInternal
         {...rest}
-        className={mergeClasses(className, styles.root)}
+        className={mergeClasses(styles.root, className)}
         ref={ref}
       />
     );

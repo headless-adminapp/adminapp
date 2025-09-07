@@ -17,7 +17,7 @@ export type LayoutProviderProps = Omit<
   'containers'
 > & {
   theme?: PartialTheme;
-} & ExtendedThemeProps;
+} & Partial<ExtendedThemeProps>;
 
 export const LayoutProvider: FC<PropsWithChildren<LayoutProviderProps>> = ({
   children,
