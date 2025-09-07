@@ -1,6 +1,7 @@
 import { tokens } from '@fluentui/react-components';
 import React, { FC } from 'react';
 
+import { extendedTokens } from '../components/fluent';
 import { MobileHeaderRightContainer } from '../DataGrid/MobileHeaderRightContainer';
 
 interface PageEntityViewMobileFrameProps {
@@ -50,7 +51,7 @@ export const PageEntityViewMobileFrame: FC<PageEntityViewMobileFrameProps> = ({
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            borderRadius: tokens.borderRadiusMedium,
+            borderRadius: extendedTokens.paperBorderRadius,
           }}
         >
           <div

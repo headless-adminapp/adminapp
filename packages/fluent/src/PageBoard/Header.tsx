@@ -1,10 +1,4 @@
-import {
-  Button,
-  Caption1,
-  SearchBox,
-  Subtitle2,
-  tokens,
-} from '@fluentui/react-components';
+import { Caption1, Subtitle2, tokens } from '@fluentui/react-components';
 import {
   useBoardSchema,
   useSearchText,
@@ -15,6 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { FC } from 'react';
 
 import { useAppStrings } from '../App/AppStringContext';
+import { Button, SearchBox } from '../components/fluent';
 import { HeaderQuickFilter } from './HeaderQuickFilter';
 
 interface HeaderProps {

@@ -29,6 +29,7 @@ import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
 import { FC, Fragment, PropsWithChildren, useRef } from 'react';
 import { Controller } from 'react-hook-form';
 
+import { extendedTokens } from '../components/fluent';
 import { PageBroken } from '../components/PageBroken';
 import { FormBody } from '../form/layout/FormBody';
 import { FormTab } from '../form/layout/FormTab';
@@ -112,7 +113,7 @@ export const PageEntityFormDesktopContainer: FC = () => {
               style={{
                 // padding: 4,
                 boxShadow: tokens.shadow2,
-                borderRadius: tokens.borderRadiusMedium,
+                borderRadius: extendedTokens.paperBorderRadius,
                 background: tokens.colorNeutralBackground1,
                 display: 'flex',
                 // overflow: 'hidden',
@@ -135,7 +136,7 @@ export const PageEntityFormDesktopContainer: FC = () => {
               display: 'flex',
               flexDirection: 'column',
               boxShadow: tokens.shadow4,
-              borderRadius: tokens.borderRadiusMedium,
+              borderRadius: extendedTokens.paperBorderRadius,
               background: tokens.colorNeutralBackground1,
               overflow: 'hidden',
               zIndex: 2,
@@ -321,7 +322,8 @@ const Wrapper: FC<PropsWithChildren<WrapperProps>> = ({
       <ScrollView>
         <div
           style={{
-            background: tokens.colorNeutralBackground1,
+            background: tokens.colorNeutralBackgroundAlpha,
+            backdropFilter: 'blur(15px)',
             position: 'fixed',
             transition: 'all 0.2s',
             top: visible ? headerHeight : -headerHeight,

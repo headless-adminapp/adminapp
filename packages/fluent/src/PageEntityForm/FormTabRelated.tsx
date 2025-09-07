@@ -6,6 +6,7 @@ import {
 } from '@headless-adminapp/app/dataform/hooks';
 import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 
+import { extendedTokens } from '../components/fluent';
 import { FormTab } from '../form/layout/FormTab';
 import { SubgridControl } from './SubgridControl';
 
@@ -40,7 +41,7 @@ export function FormTabRelated({
               display: 'flex',
               flexDirection: 'column',
               boxShadow: tokens.shadow2,
-              borderRadius: tokens.borderRadiusMedium,
+              borderRadius: extendedTokens.paperBorderRadius,
               background: tokens.colorNeutralBackground1,
               flex: 1,
             }}

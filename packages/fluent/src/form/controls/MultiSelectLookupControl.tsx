@@ -1,16 +1,12 @@
 import {
   Body1,
-  Combobox,
   Divider,
   Link,
   makeStyles,
   mergeClasses,
-  Option,
   Spinner,
-  Tag,
   TagGroup,
   tokens,
-  ToolbarButton,
 } from '@fluentui/react-components';
 import { useDebouncedValue } from '@headless-adminapp/app/hooks';
 import { useRecentItemStore } from '@headless-adminapp/app/metadata/hooks/useRecentItemStore';
@@ -30,6 +26,8 @@ import { Icons } from '@headless-adminapp/icons';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
+import { Combobox, Tag, ToolbarButton } from '../../components/fluent';
+import { Option } from '../../components/fluent/Option';
 import { RecordCard } from '../../PageEntityForm/RecordCard';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
@@ -243,7 +241,12 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
         }}
         placeholder={placeholder}
         inputMode="search"
-        style={{ width: '100%', height: '100%', minWidth: 'unset' }}
+        style={{
+          width: '100%',
+          height: '100%',
+          minWidth: 'unset',
+          paddingRight: tokens.spacingHorizontalXS,
+        }}
         autoComplete="off"
         readOnly={readOnly || disabled}
         open={open && !readOnly && !disabled}
@@ -303,10 +306,7 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
           <>
             <Divider />
             <div style={{ marginTop: tokens.spacingVerticalXXS }}>
-              <ToolbarButton
-                style={{ fontWeight: 'normal' }}
-                icon={<Icons.Add />}
-              >
+              <ToolbarButton icon={<Icons.Add />}>
                 {lookupStrings.newRecord}
               </ToolbarButton>
             </div>

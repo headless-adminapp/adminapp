@@ -1,14 +1,12 @@
-import {
-  FluentProvider,
-  PartialTheme,
-  webLightTheme,
-} from '@fluentui/react-components';
+import { PartialTheme, webLightTheme } from '@fluentui/react-components';
 import {
   LayoutProvider as LayoutProviderInternal,
   LayoutProviderProps as LayoutProviderIntenralProps,
 } from '@headless-adminapp/app/app/LayoutProvider';
 import { FC, PropsWithChildren } from 'react';
 
+import { FluentProvider } from '../components/fluent';
+import { ExtendedThemeProps } from '../components/fluent/FluentProvider';
 import { DialogContainer } from '../DialogContainer';
 import { ProgressIndicatorContainer } from '../ProgressIndicatorContainer';
 import { QuickCreateContainer } from '../QuickCreateContainer';
@@ -19,15 +17,21 @@ export type LayoutProviderProps = Omit<
   'containers'
 > & {
   theme?: PartialTheme;
-};
+} & ExtendedThemeProps;
 
 export const LayoutProvider: FC<PropsWithChildren<LayoutProviderProps>> = ({
   children,
   theme,
+  corners,
+  density,
   ...rest
 }) => {
   return (
-    <FluentProvider theme={theme ?? webLightTheme}>
+    <FluentProvider
+      theme={theme ?? webLightTheme}
+      corners={corners}
+      density={density}
+    >
       <LayoutProviderInternal
         {...rest}
         containers={{

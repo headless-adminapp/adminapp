@@ -1,13 +1,12 @@
 import {
-  Input,
   makeStyles,
   Popover,
-  PopoverSurface,
   PopoverTrigger,
 } from '@fluentui/react-components';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useMemo, useState } from 'react';
 
+import { Input, PopoverSurface } from '../../../components/fluent';
 import { SkeletonControl } from '../SkeletonControl';
 import { ControlProps } from '../types';
 import { PopoverContent } from './PopoverContent';

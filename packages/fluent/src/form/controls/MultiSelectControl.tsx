@@ -1,6 +1,7 @@
-import { Dropdown, Option } from '@fluentui/react-components';
+import { tokens } from '@fluentui/react-components';
 import { useMemo } from 'react';
 
+import { Dropdown, Option } from '../../components/fluent';
 import { Lookup } from './SelectControl';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
@@ -59,6 +60,16 @@ export default function MultiSelectControl<T extends string | number>({
       disabled={disabled}
       style={{
         width: '100%',
+      }}
+      clearButton={{
+        style: {
+          marginRight: tokens.spacingHorizontalXS,
+        },
+      }}
+      expandIcon={{
+        style: {
+          marginRight: -6,
+        },
       }}
     >
       {transformedOptions.map((x) => (

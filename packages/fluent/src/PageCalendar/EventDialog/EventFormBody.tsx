@@ -1,5 +1,4 @@
 import {
-  Button,
   DialogActions,
   DialogBody,
   DialogTitle,
@@ -23,6 +22,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { BodyLoading } from '../../components/BodyLoading';
+import { Button } from '../../components/fluent';
 import { EventFormContent } from './EventFormContent';
 import { BaseFieldValues } from './types';
 

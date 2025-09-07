@@ -1,9 +1,6 @@
 import {
-  Button,
   Menu,
-  MenuItem,
   MenuList,
-  MenuPopover,
   MenuTrigger,
   tokens,
 } from '@fluentui/react-components';
@@ -19,6 +16,8 @@ import { useMetadata } from '@headless-adminapp/app/metadata';
 import { Icons } from '@headless-adminapp/icons';
 import { useQuery } from '@tanstack/react-query';
 import { FC } from 'react';
+
+import { Button, MenuItem, MenuPopover } from '../components/fluent';
 
 export const MobileHeaderTitleContainer: FC = () => {
   const { language } = useLocale();

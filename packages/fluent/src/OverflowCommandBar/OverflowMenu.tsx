@@ -1,9 +1,7 @@
 import {
   Menu,
   MenuList,
-  MenuPopover,
   MenuTrigger,
-  ToolbarButton,
   useIsOverflowItemVisible,
   useOverflowMenu,
 } from '@fluentui/react-components';
@@ -14,6 +12,7 @@ import { Icons } from '@headless-adminapp/icons';
 import { Fragment } from 'react';
 
 import { MenuItem, MenuItemProps } from '../CommandBar/MenuItem';
+import { MenuPopover, ToolbarButton } from '../components/fluent';
 import { OverflowMenuDivider } from './OverflowMenuDivider';
 import { transformMenuItems } from './utils';
 

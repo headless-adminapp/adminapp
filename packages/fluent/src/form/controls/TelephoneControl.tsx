@@ -1,9 +1,10 @@
-import { Button, Input, tokens } from '@fluentui/react-components';
+import { tokens } from '@fluentui/react-components';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { parsePhoneNumber } from '@headless-adminapp/app/utils/phone';
 import { Icons } from '@headless-adminapp/icons';
 import { useEffect, useMemo, useState } from 'react';
 
+import { Button, Input } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 

@@ -1,14 +1,11 @@
 import {
   Avatar,
   Body1,
-  Combobox,
   Link,
   makeStyles,
   mergeClasses,
-  Option,
   OptionGroup,
   Spinner,
-  Tag,
   TagGroup,
   tokens,
 } from '@fluentui/react-components';
@@ -37,6 +34,8 @@ import { useQuery } from '@tanstack/react-query';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
+import { Combobox, Tag } from '../../components/fluent';
+import { Option } from '../../components/fluent/Option';
 import { RecordCard } from '../../PageEntityForm/RecordCard';
 import { getAvatarColor } from '../../utils/avatar';
 import { SkeletonControl } from './SkeletonControl';
@@ -129,7 +128,7 @@ const LookupControlMd: FC<RegardingControlProps> = ({
   }, [allowNavigation, routeResolver, value]);
 
   const handleOpenRecord = useCallback(
-    (event: React.MouseEvent) => {
+    async (event: React.MouseEvent) => {
       event.preventDefault();
       event.stopPropagation();
 
@@ -137,7 +136,7 @@ const LookupControlMd: FC<RegardingControlProps> = ({
         return;
       }
 
-      router.push(path);
+      await router.push(path);
     },
     [path, router]
   );

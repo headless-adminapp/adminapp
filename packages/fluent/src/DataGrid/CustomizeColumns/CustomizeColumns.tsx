@@ -1,4 +1,4 @@
-import { Button, Drawer, DrawerBody, tokens } from '@fluentui/react-components';
+import { Drawer, DrawerBody, tokens } from '@fluentui/react-components';
 import {
   GridContext,
   TransformedViewColumn,
@@ -14,6 +14,7 @@ import { CommandBarWrapper } from '../../CommandBar/Wrapper';
 import { DndProvider } from '../../components/DndProvider';
 import { DrawerFooter } from '../../components/DrawerFooter';
 import { DrawerHeader } from '../../components/DrawerHeader';
+import { Button } from '../../components/fluent';
 import { usePageEntityViewStrings } from '../../PageEntityView/PageEntityViewStringContext';
 import { AddColumns } from './AddColumns';
 import { ColumnItem } from './ColumnItem';
@@ -127,7 +128,6 @@ export function CustomizeColumns({ onClose, opened }: CustomizeColumnsProps) {
             onClose();
           }}
           appearance="primary"
-          style={{ fontWeight: tokens.fontWeightRegular }}
         >
           {strings.apply}
         </Button>
@@ -135,7 +135,6 @@ export function CustomizeColumns({ onClose, opened }: CustomizeColumnsProps) {
           onClick={() => {
             onClose();
           }}
-          style={{ fontWeight: tokens.fontWeightRegular }}
         >
           {strings.cancel}
         </Button>

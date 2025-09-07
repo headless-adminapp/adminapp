@@ -1,5 +1,4 @@
 import {
-  Button,
   makeStyles,
   Table,
   TableBody,
@@ -18,6 +17,7 @@ import { Icons } from '@headless-adminapp/icons';
 import { FC } from 'react';
 import { Control, Controller } from 'react-hook-form';
 
+import { Button } from '../../components/fluent';
 import { SectionControlWrapper } from '../../DataForm/SectionControl';
 import { StandardControl } from '../StandardControl';
 

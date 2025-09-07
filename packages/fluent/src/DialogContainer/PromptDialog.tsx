@@ -1,11 +1,9 @@
 import {
   Body1,
-  Button,
   Dialog,
   DialogActions,
   DialogBody,
   DialogContent,
-  DialogSurface,
   DialogTitle,
   tokens,
 } from '@fluentui/react-components';
@@ -16,6 +14,7 @@ import { PromptDialogOptions } from '@headless-adminapp/core/experience/dialog';
 import { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { Controller, useForm } from 'react-hook-form';
 
+import { Button, DialogSurface } from '../components/fluent';
 import { SectionControlWrapper } from '../DataForm/SectionControl';
 import { StandardControl } from '../PageEntityForm/StandardControl';
 

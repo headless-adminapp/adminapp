@@ -1,6 +1,7 @@
 import { NavItem, tokens } from '@fluentui/react-components';
 import { FC } from 'react';
 
+import { extendedTokens } from '../../components/fluent';
 import { NavItemInfo } from './types';
 import { usePrefetch } from './usePrefetch';
 
@@ -28,10 +29,11 @@ export const NavItemComponent: FC<NavItemComponentProps> = ({
         backgroundColor: item.active
           ? tokens.colorNeutralBackground4Hover
           : undefined,
+        borderRadius: extendedTokens.paperBorderRadius,
       }}
       icon={
         <item.Icon
-          size={20}
+          size="1.4em"
           filled={item.active}
           color={
             item.active

@@ -1,6 +1,5 @@
 /* eslint-disable unused-imports/no-unused-vars */
-import { SpinButton } from '@fluentui/react-components';
-
+import { SpinButton } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 

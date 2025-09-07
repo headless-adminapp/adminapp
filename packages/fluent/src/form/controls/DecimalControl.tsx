@@ -1,7 +1,7 @@
 /* eslint-disable unused-imports/no-unused-vars */
-import { Input } from '@fluentui/react-components';
 import { useEffect, useRef, useState } from 'react';
 
+import { Input } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 

@@ -4,10 +4,6 @@ body {
   margin: 0;
 }
 
-.TextControl_readonly:after {
-  border-bottom-color: var(--colorNeutralStrokeDisabled) !important;
-}
-
 .FormBody_scrollview > div {
   display: flex;
   flex-direction: column;

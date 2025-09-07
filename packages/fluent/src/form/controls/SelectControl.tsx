@@ -1,6 +1,8 @@
-import { Dropdown, Option } from '@fluentui/react-components';
+import { tokens } from '@fluentui/react-components';
 import { useMemo } from 'react';
 
+import { Dropdown } from '../../components/fluent';
+import { Option } from '../../components/fluent/Option';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
@@ -71,6 +73,16 @@ export default function SelectControl<T extends string | number>({
         minWidth: 'unset',
       }}
       clearable={clearable}
+      clearButton={{
+        style: {
+          marginRight: tokens.spacingHorizontalXS,
+        },
+      }}
+      expandIcon={{
+        style: {
+          marginRight: -6,
+        },
+      }}
     >
       {transformedOptions.map((x) => (
         <Option key={x.value} value={x.value}>

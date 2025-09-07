@@ -1,6 +1,7 @@
-import { Button, Input, tokens } from '@fluentui/react-components';
+import { tokens } from '@fluentui/react-components';
 import { Icons } from '@headless-adminapp/icons';
 
+import { Button, Input } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 

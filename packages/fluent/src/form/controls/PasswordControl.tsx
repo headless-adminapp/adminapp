@@ -1,8 +1,9 @@
-import { Button, Input, InputProps } from '@fluentui/react-components';
+import { InputProps, tokens } from '@fluentui/react-components';
 import { Icons } from '@headless-adminapp/icons';
 import { useState } from 'react';
 
 import { ControlProps } from './types';
+import { Button, Input } from '../../components/fluent';
 
 export interface PasswordControlProps extends ControlProps<string> {
   appearance?: InputProps['appearance'];
@@ -35,7 +36,11 @@ export function PasswordControl({
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}
       // invalid={error}
-      disabled={disabled}
+      readOnly={disabled}
+      style={{
+        width: '100%',
+        paddingRight: tokens.spacingHorizontalXS,
+      }}
       contentAfter={
         <Button
           appearance="transparent"

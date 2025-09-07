@@ -1,4 +1,4 @@
-import { Button, Divider, tokens } from '@fluentui/react-components';
+import { Divider, tokens } from '@fluentui/react-components';
 import { useEventManager } from '@headless-adminapp/app/dataform';
 import { EVENT_KEY_ON_FIELD_CHANGE } from '@headless-adminapp/app/dataform/constants';
 import { useIsMobile, useIsTablet } from '@headless-adminapp/app/hooks';
@@ -9,6 +9,7 @@ import { Icons } from '@headless-adminapp/icons';
 import { FC } from 'react';
 import { Control, Controller } from 'react-hook-form';
 
+import { Button, extendedTokens } from '../../components/fluent';
 import { SectionControlWrapper } from '../../DataForm/SectionControl';
 import { StandardControl } from '../StandardControl';
 
@@ -61,7 +62,7 @@ export const CardUi: FC<CardUiProps> = ({
           key={item.__key}
           style={{
             boxShadow: tokens.shadow4,
-            borderRadius: tokens.borderRadiusMedium,
+            borderRadius: extendedTokens.paperBorderRadius,
             padding: tokens.spacingVerticalM,
             position: 'relative',
             display: 'flex',
@@ -156,7 +157,6 @@ export const CardUi: FC<CardUiProps> = ({
               appearance="primary"
               onClick={() => onRemoveRow?.(index)}
               style={{
-                fontWeight: tokens.fontWeightRegular,
                 alignSelf: 'flex-start',
                 color: tokens.colorStatusDangerForeground1,
                 backgroundColor: tokens.colorStatusDangerBackground1,

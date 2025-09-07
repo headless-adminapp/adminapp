@@ -1,5 +1,4 @@
 import {
-  Button,
   Caption1,
   Link,
   Tag,
@@ -14,6 +13,7 @@ import { fileToObject } from '@headless-adminapp/core/utils';
 import { Icons } from '@headless-adminapp/icons';
 import { FC, useRef } from 'react';
 
+import { Button, extendedTokens } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
@@ -42,7 +42,10 @@ export const AttachmentsControl: FC<AttachmentsControlProps> = ({
           onFocus={onFocus}
           onBlur={onBlur}
           id={id}
-          style={{ paddingBlock: tokens.spacingVerticalXXS }}
+          style={{
+            paddingBlock: tokens.spacingVerticalXXS,
+            borderRadius: extendedTokens.controlBorderRadius,
+          }}
           expandIcon={null}
         >
           <TagGroup

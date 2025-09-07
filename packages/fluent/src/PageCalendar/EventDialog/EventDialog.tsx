@@ -1,4 +1,4 @@
-import { Dialog, DialogSurface } from '@fluentui/react-components';
+import { Dialog } from '@fluentui/react-components';
 import {
   BaseEventAttributes,
   baseEventAttributes,
@@ -14,6 +14,7 @@ import {
 import { defineSchemaAttributes } from '@headless-adminapp/core/schema/utils';
 import { Nullable } from '@headless-adminapp/core/types';
 
+import { DialogSurface } from '../../components/fluent';
 import { EventFormBody } from './EventFormBody';
 
 export function defineEventAttributes<

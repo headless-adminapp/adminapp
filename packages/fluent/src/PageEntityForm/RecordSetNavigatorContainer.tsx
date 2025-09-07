@@ -18,6 +18,7 @@ import {
 } from '@headless-adminapp/app/recordset/hooks';
 import { FC, Fragment } from 'react';
 
+import { extendedTokens } from '../components/fluent';
 import { RecordCard } from './RecordCard';
 
 const useStyles = makeStyles({
@@ -74,7 +75,7 @@ export const RecordSetNavigatorContainer: FC = () => {
       <div
         style={{
           boxShadow: tokens.shadow2,
-          borderRadius: tokens.borderRadiusMedium,
+          borderRadius: extendedTokens.paperBorderRadius,
           background: tokens.colorNeutralBackground1,
           display: 'flex',
           minWidth: 320,

@@ -1,9 +1,11 @@
-import { Combobox, makeStyles, Option } from '@fluentui/react-components';
+import { makeStyles, tokens } from '@fluentui/react-components';
 import { formatDuration } from '@headless-adminapp/app/utils';
 import { FC, useEffect, useMemo, useState } from 'react';
 
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
+import { Combobox } from '../../components/fluent';
+import { Option } from '../../components/fluent/Option';
 
 const useStyles = makeStyles({
   listbox: {
@@ -148,7 +150,11 @@ export const DurationControl: FC<DurationControlProps> = ({
         appearance="filled-darker"
         placeholder={placeholder}
         inputMode="search"
-        style={{ width: '100%', minWidth: 'unset' }}
+        style={{
+          width: '100%',
+          minWidth: 'unset',
+          paddingRight: tokens.spacingHorizontalXS,
+        }}
         listbox={{ className: styles.listbox }}
         autoComplete="off"
         readOnly={readOnly || disabled}

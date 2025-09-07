@@ -1,11 +1,8 @@
 import {
   Body1,
-  Button,
   Menu,
   MenuDivider,
-  MenuItem,
   MenuList,
-  MenuPopover,
   MenuTrigger,
   Spinner,
   tokens,
@@ -24,6 +21,12 @@ import { Icons } from '@headless-adminapp/icons';
 import { useMutation } from '@tanstack/react-query';
 import { FC, useMemo } from 'react';
 
+import {
+  Button,
+  extendedTokens,
+  MenuItem,
+  MenuPopover,
+} from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
@@ -129,7 +132,7 @@ const AttachmentImageControl: FC<AttachmentImageControlProps> = ({
             width: 100,
             height: 100,
             backgroundColor: tokens.colorNeutralBackground2,
-            borderRadius: tokens.borderRadiusMedium,
+            borderRadius: extendedTokens.controlBorderRadius,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -162,7 +165,7 @@ const AttachmentImageControl: FC<AttachmentImageControlProps> = ({
             maxHeight: '100%',
             maxWidth: '100%',
             objectFit: 'contain',
-            borderRadius: tokens.borderRadiusMedium,
+            borderRadius: extendedTokens.controlBorderRadius,
           }}
         />
         <div style={{ position: 'absolute', top: 0, right: 0 }}>
@@ -295,7 +298,7 @@ export const AttachmentControl: FC<AttachmentControlProps> = ({
             style={{
               width: '100%',
               height: 30,
-              borderRadius: tokens.borderRadiusMedium,
+              borderRadius: extendedTokens.controlBorderRadius,
               backgroundColor: tokens.colorNeutralBackground3,
               display: 'flex',
               paddingLeft: tokens.spacingHorizontalS,
@@ -342,7 +345,7 @@ export const AttachmentControl: FC<AttachmentControlProps> = ({
           style={{
             width: '100%',
             height: 30,
-            borderRadius: tokens.borderRadiusMedium,
+            borderRadius: extendedTokens.controlBorderRadius,
             backgroundColor: tokens.colorNeutralBackground3,
             display: 'flex',
             paddingLeft: tokens.spacingHorizontalS,

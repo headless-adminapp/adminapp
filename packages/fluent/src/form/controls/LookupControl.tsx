@@ -1,17 +1,13 @@
 import {
   Avatar,
   Body1,
-  Combobox,
   Divider,
   Link,
   makeStyles,
   mergeClasses,
-  Option,
   Spinner,
-  Tag,
   TagGroup,
   tokens,
-  ToolbarButton,
 } from '@fluentui/react-components';
 import { useAppContext } from '@headless-adminapp/app/app';
 import { useDebouncedValue } from '@headless-adminapp/app/hooks';
@@ -36,6 +32,8 @@ import { IconPlaceholder, Icons } from '@headless-adminapp/icons';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
+import { Combobox, Tag, ToolbarButton } from '../../components/fluent';
+import { Option } from '../../components/fluent/Option';
 import { RecordCard } from '../../PageEntityForm/RecordCard';
 import { getAvatarColor } from '../../utils/avatar';
 import { SkeletonControl } from './SkeletonControl';
@@ -224,7 +222,11 @@ const LookupControlMd: FC<LookupControlProps> = ({
         }
         placeholder={!value ? placeholder : ''}
         inputMode="search"
-        style={{ width: '100%', minWidth: 'unset' }}
+        style={{
+          width: '100%',
+          minWidth: 'unset',
+          paddingRight: tokens.spacingHorizontalXS,
+        }}
         input={{
           style: {
             width: '100%',
@@ -296,7 +298,6 @@ const LookupControlMd: FC<LookupControlProps> = ({
             <Divider />
             <div style={{ marginTop: tokens.spacingVerticalXXS }}>
               <ToolbarButton
-                style={{ fontWeight: 'normal' }}
                 icon={<Icons.Add />}
                 onClick={async () => {
                   if (isQuickCreateSupported) {

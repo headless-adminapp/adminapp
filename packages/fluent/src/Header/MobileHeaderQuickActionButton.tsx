@@ -1,6 +1,8 @@
-import { Button, makeStyles, tokens } from '@fluentui/react-components';
+import { makeStyles, tokens } from '@fluentui/react-components';
 import { Icon } from '@headless-adminapp/icons';
 import { FC } from 'react';
+
+import { Button } from '../components/fluent';
 
 const useStyles = makeStyles({
   root: {
@@ -44,7 +46,6 @@ export const MobileHeaderQuickActionButton: FC<
       appearance="transparent"
       style={{
         position: 'relative',
-        fontWeight: tokens.fontWeightRegular,
         minWidth: 'unset',
       }}
       className={styles.root}

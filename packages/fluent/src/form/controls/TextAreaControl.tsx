@@ -1,6 +1,7 @@
-import { Textarea, TextareaOnChangeData } from '@fluentui/react-components';
+import { TextareaOnChangeData } from '@fluentui/react-components';
 import { useEffect, useRef } from 'react';
 
+import { Textarea } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 

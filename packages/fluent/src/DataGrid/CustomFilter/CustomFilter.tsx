@@ -1,5 +1,4 @@
 import {
-  Button,
   Divider,
   Drawer,
   DrawerBody,
@@ -15,6 +14,7 @@ import { FC, Fragment, useEffect, useMemo, useState } from 'react';
 
 import { DrawerFooter } from '../../components/DrawerFooter';
 import { DrawerHeader } from '../../components/DrawerHeader';
+import { Button } from '../../components/fluent';
 import { SectionControlWrapper } from '../../DataForm/SectionControl';
 import SelectControl from '../../form/controls/SelectControl';
 import { getDefaultOperator } from '../GridColumnHeader/utils';
@@ -236,20 +236,10 @@ const DrawerContent: FC<DrawerContentProps> = ({ onClose }) => {
         </div>
       </DrawerBody>
       <DrawerFooter>
-        <Button
-          appearance="primary"
-          disabled={!isValid}
-          onClick={handleApply}
-          style={{ fontWeight: tokens.fontWeightRegular }}
-        >
+        <Button appearance="primary" disabled={!isValid} onClick={handleApply}>
           Apply
         </Button>
-        <Button
-          onClick={handleCancel}
-          style={{ fontWeight: tokens.fontWeightRegular }}
-        >
-          Cancel
-        </Button>
+        <Button onClick={handleCancel}>Cancel</Button>
       </DrawerFooter>
     </Fragment>
   );

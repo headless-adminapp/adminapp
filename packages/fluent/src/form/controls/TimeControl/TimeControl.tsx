@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { extendedTokens } from '../../../components/fluent';
 import { SkeletonControl } from '../SkeletonControl';
 import { ControlProps } from '../types';
 import { resolveTimeValue } from './utils';
@@ -75,6 +76,7 @@ export function TimeControl({
           flex: 1,
           minWidth: 0,
           pointerEvents: isReadonly ? 'none' : 'auto',
+          borderRadius: extendedTokens.controlBorderRadius,
         }}
         placeholder={placeholder}
         id={id}
@@ -138,6 +140,11 @@ export function TimeControl({
             <Icons.Clock size={20} />
           </div>
         }
+        listbox={{
+          style: {
+            borderRadius: extendedTokens.paperBorderRadius,
+          },
+        }}
       />
     </div>
   );

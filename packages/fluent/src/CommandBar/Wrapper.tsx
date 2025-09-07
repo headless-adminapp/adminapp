@@ -17,6 +17,7 @@ const useStyles = makeStyles({
     flexWrap: 'nowrap',
     minWidth: 0,
     width: '100%',
+    padding: '4px',
   },
   overflowHidden: {
     overflow: 'hidden',

@@ -1,8 +1,6 @@
 import {
-  Button,
   makeStyles,
   Menu,
-  MenuPopover,
   MenuTrigger,
   TableCell,
   tokens,
@@ -13,6 +11,7 @@ import { FC } from 'react';
 
 import { MenuItemProps } from '../../CommandBar/MenuItem';
 import { MenuList } from '../../CommandBar/MenuList';
+import { Button, MenuPopover } from '../../components/fluent';
 
 const useStyles = makeStyles({
   button: {

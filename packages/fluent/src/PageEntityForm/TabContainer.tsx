@@ -43,7 +43,13 @@ export const TabContainer: FC = () => {
   );
 
   return (
-    <div style={{ display: 'flex', paddingBottom: tokens.spacingVerticalS }}>
+    <div
+      style={{
+        display: 'flex',
+        paddingBottom: tokens.spacingVerticalS,
+        overflowY: 'auto',
+      }}
+    >
       <TabList
         selectedValue={activeTab}
         onTabSelect={(e, value) => {

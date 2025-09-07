@@ -1,4 +1,4 @@
-import { Button, tokens } from '@fluentui/react-components';
+import { tokens } from '@fluentui/react-components';
 import { DateSelectArg, DatesSetArg, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -15,6 +15,7 @@ import utc from 'dayjs/plugin/utc';
 import { useMemo, useRef } from 'react';
 
 import { BodyLoading } from '../components/BodyLoading';
+import { Button, extendedTokens } from '../components/fluent';
 import { renderEventContent } from './renderEventContent';
 import { TitleSelector } from './TitleSelector';
 import { ViewType } from './types';
@@ -137,7 +138,7 @@ export const CalendarSection = ({
         position: 'relative',
         background: tokens.colorNeutralBackground1,
         padding: tokens.spacingHorizontalL,
-        borderRadius: tokens.borderRadiusMedium,
+        borderRadius: extendedTokens.paperBorderRadius,
         boxShadow: tokens.shadow2,
         gap: tokens.spacingVerticalM,
       }}
@@ -154,7 +155,6 @@ export const CalendarSection = ({
         >
           <Button
             appearance="outline"
-            style={{ fontWeight: tokens.fontWeightMedium }}
             icon={<Icons.Calendar />}
             onClick={() => calendarRef.current?.getApi().today()}
             disabled={isToday}

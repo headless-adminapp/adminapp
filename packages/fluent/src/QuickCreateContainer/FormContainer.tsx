@@ -1,5 +1,4 @@
 import {
-  Button,
   DrawerBody,
   MessageBar,
   MessageBarBody,
@@ -21,6 +20,7 @@ import { FC, Fragment } from 'react';
 import { BodyLoading } from '../components/BodyLoading';
 import { DrawerFooter } from '../components/DrawerFooter';
 import { DrawerHeader } from '../components/DrawerHeader';
+import { Button } from '../components/fluent';
 import { PageBroken } from '../components/PageBroken';
 import { FormTab } from '../form/layout/FormTab';
 import { SectionContainer } from '../PageEntityForm/SectionContainer';

@@ -1,5 +1,4 @@
 import {
-  Button,
   Caption1,
   Divider,
   Subtitle2,
@@ -15,6 +14,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Fragment } from 'react';
 import { Controller, Path, UseFormReturn } from 'react-hook-form';
 
+import { extendedTokens } from '../components/fluent';
+import { Button } from '../components/fluent/Button';
 import { StandardControl } from '../PageEntityForm/StandardControl';
 
 interface HeaderProps<SA extends SchemaAttributes = SchemaAttributes> {
@@ -35,7 +36,7 @@ export function Header<SA extends SchemaAttributes = SchemaAttributes>({
         display: 'flex',
         flexDirection: 'column',
         background: tokens.colorNeutralBackground1,
-        borderRadius: tokens.borderRadiusLarge,
+        borderRadius: extendedTokens.paperBorderRadius,
         paddingBlock: tokens.spacingVerticalS,
         paddingInline: tokens.spacingHorizontalM,
         gap: tokens.spacingVerticalS,
@@ -70,7 +71,6 @@ export function Header<SA extends SchemaAttributes = SchemaAttributes>({
         >
           {!!config.createOptions && (
             <Button
-              style={{ fontWeight: tokens.fontWeightMedium }}
               icon={<Icons.Add />}
               appearance="primary"
               onClick={onCreateButtonClick}
@@ -81,7 +81,6 @@ export function Header<SA extends SchemaAttributes = SchemaAttributes>({
           <Button
             icon={<Icons.Refresh />}
             appearance="subtle"
-            style={{ fontWeight: tokens.fontWeightRegular }}
             onClick={async () => {
               await queryClient.invalidateQueries({
                 queryKey: ['calendar-events', 'list'],

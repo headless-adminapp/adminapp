@@ -1,8 +1,6 @@
 import {
   makeStyles,
   Menu,
-  MenuItem as InternalMenuItem,
-  MenuPopover,
   MenuSplitGroup,
   MenuTrigger,
   mergeClasses,
@@ -12,6 +10,10 @@ import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
 import { Icon } from '@headless-adminapp/icons';
 import { memo } from 'react';
 
+import {
+  MenuItem as InternalMenuItem,
+  MenuPopover,
+} from '../components/fluent';
 import { MenuList } from './MenuList';
 
 const useStyles = makeStyles({

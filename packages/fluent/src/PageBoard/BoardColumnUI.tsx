@@ -21,6 +21,7 @@ import type { Identifier } from 'dnd-core';
 import { FC, useMemo, useRef } from 'react';
 
 import { useDndContext } from '../components/DndProvider';
+import { extendedTokens } from '../components/fluent';
 import { BoardColumnCard } from './BoardColumnCard';
 import { BoardingColumnCardLoading } from './BoardingColumnCardLoading';
 
@@ -90,7 +91,7 @@ export const BoardColumnUI: FC = () => {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        borderRadius: tokens.borderRadiusXLarge,
+        borderRadius: extendedTokens.paperBorderRadius,
         outline: over
           ? `2px dashed ${tokens.colorBrandBackground}`
           : canDrop
@@ -122,7 +123,7 @@ export const BoardColumnUI: FC = () => {
               gap: tokens.spacingVerticalM,
               color: tokens.colorNeutralForeground3,
               padding: tokens.spacingVerticalXXXL,
-              borderRadius: tokens.borderRadiusLarge,
+              borderRadius: extendedTokens.paperBorderRadius,
               backgroundColor: tokens.colorNeutralBackground1,
             }}
           >

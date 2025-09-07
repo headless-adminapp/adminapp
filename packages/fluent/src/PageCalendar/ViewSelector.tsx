@@ -1,11 +1,7 @@
-import {
-  Button,
-  makeStyles,
-  mergeClasses,
-  tokens,
-} from '@fluentui/react-components';
+import { makeStyles, mergeClasses, tokens } from '@fluentui/react-components';
 import { FC, Fragment } from 'react';
 
+import { Button } from '../components/fluent';
 import { ViewType } from './types';
 
 type ViewItem = {

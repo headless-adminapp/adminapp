@@ -1,13 +1,14 @@
 import {
   Badge,
   BadgeProps,
-  Button,
   makeStyles,
   tokens,
 } from '@fluentui/react-components';
 import { useBasePath, useRouter } from '@headless-adminapp/app/route';
 import { Icon } from '@headless-adminapp/icons';
 import { FC } from 'react';
+
+import { Button } from '../components/fluent';
 
 const useStyles = makeStyles({
   root: {
@@ -81,11 +82,11 @@ export const QuickActionItem: FC<QuickActionItemProps> = ({
       title={label}
       aria-label={label}
       className={styles.root}
-      onClick={(event) => {
+      onClick={async (event) => {
         event.preventDefault();
 
         if (fullLink) {
-          router.push(fullLink);
+          await router.push(fullLink);
         } else if (onClick) {
           onClick();
         }

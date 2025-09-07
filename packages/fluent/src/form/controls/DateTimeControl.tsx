@@ -9,6 +9,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { useEffect, useRef, useState } from 'react';
 
+import { extendedTokens } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
 import { resolveTimeValue } from './TimeControl/utils';
 import { ControlProps } from './types';
@@ -144,9 +145,14 @@ export function DateTimeControl({
             <Icons.Calendar size={20} />
           </div>
         }
-        style={{ flex: 1 }}
+        style={{ flex: 1, borderRadius: extendedTokens.controlBorderRadius }}
         input={{
           style: { minWidth: 0, width: '100%' },
+        }}
+        popupSurface={{
+          style: {
+            borderRadius: extendedTokens.paperBorderRadius,
+          },
         }}
       />
       <TimePicker
@@ -155,6 +161,7 @@ export function DateTimeControl({
           flex: 1,
           minWidth: 0,
           pointerEvents: isReadonly ? 'none' : 'auto',
+          borderRadius: extendedTokens.controlBorderRadius,
         }}
         input={{
           style: { minWidth: 0 },
@@ -235,6 +242,11 @@ export function DateTimeControl({
             <Icons.Clock size={20} />
           </div>
         }
+        listbox={{
+          style: {
+            borderRadius: extendedTokens.paperBorderRadius,
+          },
+        }}
       />
     </div>
   );

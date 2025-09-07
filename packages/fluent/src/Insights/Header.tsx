@@ -1,5 +1,4 @@
 import {
-  Button,
   Caption1,
   Divider,
   Subtitle2,
@@ -12,6 +11,7 @@ import { Icons } from '@headless-adminapp/icons';
 import { FC, Fragment } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { Button, extendedTokens } from '../components/fluent';
 import { StandardControl } from '../PageEntityForm/StandardControl';
 
 interface HeaderProps {
@@ -48,10 +48,14 @@ export const Header: FC<HeaderProps> = () => {
         //   ? tokens.colorNeutralBackground1
         //   : 'transparent',
         // backdropFilter: isScrolled ? 'blur(15px)' : 'none',
+        backdropFilter: 'blur(15px)',
+        background: tokens.colorNeutralBackgroundAlpha,
 
         boxShadow: tokens.shadow4,
-        backgroundColor: tokens.colorNeutralBackground1,
+        // backgroundColor: tokens.colorNeutralBackground1,
+        // backgroundColor: 'rgba(255, 255, 255, 0.8)',
         // backdropFilter: 'blur(20px)',
+        borderRadius: extendedTokens.paperBorderRadius,
       }}
     >
       <div
@@ -83,7 +87,6 @@ export const Header: FC<HeaderProps> = () => {
           <Button
             icon={<Icons.Refresh />}
             appearance="subtle"
-            style={{ fontWeight: tokens.fontWeightRegular }}
             onClick={() => {
               eventManager.emit('INSIGHT_REFRESH_TRIGGER');
             }}

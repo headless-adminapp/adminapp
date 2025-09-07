@@ -1,5 +1,4 @@
 import {
-  Button,
   DialogActions,
   DialogContent,
   DialogTrigger,
@@ -12,6 +11,7 @@ import { OperatorKey } from '@headless-adminapp/core/transport';
 import { FC, Fragment, useMemo, useState } from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
+import { Button } from '../../components/fluent';
 import { usePageEntityViewStrings } from '../../PageEntityView/PageEntityViewStringContext';
 import { ConditionValueControl } from './ConditionValueControl';
 import { OperatorSelect } from './OperatorSelect';

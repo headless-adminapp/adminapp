@@ -1,6 +1,8 @@
 import { Divider, tokens } from '@fluentui/react-components';
 import React, { FC } from 'react';
 
+import { extendedTokens } from '../components/fluent';
+
 interface PageEntityViewDesktopFrameProps {
   header: React.ReactNode;
   content: React.ReactNode;
@@ -55,7 +57,7 @@ export const PageEntityViewDesktopFrameV2: FC<
             display: 'flex',
             flexDirection: 'column',
             boxShadow: tokens.shadow2,
-            borderRadius: tokens.borderRadiusMedium,
+            borderRadius: extendedTokens.paperBorderRadius,
             background: tokens.colorNeutralBackground1,
             overflow: 'hidden',
           }}

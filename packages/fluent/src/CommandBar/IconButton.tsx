@@ -3,10 +3,11 @@ import {
   makeStyles,
   mergeClasses,
   tokens,
-  ToolbarButton,
 } from '@fluentui/react-components';
 import { Icon } from '@headless-adminapp/icons';
 import { forwardRef, memo, MemoExoticComponent } from 'react';
+
+import { ToolbarButton } from '../components/fluent';
 
 const useStyles = makeStyles({
   root: {

@@ -3,11 +3,12 @@ import {
   Dialog,
   DialogBody,
   DialogContent,
-  DialogSurface,
   Spinner,
   tokens,
 } from '@fluentui/react-components';
 import { useProgressIndicator } from '@headless-adminapp/app/progress-indicator/hooks';
+
+import { DialogSurface } from '../components/fluent';
 
 export const ProgressIndicatorContainer = () => {
   const state = useProgressIndicator();

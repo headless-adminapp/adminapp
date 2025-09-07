@@ -1,11 +1,7 @@
 import {
-  Button,
   Menu,
-  MenuItem,
   MenuList,
-  MenuPopover,
   MenuTrigger,
-  SearchBox,
   tokens,
 } from '@fluentui/react-components';
 import {
@@ -29,6 +25,7 @@ import { Icons } from '@headless-adminapp/icons';
 import { FC, useState } from 'react';
 
 import { useAppStrings } from '../App/AppStringContext';
+import { Button, MenuItem, MenuPopover, SearchBox } from '../components/fluent';
 import { usePageEntityViewStrings } from '../PageEntityView/PageEntityViewStringContext';
 import { CustomizeColumns } from './CustomizeColumns';
 
@@ -116,8 +113,8 @@ export const GridHeaderDesktopV2: FC<GridHeaderDesktopProps> = (props) => {
           <Button
             appearance="primary"
             icon={<Icons.Add />}
-            onClick={() => {
-              openForm({
+            onClick={async () => {
+              await openForm({
                 logicalName: schema.logicalName,
               });
             }}

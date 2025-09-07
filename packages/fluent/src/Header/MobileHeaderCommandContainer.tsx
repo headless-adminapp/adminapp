@@ -1,11 +1,9 @@
 import {
-  Button,
   Divider,
   Drawer,
   DrawerBody,
   makeStyles,
   MenuDivider,
-  MenuItem,
   MenuList,
   mergeClasses,
   tokens,
@@ -20,6 +18,7 @@ import { Icon, IconPlaceholder, Icons } from '@headless-adminapp/icons';
 import { FC, Fragment, useEffect, useMemo, useState } from 'react';
 
 import { QuickActionItem } from '../App/QuickActionItem';
+import { Button, MenuItem } from '../components/fluent';
 import { MobileHeaderQuickActionButton } from './MobileHeaderQuickActionButton';
 
 const useStyles = makeStyles({
@@ -226,9 +225,9 @@ export const BottomDrawerMenu: FC<BottomDrawerMenuProps> = ({
                           text={item.text}
                           Icon={item.Icon}
                           danger={item.danger}
-                          onClick={() => {
+                          onClick={async () => {
                             onClose();
-                            item.onClick?.();
+                            await item.onClick?.();
                           }}
                         />
                       );
@@ -246,10 +245,10 @@ export const BottomDrawerMenu: FC<BottomDrawerMenuProps> = ({
                           onNavigate={() => {
                             pushStack(item.items);
                           }}
-                          onClick={() => {
+                          onClick={async () => {
                             if (item.onClick) {
                               onClose();
-                              item.onClick();
+                              await item.onClick();
                             } else {
                               pushStack(item.items);
                             }
@@ -289,10 +288,10 @@ export const BottomDrawerMenu: FC<BottomDrawerMenuProps> = ({
 
                           pushStack(item.items);
                         }}
-                        onClick={() => {
+                        onClick={async () => {
                           if (item.onClick) {
                             onClose();
-                            item.onClick();
+                            await item.onClick();
                           } else if (item.items?.length) {
                             pushStack(item.items);
                           }

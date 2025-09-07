@@ -4,10 +4,8 @@ import {
   Caption1Strong,
   Hamburger,
   MenuDivider,
-  MenuItem,
   MenuList,
   Popover,
-  PopoverSurface,
   PopoverTrigger,
   Subtitle2,
   tokens,
@@ -28,6 +26,7 @@ import { isColorDark } from '@headless-adminapp/app/utils/color';
 import { Icons } from '@headless-adminapp/icons';
 import { FC, ReactNode, useMemo, useState } from 'react';
 
+import { MenuItem, PopoverSurface } from '../components/fluent';
 import { AppLogo } from './AppLogo';
 import { useAppStrings } from './AppStringContext';
 import { QuickActionItem } from './QuickActionItem';
@@ -257,21 +256,30 @@ const AppDesktopHeader: FC<AppHeaderContainerProps> = ({ onNavToggle }) => {
   return (
     <div
       style={{
-        display: 'flex',
-        alignItems: 'center',
-        height: 50,
-        minHeight: 50,
         background,
-        paddingInline: 8,
-        gap: 8,
-        color,
+        paddingLeft: 'env(safe-area-inset-left)',
+        paddingRight: 'env(safe-area-inset-right)',
+        paddingTop: 'env(safe-area-inset-top)',
       }}
     >
-      <div style={{ display: 'flex', flex: 1, alignItems: 'center', gap: 8 }}>
-        {isTablet && <NavHamburger onNavToggle={onNavToggle} />}
-        <NavTitle />
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          height: 50,
+          minHeight: 50,
+          background,
+          paddingInline: 8,
+          gap: 8,
+          color,
+        }}
+      >
+        <div style={{ display: 'flex', flex: 1, alignItems: 'center', gap: 8 }}>
+          {isTablet && <NavHamburger onNavToggle={onNavToggle} />}
+          <NavTitle />
+        </div>
+        <NavActions />
       </div>
-      <NavActions />
     </div>
   );
 };

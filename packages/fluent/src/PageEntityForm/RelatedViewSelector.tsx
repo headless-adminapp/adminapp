@@ -1,8 +1,6 @@
 import {
   Menu,
-  MenuItem,
   MenuList,
-  MenuPopover,
   MenuTrigger,
   tokens,
 } from '@fluentui/react-components';
@@ -20,6 +18,7 @@ import { Schema } from '@headless-adminapp/core/schema';
 import { Icons } from '@headless-adminapp/icons';
 import { useMemo } from 'react';
 
+import { MenuItem, MenuPopover } from '../components/fluent';
 import { usePageEntityFormStrings } from './PageEntityFormStringContext';
 
 function getRelatedItems(
@@ -133,7 +132,6 @@ export function RelatedViewSelector(props: Readonly<RelatedViewSelectorProps>) {
           style={{
             border: 'none',
             overflow: 'hidden',
-            borderRadius: tokens.borderRadiusMedium,
             padding: `${tokens.spacingVerticalM} ${tokens.spacingHorizontalMNudge}`,
             fontFamily: tokens.fontFamilyBase,
             lineHeight: tokens.lineHeightBase300,

@@ -1,12 +1,7 @@
 import {
-  Button,
-  Checkbox,
   Divider,
   Drawer,
   DrawerBody,
-  Dropdown,
-  Input,
-  Option,
   tokens,
 } from '@fluentui/react-components';
 import {
@@ -24,6 +19,13 @@ import { Fragment, useState } from 'react';
 import { useAppStrings } from '../../App/AppStringContext';
 import { DrawerFooter } from '../../components/DrawerFooter';
 import { DrawerHeader } from '../../components/DrawerHeader';
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  Input,
+  Option,
+} from '../../components/fluent';
 import { usePageEntityViewStrings } from '../../PageEntityView/PageEntityViewStringContext';
 
 interface AddColumnsProps {
@@ -132,18 +134,12 @@ export function AddColumns({
             <div
               style={{
                 display: 'flex',
-                flexDirection: 'column-reverse',
+                flexDirection: 'column',
                 gap: 8,
                 marginBlock: tokens.spacingVerticalS,
                 paddingInline: tokens.spacingHorizontalS,
               }}
             >
-              <Input
-                contentBefore={<Icons.Search size={16} />}
-                placeholder={appStrings.searchPlaceholder}
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-              />
               <Dropdown
                 value={selectedGroupItem?.label ?? ''}
                 selectedOptions={
@@ -164,6 +160,12 @@ export function AddColumns({
                   </Option>
                 ))}
               </Dropdown>
+              <Input
+                contentBefore={<Icons.Search size={16} />}
+                placeholder={appStrings.searchPlaceholder}
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+              />
             </div>
             <Divider />
           </Fragment>
@@ -176,7 +178,6 @@ export function AddColumns({
             appearance="transparent"
             icon={<Checkbox checked={includedColumnsObj[column.id] ?? false} />}
             style={{
-              fontWeight: tokens.fontSizeBase400,
               width: '100%',
               justifyContent: 'flex-start',
               paddingInline: tokens.spacingHorizontalS,
@@ -194,12 +195,7 @@ export function AddColumns({
         ))}
       </DrawerBody>
       <DrawerFooter>
-        <Button
-          onClick={onClose}
-          style={{ fontWeight: tokens.fontWeightRegular }}
-        >
-          {strings.close}
-        </Button>
+        <Button onClick={onClose}>{strings.close}</Button>
       </DrawerFooter>
     </Drawer>
   );

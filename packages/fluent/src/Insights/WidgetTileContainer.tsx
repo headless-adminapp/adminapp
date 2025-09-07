@@ -1,6 +1,8 @@
 import { Title2, tokens } from '@fluentui/react-components';
 import { FC } from 'react';
 
+import { extendedTokens } from '../components/fluent';
+
 interface WidgetTileContainerProps {}
 
 export const WidgetTileContainer: FC<WidgetTileContainerProps> = ({}) => {
@@ -11,7 +13,7 @@ export const WidgetTileContainer: FC<WidgetTileContainerProps> = ({}) => {
         flex: 1,
         background: tokens.colorNeutralBackground1,
         boxShadow: tokens.shadow2,
-        borderRadius: tokens.borderRadiusMedium,
+        borderRadius: extendedTokens.controlBorderRadius,
         flexDirection: 'column',
       }}
     >

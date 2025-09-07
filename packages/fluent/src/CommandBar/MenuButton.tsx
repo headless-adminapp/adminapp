@@ -4,7 +4,6 @@ import {
   Menu,
   MenuButton,
   MenuButtonProps,
-  MenuPopover,
   MenuTrigger,
   mergeClasses,
   SplitButton,
@@ -14,12 +13,14 @@ import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
 import { Icon } from '@headless-adminapp/icons';
 import { forwardRef, memo, MemoExoticComponent } from 'react';
 
+import { extendedTokens } from '../components/fluent';
+import { MenuPopover } from '../components/fluent/MenuPopover';
 import { MenuItemProps } from './MenuItem';
 import { MenuList } from './MenuList';
 
 const useStyles = makeStyles({
   splitButton: {
-    borderRadius: tokens.borderRadiusMedium,
+    borderRadius: extendedTokens.buttonBorderRadius,
     '& > button:first-child': {
       fontWeight: tokens.fontWeightRegular,
       paddingRight: 0,
@@ -37,6 +38,7 @@ const useStyles = makeStyles({
   },
   menuButton: {
     fontWeight: tokens.fontWeightRegular,
+    borderRadius: extendedTokens.buttonBorderRadius,
   },
   splitButtonDanger: {
     '&:hover:not(:has(:last-child:hover))': {

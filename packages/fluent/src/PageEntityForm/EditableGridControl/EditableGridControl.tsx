@@ -1,4 +1,4 @@
-import { Body1Strong, Button, Divider } from '@fluentui/react-components';
+import { Body1Strong, Divider } from '@fluentui/react-components';
 import {
   editableSubgridFormValidator,
   useEventManager,
@@ -20,6 +20,7 @@ import { useEffect, useRef } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 
 import { BodyLoading } from '../../components/BodyLoading';
+import { Button } from '../../components/fluent';
 import { CardUi } from './CardUi';
 import { TableUi } from './TableUi';
 

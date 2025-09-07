@@ -1,11 +1,7 @@
-import {
-  Dialog,
-  DialogBody,
-  DialogContent,
-  DialogSurface,
-} from '@fluentui/react-components';
+import { Dialog, DialogBody, DialogContent } from '@fluentui/react-components';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 
+import { DialogSurface } from './fluent';
 import { LoginForm } from './LoginForm';
 
 interface LoginFormProps {

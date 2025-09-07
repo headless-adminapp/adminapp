@@ -1,11 +1,4 @@
-import {
-  Button,
-  Menu,
-  MenuItem,
-  MenuList,
-  MenuPopover,
-  MenuTrigger,
-} from '@fluentui/react-components';
+import { Menu, MenuList, MenuTrigger } from '@fluentui/react-components';
 import { GridContext } from '@headless-adminapp/app/datagrid';
 import {
   useChangeView,
@@ -16,6 +9,8 @@ import { useLocale } from '@headless-adminapp/app/locale';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { Icons } from '@headless-adminapp/icons';
 import { FC } from 'react';
+
+import { Button, MenuItem, MenuPopover } from '../components/fluent';
 
 export const FormSubgridViewSelector: FC = () => {
   const viewLookup = useGridViewLookupData();
@@ -66,10 +61,7 @@ export const FormSubgridViewSelector: FC = () => {
           <MenuPopover>
             <MenuList>
               {viewLookup.map((view) => (
-                <MenuItem
-                  key={view.id}
-                  onClick={() => changeView(view.id as string)}
-                >
+                <MenuItem key={view.id} onClick={() => changeView(view.id)}>
                   {view.localizedNames?.[language] ?? view.name}
                 </MenuItem>
               ))}

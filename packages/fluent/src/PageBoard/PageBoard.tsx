@@ -13,6 +13,7 @@ import { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { useEffect } from 'react';
 
 import { DndProvider } from '../components/DndProvider';
+import { extendedTokens } from '../components/fluent';
 import { BoardColumn } from './BoardColumn';
 import { Header } from './Header';
 
@@ -58,7 +59,7 @@ export function PageBoard<S extends SchemaAttributes = SchemaAttributes>(
                 display: 'flex',
                 flexDirection: 'column',
                 background: tokens.colorNeutralBackground1,
-                borderRadius: tokens.borderRadiusLarge,
+                borderRadius: extendedTokens.paperBorderRadius,
                 paddingBlock: tokens.spacingVerticalM,
                 paddingInline: tokens.spacingHorizontalM,
                 gap: tokens.spacingVerticalM,

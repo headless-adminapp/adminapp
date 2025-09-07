@@ -1,8 +1,6 @@
 import {
-  Button,
   Divider,
   Popover,
-  PopoverSurface,
   PopoverTrigger,
   tokens,
 } from '@fluentui/react-components';
@@ -19,6 +17,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { FC, useState } from 'react';
 
+import { Button, extendedTokens, PopoverSurface } from '../components/fluent';
 import { EventDialog } from './EventDialog/EventDialog';
 
 dayjs.extend(utc);
@@ -37,7 +36,7 @@ const EventItemPreviewComponent: FC<{ eventInfo: EventContentArg }> = ({
         display: 'flex',
         backgroundColor: tokens.colorBrandBackground2,
         color: tokens.colorNeutralForeground1,
-        borderRadius: tokens.borderRadiusMedium,
+        borderRadius: extendedTokens.controlBorderRadius,
         paddingBlock: tokens.spacingVerticalXXS,
         paddingInline: tokens.spacingHorizontalS,
         border: `1px solid ${tokens.colorBrandStroke2}`,

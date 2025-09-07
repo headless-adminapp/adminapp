@@ -1,4 +1,4 @@
-import { Button, tokens } from '@fluentui/react-components';
+import { tokens } from '@fluentui/react-components';
 import { getLocalizedOperatorOptions } from '@headless-adminapp/app/datagrid';
 import { Attribute } from '@headless-adminapp/core/attributes';
 import { ColumnCondition } from '@headless-adminapp/core/experience/view';
@@ -7,6 +7,8 @@ import { Icons } from '@headless-adminapp/icons';
 import { FC, useMemo } from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
+import { extendedTokens } from '../../components/fluent';
+import { Button } from '../../components/fluent/Button';
 import { TextControl } from '../../form/controls/TextControl';
 import { ConditionValueControl } from '../GridColumnHeader/ConditionValueControl';
 import { OperatorSelect } from '../GridColumnHeader/OperatorSelect';
@@ -60,7 +62,7 @@ export const ColumnFilterItem: FC<ColumnFilterItemProps> = ({
         flexDirection: 'column',
         gap: tokens.spacingVerticalM,
         border: `1px solid ${tokens.colorNeutralStroke3}`,
-        borderRadius: tokens.borderRadiusMedium,
+        borderRadius: extendedTokens.paperBorderRadius,
         padding: tokens.spacingVerticalM,
       }}
     >

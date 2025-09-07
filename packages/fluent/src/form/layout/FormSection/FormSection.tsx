@@ -1,8 +1,8 @@
-// import { Divider, Flex, Grid, Paper, Stack, Text } from '@mantine/core';
 import { Body1Strong, Divider, tokens } from '@fluentui/react-components';
 import { useElementSize } from '@headless-adminapp/app/hooks';
 import { FC, Fragment, PropsWithChildren, useRef } from 'react';
 
+import { extendedTokens } from '../../../components/fluent';
 import { FormSectionColumn } from './FormSectionColumn';
 import { FormSectionLoading } from './FormSectionLoading';
 
@@ -106,7 +106,7 @@ export const FormSection: FC<PropsWithChildren<FormSectionProps>> & {
       ref={divRef}
       style={{
         boxShadow: tokens.shadow2,
-        borderRadius: tokens.borderRadiusMedium,
+        borderRadius: extendedTokens.paperBorderRadius,
         background: tokens.colorNeutralBackground1,
         display: 'flex',
         flexDirection: 'column',

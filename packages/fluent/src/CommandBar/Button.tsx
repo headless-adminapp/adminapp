@@ -3,14 +3,14 @@ import {
   makeStyles,
   mergeClasses,
   tokens,
-  ToolbarButton,
 } from '@fluentui/react-components';
 import { Icon } from '@headless-adminapp/icons';
 import { forwardRef, memo, MemoExoticComponent } from 'react';
 
+import { ToolbarButton } from '../components/fluent';
+
 const useStyles = makeStyles({
   root: {
-    fontWeight: 'normal',
     minWidth: 'unset',
     textWrap: 'nowrap',
     flexShrink: 0,
@@ -68,8 +68,6 @@ export interface CommandButtonProps {
   appearance?: 'subtle' | 'colored';
 }
 
-const ToolbarButtonInternal = ToolbarButton as any;
-
 export const CommandButton: MemoExoticComponent<
   ForwardRefComponent<CommandButtonProps>
 > = memo(
@@ -88,7 +86,7 @@ export const CommandButton: MemoExoticComponent<
     const styles = useStyles();
 
     return (
-      <ToolbarButtonInternal
+      <ToolbarButton
         ref={ref}
         type="button"
         icon={Icon ? <Icon size={20} /> : undefined}
@@ -103,7 +101,7 @@ export const CommandButton: MemoExoticComponent<
         )}
       >
         {text}
-      </ToolbarButtonInternal>
+      </ToolbarButton>
     );
   })
 );

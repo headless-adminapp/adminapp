@@ -1,6 +1,8 @@
 import { tokens } from '@fluentui/react-components';
 import { FC, PropsWithChildren } from 'react';
 
+import { extendedTokens } from '../components/fluent';
+
 interface WidgetSectionProps {
   style?: React.CSSProperties;
 }
@@ -17,7 +19,7 @@ export const WidgetSection: FC<PropsWithChildren<WidgetSectionProps>> = ({
         flexDirection: 'column',
         background: tokens.colorNeutralBackground1,
         ...style,
-        borderRadius: tokens.borderRadiusXLarge,
+        borderRadius: extendedTokens.paperBorderRadius,
         overflow: 'hidden',
         boxShadow: 'none',
         position: 'relative',

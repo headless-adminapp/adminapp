@@ -1,10 +1,7 @@
 import {
   Body1,
-  Button,
   Menu,
-  MenuItem,
   MenuList,
-  MenuPopover,
   MenuTrigger,
   tokens,
 } from '@fluentui/react-components';
@@ -14,6 +11,12 @@ import type { Identifier, XYCoord } from 'dnd-core';
 import { FC, useRef } from 'react';
 
 import { useDndContext } from '../../components/DndProvider';
+import {
+  Button,
+  extendedTokens,
+  MenuItem,
+  MenuPopover,
+} from '../../components/fluent';
 
 export const ItemTypes = {
   CARD: 'column',
@@ -129,7 +132,7 @@ export const ColumnItem: FC<CardProps> = ({
         paddingLeft: tokens.spacingHorizontalS,
         cursor: 'move',
         opacity,
-        borderRadius: tokens.borderRadiusMedium,
+        borderRadius: extendedTokens.controlBorderRadius,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',

@@ -1,4 +1,4 @@
-import { Badge, Button, Input } from '@fluentui/react-components';
+import { Badge } from '@fluentui/react-components';
 import {
   useGridColumnFilter,
   useSearchText,
@@ -7,6 +7,7 @@ import { Icons } from '@headless-adminapp/icons';
 import { FC, useState } from 'react';
 
 import { useAppStrings } from '../App/AppStringContext';
+import { Button, Input } from '../components/fluent';
 import { CustomFilter } from './CustomFilter';
 import { MobileHeaderTitleContainer } from './MobileHeaderTitleContainer';
 

@@ -1,7 +1,7 @@
-import { Input, mergeClasses } from '@fluentui/react-components';
 import { useCurrencySymbol } from '@headless-adminapp/app/locale';
 import { useEffect, useRef, useState } from 'react';
 
+import { Input } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
@@ -90,7 +90,6 @@ export function CurrencyControl({
       onFocus={() => onFocus?.()}
       contentBefore={<div>{symbol}</div>}
       readOnly={isReadOnly}
-      className={mergeClasses(isReadOnly && 'TextControl_readonly')}
       style={{
         width: '100%',
       }}

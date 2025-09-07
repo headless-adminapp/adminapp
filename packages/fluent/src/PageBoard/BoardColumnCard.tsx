@@ -4,6 +4,7 @@ import { Schema } from '@headless-adminapp/core/schema';
 import { useRef } from 'react';
 
 import { useDndContext } from '../components/DndProvider';
+import { extendedTokens } from '../components/fluent';
 
 interface BoardColumnCardProps {
   record: Record<string, unknown>;
@@ -42,7 +43,7 @@ export function BoardColumnCard({
       style={{
         display: 'flex',
         background: tokens.colorNeutralBackground1,
-        borderRadius: tokens.borderRadiusLarge,
+        borderRadius: extendedTokens.paperBorderRadius,
         boxShadow: tokens.shadow4,
         opacity: isDragging ? 0.5 : 1,
       }}

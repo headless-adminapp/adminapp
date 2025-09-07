@@ -1,10 +1,4 @@
-import {
-  Combobox,
-  Input,
-  InputProps,
-  mergeClasses,
-  Option,
-} from '@fluentui/react-components';
+import { InputProps } from '@fluentui/react-components';
 import { useDebouncedValue } from '@headless-adminapp/app/hooks';
 import { useMetadata } from '@headless-adminapp/app/metadata';
 import { useRetriveRecords } from '@headless-adminapp/app/transport/hooks/useRetriveRecords';
@@ -12,6 +6,8 @@ import { SuggestionOptions } from '@headless-adminapp/core/attributes/StringAttr
 import { uniq } from 'lodash';
 import { FC, Fragment, useCallback, useEffect, useRef, useState } from 'react';
 
+import { Combobox, Input } from '../../components/fluent';
+import { Option } from '../../components/fluent/Option';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
@@ -171,7 +167,6 @@ export function TextControl({
       autoComplete={autoComplete}
       autoCorrect={autoCorrect}
       autoCapitalize={autoCapitalize}
-      className={mergeClasses(readonly && 'TextControl_readonly')}
       style={{
         width: '100%',
       }}

@@ -36,6 +36,7 @@ export const NavCategoryItemComponent: FC<NavCategoryItemComponentProps> = ({
           color={
             isActive ? 'var(--colorNeutralForeground2BrandSelected)' : undefined
           }
+          size="1.4em"
         />
       }
       className={isActive ? styles.activeNavCategoryItem : undefined}

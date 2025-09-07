@@ -1,5 +1,7 @@
-import { Checkbox, TableCell } from '@fluentui/react-components';
+import { TableCell } from '@fluentui/react-components';
 import { FC, memo } from 'react';
+
+import { Checkbox } from '../../components/fluent/Checkbox';
 
 export interface TableCellCheckboxProps {
   checked?: boolean;

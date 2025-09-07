@@ -26,6 +26,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { FC, useCallback, useMemo, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
+import { extendedTokens } from '../components/fluent';
 import { BottomDrawerMenu } from '../Header/MobileHeaderCommandContainer';
 import { RecordCard } from '../PageEntityForm/RecordCard';
 import { RecordCardLoading } from '../PageEntityForm/RecordCardLoading';
@@ -95,8 +96,8 @@ export const GridListContainer: FC<GridListContainerProps> = () => {
   const openFormInternal = useOpenForm();
 
   const openRecord = useCallback(
-    (id: string) => {
-      openFormInternal({
+    async (id: string) => {
+      await openFormInternal({
         logicalName: schema.logicalName,
         id,
         recordSetIds:
@@ -169,9 +170,9 @@ export const GridListContainer: FC<GridListContainerProps> = () => {
                       card={view.experience.card}
                       record={row}
                       schema={schema}
-                      onClick={() => {
+                      onClick={async () => {
                         const id = row[schema.idAttribute] as string;
-                        openRecord(id);
+                        await openRecord(id);
                       }}
                       onLongPress={() => {
                         const id = row[schema.idAttribute] as string;
@@ -256,7 +257,7 @@ const Item: FC<ItemProps> = ({
       style={{
         width: '100%',
         cursor: 'pointer',
-        borderRadius: tokens.borderRadiusMedium,
+        borderRadius: extendedTokens.paperBorderRadius,
         userSelect: 'none',
         WebkitUserSelect: 'none',
       }}

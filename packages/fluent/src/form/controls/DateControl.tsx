@@ -8,6 +8,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 
 import { useAppStrings } from '../../App/AppStringContext';
+import { extendedTokens } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
 
@@ -58,10 +59,16 @@ export function DateControl({
       strings={datePickerStrings}
       style={{
         width: '100%',
+        borderRadius: extendedTokens.controlBorderRadius,
       }}
       input={{
         style: {
           width: '100%',
+        },
+      }}
+      popupSurface={{
+        style: {
+          borderRadius: extendedTokens.paperBorderRadius,
         },
       }}
       contentAfter={

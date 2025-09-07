@@ -1,7 +1,8 @@
-import { Button, Divider, tokens } from '@fluentui/react-components';
+import { Divider, tokens } from '@fluentui/react-components';
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
 
+import { Button } from '../../../components/fluent';
 import { CalendarItem } from './CalendarItem';
 import { selectMaxDate } from './utils';
 

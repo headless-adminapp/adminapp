@@ -1,5 +1,7 @@
-import { Body1, Button, Title2 } from '@fluentui/react-components';
+import { Body1, Title2 } from '@fluentui/react-components';
 import { Icon } from '@headless-adminapp/icons';
+
+import { Button } from './fluent';
 
 interface PageBrokenProps {
   title: string;

@@ -1,14 +1,11 @@
 import {
   Dialog,
   DialogBody,
-  DialogSurface,
   DialogTitle,
   makeStyles,
   Menu,
   MenuDivider,
-  MenuItem,
   MenuList,
-  MenuPopover,
   MenuTrigger,
   mergeClasses,
   TableHeaderCell,
@@ -31,6 +28,7 @@ import {
   useState,
 } from 'react';
 
+import { DialogSurface, MenuItem, MenuPopover } from '../../components/fluent';
 import { usePageEntityViewStrings } from '../../PageEntityView/PageEntityViewStringContext';
 import { FilterForm } from './FilterForm';
 

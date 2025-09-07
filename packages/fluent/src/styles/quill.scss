@@ -3,7 +3,7 @@
   flex-direction: column;
   background-color: var(--colorNeutralBackground3);
   overflow: hidden;
-  border-radius: var(--borderRadiusMedium);
+  border-radius: var(--controlBorderRadius);
   border: 1px solid transparent;
 
   &:focus-within {

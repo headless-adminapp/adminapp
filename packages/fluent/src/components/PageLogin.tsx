@@ -1,6 +1,7 @@
 import { tokens } from '@fluentui/react-components';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 
+import { extendedTokens } from './fluent';
 import { LoginForm, LoginFormData } from './LoginForm';
 
 interface LoginPageProps {
@@ -68,7 +69,7 @@ export function PageLogin(props: Readonly<LoginPageProps>) {
           maxWidth: 992,
           width: '100%',
           overflow: 'hidden',
-          borderRadius: tokens.borderRadiusMedium,
+          borderRadius: extendedTokens.paperBorderRadius,
           background: tokens.colorNeutralBackground1,
         }}
       >

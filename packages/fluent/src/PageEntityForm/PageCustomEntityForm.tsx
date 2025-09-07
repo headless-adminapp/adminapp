@@ -1,6 +1,7 @@
 import { tokens } from '@fluentui/react-components';
 import { RetriveRecordFn } from '@headless-adminapp/app/dataform/DataFormProvider/types';
 import { SaveRecordFn } from '@headless-adminapp/app/dataform/utils/saveRecord';
+import { useMobileHeader } from '@headless-adminapp/app/header';
 import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 import { PageEntityFormProvider } from '@headless-adminapp/app/providers/PageEntityFormProvider';
 import { RecordSetProvider } from '@headless-adminapp/app/recordset';
@@ -34,6 +35,8 @@ export function PageCustomEntityForm<
   retriveRecordFn,
   saveRecordFn,
 }: Readonly<PageCustomEntityFormProps<SA>>) {
+  useMobileHeader(true);
+
   return (
     <HistoryStateKeyProvider
       historyKey={'page-entity-form.' + schema.logicalName}

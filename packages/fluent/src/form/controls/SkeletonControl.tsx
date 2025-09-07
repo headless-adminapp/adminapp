@@ -1,6 +1,8 @@
 import { makeStyles, SkeletonItem } from '@fluentui/react-components';
 import { FC } from 'react';
 
+import { extendedTokens } from '../../components/fluent';
+
 const useStyles = makeStyles({
   skeleton: {
     backgroundColor: 'var(--colorNeutralBackground3)',
@@ -24,7 +26,11 @@ export const SkeletonControl: FC<SkeletonControlProps> = ({
   return (
     <div style={{ paddingBlock: 2 }}>
       <SkeletonItem
-        style={{ height: height - 4, width }}
+        style={{
+          height: height - 4,
+          width,
+          borderRadius: extendedTokens.controlBorderRadius,
+        }}
         className={styles.skeleton}
       />
     </div>

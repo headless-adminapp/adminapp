@@ -1,6 +1,5 @@
 import {
   Body1,
-  Button,
   MessageBar,
   MessageBarBody,
   Spinner,
@@ -13,6 +12,7 @@ import * as yup from 'yup';
 import { SectionControlWrapper } from '../DataForm/SectionControl';
 import { PasswordControl } from '../form/controls/PasswordControl';
 import { TextControl } from '../form/controls/TextControl';
+import { Button } from './fluent';
 
 export interface LoginFormData {
   username: string;

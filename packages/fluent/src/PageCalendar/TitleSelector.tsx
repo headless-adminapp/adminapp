@@ -1,11 +1,5 @@
 import { Calendar, DateRangeType } from '@fluentui/react-calendar-compat';
-import {
-  Button,
-  Popover,
-  PopoverSurface,
-  PopoverTrigger,
-  tokens,
-} from '@fluentui/react-components';
+import { Popover, PopoverTrigger, tokens } from '@fluentui/react-components';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { iconSet } from '@headless-adminapp/icons-fluent';
@@ -15,6 +9,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { FC, useMemo } from 'react';
 
+import { Button, PopoverSurface } from '../components/fluent';
 import { ViewType } from './types';
 
 dayjs.extend(utc);

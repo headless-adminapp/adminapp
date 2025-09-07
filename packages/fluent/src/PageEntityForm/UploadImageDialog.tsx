@@ -1,11 +1,9 @@
 import {
   Avatar,
-  Button,
   Dialog,
   DialogActions,
   DialogBody,
   DialogContent,
-  DialogSurface,
   DialogTitle,
   DialogTrigger,
   tokens,
@@ -19,6 +17,7 @@ import { Icons } from '@headless-adminapp/icons';
 import { useMutation } from '@tanstack/react-query';
 import { FC, useEffect, useState } from 'react';
 
+import { Button, DialogSurface } from '../components/fluent';
 import { getAvatarColor } from '../utils/avatar';
 
 interface UploadImageDialogProps {

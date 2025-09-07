@@ -2,6 +2,7 @@ import { useCommands } from '@headless-adminapp/app/command';
 import { useBaseCommandHandlerContext } from '@headless-adminapp/app/command/hooks';
 import { DataGridProvider } from '@headless-adminapp/app/datagrid/DataGridProvider';
 import { useGridControlContext } from '@headless-adminapp/app/datagrid/hooks';
+import { useIsMobile } from '@headless-adminapp/app/hooks';
 import {
   useExperienceView,
   useExperienceViewCommands,
@@ -13,6 +14,7 @@ import { Filter } from '@headless-adminapp/core/transport';
 
 import { BodyLoading } from '../components/BodyLoading';
 import { GridTableContainer } from '../DataGrid';
+import { GridListContainer } from '../DataGrid/GridListContainer';
 import { WidgetSection } from './WidgetSection';
 import { WidgetTitleBar } from './WidgetTitleBar';
 
@@ -102,6 +104,7 @@ const FormSubgridContainer = ({
   WidgetDataGridContainerProps,
   'title' | 'commands' | 'allowContextMenu'
 >) => {
+  const isMobile = useIsMobile();
   const baseCommandHandleContext = useBaseCommandHandlerContext();
   const primaryControl = useGridControlContext();
 
@@ -137,12 +140,16 @@ const FormSubgridContainer = ({
             }}
           >
             <div style={{ flex: 1, display: 'flex', minHeight: 300 }}>
-              <GridTableContainer
-                disableColumnSort
-                disableColumnFilter
-                disableSelection
-                disableContextMenu={!allowContextMenu}
-              />
+              {!isMobile ? (
+                <GridTableContainer
+                  disableColumnSort
+                  disableColumnFilter
+                  disableSelection
+                  disableContextMenu={!allowContextMenu}
+                />
+              ) : (
+                <GridListContainer />
+              )}
             </div>
           </div>
         </div>

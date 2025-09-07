@@ -1,10 +1,6 @@
 import {
-  Button,
-  Input,
   Menu,
-  MenuItem,
   MenuList,
-  MenuPopover,
   MenuTrigger,
   tokens,
 } from '@fluentui/react-components';
@@ -19,6 +15,7 @@ import { Icons } from '@headless-adminapp/icons';
 import { FC, useState } from 'react';
 
 import { useAppStrings } from '../App/AppStringContext';
+import { Button, Input, MenuItem, MenuPopover } from '../components/fluent';
 import { usePageEntityViewStrings } from '../PageEntityView/PageEntityViewStringContext';
 import { CustomizeColumns } from './CustomizeColumns';
 import { GridQuickFilterDesktop } from './GridQuickFilterDesktop';
@@ -85,10 +82,7 @@ export const GridHeaderDesktop: FC<GridHeaderDesktopProps> = (props) => {
             <MenuPopover>
               <MenuList>
                 {viewLookup.map((view) => (
-                  <MenuItem
-                    key={view.id}
-                    onClick={() => changeView(view.id as string)}
-                  >
+                  <MenuItem key={view.id} onClick={() => changeView(view.id)}>
                     {view.localizedNames?.[language] ?? view.name}
                   </MenuItem>
                 ))}

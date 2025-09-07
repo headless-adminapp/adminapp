@@ -70,7 +70,7 @@ export function InsightsContainer() {
           titleButton
         )}
       </div> */}
-      <div
+      {/* <div
         style={{
           // padding: spacingMapping[insightExpereince.style?.spacing ?? 'normal'],
           // paddingBottom: 0,
@@ -84,7 +84,18 @@ export function InsightsContainer() {
         }}
       >
         <Header isScrolled={isScrolled} />
-      </div>
+      </div> */}
+
+      {/* <div
+        style={{
+          zIndex: 10,
+          position: 'sticky',
+          top: 50,
+          height: 100,
+          width: 200,
+          border: '1px solid red',
+        }}
+      ></div> */}
       <div
         style={{
           display: 'flex',
@@ -100,10 +111,11 @@ export function InsightsContainer() {
             setIsScrolled(div.scrollTop > 0);
           }}
         >
-          {/* <div
+          <div
             style={{
-              paddingInline:
-                spacingMapping[insightExpereince.style?.spacing ?? 'normal'],
+              // paddingInline:
+              //   spacingMapping[insightExpereince.style?.spacing ?? 'normal'],
+              padding: tokens.spacingHorizontalXL,
               paddingBottom: 0,
               // boxShadow: isScrolled ? tokens.shadow2 : 'none',
               // backgroundColor: isScrolled
@@ -114,15 +126,15 @@ export function InsightsContainer() {
               top: 0,
             }}
           >
-            <div
+            {/* <div
               style={{
-                height:
-                  spacingMapping[insightExpereince.style?.spacing ?? 'normal'],
+                // height:
+                //   spacingMapping[insightExpereince.style?.spacing ?? 'normal'],
                 backgroundColor: tokens.colorNeutralBackground2,
               }}
-            />
+            /> */}
             <Header isScrolled={isScrolled} />
-          </div> */}
+          </div>
           {/* <div style={{ height: ROW_GAP }} /> */}
           <Widgets widgets={config.widgets} />
         </ScrollView>

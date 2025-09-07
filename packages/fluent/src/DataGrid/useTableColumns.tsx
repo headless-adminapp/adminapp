@@ -59,6 +59,7 @@ import {
 } from '@tanstack/react-table';
 import { FC, Fragment, useEffect, useMemo, useRef } from 'react';
 
+import { extendedTokens } from '../components/fluent';
 import { componentStore } from '../componentStore';
 import { getAvatarColor } from '../utils/avatar';
 import { ActionCell } from './ActionCell';
@@ -292,6 +293,11 @@ export function useTableColumns({
               minWidth: 32,
               alignItems: 'center',
             }}
+            checkboxIndicator={{
+              indicator: {
+                style: { borderRadius: extendedTokens.checkboxBorderRadius },
+              },
+            }}
             onClick={toggleAllSelectedIds}
           />
         ),
@@ -299,6 +305,11 @@ export function useTableColumns({
           <TableSelectionCell
             className={mergeClasses(styles.selectionCell)}
             checked={info.row.getIsSelected()}
+            checkboxIndicator={{
+              indicator: {
+                style: { borderRadius: extendedTokens.checkboxBorderRadius },
+              },
+            }}
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();

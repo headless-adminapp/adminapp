@@ -1,15 +1,15 @@
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogBody,
   DialogContent,
-  DialogSurface,
   DialogTitle,
   tokens,
 } from '@fluentui/react-components';
 import { stringWithDefault } from '@headless-adminapp/core/utils';
 import { Icons } from '@headless-adminapp/icons';
+
+import { Button, DialogSurface } from '../components/fluent';
 
 interface ErrorDialogProps {
   open: boolean;
