@@ -24,6 +24,11 @@ export type ExtendedTokens = {
   optionPaddingVertical: string;
   appBarHeight: string;
   navItempaddingVertical: string;
+  calendarTableWidth: string;
+  calendarDayCellSize: string;
+  calendarHeaderIconSize: string;
+  calendarPickerItemButtonSize: string;
+  calendarGoTodayButtonHeight: string;
 };
 
 export { tokens } from '@fluentui/react-components';
@@ -54,4 +59,9 @@ export const extendedTokens: ExtendedTokens = {
   optionPaddingVertical: 'var(--optionPaddingVertical)',
   appBarHeight: 'var(--appBarHeight)',
   navItempaddingVertical: 'var(--navItempaddingVertical)',
+  calendarTableWidth: 'var(--calendarTableWidth)',
+  calendarDayCellSize: 'var(--calendarDayCellSize)',
+  calendarHeaderIconSize: 'var(--calendarHeaderIconSize)',
+  calendarPickerItemButtonSize: 'var(--calendarPickerItemButtonSize)',
+  calendarGoTodayButtonHeight: 'var(--calendarGoTodayButtonHeight)',
 };

@@ -1,5 +1,5 @@
 import { DayOfWeek } from '@fluentui/react-calendar-compat';
-import { tokens } from '@fluentui/react-components';
+import { makeStyles, tokens } from '@fluentui/react-components';
 import { DatePicker } from '@fluentui/react-datepicker-compat';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { Icons } from '@headless-adminapp/icons';
@@ -14,6 +14,45 @@ import { ControlProps } from './types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+export const useCalendarStyles = makeStyles({
+  calendar: {
+    width: `calc(${extendedTokens.calendarTableWidth} + 24px)`,
+    '& .fui-CalendarDay': {
+      width: extendedTokens.calendarTableWidth,
+    },
+    '& .fui-CalendarDayGrid__table': {
+      width: extendedTokens.calendarTableWidth,
+    },
+    '& .fui-CalendarDayGrid__dayButton': {
+      width: extendedTokens.calendarDayCellSize,
+      height: extendedTokens.calendarDayCellSize,
+      lineHeight: extendedTokens.calendarDayCellSize,
+    },
+    '& .fui-CalendarDay__headerIconButton': {
+      width: extendedTokens.calendarHeaderIconSize,
+      height: extendedTokens.calendarHeaderIconSize,
+      lineHeight: extendedTokens.calendarHeaderIconSize,
+    },
+    '& .fui-CalendarPicker__navigationButton': {
+      width: extendedTokens.calendarHeaderIconSize,
+      height: extendedTokens.calendarHeaderIconSize,
+      lineHeight: extendedTokens.calendarHeaderIconSize,
+    },
+    '& .fui-CalendarPicker__itemButton': {
+      width: extendedTokens.calendarPickerItemButtonSize,
+      height: extendedTokens.calendarPickerItemButtonSize,
+      lineHeight: extendedTokens.calendarPickerItemButtonSize,
+    },
+    '& .fui-CalendarPicker': {
+      width: extendedTokens.calendarTableWidth,
+    },
+    '& .fui-Calendar__goTodayButton': {
+      height: extendedTokens.calendarGoTodayButtonHeight,
+      lineHeight: extendedTokens.calendarGoTodayButtonHeight,
+    },
+  },
+});
 
 export interface DateControlProps extends ControlProps<string> {
   maxDate?: Date;
@@ -34,6 +73,7 @@ export function DateControl({
 }: Readonly<DateControlProps>) {
   const { dateFormats } = useLocale();
   const { datePickerStrings } = useAppStrings();
+  const calendarStyles = useCalendarStyles();
 
   if (skeleton) {
     return <SkeletonControl />;
@@ -85,6 +125,9 @@ export function DateControl({
           <Icons.Calendar size={20} />
         </div>
       }
+      calendar={{
+        className: calendarStyles.calendar,
+      }}
     />
   );
 }

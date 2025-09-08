@@ -2,7 +2,6 @@ import {
   Body1,
   Caption1,
   Divider,
-  MessageBar,
   MessageBarBody,
   Subtitle2,
   tokens,
@@ -29,7 +28,7 @@ import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
 import { FC, Fragment, PropsWithChildren, useRef } from 'react';
 import { Controller } from 'react-hook-form';
 
-import { extendedTokens } from '../components/fluent';
+import { extendedTokens, MessageBar } from '../components/fluent';
 import { useExtendedThemeContext } from '../components/fluent/FluentProvider';
 import { PageBroken } from '../components/PageBroken';
 import { FormBody } from '../form/layout/FormBody';

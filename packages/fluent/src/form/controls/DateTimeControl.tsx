@@ -10,7 +10,9 @@ import utc from 'dayjs/plugin/utc';
 import { useEffect, useRef, useState } from 'react';
 
 import { extendedTokens } from '../../components/fluent';
+import { useCalendarStyles } from './DateControl';
 import { SkeletonControl } from './SkeletonControl';
+import { useTimePickerStyles } from './TimeControl/TimeControl';
 import { resolveTimeValue } from './TimeControl/utils';
 import { ControlProps } from './types';
 
@@ -35,6 +37,8 @@ export function DateTimeControl({
   readOnly,
   skeleton,
 }: Readonly<DateTimeControlProps>) {
+  const calendarStyles = useCalendarStyles();
+  const timePickerStyles = useTimePickerStyles();
   const {
     dateFormats: { short: dateFormat },
     timeFormats: { short: timeFormat },
@@ -158,6 +162,9 @@ export function DateTimeControl({
             borderRadius: extendedTokens.paperBorderRadius,
           },
         }}
+        calendar={{
+          className: calendarStyles.calendar,
+        }}
       />
       <TimePicker
         appearance="filled-darker"
@@ -248,9 +255,7 @@ export function DateTimeControl({
           </div>
         }
         listbox={{
-          style: {
-            borderRadius: extendedTokens.paperBorderRadius,
-          },
+          className: timePickerStyles.listbox,
         }}
       />
     </div>

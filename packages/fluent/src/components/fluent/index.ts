@@ -15,3 +15,4 @@ export { Checkbox } from './Checkbox';
 export { MenuItem } from './MenuItem';
 export { PopoverSurface } from './PopoverSurface';
 export { DialogSurface } from './DialogSurface';
+export { MessageBar } from './MessageBar';

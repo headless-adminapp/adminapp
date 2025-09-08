@@ -2,8 +2,8 @@ import {
   ForwardRefComponent,
   makeStyles,
   mergeClasses,
-  Option as OptionInternal,
-  OptionProps,
+  MessageBar as MessageBarInternal,
+  MessageBarProps,
   tokens,
 } from '@fluentui/react-components';
 import { forwardRef } from 'react';
@@ -12,22 +12,21 @@ import { extendedTokens } from './tokens';
 
 const useStyles = makeStyles({
   root: {
+    fontWeight: tokens.fontWeightRegular,
     borderRadius: extendedTokens.controlBorderRadius,
-    padding: `${extendedTokens.optionPaddingVertical} ${tokens.spacingHorizontalS}`,
   },
 });
 
-type ExtendedOptionProps = OptionProps;
+type ExtendedMessageBarProps = MessageBarProps;
 
-export const Option: ForwardRefComponent<ExtendedOptionProps> = forwardRef(
-  function Option({ className, ...rest }, ref) {
+export const MessageBar: ForwardRefComponent<ExtendedMessageBarProps> =
+  forwardRef(function MessageBar({ className, ...rest }, ref) {
     const styles = useStyles();
     return (
-      <OptionInternal
+      <MessageBarInternal
         {...rest}
         className={mergeClasses(styles.root, className)}
         ref={ref}
       />
     );
-  }
-);
+  });

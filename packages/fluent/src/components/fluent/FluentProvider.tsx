@@ -96,6 +96,11 @@ export const FluentProvider: ForwardRefComponent<ExtendedFluentProviderProps> =
       let optionPaddingVertical = '6px';
       let appBarHeight = '48px';
       let navItempaddingVertical = '10px';
+      let calendarTableWidth = '196px';
+      let calendarDayCellSize = '24px';
+      let calendarHeaderIconSize = '28px';
+      let calendarPickerItemButtonSize = '40px';
+      let calendarGoTodayButtonHeight = '30px';
 
       if (density === 'comfortable') {
         buttonMinWidthS = '72px';
@@ -111,6 +116,11 @@ export const FluentProvider: ForwardRefComponent<ExtendedFluentProviderProps> =
         optionPaddingVertical = '9px';
         appBarHeight = '64px';
         navItempaddingVertical = '16px';
+        calendarTableWidth = '252px';
+        calendarDayCellSize = '32px';
+        calendarHeaderIconSize = '36px';
+        calendarPickerItemButtonSize = '54px';
+        calendarGoTodayButtonHeight = '36px';
       }
 
       let fontSizeBase100 = '10px';
@@ -178,6 +188,11 @@ export const FluentProvider: ForwardRefComponent<ExtendedFluentProviderProps> =
         optionPaddingVertical,
         navItempaddingVertical,
         appBarHeight,
+        calendarTableWidth,
+        calendarDayCellSize,
+        calendarHeaderIconSize,
+        calendarPickerItemButtonSize,
+        calendarGoTodayButtonHeight,
 
         fontSizeBase100,
         fontSizeBase200,

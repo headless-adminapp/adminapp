@@ -1,4 +1,4 @@
-import { tokens } from '@fluentui/react-components';
+import { makeStyles, tokens } from '@fluentui/react-components';
 import { TimePicker } from '@fluentui/react-timepicker-compat';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { Icons } from '@headless-adminapp/icons';
@@ -13,6 +13,16 @@ import { resolveTimeValue } from './utils';
 
 dayjs.extend(customParseFormat);
 
+export const useTimePickerStyles = makeStyles({
+  listbox: {
+    borderRadius: extendedTokens.paperBorderRadius,
+    '& .fui-Option': {
+      borderRadius: extendedTokens.controlBorderRadius,
+      padding: `${extendedTokens.optionPaddingVertical} ${tokens.spacingHorizontalS}`,
+    },
+  },
+});
+
 export interface TimeControlProps extends ControlProps<number> {}
 
 export function TimeControl({
@@ -26,6 +36,7 @@ export function TimeControl({
   readOnly,
   skeleton,
 }: Readonly<TimeControlProps>) {
+  const timePickerStyles = useTimePickerStyles();
   const {
     timeFormats: { short: timeFormat },
     timezone,
@@ -142,9 +153,7 @@ export function TimeControl({
           </div>
         }
         listbox={{
-          style: {
-            borderRadius: extendedTokens.paperBorderRadius,
-          },
+          className: timePickerStyles.listbox,
         }}
       />
     </div>
