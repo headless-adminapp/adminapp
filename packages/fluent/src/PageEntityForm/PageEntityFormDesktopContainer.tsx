@@ -324,8 +324,8 @@ const Wrapper: FC<PropsWithChildren<WrapperProps>> = ({
       <ScrollView>
         <div
           style={{
-            background: tokens.colorNeutralBackgroundAlpha,
-            backdropFilter: 'blur(15px)',
+            background: tokens.colorNeutralBackgroundAlpha2,
+            backdropFilter: 'blur(20px)',
             position: 'fixed',
             transition: 'all 0.2s',
             top: visible ? headerHeight : -headerHeight,

@@ -48,8 +48,8 @@ export const Header: FC<HeaderProps> = () => {
         //   ? tokens.colorNeutralBackground1
         //   : 'transparent',
         // backdropFilter: isScrolled ? 'blur(15px)' : 'none',
-        backdropFilter: 'blur(15px)',
-        background: tokens.colorNeutralBackgroundAlpha,
+        backdropFilter: 'blur(20px)',
+        background: tokens.colorNeutralBackgroundAlpha2,
 
         boxShadow: tokens.shadow4,
         // backgroundColor: tokens.colorNeutralBackground1,

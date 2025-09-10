@@ -105,10 +105,20 @@ const useStyles = makeStyles({
     alignItems: 'center',
   },
   table: {
-    '&:after': {
-      content: ' ',
-      display: 'block',
-      height: '32px',
+    display: 'flex',
+    flexDirection: 'column',
+    borderCollapse: 'collapse',
+    width: '100%',
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    msUserSelect: 'none',
+
+    '& *': {
+      userSelect: 'none',
+      WebkitUserSelect: 'none',
+      MozUserSelect: 'none',
+      msUserSelect: 'none',
     },
   },
 });
@@ -323,19 +333,14 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
         >
           <Table
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              borderCollapse: 'collapse',
-              width: '100%',
               height: virtualizer.getTotalSize() + headerHeight,
               ['--action-shadow' as any]: !isScrolledToRight
                 ? '-2px 0px 6px rgba(0, 0, 0, 0.12)'
                 : 'none',
-              userSelect: 'none',
             }}
             ref={tableElementRef}
             tabIndex={0}
-            className="table-pseduo"
+            className={mergeClasses('table-pseduo', styles.table)}
           >
             <TableHeader
               style={{
