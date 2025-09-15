@@ -32,6 +32,7 @@ export const HeaderQuickFilter: FC = () => {
                 name={key}
                 value={values[key] ?? null}
                 onChange={(value) => setValue(key, value)}
+                required={attribute.required}
               />
             </SectionControlWrapper>
           </div>

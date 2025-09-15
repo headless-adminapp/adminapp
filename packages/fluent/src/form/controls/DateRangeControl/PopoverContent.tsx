@@ -1,10 +1,134 @@
 import { Divider, tokens } from '@fluentui/react-components';
 import dayjs from 'dayjs';
-import { FC, useState } from 'react';
+import isoWeek from 'dayjs/plugin/isoWeek';
+import { FC, useMemo, useState } from 'react';
 
+import { useAppStrings } from '../../../App/AppStringContext';
 import { Button } from '../../../components/fluent';
+import GroupedSelectControl, {
+  GroupedSelectControlProps,
+} from '../GroupedSelectControl';
 import { CalendarItem } from './CalendarItem';
 import { selectMaxDate } from './utils';
+dayjs.extend(isoWeek);
+
+const DATE_FORMAT = 'YYYY-MM-DD';
+
+function createOption(label: string, values: [string, string]) {
+  return {
+    label,
+    value: `${values[0]}_${values[1]}`,
+  };
+}
+
+function getFiscalYear(date: dayjs.Dayjs) {
+  if (date.month() < 3) {
+    return date.year() - 1;
+  }
+  return date.year();
+}
+
+function startOfFiscalYear(year: number) {
+  return dayjs(`${year}-04-01`).startOf('day');
+}
+
+function endOfFiscalYear(year: number) {
+  return dayjs(`${year + 1}-03-31`).endOf('day');
+}
+
+function relativeStartOfFiscalyear(offset: number) {
+  const currentFY = getFiscalYear(dayjs());
+  const targetFY = currentFY + offset;
+  return startOfFiscalYear(targetFY);
+}
+
+function relativeEndOfFiscalyear(offset: number) {
+  const currentFY = getFiscalYear(dayjs());
+  const targetFY = currentFY + offset;
+  return endOfFiscalYear(targetFY);
+}
+
+function useQuickOptionGroups() {
+  const { operatorStrings } = useAppStrings();
+
+  return useMemo(() => {
+    const options: GroupedSelectControlProps<string>['optionGroups'] = [];
+
+    options.push({
+      label: 'Week',
+      options: [
+        createOption(operatorStrings.thisWeek, [
+          dayjs().startOf('isoWeek').format(DATE_FORMAT),
+          dayjs().endOf('isoWeek').format(DATE_FORMAT),
+        ]),
+        createOption(operatorStrings.nextWeek, [
+          dayjs().add(1, 'week').startOf('isoWeek').format(DATE_FORMAT),
+          dayjs().add(1, 'week').endOf('isoWeek').format(DATE_FORMAT),
+        ]),
+        createOption(operatorStrings.lastWeek, [
+          dayjs().subtract(1, 'week').startOf('isoWeek').format(DATE_FORMAT),
+          dayjs().subtract(1, 'week').endOf('isoWeek').format(DATE_FORMAT),
+        ]),
+      ],
+    });
+
+    options.push({
+      label: 'Month',
+      options: [
+        createOption(operatorStrings.thisMonth, [
+          dayjs().startOf('month').format(DATE_FORMAT),
+          dayjs().endOf('month').format(DATE_FORMAT),
+        ]),
+        createOption(operatorStrings.nextMonth, [
+          dayjs().add(1, 'month').startOf('month').format(DATE_FORMAT),
+          dayjs().add(1, 'month').endOf('month').format(DATE_FORMAT),
+        ]),
+        createOption(operatorStrings.lastMonth, [
+          dayjs().subtract(1, 'month').startOf('month').format(DATE_FORMAT),
+          dayjs().subtract(1, 'month').endOf('month').format(DATE_FORMAT),
+        ]),
+      ],
+    });
+
+    options.push({
+      label: 'Year',
+      options: [
+        createOption(operatorStrings.thisYear, [
+          dayjs().startOf('year').format(DATE_FORMAT),
+          dayjs().endOf('year').format(DATE_FORMAT),
+        ]),
+        createOption(operatorStrings.nextYear, [
+          dayjs().add(1, 'year').startOf('year').format(DATE_FORMAT),
+          dayjs().add(1, 'year').endOf('year').format(DATE_FORMAT),
+        ]),
+        createOption(operatorStrings.lastYear, [
+          dayjs().subtract(1, 'year').startOf('year').format(DATE_FORMAT),
+          dayjs().subtract(1, 'year').endOf('year').format(DATE_FORMAT),
+        ]),
+      ],
+    });
+
+    options.push({
+      label: 'Fiscal Year',
+      options: [
+        createOption(operatorStrings.thisFiscalYear, [
+          relativeStartOfFiscalyear(0).format(DATE_FORMAT),
+          relativeEndOfFiscalyear(0).format(DATE_FORMAT),
+        ]),
+        createOption(operatorStrings.nextFiscalYear, [
+          relativeStartOfFiscalyear(1).format(DATE_FORMAT),
+          relativeEndOfFiscalyear(1).format(DATE_FORMAT),
+        ]),
+        createOption(operatorStrings.lastFiscalYear, [
+          relativeStartOfFiscalyear(-1).format(DATE_FORMAT),
+          relativeEndOfFiscalyear(-1).format(DATE_FORMAT),
+        ]),
+      ],
+    });
+
+    return options;
+  }, [operatorStrings]);
+}
 
 interface PopoverContentProps {
   value: [string, string] | null;
@@ -111,6 +235,8 @@ export const PopoverContent: FC<PopoverContentProps> = ({
     );
   }
 
+  const optionGroups = useQuickOptionGroups();
+
   return (
     <div style={{ display: 'flex' }}>
       <div>
@@ -149,10 +275,53 @@ export const PopoverContent: FC<PopoverContentProps> = ({
             display: 'flex',
             gap: tokens.spacingHorizontalS,
             padding: tokens.spacingVerticalS,
-            justifyContent: 'flex-end',
+            alignItems: 'center',
           }}
         >
-          {actions}
+          <div style={{ minWidth: 120 }}>
+            <GroupedSelectControl
+              placeholder="Custom range"
+              value={`${date1?.format(DATE_FORMAT) ?? ''}_${
+                date2?.format(DATE_FORMAT) ?? ''
+              }`}
+              size="small"
+              onChange={(value) => {
+                if (!value) {
+                  return;
+                }
+                const parts = value.split('_');
+                const date1 = dayjs(parts[0]);
+                const date2 = dayjs(parts[1]);
+
+                setNavigationDate1(dayjs(parts[0]));
+
+                if (
+                  date1.year() === date2.year() &&
+                  date1.month() === date2.month()
+                ) {
+                  setNavigationDate2(dayjs(parts[0]).add(1, 'month'));
+                } else {
+                  setNavigationDate2(date2);
+                }
+                setInternalValue([dayjs(parts[0]), dayjs(parts[1])]);
+
+                if (!showApplyButton) {
+                  onChange?.(parts as [string, string]);
+                }
+              }}
+              optionGroups={optionGroups}
+            />
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flex: 1,
+              gap: tokens.spacingHorizontalS,
+              justifyContent: 'flex-end',
+            }}
+          >
+            {actions}
+          </div>
         </div>
       </div>
     </div>

@@ -23,6 +23,7 @@ const useStyles = makeStyles({
 export interface DateRangeControlProps extends ControlProps<[string, string]> {
   maxDate?: Date;
   minDate?: Date;
+  required?: boolean;
 }
 
 export function DateRangeControl({
@@ -35,6 +36,7 @@ export function DateRangeControl({
   minDate,
   readOnly,
   skeleton,
+  required,
 }: Readonly<DateRangeControlProps>) {
   const [open, setOpen] = useState(false);
   const styles = useStyles();
@@ -78,6 +80,7 @@ export function DateRangeControl({
           value={value}
           minDate={minDate}
           maxDate={maxDate}
+          required={required}
           onChange={(value) => {
             setOpen(false);
             onChange?.(value);

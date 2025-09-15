@@ -1,4 +1,4 @@
-import { DropdownProps, tokens } from '@fluentui/react-components';
+import { DropdownProps, OptionGroup, tokens } from '@fluentui/react-components';
 import { useMemo } from 'react';
 
 import { Dropdown } from '../../components/fluent';
@@ -11,16 +11,16 @@ export interface Lookup<T = string> {
   value: T;
 }
 
-export type SelectControlProps<T> = ControlProps<T> & {
-  options: Lookup<T>[];
+export type GroupedSelectControlProps<T> = ControlProps<T> & {
+  optionGroups: Array<{ label: string; options: Lookup<T>[] }>;
   clearable?: boolean;
   size?: DropdownProps['size'];
 };
 
-export default function SelectControl<T extends string | number>({
+export default function GroupedSelectControl<T extends string | number>({
   value,
   onChange,
-  options,
+  optionGroups,
   id,
   name,
   disabled,
@@ -30,14 +30,11 @@ export default function SelectControl<T extends string | number>({
   skeleton,
   clearable,
   size,
-}: Readonly<SelectControlProps<T>>) {
-  const transformedOptions = useMemo(
-    () => options.map((x) => ({ label: x.label, value: String(x.value) })),
-    [options]
-  );
-
+}: Readonly<GroupedSelectControlProps<T>>) {
   const handleChange = (value: string) => {
-    const option = options.find((x) => String(x.value) === value);
+    const option = optionGroups
+      .flatMap((group) => group.options)
+      .find((x) => String(x.value) === String(value));
     if (option) {
       onChange?.(option.value);
     } else {
@@ -46,8 +43,11 @@ export default function SelectControl<T extends string | number>({
   };
 
   const selectedOption = useMemo(
-    () => options.find((x) => x.value === value),
-    [options, value]
+    () =>
+      optionGroups
+        .flatMap((group) => group.options)
+        .find((x) => x.value === value),
+    [optionGroups, value]
   );
 
   if (skeleton) {
@@ -61,9 +61,7 @@ export default function SelectControl<T extends string | number>({
       name={name}
       appearance="filled-darker"
       size={size}
-      // data={transformedOptions}
       value={selectedOption?.label ?? ''}
-      // onChange={(e, v) => handleChange(v as string)}
       selectedOptions={value ? [String(value)] : []}
       onOptionSelect={(event, data) => {
         handleChange(data.optionValue as string);
@@ -87,10 +85,14 @@ export default function SelectControl<T extends string | number>({
         },
       }}
     >
-      {transformedOptions.map((x) => (
-        <Option key={x.value} value={x.value}>
-          {x.label}
-        </Option>
+      {optionGroups.map((group) => (
+        <OptionGroup label={group.label} key={group.label}>
+          {group.options.map((option) => (
+            <Option key={option.value} value={String(option.value)}>
+              {option.label}
+            </Option>
+          ))}
+        </OptionGroup>
       ))}
     </Dropdown>
   );

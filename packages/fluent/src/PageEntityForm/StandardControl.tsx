@@ -285,6 +285,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         disabled: isDisabled,
         readOnly,
         skeleton,
+        required,
       };
 
       const Control =

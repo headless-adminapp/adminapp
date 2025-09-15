@@ -115,6 +115,7 @@ export const Header: FC<HeaderProps> = () => {
                             value={field.value}
                             onChange={field.onChange}
                             onBlur={field.onBlur}
+                            required={attribute.required}
                           />
                         </div>
                       );

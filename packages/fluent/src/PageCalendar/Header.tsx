@@ -110,6 +110,7 @@ export function Header<SA extends SchemaAttributes = SchemaAttributes>({
                               value={field.value}
                               onChange={field.onChange}
                               onBlur={field.onBlur}
+                              required={attribute.required}
                             />
                           </div>
                         );
