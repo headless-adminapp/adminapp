@@ -17,6 +17,7 @@ import {
   useGridColumnFilter,
 } from '@headless-adminapp/app/datagrid/hooks';
 import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
+import { Attribute } from '@headless-adminapp/core';
 import { ColumnCondition } from '@headless-adminapp/core/experience/view';
 import { Icons } from '@headless-adminapp/icons';
 import {
@@ -108,7 +109,14 @@ export const TableHeaderFilterCell: FC<
   const strings = usePageEntityViewStrings();
 
   const attribute = useMemo(() => {
-    const _attribute = schema.attributes[column.name];
+    const _attribute = schema.attributes[column.name] as Attribute | undefined;
+
+    if (!_attribute) {
+      throw new Error(
+        `Attribute not found: ${column.name} in ${schema.logicalName}`
+      );
+    }
+
     if (!column.expandedKey) {
       return _attribute;
     }
@@ -200,7 +208,7 @@ export const TableHeaderFilterCell: FC<
 
   const headerCell = (
     <TableHeaderCell
-      as="div"
+      as="th"
       className={mergeClasses(styles.root, align === 'right' && styles.right)}
       style={{
         textAlign: align,

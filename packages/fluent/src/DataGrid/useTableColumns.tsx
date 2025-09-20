@@ -135,18 +135,22 @@ export function useTableColumns({
       availableWidth,
       gapWidth: 0,
       columns: columns.map((column) => {
-        const attribute = schema.attributes[column.name];
+        const attribute = schema.attributes[column.name] as
+          | Attribute
+          | undefined;
 
         let defaultMaxWidth = 1000;
 
-        if (attribute.type === 'date') {
-          if (attribute.format === 'datetime') {
-            defaultMaxWidth = 200;
-          } else {
-            defaultMaxWidth = 100;
+        if (attribute) {
+          if (attribute.type === 'date') {
+            if (attribute.format === 'datetime') {
+              defaultMaxWidth = 200;
+            } else {
+              defaultMaxWidth = 100;
+            }
+          } else if (attribute.type === 'money') {
+            defaultMaxWidth = 150;
           }
-        } else if (attribute.type === 'money') {
-          defaultMaxWidth = 150;
         }
 
         return {

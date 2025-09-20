@@ -2,6 +2,7 @@ import { useCommands } from '@headless-adminapp/app/command';
 import { useBaseCommandHandlerContext } from '@headless-adminapp/app/command/hooks';
 import { DataGridProvider } from '@headless-adminapp/app/datagrid/DataGridProvider';
 import { useGridControlContext } from '@headless-adminapp/app/datagrid/hooks';
+import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 import {
   useExperienceView,
@@ -29,7 +30,6 @@ interface WidgetDataGridContainerProps {
   allowContextMenu?: boolean;
 }
 
-/*** @deprecated Need refactoring */
 export function WidgetDataGridContainer({
   logicalName,
   maxRecords,
@@ -77,22 +77,24 @@ export function WidgetDataGridContainer({
   }
 
   return (
-    <DataGridProvider
-      schema={schema}
-      view={view}
-      views={[]}
-      onChangeView={() => {}}
-      commands={contextCommands}
-      allowViewSelection={false}
-      maxRecords={maxRecords}
-      extraFilter={filter}
-    >
-      <FormSubgridContainer
-        title={title}
-        commands={commands}
-        allowContextMenu={allowContextMenu}
-      />
-    </DataGridProvider>
+    <HistoryStateKeyProvider historyKey="~">
+      <DataGridProvider
+        schema={schema}
+        view={view}
+        views={[]}
+        onChangeView={() => {}}
+        commands={contextCommands}
+        allowViewSelection={false}
+        maxRecords={maxRecords}
+        extraFilter={filter}
+      >
+        <FormSubgridContainer
+          title={title}
+          commands={commands}
+          allowContextMenu={allowContextMenu}
+        />
+      </DataGridProvider>
+    </HistoryStateKeyProvider>
   );
 }
 

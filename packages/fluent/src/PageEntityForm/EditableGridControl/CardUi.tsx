@@ -141,6 +141,9 @@ export const CardUi: FC<CardUiProps> = ({
                             }}
                             onBlur={field.onBlur}
                             placeholder=""
+                            allowNewRecord
+                            allowNavigation
+                            allowQuickCreate
                           />
                         </SectionControlWrapper>
                       );

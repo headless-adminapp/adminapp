@@ -173,6 +173,9 @@ export const TableUi: FC<TableUiProps> = ({
                             }}
                             onBlur={field.onBlur}
                             placeholder=""
+                            allowNewRecord
+                            allowNavigation
+                            allowQuickCreate
                           />
                         </SectionControlWrapper>
                       );

@@ -63,6 +63,11 @@ async function checkNavigationGuard(): Promise<boolean> {
   return true;
 }
 
+function isKeyToIgnore(key?: string) {
+  if (!key) return false;
+  return key === '~' || key?.endsWith('~');
+}
+
 export function useNextRouter() {
   const router = useRouter();
 
@@ -79,6 +84,9 @@ export function useNextRouter() {
 
   const nextRouter = useMemo(() => {
     const getState: RouterInstance['getState'] = (key?: string) => {
+      if (isKeyToIgnore(key)) {
+        return {};
+      }
       const stateKey = isPushNavigating ? PENDING_STATE_KEY : STATE_KEY;
       const data = window.history.state[stateKey] ?? {};
 
@@ -91,6 +99,10 @@ export function useNextRouter() {
 
     const setState: RouterInstance['setState'] = (key: any, state?: any) => {
       if (typeof key === 'string') {
+        if (isKeyToIgnore(key)) {
+          return;
+        }
+
         state = {
           ...window.history.state?.[STATE_KEY],
           [key]: state,
