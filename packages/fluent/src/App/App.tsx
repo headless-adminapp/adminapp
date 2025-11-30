@@ -2,8 +2,10 @@ import { FC, PropsWithChildren } from 'react';
 
 import { AppUI } from './AppUI';
 
-interface AppProps {}
+interface AppProps {
+  appFooter?: React.ReactNode;
+}
 
-export const App: FC<PropsWithChildren<AppProps>> = ({ children }) => {
-  return <AppUI>{children}</AppUI>;
+export const App: FC<PropsWithChildren<AppProps>> = (props) => {
+  return <AppUI {...props} />;
 };

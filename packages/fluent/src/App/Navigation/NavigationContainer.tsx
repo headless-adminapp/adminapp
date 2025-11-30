@@ -130,6 +130,7 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
         <NavDrawerBody
           style={{
             paddingTop: 8,
+            paddingBottom: 8,
           }}
         >
           {sections.map((section, index) => (

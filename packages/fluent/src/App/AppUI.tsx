@@ -7,7 +7,14 @@ import { NavigationContainer } from './Navigation';
 
 type DrawerType = Required<DrawerProps>['type'];
 
-export const AppUI: FC<PropsWithChildren> = ({ children }) => {
+interface AppUIProps {
+  appFooter?: React.ReactNode;
+}
+
+export const AppUI: FC<PropsWithChildren<AppUIProps>> = ({
+  children,
+  appFooter,
+}) => {
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
 
@@ -57,6 +64,7 @@ export const AppUI: FC<PropsWithChildren> = ({ children }) => {
           {children}
         </div>
       </div>
+      {appFooter}
     </main>
   );
 };
