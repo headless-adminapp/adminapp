@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/server-sdk",
-  "version": "1.4.24",
+  "version": "1.4.33",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
