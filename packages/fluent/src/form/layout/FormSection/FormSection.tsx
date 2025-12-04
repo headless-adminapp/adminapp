@@ -138,7 +138,7 @@ export const FormSection: FC<PropsWithChildren<FormSectionProps>> & {
                 <div style={{ flex: 1 }} />
               </div>
             </div>
-            <Divider style={{ opacity: 0.2 }} />
+            <Divider style={{ opacity: 0.2, flexGrow: 0 }} />
           </Fragment>
         )}
         <div

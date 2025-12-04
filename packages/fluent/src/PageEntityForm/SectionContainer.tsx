@@ -144,6 +144,8 @@ export function SectionContainer<
                   gridColumn: control.span
                     ? `var(--section-item-span-${control.span})`
                     : undefined,
+                  display: control.fullHeight ? 'flex' : undefined,
+                  flexDirection: control.fullHeight ? 'column' : undefined,
                 }}
               >
                 <Controller
@@ -175,6 +177,7 @@ export function SectionContainer<
                         required={required}
                         isError={isError}
                         errorMessage={errorMessage}
+                        grow={control.fullHeight}
                       >
                         <Control
                           attribute={attribute}
@@ -206,6 +209,7 @@ export function SectionContainer<
                           }}
                           autoHeight={control.autoHeight}
                           maxHeight={control.maxHeight}
+                          fullHeight={control.fullHeight}
                           skeleton={skeleton}
                           required={required}
                         />

@@ -8,11 +8,17 @@ interface SectionControlWrapperProps {
   required?: boolean;
   isError?: boolean;
   errorMessage?: string;
+  grow?: boolean;
 }
 
 export function SectionControlWrapper(
   props: PropsWithChildren<SectionControlWrapperProps>
 ) {
+  const gridTemplateRows = !props.grow
+    ? undefined
+    : props.labelPosition === 'top' && !props.labelHidden
+    ? 'auto 1fr auto auto'
+    : '1fr auto auto auto';
   return (
     <Field
       label={props.labelHidden ? undefined : props.label}
@@ -21,7 +27,11 @@ export function SectionControlWrapper(
       validationState={props.isError ? 'error' : undefined}
       validationMessage={props.errorMessage}
       validationMessageIcon={null}
-      style={{ paddingLeft: props.labelHidden ? 0 : undefined }}
+      style={{
+        paddingLeft: props.labelHidden ? 0 : undefined,
+        gridTemplateRows,
+        flexGrow: props.grow ? 1 : undefined,
+      }}
     >
       {props.children}
     </Field>

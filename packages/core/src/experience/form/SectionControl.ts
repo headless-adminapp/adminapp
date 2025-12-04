@@ -24,8 +24,12 @@ export interface StandardControlProps {
   quickViewControl?: boolean;
   allowNavigation?: boolean;
   allowNewRecord?: boolean;
+  /** For textarea */
   autoHeight?: boolean;
+  /** For textarea */
   maxHeight?: number;
+  /** Allow control to take full available height of the section */
+  fullHeight?: boolean;
   skeleton?: boolean; // For loading state
   required?: boolean;
 }
@@ -46,9 +50,14 @@ export interface SectionStatndardControl<
 > extends BaseSectionControl {
   type: 'standard';
   attributeName: keyof S;
-  component?: string | React.ComponentType<StandardControlProps>; // Component or unique name of component from registry to override default component
-  autoHeight?: boolean; // auto height for the control
-  maxHeight?: number; // max height for the control
+  /** Component or unique name of component from registry to override default component */
+  component?: string | React.ComponentType<StandardControlProps>;
+  /** auto height for the control (For textarea) */
+  autoHeight?: boolean;
+  /** max height for the control (For textarea) */
+  maxHeight?: number;
+  /** control takes full height of the section */
+  fullHeight?: boolean;
 }
 
 export interface SectionSpacerControl extends BaseSectionControl {
