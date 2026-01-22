@@ -273,11 +273,11 @@ importers:
   packages/server-sdk-mongo:
     dependencies:
       '@headless-adminapp/core':
-        specifier: workspace:*
-        version: link:../core/dist
+        specifier: 1.4.33
+        version: 1.4.33(@tanstack/react-query@5.84.2(react@18.3.1))
       '@headless-adminapp/server-sdk':
-        specifier: workspace:*
-        version: link:../server-sdk/dist
+        specifier: 1.4.33
+        version: 1.4.33
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -1139,6 +1139,14 @@ packages:
 
   '@griffel/style-types@1.2.0':
     resolution: {integrity: sha512-x166MNw0vWe5l5qhinfNT4eyWOaP48iFzPyFOfIB0/BVidKTWsEe5PmqRJDDtrJFS3VHhd/tE0oM6tkEMh2tsg==}
+
+  '@headless-adminapp/core@1.4.33':
+    resolution: {integrity: sha512-js27SbbNIBZLjTH8jYRqXyTQpbnY3xBeF0VJuKExMCFxBXOaqZabJSsdborb/0oj2o3U+tCGZW8w2esYZ/h+MA==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.51.1
+
+  '@headless-adminapp/server-sdk@1.4.33':
+    resolution: {integrity: sha512-GihZGQjS6Bo7/Eev9KoOFnevPg4PS5EuuzAke14YM/yNtoleN13WYfZuoLoFfFCA0oDIXaZ0DLST3WkU5ROgzw==}
 
   '@hookform/resolvers@3.9.0':
     resolution: {integrity: sha512-bU0Gr4EepJ/EQsH/IwEzYLsT/PEj5C0ynLQ4m+GSHS+xKH4TfSelhluTgOaoc4kA5s7eCsQbM4wvZLzELmWzUg==}
@@ -7026,6 +7034,15 @@ snapshots:
   '@griffel/style-types@1.2.0':
     dependencies:
       csstype: 3.1.3
+
+  '@headless-adminapp/core@1.4.33(@tanstack/react-query@5.84.2(react@18.3.1))':
+    dependencies:
+      '@tanstack/react-query': 5.84.2(react@18.3.1)
+      uuid: 11.0.3
+
+  '@headless-adminapp/server-sdk@1.4.33':
+    dependencies:
+      dayjs: 1.11.13
 
   '@hookform/resolvers@3.9.0(react-hook-form@7.52.2(react@18.3.1))':
     dependencies:
