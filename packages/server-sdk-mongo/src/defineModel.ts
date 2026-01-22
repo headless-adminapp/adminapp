@@ -7,6 +7,7 @@ import {
 import { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
 import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
 import { IdTypes } from '@headless-adminapp/core/attributes/IdAttribute';
+import { RegardingAttribute } from '@headless-adminapp/core/attributes/LookupAttribute';
 import { Schema } from '@headless-adminapp/core/schema';
 import { Model, model, models, Schema as MongoSchema } from 'mongoose';
 
@@ -52,11 +53,17 @@ function resolveIdAttribute(attribute: IdAttribute<Id>) {
 
 function resolveLookupAttribute(
   attribute: LookupAttribute,
-  modelNameResolver: (logicalName: string) => string
+  modelNameResolver: (logicalName: string) => string,
 ) {
   return {
     type: resolveIdType(attribute),
     ref: modelNameResolver(attribute.entity),
+  };
+}
+
+function resolveRegardingAttribute(attribute: RegardingAttribute) {
+  return {
+    type: resolveIdType(attribute),
   };
 }
 
@@ -75,65 +82,71 @@ function applyRequiredAttribute(attribute: AttributeBase, _defination: any) {
 export function defineModel<S extends MongoRequiredSchemaAttributes>(
   name: string,
   schema: Schema<S>,
-  modelNameResolver: (logicalName: string) => string
+  modelNameResolver: (logicalName: string) => string,
 ) {
   if (!models[name]) {
     const { _id, ...rest } = schema.attributes;
 
-    const defination = Object.keys(rest).reduce((acc, key) => {
-      const attribute = rest[key];
+    const defination = Object.keys(rest).reduce(
+      (acc, key) => {
+        const attribute = rest[key];
 
-      if (
-        schema.createdAtAttribute === key ||
-        schema.updatedAtAttribute === key
-      ) {
-        // Skip createdAt and updatedAt attributes
-        return acc;
-      }
-
-      switch (attribute.type) {
-        case 'id':
-          acc[key] = resolveIdAttribute(attribute);
-          break;
-        case 'attachment':
-        case 'string':
-          acc[key] = { type: MongoSchema.Types.String };
-          break;
-        case 'boolean':
-          acc[key] = { type: MongoSchema.Types.Boolean };
-          break;
-        case 'date':
-          acc[key] = { type: MongoSchema.Types.Date };
-          break;
-        case 'choice':
-          acc[key] = resolveChoiceAttribute(attribute);
-          break;
-        case 'choices':
-          acc[key] = resolveChoicesAttribute(attribute);
-          break;
-        case 'lookup':
-          acc[key] = resolveLookupAttribute(attribute, modelNameResolver);
-          break;
-        case 'mixed':
-          acc[key] = { type: MongoSchema.Types.Mixed };
-          break;
-        case 'money':
-        case 'number':
-          acc[key] = { type: MongoSchema.Types.Number };
-          break;
-        case 'daterange':
-        case 'lookups':
-          acc[key] = { type: MongoSchema.Types.Mixed };
-          break;
-        default:
+        if (
+          schema.createdAtAttribute === key ||
+          schema.updatedAtAttribute === key
+        ) {
+          // Skip createdAt and updatedAt attributes
           return acc;
-      }
+        }
 
-      applyDefaultAttribute(attribute, acc[key]);
-      applyRequiredAttribute(attribute, acc[key]);
+        switch (attribute.type) {
+          case 'id':
+            acc[key] = resolveIdAttribute(attribute);
+            break;
+          case 'attachment':
+          case 'string':
+            acc[key] = { type: MongoSchema.Types.String };
+            break;
+          case 'boolean':
+            acc[key] = { type: MongoSchema.Types.Boolean };
+            break;
+          case 'date':
+            acc[key] = { type: MongoSchema.Types.Date };
+            break;
+          case 'choice':
+            acc[key] = resolveChoiceAttribute(attribute);
+            break;
+          case 'choices':
+            acc[key] = resolveChoicesAttribute(attribute);
+            break;
+          case 'lookup':
+            acc[key] = resolveLookupAttribute(attribute, modelNameResolver);
+            break;
+          case 'regarding':
+            acc[key] = resolveRegardingAttribute(attribute);
+            break;
+          case 'mixed':
+            acc[key] = { type: MongoSchema.Types.Mixed };
+            break;
+          case 'money':
+          case 'number':
+            acc[key] = { type: MongoSchema.Types.Number };
+            break;
+          case 'daterange':
+          case 'lookups':
+            acc[key] = { type: MongoSchema.Types.Mixed };
+            break;
+          default:
+            return acc;
+        }
 
-      return acc;
-    }, {} as Record<string, any>);
+        applyDefaultAttribute(attribute, acc[key]);
+        applyRequiredAttribute(attribute, acc[key]);
+
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
 
     if (!('objectId' in _id)) {
       defination._id = resolveIdAttribute(_id);
@@ -150,7 +163,7 @@ export function defineModel<S extends MongoRequiredSchemaAttributes>(
     models[name] = model<InferredDbSchemaType<S>>(
       name,
       mongoSchema,
-      schema.collectionName ?? schema.logicalName
+      schema.collectionName ?? schema.logicalName,
     );
   }
 

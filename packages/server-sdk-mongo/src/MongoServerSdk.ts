@@ -49,7 +49,7 @@ export interface MongoDatabaseContext {
 interface MongoServerSdkOptions<
   SdkContext extends ServerSdkContext = ServerSdkContext,
   DbContext extends MongoDatabaseContext = MongoDatabaseContext,
-  SA extends MongoRequiredSchemaAttributes = MongoRequiredSchemaAttributes
+  SA extends MongoRequiredSchemaAttributes = MongoRequiredSchemaAttributes,
 > extends ServerSdkOptions<SdkContext, DbContext, SA> {
   schemaStore: MongoSchemaStore<SA>;
 }
@@ -58,11 +58,8 @@ export class MongoServerSdk<
   SdkContext extends ServerSdkContext = ServerSdkContext,
   DbContext extends MongoDatabaseContext = MongoDatabaseContext,
   SA extends MongoRequiredSchemaAttributes = MongoRequiredSchemaAttributes,
-  Options extends MongoServerSdkOptions<
-    SdkContext,
-    DbContext,
-    SA
-  > = MongoServerSdkOptions<SdkContext, DbContext, SA>
+  Options extends MongoServerSdkOptions<SdkContext, DbContext, SA> =
+    MongoServerSdkOptions<SdkContext, DbContext, SA>,
 > extends ServerSdk<SdkContext, DbContext, SA, Options> {
   protected session: ClientSession | null = null;
 
@@ -118,7 +115,7 @@ export class MongoServerSdk<
   }
 
   protected async retriveRecord<T extends Record<string, unknown>>(
-    params: RetriveRecordParams
+    params: RetriveRecordParams,
   ): Promise<RetriveRecordResult<T>> {
     const model = this.options.schemaStore.getModel(params.logicalName);
     const schema = this.options.schemaStore.getSchema(params.logicalName);
@@ -150,7 +147,7 @@ export class MongoServerSdk<
       schema,
       {
         timezone: this.timezone,
-      }
+      },
     );
 
     if (orgFilter) {
@@ -170,7 +167,7 @@ export class MongoServerSdk<
       schema,
       {
         timezone: this.timezone,
-      }
+      },
     );
 
     if (permissionFilter) {
@@ -188,7 +185,7 @@ export class MongoServerSdk<
           (params?.expand as Record<string, string[]>)?.[key]?.length
         ) {
           const lookupSchema = this.options.schemaStore.getSchema(
-            attribute.entity
+            attribute.entity,
           );
           lookupPipelines.push({
             $lookup: {
@@ -204,6 +201,26 @@ export class MongoServerSdk<
               preserveNullAndEmptyArrays: true,
             },
           });
+        }
+      } else if (attribute.type === 'regarding') {
+        if (params?.columns?.includes(key)) {
+          for (const entity of attribute.entities) {
+            const lookupSchema = this.options.schemaStore.getSchema(entity);
+            lookupPipelines.push({
+              $lookup: {
+                from: lookupSchema.logicalName,
+                localField: key,
+                foreignField: '_id',
+                as: `@expand.${key}.${entity}`,
+              },
+            });
+            lookupPipelines.push({
+              $unwind: {
+                path: `$@expand.${key}.${entity}`,
+                preserveNullAndEmptyArrays: true,
+              },
+            });
+          }
         }
       }
     });
@@ -260,85 +277,98 @@ export class MongoServerSdk<
     schema: Schema<SA>;
   }) {
     if (params.columns?.length) {
-      const projection = params.columns.reduce((acc, x) => {
-        const [key, subKey] = x.split('.');
-        const attribute = params.schema.attributes[key];
-        if (!attribute) {
-          return acc;
-        }
-
-        if (attribute.type !== 'lookup') {
-          acc[key] = 1;
-          return acc;
-        } else {
-          const lookupSchema = this.options.schemaStore.getSchema(
-            attribute.entity
-          );
-          let lookupProjection: Record<string, number | string> = (acc[
-            key
-          ] as Record<string, number | string>) || {
-            _id: 1,
-          };
-
-          if (!subKey) {
-            lookupProjection = {
-              ...lookupProjection,
-              name: `$${key}.${lookupSchema.primaryAttribute as string}`,
-              [`${key}.${lookupSchema.primaryAttribute as string}`]: 1,
-              logicalName: lookupSchema.logicalName,
-            };
-          } else {
-            lookupProjection[subKey] = 1;
+      const projection = params.columns.reduce(
+        (acc, x) => {
+          const [key, subKey] = x.split('.');
+          const attribute = params.schema.attributes[key];
+          if (!attribute) {
+            return acc;
           }
 
-          acc[key] = lookupProjection;
-          return acc;
-        }
-      }, {} as Record<string, number | string | any | Record<string, number | string>>);
+          if (attribute.type === 'lookup') {
+            const lookupSchema = this.options.schemaStore.getSchema(
+              attribute.entity,
+            );
+            let lookupProjection: Record<string, number | string> = (acc[
+              key
+            ] as Record<string, number | string>) || {
+              _id: 1,
+            };
+
+            if (!subKey) {
+              lookupProjection = {
+                ...lookupProjection,
+                name: `$${key}.${lookupSchema.primaryAttribute as string}`,
+                [`${key}.${lookupSchema.primaryAttribute as string}`]: 1,
+                logicalName: lookupSchema.logicalName,
+              };
+            } else {
+              lookupProjection[subKey] = 1;
+            }
+
+            acc[key] = lookupProjection;
+            return acc;
+          } else if (attribute.type === 'regarding') {
+            acc[attribute.entityTypeAttribute] = 1;
+            acc[key] = 1;
+            return acc;
+          } else {
+            acc[key] = 1;
+            return acc;
+          }
+        },
+        {} as Record<
+          string,
+          number | string | any | Record<string, number | string>
+        >,
+      );
 
       projection._id = 1;
       projection['@data:entity'] = params.schema.logicalName;
 
       if (params.expand && Object.keys(params.expand).length) {
-        const expand = Object.keys(params.expand).reduce((acc, cur) => {
-          const attribute = params.schema.attributes[cur];
-          if (!attribute) {
-            return acc;
-          }
+        const expand = Object.keys(params.expand).reduce(
+          (acc, cur) => {
+            const attribute = params.schema.attributes[cur];
+            if (!attribute) {
+              return acc;
+            }
 
-          if (attribute.type !== 'lookup') {
-            return acc;
-          }
+            if (attribute.type !== 'lookup') {
+              return acc;
+            }
 
-          const lookupSchema = this.options.schemaStore.getSchema(
-            attribute.entity
-          );
+            const lookupSchema = this.options.schemaStore.getSchema(
+              attribute.entity,
+            );
 
-          const expandProjection = {
-            '@data:entity': lookupSchema.logicalName,
-            [lookupSchema.idAttribute]: `$${cur}.${
-              lookupSchema.idAttribute as string
-            }`,
-          } as Record<string, any>;
+            const expandProjection = {
+              '@data:entity': lookupSchema.logicalName,
+              [lookupSchema.idAttribute]: `$${cur}.${
+                lookupSchema.idAttribute as string
+              }`,
+            } as Record<string, any>;
 
-          const columns = params.expand?.[cur] ?? [];
+            const columns = params.expand?.[cur] ?? [];
 
-          columns.forEach((column) => {
-            expandProjection[column] = `$${cur}.${column}`;
-          });
+            columns.forEach((column) => {
+              expandProjection[column] = `$${cur}.${column}`;
+            });
 
-          acc[cur] = {
-            $cond: {
-              if: {
-                $and: [{ $eq: [{ $type: '$bankAccount' }, 'object'] }],
+            acc[cur] = {
+              $cond: {
+                if: {
+                  $and: [{ $eq: [{ $type: '$bankAccount' }, 'object'] }],
+                },
+                then: expandProjection,
+                else: null,
               },
-              then: expandProjection,
-              else: null,
-            },
-          };
+            };
 
-          return acc;
-        }, {} as Record<string, any>);
+            return acc;
+          },
+          {} as Record<string, any>,
+        );
 
         if (Object.keys(expand).length) {
           projection['@data:expand'] = expand;
@@ -357,7 +387,7 @@ export class MongoServerSdk<
   }
 
   protected async retriveRecords<T extends Record<string, unknown>>(
-    params: RetriveRecordsParams
+    params: RetriveRecordsParams,
   ): Promise<RetriveRecordsResult<T>> {
     const logicalName = params.logicalName;
 
@@ -377,7 +407,7 @@ export class MongoServerSdk<
       schema,
       {
         timezone: this.timezone,
-      }
+      },
     );
 
     if (orgFilter) {
@@ -397,7 +427,7 @@ export class MongoServerSdk<
       schema,
       {
         timezone: this.timezone,
-      }
+      },
     );
 
     if (permissionFilter) {
@@ -419,7 +449,7 @@ export class MongoServerSdk<
           (!!params?.search && attribute.searchable)
         ) {
           const lookupSchema = this.options.schemaStore.getSchema(
-            attribute.entity
+            attribute.entity,
           );
           lookupPipelines.push({
             $lookup: {
@@ -435,6 +465,26 @@ export class MongoServerSdk<
               preserveNullAndEmptyArrays: true,
             },
           });
+        }
+      } else if (attribute.type === 'regarding') {
+        if (params?.columns?.includes(key)) {
+          for (const entity of attribute.entities) {
+            const lookupSchema = this.options.schemaStore.getSchema(entity);
+            lookupPipelines.push({
+              $lookup: {
+                from: lookupSchema.logicalName,
+                localField: key,
+                foreignField: '_id',
+                as: `@expand.${key}.${entity}`,
+              },
+            });
+            lookupPipelines.push({
+              $unwind: {
+                path: `$@expand.${key}.${entity}`,
+                preserveNullAndEmptyArrays: true,
+              },
+            });
+          }
         }
       }
     });
@@ -458,9 +508,9 @@ export class MongoServerSdk<
         new Set([
           schema.primaryAttribute,
           ...Object.keys(schema.attributes).filter(
-            (x) => schema.attributes[x].searchable
+            (x) => schema.attributes[x].searchable,
           ),
-        ])
+        ]),
       );
 
       const searchFilter = searchFields
@@ -485,7 +535,7 @@ export class MongoServerSdk<
             };
           } else if (attribute.type === 'lookup') {
             const lookupSchema = this.options.schemaStore.getSchema(
-              attribute.entity
+              attribute.entity,
             );
 
             return {
@@ -513,10 +563,13 @@ export class MongoServerSdk<
       }
     }
 
-    const sort = params?.sort?.reduce((acc, x) => {
-      acc[x.field] = x.order === 'asc' ? 1 : -1;
-      return acc;
-    }, {} as Record<string, 1 | -1>);
+    const sort = params?.sort?.reduce(
+      (acc, x) => {
+        acc[x.field] = x.order === 'asc' ? 1 : -1;
+        return acc;
+      },
+      {} as Record<string, 1 | -1>,
+    );
 
     const listPipeline = [...basePipelines];
     const countPipeline = [...basePipelines];
@@ -581,7 +634,7 @@ export class MongoServerSdk<
   }
 
   protected async deleteRecord(
-    params: DeleteRecordParams
+    params: DeleteRecordParams,
   ): Promise<DeleteRecordResult> {
     const model = this.options.schemaStore.getModel(params.logicalName);
     const schema = this.options.schemaStore.getSchema(params.logicalName);
@@ -615,7 +668,7 @@ export class MongoServerSdk<
       schema,
       {
         timezone: this.timezone,
-      }
+      },
     );
 
     if (orgFilter) {
@@ -633,7 +686,7 @@ export class MongoServerSdk<
       schema,
       {
         timezone: this.timezone,
-      }
+      },
     );
 
     if (permissionFilter) {
@@ -728,8 +781,66 @@ export class MongoServerSdk<
     };
   }
 
+  private transformToDbRecord(data: unknown, schema: Schema<SA>) {
+    const dbRecord = Object.entries(data as Record<string, any>).reduce(
+      (acc, [key, value]) => {
+        if (value === undefined) {
+          return acc;
+        }
+
+        const attribute = schema.attributes[key];
+
+        if (!attribute) {
+          return acc;
+        }
+
+        if (key === '_id' && !value) {
+          return acc;
+        }
+
+        if (value === null) {
+          acc[key] = null;
+          return acc;
+        }
+
+        if (attribute.type === 'id') {
+          if ('objectId' in attribute) {
+            value = new Types.ObjectId(value as string);
+          }
+
+          acc[key] = value;
+        } else if (schema.attributes[key]?.type === 'lookup') {
+          if (typeof value === 'object') {
+            value = value.id;
+          }
+
+          if ('objectId' in schema.attributes[key]) {
+            acc[key] = new Types.ObjectId(value as string);
+          } else {
+            acc[key] = value;
+          }
+        } else if (attribute.type === 'regarding') {
+          acc[key] = value.id;
+          acc[attribute.entityTypeAttribute] = value.logicalName;
+        } else if (schema.attributes[key]?.type === 'attachment') {
+          if (typeof value === 'object') {
+            acc[key] = value.url;
+          } else if (typeof value === 'string') {
+            acc[key] = value;
+          }
+        } else {
+          acc[key] = value;
+        }
+
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
+    return dbRecord;
+  }
+
   protected async createRecord(
-    params: CreateRecordParams
+    params: CreateRecordParams,
   ): Promise<CreateRecordResult> {
     if (this.supportSession() && !this.session) {
       throw new Error('Session is not started');
@@ -740,58 +851,7 @@ export class MongoServerSdk<
 
     let data = params.data;
 
-    data = Object.entries(data).reduce((acc, [key, value]) => {
-      if (value === undefined) {
-        return acc;
-      }
-
-      const attribute = schema.attributes[key];
-
-      if (!attribute) {
-        return acc;
-      }
-
-      if (key === '_id' && !value) {
-        return acc;
-      }
-
-      if (value === null) {
-        acc[key] = null;
-        return acc;
-      }
-
-      if (attribute.type === 'id') {
-        if ('objectId' in attribute) {
-          value = new Types.ObjectId(value as string);
-        }
-
-        acc[key] = value;
-      }
-
-      if (schema.attributes[key]?.type === 'lookup') {
-        if (typeof value === 'object') {
-          value = value.id;
-        }
-
-        if ('objectId' in schema.attributes[key]) {
-          acc[key] = new Types.ObjectId(value as string);
-        } else {
-          acc[key] = value;
-        }
-      } else {
-        acc[key] = value;
-      }
-
-      if (schema.attributes[key]?.type === 'attachment') {
-        if (typeof value === 'object') {
-          acc[key] = value.url;
-        } else if (typeof value === 'string') {
-          acc[key] = value;
-        }
-      }
-
-      return acc;
-    }, {} as Record<string, any>);
+    data = this.transformToDbRecord(data, schema);
 
     const defaultValues = this.options.defaultValueProvider?.getDefaultValues({
       data,
@@ -803,7 +863,7 @@ export class MongoServerSdk<
     const autoNumberAttributes = Object.entries(schema.attributes).filter(
       ([, attribute]) => {
         return attribute.type === 'number' && attribute.autoNumber;
-      }
+      },
     );
 
     if (autoNumberAttributes.length) {
@@ -863,7 +923,7 @@ export class MongoServerSdk<
   }
 
   protected async updateRecord(
-    params: UpdateRecordParams
+    params: UpdateRecordParams,
   ): Promise<UpdateRecordResult> {
     const model = this.options.schemaStore.getModel(params.logicalName);
     const schema = this.options.schemaStore.getSchema(params.logicalName);
@@ -872,44 +932,10 @@ export class MongoServerSdk<
       throw new ForbiddenError('Updating is disabled for this entity');
     }
 
-    const data = Object.entries(params.data).reduce((acc, [key, value]) => {
-      if (key === schema.idAttribute) {
-        return acc;
-      }
+    const data = this.transformToDbRecord(params.data, schema);
 
-      const attribute = schema.attributes[key];
-
-      if (!attribute) {
-        return acc;
-      }
-
-      if (value === undefined) {
-        return acc;
-      }
-
-      if (value === null) {
-        acc[key] = null;
-        return acc;
-      }
-
-      if (attribute.type === 'lookup') {
-        value = value.id;
-
-        acc[key] = value;
-      } else {
-        acc[key] = value;
-      }
-
-      if (schema.attributes[key]?.type === 'attachment') {
-        if (typeof value === 'object') {
-          acc[key] = value.url;
-        } else if (typeof value === 'string') {
-          acc[key] = value;
-        }
-      }
-
-      return acc;
-    }, {} as Record<string, any>);
+    // Remove idAttribute from data
+    delete data[schema.idAttribute as string];
 
     const existingRecord = await model.findOne(
       {
@@ -918,7 +944,7 @@ export class MongoServerSdk<
       undefined,
       {
         session: this.session,
-      }
+      },
     );
 
     if (!existingRecord) {
@@ -946,7 +972,7 @@ export class MongoServerSdk<
       {
         $set: data,
       },
-      { session: this.session }
+      { session: this.session },
     );
 
     changedValues = this.getChangedValues(existingRecord.toJSON(), data);
@@ -982,7 +1008,7 @@ export class MongoServerSdk<
       schema: Schema<SA>;
       columns?: string[];
       expand?: RetriveRecordsParams['expand'];
-    }
+    },
   ) {
     return records.map((record) =>
       transformRecord({
@@ -991,13 +1017,13 @@ export class MongoServerSdk<
         columns,
         expand,
         schemaStore: this.options.schemaStore as unknown as ISchemaStore,
-      })
+      }),
     );
   }
 
   /** @todo: unfinished code */
   protected async retriveAggregate<T = unknown>(
-    query: AggregateQuery
+    query: AggregateQuery,
   ): Promise<T[]> {
     const logicalName = query.logicalName;
     const schema = this.options.schemaStore.getSchema(query.logicalName);
@@ -1016,7 +1042,7 @@ export class MongoServerSdk<
       schema,
       {
         timezone: this.timezone,
-      }
+      },
     );
 
     if (orgFilter) {
@@ -1036,7 +1062,7 @@ export class MongoServerSdk<
       schema,
       {
         timezone: this.timezone,
-      }
+      },
     );
 
     if (permissionFilter) {
@@ -1051,7 +1077,7 @@ export class MongoServerSdk<
 
     function extractExtendedKeyFromValue(
       key: string,
-      value: AggregateAttributeValue
+      value: AggregateAttributeValue,
     ) {
       if (value.type === 'column') {
         if (value.expandedKey) {
@@ -1100,7 +1126,7 @@ export class MongoServerSdk<
         // either expand included
         if (set.has(key)) {
           const lookupSchema = this.options.schemaStore.getSchema(
-            attribute.entity
+            attribute.entity,
           );
           lookupPipelines.push({
             $lookup: {
@@ -1222,19 +1248,19 @@ export class MongoServerSdk<
 }
 
 export interface AutoNumberProviderBaseOptions<
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 > {
   schemaStore: ISchemaStore<SA>;
 }
 
 export abstract class AutoNumberProviderBase<
   SA extends SchemaAttributes = SchemaAttributes,
-  Options extends AutoNumberProviderBaseOptions<SA> = AutoNumberProviderBaseOptions<SA>
-> implements IAutoNumberProvider
-{
+  Options extends AutoNumberProviderBaseOptions<SA> =
+    AutoNumberProviderBaseOptions<SA>,
+> implements IAutoNumberProvider {
   constructor(protected options: Options) {}
 
   abstract resolveAutoNumber<T extends string | number = string>(
-    params: ResovleAutoNumberParams
+    params: ResovleAutoNumberParams,
   ): Promise<T>;
 }

@@ -41,6 +41,29 @@ function transformColumns({
           logicalName: attribute.entity,
         };
       }
+    } else if (attribute.type === 'regarding') {
+      const entity = record[attribute.entityTypeAttribute];
+
+      if (!entity) {
+        transformedRecord[column] = null;
+        continue;
+      }
+
+      const expandedValue = record['@expand']?.[column]?.[entity];
+      const lookupSchema = schemaStore.getSchema(entity);
+
+      if (!record[column] || !expandedValue) {
+        transformedRecord[column] = null;
+      } else {
+        transformedRecord[column] = {
+          id: expandedValue[lookupSchema.idAttribute],
+          name: expandedValue[lookupSchema.primaryAttribute],
+          avatar: lookupSchema.avatarAttribute
+            ? expandedValue[lookupSchema.avatarAttribute]
+            : null,
+          logicalName: entity,
+        };
+      }
     } else if (attribute.type === 'date' && attribute.format === 'date') {
       if (record[column]) {
         transformedRecord[column] = dayjs(record[column])
@@ -98,44 +121,47 @@ const transformExpandedRecord = ({
 
     Object.assign(
       transformedRecord['$expand'][expandKey],
-      expandedColumns.reduce((acc, column) => {
-        const attribute = expandedSchema.attributes[column];
-        if (!attribute) {
+      expandedColumns.reduce(
+        (acc, column) => {
+          const attribute = expandedSchema.attributes[column];
+          if (!attribute) {
+            return acc;
+          }
+
+          if (attribute.type === 'lookup') {
+            const nestedExpandedRecord = expandedRecord['@expand']?.[column];
+
+            if (!nestedExpandedRecord) {
+              acc[column] = null;
+            } else {
+              acc[column] = {
+                id: nestedExpandedRecord[expandedSchema.idAttribute],
+                name: nestedExpandedRecord[expandedSchema.primaryAttribute],
+                logicalName: attribute.entity,
+              };
+            }
+          } else if (attribute.type === 'date' && attribute.format === 'date') {
+            if (expandedRecord[column]) {
+              acc[column] = dayjs(expandedRecord[column])
+                .utc()
+                .format('YYYY-MM-DD');
+            } else {
+              acc[column] = null;
+            }
+          } else if (attribute.type === 'attachment') {
+            if (expandedRecord[column]) {
+              acc[column] = urlToFileObject(expandedRecord[column]);
+            } else {
+              acc[column] = null;
+            }
+          } else {
+            acc[column] = expandedRecord[column];
+          }
+
           return acc;
-        }
-
-        if (attribute.type === 'lookup') {
-          const nestedExpandedRecord = expandedRecord['@expand']?.[column];
-
-          if (!nestedExpandedRecord) {
-            acc[column] = null;
-          } else {
-            acc[column] = {
-              id: nestedExpandedRecord[expandedSchema.idAttribute],
-              name: nestedExpandedRecord[expandedSchema.primaryAttribute],
-              logicalName: attribute.entity,
-            };
-          }
-        } else if (attribute.type === 'date' && attribute.format === 'date') {
-          if (expandedRecord[column]) {
-            acc[column] = dayjs(expandedRecord[column])
-              .utc()
-              .format('YYYY-MM-DD');
-          } else {
-            acc[column] = null;
-          }
-        } else if (attribute.type === 'attachment') {
-          if (expandedRecord[column]) {
-            acc[column] = urlToFileObject(expandedRecord[column]);
-          } else {
-            acc[column] = null;
-          }
-        } else {
-          acc[column] = expandedRecord[column];
-        }
-
-        return acc;
-      }, {} as Record<string, any>)
+        },
+        {} as Record<string, any>,
+      ),
     );
   }
 };
