@@ -32,9 +32,9 @@
     "mongoose": "^8.5.1"
   },
   "dependencies": {
-    "@headless-adminapp/core": "workspace:*",
-    "@headless-adminapp/server-sdk": "workspace:*",
+    "@headless-adminapp/core": "1.4.33",
+    "@headless-adminapp/server-sdk": "1.4.33",
     "dayjs": "^1.11.13"
   },
-  "gitHead": "a28ee863fccb6157774e75b4cc421c6940cda469"
+  "gitHead": "2b56f2defafc1ee1e122c24012c7f016465012c3"
 }
