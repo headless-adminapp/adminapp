@@ -3,3 +3,4 @@ packages/*/dist/
 tsconfig.tsbuildinfo
 scripts/logs/
 coverage/
+lerna-debug.log

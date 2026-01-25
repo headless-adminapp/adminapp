@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/server-sdk-mongo",
-  "version": "1.4.35",
+  "version": "1.4.36",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
@@ -32,8 +32,8 @@
     "mongoose": "^8.5.1"
   },
   "dependencies": {
-    "@headless-adminapp/core": "1.4.33",
-    "@headless-adminapp/server-sdk": "1.4.33",
+    "@headless-adminapp/core": "workspace:*",
+    "@headless-adminapp/server-sdk": "workspace:*",
     "dayjs": "^1.11.13"
   },
   "gitHead": "2b56f2defafc1ee1e122c24012c7f016465012c3"
