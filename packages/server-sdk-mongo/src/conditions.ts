@@ -63,7 +63,7 @@ interface ConditionTransformerOptions {
 type ConditionTransformer = (
   condtion: Condition,
   attribute: Attribute,
-  options: ConditionTransformerOptions
+  options: ConditionTransformerOptions,
 ) => { [key: string]: any } | null;
 
 function hasTimezoneInfo(dateString: string): boolean {
@@ -247,12 +247,12 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
         $gte: startOfFiscalYear(
           fiscalYear,
           timezone,
-          attribute
+          attribute,
         ).toAttributeDate(attribute),
         $lt: startOfFiscalYear(
           fiscalYear + 1,
           timezone,
-          attribute
+          attribute,
         ).toAttributeDate(attribute),
       },
     };
@@ -309,12 +309,12 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
         $gte: startOfFiscalYear(
           fiscalYear,
           timezone,
-          attribute
+          attribute,
         ).toAttributeDate(attribute),
         $lt: startOfFiscalYear(
           fiscalYear + 1,
           timezone,
-          attribute
+          attribute,
         ).toAttributeDate(attribute),
       },
     };
@@ -385,12 +385,12 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
         $gte: startOfFiscalYear(
           fiscalYear,
           timezone,
-          attribute
+          attribute,
         ).toAttributeDate(attribute),
         $lt: startOfFiscalYear(
           fiscalYear + 1,
           timezone,
-          attribute
+          attribute,
         ).toAttributeDate(attribute),
       },
     };
@@ -435,12 +435,12 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       $gte: startOfFiscalYear(
         condition.value,
         timezone,
-        attribute
+        attribute,
       ).toAttributeDate(attribute),
       $lt: startOfFiscalYear(
         condition.value + 1,
         timezone,
-        attribute
+        attribute,
       ).toAttributeDate(attribute),
     },
   }),
@@ -456,7 +456,10 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       };
     }
 
-    if (attribute.type === 'lookup' && 'objectId' in attribute) {
+    if (
+      ['lookup', 'regarding'].includes(attribute.type) &&
+      'objectId' in attribute
+    ) {
       return {
         [condition.field]: new Types.ObjectId(condition.value as string),
       };
@@ -478,7 +481,10 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       };
     }
 
-    if (attribute.type === 'lookup' && 'objectId' in attribute) {
+    if (
+      ['lookup', 'regarding'].includes(attribute.type) &&
+      'objectId' in attribute
+    ) {
       return {
         [condition.field]: {
           $ne: new Types.ObjectId(condition.value as string),
@@ -616,7 +622,7 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       };
     }
 
-    if (attribute.type === 'id' || attribute.type === 'lookup') {
+    if (['id', 'lookup', 'regarding'].includes(attribute.type)) {
       if ('objectId' in attribute) {
         return {
           [condition.field]: {
@@ -689,7 +695,7 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       };
     }
 
-    if (attribute.type === 'id' || attribute.type === 'lookup') {
+    if (['id', 'lookup', 'regarding'].includes(attribute.type)) {
       if ('objectId' in attribute) {
         return {
           [condition.field]: {
@@ -720,7 +726,7 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
 export function transformCondition(
   condition: Condition,
   attribute: Attribute,
-  options: ConditionTransformerOptions
+  options: ConditionTransformerOptions,
 ): { [key: string]: any } | null {
   const transformer = conditionTransformers[condition.operator];
 
@@ -738,7 +744,7 @@ export function transformCondition(
 export function transformFilter<SA extends MongoRequiredSchemaAttributes>(
   filter: Filter | null | undefined,
   schema: Schema<SA>,
-  options: ConditionTransformerOptions
+  options: ConditionTransformerOptions,
 ): FilterQuery<any> | null {
   if (!filter) {
     return null;
@@ -751,8 +757,8 @@ export function transformFilter<SA extends MongoRequiredSchemaAttributes>(
         transformCondition(
           condition,
           schema.attributes[condition.field],
-          options
-        )
+          options,
+        ),
       )
       .filter(Boolean);
 

@@ -2,6 +2,7 @@ import type { Attribute } from '@headless-adminapp/core/attributes';
 
 import type { SchemaAttributes } from '../../schema';
 import type { Localized } from '../../types';
+import { ViewExperience } from '../view';
 import type { QuickViewForm } from './QuickViewForm';
 import type { SectionEditableGridControl } from './SectionEditableGridControl';
 
@@ -46,7 +47,7 @@ export interface BaseSectionControl {
 }
 
 export interface SectionStatndardControl<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 > extends BaseSectionControl {
   type: 'standard';
   attributeName: keyof S;
@@ -69,6 +70,7 @@ export interface SectionSubgridControl extends BaseSectionControl {
   logicalName: string;
   // attributeName: string;
   viewId?: string;
+  view?: ViewExperience<any>;
   availableViewIds?: string[];
   allowViewSelection?: boolean;
   // noAssociateFilter?: boolean;
@@ -78,7 +80,7 @@ export interface SectionSubgridControl extends BaseSectionControl {
 }
 
 export interface SectionQuickViewControl<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 > extends BaseSectionControl {
   type: 'quickview';
   // logicalName: string;

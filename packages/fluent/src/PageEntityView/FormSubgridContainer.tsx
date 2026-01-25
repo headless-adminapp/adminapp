@@ -13,6 +13,7 @@ import { GridPaginationContainer } from '../DataGrid/GridPaginationContainer';
 import { GridTableContainer } from '../DataGrid/GridTableContainer';
 
 interface FormSubgridContainerProps {
+  hideSelector?: boolean;
   hideCommandBar?: boolean;
   hideSearch?: boolean;
 }
@@ -28,6 +29,7 @@ export const FormSubgridContainer: FC<FormSubgridContainerProps> = (props) => {
 };
 
 export const FormSubgridDesktopContainer: FC<FormSubgridContainerProps> = ({
+  hideSelector,
   hideCommandBar,
   hideSearch,
 }) => {
@@ -55,19 +57,23 @@ export const FormSubgridDesktopContainer: FC<FormSubgridContainerProps> = ({
           // overflow: 'hidden',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            height: 40,
-          }}
-        >
-          <FormSubgridViewSelector />
-        </div>
-        <div>
-          <Divider style={{ opacity: 0.2 }} />
-        </div>
+        {!hideSelector && (
+          <>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                height: 40,
+              }}
+            >
+              <FormSubgridViewSelector />
+            </div>
+            <div>
+              <Divider style={{ opacity: 0.2 }} />
+            </div>
+          </>
+        )}
         {(!hideCommandBar || !hideSearch) && (
           <div
             style={{
@@ -146,6 +152,7 @@ export const FormSubgridDesktopContainer: FC<FormSubgridContainerProps> = ({
 };
 
 export const FormSubgridMobileContainer: FC<FormSubgridContainerProps> = ({
+  hideSelector,
   hideCommandBar,
   hideSearch,
 }) => {
@@ -169,19 +176,23 @@ export const FormSubgridMobileContainer: FC<FormSubgridContainerProps> = ({
           flexDirection: 'column',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            height: 40,
-          }}
-        >
-          <FormSubgridViewSelector />
-        </div>
-        <div>
-          <Divider style={{ opacity: 0.2 }} />
-        </div>
+        {!hideSelector && (
+          <>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                height: 40,
+              }}
+            >
+              <FormSubgridViewSelector />
+            </div>
+            <div>
+              <Divider style={{ opacity: 0.2 }} />
+            </div>
+          </>
+        )}
         {(!hideCommandBar || !hideSearch) && (
           <div
             style={{

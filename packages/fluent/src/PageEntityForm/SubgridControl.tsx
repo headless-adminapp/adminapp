@@ -7,6 +7,7 @@ import {
   useExperienceViewSubgridCommands,
   useSchema,
 } from '@headless-adminapp/app/metadata/hooks';
+import { ViewExperience } from '@headless-adminapp/core/experience/view';
 import { Filter } from '@headless-adminapp/core/transport';
 import { useMemo, useState } from 'react';
 
@@ -17,7 +18,9 @@ interface SubgridControlProps {
   logicalName: string;
   allowViewSelection?: boolean;
   viewId?: string;
+  view?: ViewExperience<any>;
   availableViewIds?: string[];
+  hideSelector?: boolean;
   associated:
     | false
     | {
@@ -37,16 +40,17 @@ export function SubgridControl(props: Readonly<SubgridControlProps>) {
     props.logicalName,
     viewId,
     !!props.associated,
-    props.availableViewIds
+    props.availableViewIds,
+    props.view,
   );
   const { viewLookup } = useExperienceViewLookup(
     props.logicalName,
     !!props.associated,
-    props.availableViewIds
+    props.availableViewIds,
   );
   const { commands } = useExperienceViewCommands(props.logicalName);
   const { commands: subgridCommands } = useExperienceViewSubgridCommands(
-    props.logicalName
+    props.logicalName,
   );
 
   const extraFilter: Filter | undefined = useMemo(() => {
@@ -133,7 +137,11 @@ export function SubgridControl(props: Readonly<SubgridControlProps>) {
       allowViewSelection={props.allowViewSelection ?? false}
       disabled={disabled}
     >
-      {disabled ? <FormSubgridNotAvailableContainer /> : <ContainerComponent />}
+      {disabled ? (
+        <FormSubgridNotAvailableContainer />
+      ) : (
+        <ContainerComponent hideSelector={props.hideSelector} />
+      )}
     </DataGridProvider>
   );
 }

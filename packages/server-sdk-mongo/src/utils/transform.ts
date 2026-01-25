@@ -179,8 +179,18 @@ export function transformRecord({
   expand?: RetriveRecordsParams['expand'];
   schemaStore: ISchemaStore;
 }) {
+  let logicalName = schema.logicalName;
+
+  if (schema.virtual && schema.virtualLogicalNameAttribute) {
+    const virtualLogicalName = record[schema.virtualLogicalNameAttribute];
+
+    if (virtualLogicalName) {
+      logicalName = virtualLogicalName;
+    }
+  }
+
   const transformedRecord = {
-    $entity: schema.logicalName,
+    $entity: logicalName,
   } as Record<string, any>;
 
   let id = record[schema.idAttribute];

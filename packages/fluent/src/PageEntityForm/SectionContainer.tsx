@@ -33,7 +33,7 @@ import { StandardControl } from './StandardControl';
 import { SubgridControl } from './SubgridControl';
 
 export function SectionContainer<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >({
   section,
   skeleton,
@@ -49,19 +49,19 @@ export function SectionContainer<
 
   const disabledControls = useContextSelector(
     DataFormContext,
-    (state) => state.disabledControls
+    (state) => state.disabledControls,
   );
   const hiddenControls = useContextSelector(
     DataFormContext,
-    (state) => state.hiddenControls
+    (state) => state.hiddenControls,
   );
   const requiredFields = useContextSelector(
     DataFormContext,
-    (state) => state.requiredFields
+    (state) => state.requiredFields,
   );
   const hiddenSections = useContextSelector(
     DataFormContext,
-    (state) => state.hiddenSections
+    (state) => state.hiddenSections,
   );
 
   const calculatedAttributeStore = useCalculatedAttributeStore();
@@ -74,7 +74,7 @@ export function SectionContainer<
           hiddenControls,
         });
       }),
-    [section.controls, hiddenControls]
+    [section.controls, hiddenControls],
   );
 
   if (hiddenSections[section.name] || visibleControls.length === 0) {
@@ -97,7 +97,7 @@ export function SectionContainer<
 
             if (!attribute) {
               console.warn(
-                `Attribute ${control.attributeName as string} not found`
+                `Attribute ${control.attributeName as string} not found`,
               );
               return null;
             }
@@ -127,7 +127,7 @@ export function SectionContainer<
               calculatedAttribute:
                 calculatedAttributeStore?.getCalculatedAttributeInfo(
                   schema.logicalName,
-                  control.attributeName as string
+                  control.attributeName as string,
                 ),
             });
 
@@ -190,7 +190,7 @@ export function SectionContainer<
                               EVENT_KEY_ON_FIELD_CHANGE,
                               control.attributeName,
                               value,
-                              previousValue
+                              previousValue,
                             );
                           }}
                           onBlur={field.onBlur}
@@ -248,7 +248,7 @@ export function SectionContainer<
                 ContainerComponent = control.component;
               } else if (typeof control.component === 'string') {
                 ContainerComponent = componentStore.getComponent<FC>(
-                  control.component
+                  control.component,
                 );
               }
             }
@@ -256,14 +256,18 @@ export function SectionContainer<
             const key = control.key ?? `${control.logicalName}-${index}`;
 
             return (
-              <HistoryStateKeyProvider historyKey={`subgrid.${key}`} nested>
+              <HistoryStateKeyProvider
+                key={key}
+                historyKey={`subgrid.${key}`}
+                nested
+              >
                 <SubgridControl
-                  key={key}
                   logicalName={control.logicalName}
                   allowViewSelection={control.allowViewSelection}
                   viewId={control.viewId}
                   availableViewIds={control.availableViewIds}
                   ContainerComponent={ContainerComponent}
+                  hideSelector={control.labelHidden}
                   associated={
                     !control.associatedAttribute
                       ? false
@@ -273,6 +277,7 @@ export function SectionContainer<
                           refAttributeName: control.associatedAttribute,
                         }
                   }
+                  view={control.view}
                 />
               </HistoryStateKeyProvider>
             );
@@ -281,13 +286,13 @@ export function SectionContainer<
             const Component =
               control.component === 'string'
                 ? (componentStore.getComponent(
-                    control.component
+                    control.component,
                   ) as React.ComponentType)
                 : control.component;
 
             if (!Component) {
               console.warn(
-                `Component ${control.component} not found for control ${control.key}`
+                `Component ${control.component} not found for control ${control.key}`,
               );
 
               return null;

@@ -133,7 +133,7 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
             {getAttributeFormattedValue(
               schema.attributes[cardView.primaryColumn],
               _record[cardView.primaryColumn],
-              locale
+              locale,
             )}
           </Body1>
           {cardView.secondaryColumns?.map((column) => (
@@ -211,7 +211,7 @@ function SecondaryColumnContent<S extends SchemaAttributes = SchemaAttributes>({
   locale: Locale;
 }>) {
   const value = _record[column.name];
-  if (!value) {
+  if (!value && value !== 0) {
     return null;
   }
 
@@ -232,7 +232,7 @@ function SecondaryColumnContent<S extends SchemaAttributes = SchemaAttributes>({
 
     if (attribute.type === 'choices') {
       const choices = attribute.options.filter((option) =>
-        value.includes(option.value)
+        value.includes(option.value),
       );
 
       if (!choices.length) {

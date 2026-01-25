@@ -151,7 +151,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
   const dataState = useGridDataState();
   const fetchNextPage = useContextSelector(
     GridContext,
-    (state) => state.fetchNextPage
+    (state) => state.fetchNextPage,
   );
   const columns = useGridColumns();
   const [sorting] = useGridSorting();
@@ -176,15 +176,25 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
 
   const openRecord = useCallback(
     (id: string) => {
+      const record = dataRef.current?.records.find(
+        (r) => r[schema.idAttribute] === id,
+      );
+
+      if (!record) {
+        return;
+      }
+
+      const logicalName = record.$entity || schema.logicalName;
+
       openFormInternal({
-        logicalName: schema.logicalName,
+        logicalName: logicalName,
         id,
         recordSetIds: dataRef.current?.records.map(
-          (x) => x[schema.idAttribute] as string
+          (x) => x[schema.idAttribute] as string,
         ),
-      });
+      }).catch(console.error);
     },
-    [openFormInternal, schema.idAttribute, schema.logicalName]
+    [openFormInternal, schema.idAttribute, schema.logicalName],
   );
 
   const { direction } = useLocale();
@@ -211,11 +221,14 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
 
   const idMapping = useMemo(
     () =>
-      uniqueRecords.reduce((acc, record) => {
-        acc[record[schema.idAttribute] as string] = record.__uuid;
-        return acc;
-      }, {} as Record<string, string>),
-    [uniqueRecords, schema.idAttribute]
+      uniqueRecords.reduce(
+        (acc, record) => {
+          acc[record[schema.idAttribute] as string] = record.__uuid;
+          return acc;
+        },
+        {} as Record<string, string>,
+      ),
+    [uniqueRecords, schema.idAttribute],
   );
 
   const rowSelection = useMemo(() => {
@@ -280,7 +293,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
       const visibleHeight =
         tableWrapperRef.current?.parentElement?.parentElement?.clientHeight;
       setIsScrollNearBottom(
-        scrollPosition > virtualSize * 0.95 - visibleHeight
+        scrollPosition > virtualSize * 0.95 - visibleHeight,
       );
       setIsScrolled(scrollPosition > 0);
     }
@@ -375,7 +388,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
                       : flexRender(header.column.columnDef.header, {
                           ...header.getContext(),
                           key: header.id,
-                        })
+                        }),
                   )}
                 </TableRow>
               ))}
@@ -420,7 +433,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
                       flexRender(cell.column.columnDef.cell, {
                         ...cell.getContext(),
                         key: cell.column.id,
-                      })
+                      }),
                     )}
                   </TableRow>
                 );

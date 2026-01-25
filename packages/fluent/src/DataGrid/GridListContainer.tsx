@@ -57,7 +57,7 @@ export const GridListContainer: FC<GridListContainerProps> = () => {
   const dataState = useGridDataState();
   const fetchNextPage = useContextSelector(
     GridContext,
-    (state) => state.fetchNextPage
+    (state) => state.fetchNextPage,
   );
   const schema = useDataGridSchema();
   const view = useSelectedView();
@@ -97,16 +97,24 @@ export const GridListContainer: FC<GridListContainerProps> = () => {
 
   const openRecord = useCallback(
     async (id: string) => {
+      const record = dataRef.current?.records.find(
+        (r) => r[schema.idAttribute] === id,
+      );
+
+      if (!record) {
+        return;
+      }
+
       await openFormInternal({
-        logicalName: schema.logicalName,
+        logicalName: record.$entity || schema.logicalName,
         id,
         recordSetIds:
           dataRef.current?.records.map(
-            (x) => x[schema.idAttribute] as string
+            (x) => x[schema.idAttribute] as string,
           ) ?? [],
       });
     },
-    [openFormInternal, schema.idAttribute, schema.logicalName]
+    [openFormInternal, schema.idAttribute, schema.logicalName],
   );
 
   const isSubgrid = useContextSelector(GridContext, (state) => state.isSubGrid);
@@ -180,7 +188,7 @@ export const GridListContainer: FC<GridListContainerProps> = () => {
                         setShowContextMenu(true);
                       }}
                       selected={selectedIds.includes(
-                        row[schema.idAttribute] as string
+                        row[schema.idAttribute] as string,
                       )}
                     />
                   </div>
