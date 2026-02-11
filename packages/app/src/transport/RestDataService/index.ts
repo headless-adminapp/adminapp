@@ -25,7 +25,10 @@ export async function handleResponseError(response: Response) {
     const data = await response.json();
 
     if (data.error) {
-      throw new HttpError(response.status, data.error);
+      const message =
+        typeof data.error === 'string' ? data.error : data.error.message;
+      const code = data.error?.code;
+      throw new HttpError(response.status, message, code);
     }
   }
 
@@ -73,7 +76,7 @@ export class RestDataService implements IDataService {
     columns: (keyof T)[],
     expand?: {
       [key in keyof T]?: string[];
-    }
+    },
   ) {
     return this.execute<Data<T>>({
       type: 'retriveRecord',
@@ -87,7 +90,7 @@ export class RestDataService implements IDataService {
   }
 
   public async retriveRecords<T = unknown>(
-    params: RetriveRecordsFnOptions<T>
+    params: RetriveRecordsFnOptions<T>,
   ): Promise<RetriveRecordsResult<T>> {
     return this.execute<RetriveRecordsResult<T>>({
       type: 'retriveRecords',
@@ -108,7 +111,7 @@ export class RestDataService implements IDataService {
   public async updateRecord<T>(
     logicalName: string,
     id: string,
-    data: Partial<T>
+    data: Partial<T>,
   ) {
     return this.execute<CreateRecordResult>({
       type: 'updateRecord',
@@ -134,7 +137,7 @@ export class RestDataService implements IDataService {
     Q extends Record<string, AggregateAttribute> = Record<
       string,
       AggregateAttribute
-    >
+    >,
   >(query: AggregateQuery<Q>): Promise<InferredAggregateQueryResult<Q>[]> {
     const result = await this.execute<InferredAggregateQueryResult<Q>[]>({
       type: 'retriveAggregate',
@@ -146,7 +149,7 @@ export class RestDataService implements IDataService {
 
   public async customAction<T = unknown>(
     actionName: string,
-    payload: unknown
+    payload: unknown,
   ): Promise<T> {
     const result = await this.execute<T>({
       type: 'customAction',

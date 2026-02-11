@@ -1,39 +1,47 @@
 export class HttpError extends Error {
   public status: number;
+  public code?: string;
 
-  constructor(status: number, message: string) {
+  /**
+   * Creates an instance of HttpError.
+   * @param status HTTP Status code for network response
+   * @param message Error message
+   * @param code Optional error code string
+   */
+  constructor(status: number, message: string, code?: string) {
     super(message);
     this.status = status;
+    this.code = code;
   }
 }
 
 export class BadRequestError extends HttpError {
-  constructor(message: string) {
-    super(400, message);
+  constructor(message: string, code?: string) {
+    super(400, message, code || 'BAD_REQUEST');
   }
 }
 
 export class UnauthorizedError extends HttpError {
-  constructor(message: string) {
-    super(401, message);
+  constructor(message: string, code?: string) {
+    super(401, message, code || 'UNAUTHORIZED');
   }
 }
 
 export class ForbiddenError extends HttpError {
-  constructor(message: string) {
-    super(403, message);
+  constructor(message: string, code?: string) {
+    super(403, message, code || 'FORBIDDEN');
   }
 }
 
 export class NotFoundError extends HttpError {
-  constructor(message: string) {
-    super(404, message);
+  constructor(message: string, code?: string) {
+    super(404, message, code || 'NOT_FOUND');
   }
 }
 
 export class ConflictError extends HttpError {
-  constructor(message: string) {
-    super(409, message);
+  constructor(message: string, code?: string) {
+    super(409, message, code || 'CONFLICT');
   }
 }
 
