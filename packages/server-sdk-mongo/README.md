@@ -21,7 +21,7 @@ Peer dependencies:
 Use this package alongside @headless-adminapp/server-sdk. See the docs and examples for detailed setup:
 
 - https://headless-adminapp.github.io/
-- https://github.com/kishanmundha/headless-adminapp-examples
+- https://headless-adminapp-examples.vercel.app/
 
 ## Development
 

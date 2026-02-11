@@ -21,7 +21,7 @@ Peer dependencies:
 Start with the project documentation and example apps for recommended integration patterns:
 
 - https://headless-adminapp.github.io/
-- https://github.com/kishanmundha/headless-adminapp-examples
+- https://headless-adminapp-examples.vercel.app/
 
 ## Development
 

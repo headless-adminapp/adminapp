@@ -25,7 +25,7 @@ Peer dependencies:
 Use this package when you want a Fluent UI experience. See the docs and examples for recommended setup:
 
 - https://headless-adminapp.github.io/
-- https://github.com/kishanmundha/headless-adminapp-examples
+- https://headless-adminapp-examples.vercel.app/
 
 ## Development
 

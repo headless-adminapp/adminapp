@@ -21,7 +21,7 @@ Peer dependencies:
 See the project documentation and examples for end-to-end setup and usage patterns:
 
 - https://headless-adminapp.github.io/
-- https://github.com/kishanmundha/headless-adminapp-examples
+- https://headless-adminapp-examples.vercel.app/
 
 ## Development
 

@@ -17,7 +17,7 @@ pnpm add @headless-adminapp/server-sdk
 Refer to the documentation and examples for server integration patterns:
 
 - https://headless-adminapp.github.io/
-- https://github.com/kishanmundha/headless-adminapp-examples
+- https://headless-adminapp-examples.vercel.app/
 
 ## Development
 
