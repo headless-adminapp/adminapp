@@ -15,6 +15,10 @@ import { MoneyAttribute } from './MoneyAttribute';
 import { NumberAttribute } from './NumberAttribute';
 import { StringAttribute } from './StringAttribute';
 
+/**
+ * Attribute union
+ * @description Represents the union of all possible attribute.
+ */
 export type Attribute =
   | IdAttribute<string | number>
   | StringAttribute
@@ -32,4 +36,8 @@ export type Attribute =
   | AttachmentsAttribute
   | MixedAttribute;
 
+/**
+ * Attribute type union
+ * @description Represents the union of all possible attribute types.
+ */
 export type AttributeType = Attribute['type'];

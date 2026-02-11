@@ -13,20 +13,33 @@ export interface SchemaMetadata {
   localizedDescriptions?: Localized<string>;
 }
 
-export interface Schema<A extends SchemaAttributes = SchemaAttributes>
-  extends SchemaMetadata {
+/**
+ * Schema interface
+ * @description Represents the structure and metadata of a schema, including its attributes.
+ */
+export interface Schema<
+  A extends SchemaAttributes = SchemaAttributes,
+> extends SchemaMetadata {
+  /** Key attribute names */
   idAttribute: keyof A;
+  /** Primary attribute name for display */
   primaryAttribute: keyof A;
+  /** Attribute name for record creation timestamp */
   createdAtAttribute?: keyof A;
+  /** Attribute name for record update timestamp */
   updatedAtAttribute?: keyof A;
+  /** An attachment attribute for avatar */
   avatarAttribute?: keyof A;
-  ownership?: 'scoped' | 'global'; // Scoped means user can only see records they have permission to see, global means user can see all records
+  // Ownership of the schema
+  ownership?:
+    | 'scoped' // Records are scoped to user or team, only they can see their records
+    | 'global'; // Records are global, user can see all records
   virtual?: boolean; // Not a physical collection and used for query only
   baseSchemaLogicalName?: string; // Base entity for the schema
   baseSchemaLogicalNames?: string[]; // Base entities for the schema (Used to create record)
   virtualLogicalNameAttribute?: keyof A; // Attribute that contains the schema logical name for virtual entities
   additionalMetadata?: Record<string, any>; // Additional metadata
-  attributes: A;
+  attributes: A; // Attributes of the schema
   restrictions?: {
     disableCreate?: boolean;
     disableUpdate?: boolean;
