@@ -9,7 +9,7 @@ console.log(`Generating package.json for ${packageName}`);
 
 const packageJsonContent = fs.readFileSync(
   path.join(packageDir, 'package.json'),
-  'utf8'
+  'utf8',
 );
 
 interface PackageJson {
@@ -33,5 +33,11 @@ const newPackageJsonContent = JSON.stringify(packageJson, null, 2);
 fs.writeFileSync(
   path.join(packageDir, 'dist', 'package.json'),
   newPackageJsonContent,
-  'utf8'
+  'utf8',
+);
+
+// copy README.md to dist
+fs.copyFileSync(
+  path.join(packageDir, 'README.md'),
+  path.join(packageDir, 'dist', 'README.md'),
 );
