@@ -7,7 +7,7 @@ import { App } from '@headless-adminapp/fluent/App';
 import { LayoutProvider } from '@headless-adminapp/fluent/App/LayoutProvider';
 import { registerIconSet } from '@headless-adminapp/icons/register';
 import { iconSet } from '@headless-adminapp/icons-fluent';
-import { useNextRouter } from '@headless-adminapp/next-router';
+import { useNextRouter } from '@headless-adminapp/next';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { PropsWithChildren } from 'react';
 

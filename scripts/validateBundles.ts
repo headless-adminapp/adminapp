@@ -7,7 +7,7 @@ const bundleTestingDirectories = ['next/13', 'next/14'];
 
 async function executeCommand(
   command: string,
-  options: { cwd: string; verbose?: boolean }
+  options: { cwd: string; verbose?: boolean },
 ) {
   return new Promise<void>((resolve, reject) => {
     exec(
@@ -27,7 +27,7 @@ async function executeCommand(
         } else {
           resolve();
         }
-      }
+      },
     );
   });
 }
@@ -60,7 +60,7 @@ async function copyPackage({
     directory,
     'node_modules',
     '@headless-adminapp',
-    name
+    name,
   );
 
   if (fs.existsSync(node_modules)) {
@@ -72,18 +72,18 @@ async function copyPackage({
     '../packages',
     name,
     'dist',
-    'package.json'
+    'package.json',
   );
 
   const packageJson = JSON.parse(
-    fs.readFileSync(packageJsonPath, { encoding: 'utf-8' })
+    fs.readFileSync(packageJsonPath, { encoding: 'utf-8' }),
   );
 
   const deps = packageJson.dependencies || {};
 
   await copyFolder(
     path.join(__dirname, '../packages', name, 'dist'),
-    path.join(directory, 'node_modules', '@headless-adminapp', name)
+    path.join(directory, 'node_modules', '@headless-adminapp', name),
   );
 
   return deps;
@@ -109,11 +109,11 @@ function getPackageDeps(name: string): Record<string, string> {
     '../packages',
     name,
     'dist',
-    'package.json'
+    'package.json',
   );
 
   const packageJson = JSON.parse(
-    fs.readFileSync(packageJsonPath, { encoding: 'utf-8' })
+    fs.readFileSync(packageJsonPath, { encoding: 'utf-8' }),
   );
 
   const deps = packageJson.dependencies || {};
@@ -132,26 +132,26 @@ function getPackagesDeps(packages: string[]): Record<string, string> {
 // eslint-disable-next-line unused-imports/no-unused-vars
 async function installPackageDeps(
   deps: Record<string, string>,
-  directory: string
+  directory: string,
 ) {
   for (const [name, version] of Object.entries(deps)) {
     await executeCommand(
       `pnpm install ${name}@${version} --ignore-workspace --optional`,
       {
         cwd: directory,
-      }
+      },
     );
   }
 }
 
 async function syncOptionalDeps(
   deps: Record<string, string>,
-  directory: string
+  directory: string,
 ) {
   const packageJsonPath = path.join(directory, 'package.json');
 
   const packageJson = JSON.parse(
-    fs.readFileSync(packageJsonPath, { encoding: 'utf-8' })
+    fs.readFileSync(packageJsonPath, { encoding: 'utf-8' }),
   );
 
   const optionalDeps = packageJson.optionalDependencies || {};
@@ -161,10 +161,13 @@ async function syncOptionalDeps(
   // sort keys
   const sortedNewOptionalDeps = Object.keys(newOptionalDeps)
     .sort()
-    .reduce((acc, key) => {
-      acc[key] = newOptionalDeps[key];
-      return acc;
-    }, {} as Record<string, string>);
+    .reduce(
+      (acc, key) => {
+        acc[key] = newOptionalDeps[key];
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
 
   if (JSON.stringify(optionalDeps) !== JSON.stringify(sortedNewOptionalDeps)) {
     packageJson.optionalDependencies = sortedNewOptionalDeps;
@@ -186,7 +189,7 @@ async function run() {
       const directory = path.join(
         __dirname,
         '../testing/bundle',
-        testingDirectory
+        testingDirectory,
       );
 
       const packages = [
@@ -198,7 +201,7 @@ async function run() {
         'server-sdk',
         'server-sdk-mongo',
         'server-sdk-sequelize',
-        'next-router',
+        'next',
       ];
 
       const optionalDeps = getPackagesDeps(packages);
