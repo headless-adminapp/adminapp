@@ -34,7 +34,6 @@ export type MultiLookupAttribute = AttributeBase<Id[]> & {
  */
 export type RegardingAttribute = AttributeBase<Id> & {
   type: 'regarding';
-  behavior?: LookupBehavior;
   localizedRelatedLabel?: Localized<string>;
   entities: string[];
   entityTypeAttribute: string;
