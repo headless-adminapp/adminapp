@@ -53,7 +53,7 @@ export namespace DefaultCommandBuilder {
 
   function extractLocalizedStrings<T, U>(
     localizedStrings: Localized<T> | undefined,
-    selector: (strings: T) => U
+    selector: (strings: T) => U,
   ): Localized<U> | undefined {
     if (!localizedStrings) {
       return;
@@ -78,7 +78,7 @@ export namespace DefaultCommandBuilder {
           text: strings.new,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.new
+            (x) => x.new,
           ),
         }),
         ViewCommandBuilder.createNewRecordForVirtualCommand({
@@ -86,7 +86,7 @@ export namespace DefaultCommandBuilder {
           text: strings.new,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.new
+            (x) => x.new,
           ),
         }),
         ViewCommandBuilder.createEditRecordCommand({
@@ -94,7 +94,7 @@ export namespace DefaultCommandBuilder {
           text: strings.edit,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.edit
+            (x) => x.edit,
           ),
         }),
         ViewCommandBuilder.createViewRecordCommand({
@@ -102,7 +102,7 @@ export namespace DefaultCommandBuilder {
           text: strings.view,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.view
+            (x) => x.view,
           ),
         }),
         ViewCommandBuilder.createDeleteRecordCommand({
@@ -110,12 +110,12 @@ export namespace DefaultCommandBuilder {
           text: strings.delete,
           localizedText: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.delete
+            (x) => x.delete,
           ),
           stringSet: strings.deleteRecordCommandStringSet,
           localizedStringSet: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.deleteRecordCommandStringSet
+            (x) => x.deleteRecordCommandStringSet,
           ),
         }),
         ViewCommandBuilder.createRefreshCommand({
@@ -123,7 +123,7 @@ export namespace DefaultCommandBuilder {
           text: strings.refresh,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.refresh
+            (x) => x.refresh,
           ),
         }),
       ],
@@ -134,7 +134,7 @@ export namespace DefaultCommandBuilder {
             text: strings.export,
             localizedTexts: extractLocalizedStrings(
               localizedSrings,
-              (x) => x.export
+              (x) => x.export,
             ),
           },
           csv: {
@@ -142,7 +142,7 @@ export namespace DefaultCommandBuilder {
             text: strings.exportCsv,
             localizedTexts: extractLocalizedStrings(
               localizedSrings,
-              (x) => x.exportCsv
+              (x) => x.exportCsv,
             ),
           },
           excel: {
@@ -150,7 +150,7 @@ export namespace DefaultCommandBuilder {
             text: strings.exportExcel,
             localizedTexts: extractLocalizedStrings(
               localizedSrings,
-              (x) => x.exportExcel
+              (x) => x.exportExcel,
             ),
           },
         }),
@@ -198,7 +198,7 @@ export namespace DefaultCommandBuilder {
           text: strings.save,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.save
+            (x) => x.save,
           ),
         }),
         FormCommandBuilder.createSaveAndCloseCommand({
@@ -206,7 +206,7 @@ export namespace DefaultCommandBuilder {
           text: strings.saveAndClose,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.saveAndClose
+            (x) => x.saveAndClose,
           ),
         }),
         FormCommandBuilder.createRefreshCommand({
@@ -214,7 +214,7 @@ export namespace DefaultCommandBuilder {
           text: strings.refresh,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.refresh
+            (x) => x.refresh,
           ),
         }),
         FormCommandBuilder.createDeleteCommand({
@@ -222,12 +222,12 @@ export namespace DefaultCommandBuilder {
           text: 'Delete',
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.delete
+            (x) => x.delete,
           ),
           stringSet: strings.deleteRecordCommandStringSet,
           localizedStringSet: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.deleteRecordCommandStringSet
+            (x) => x.deleteRecordCommandStringSet,
           ),
         }),
       ],
@@ -286,7 +286,7 @@ export namespace DefaultCommandBuilder {
           text: strings.new,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.new
+            (x) => x.new,
           ),
         }),
         SubgridCommandBuilder.createEditRecordCommand({
@@ -294,15 +294,15 @@ export namespace DefaultCommandBuilder {
           text: strings.edit,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.edit
+            (x) => x.edit,
           ),
         }),
-        SubgridCommandBuilder.createEditRecordCommand({
+        SubgridCommandBuilder.createViewRecordCommand({
           Icon: icons.View,
           text: strings.view,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.view
+            (x) => x.view,
           ),
         }),
         SubgridCommandBuilder.createDeleteRecordCommand({
@@ -310,12 +310,12 @@ export namespace DefaultCommandBuilder {
           text: strings.delete,
           localizedText: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.delete
+            (x) => x.delete,
           ),
           stringSet: strings.deleteRecordCommandStringSet,
           localizedStringSet: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.deleteRecordCommandStringSet
+            (x) => x.deleteRecordCommandStringSet,
           ),
         }),
         SubgridCommandBuilder.createRefreshCommand({
@@ -323,7 +323,7 @@ export namespace DefaultCommandBuilder {
           text: strings.refresh,
           localizedTexts: extractLocalizedStrings(
             localizedSrings,
-            (x) => x.refresh
+            (x) => x.refresh,
           ),
         }),
       ],
@@ -334,7 +334,7 @@ export namespace DefaultCommandBuilder {
             text: strings.export,
             localizedTexts: extractLocalizedStrings(
               localizedSrings,
-              (x) => x.export
+              (x) => x.export,
             ),
           },
           csv: {
@@ -342,7 +342,7 @@ export namespace DefaultCommandBuilder {
             text: strings.exportCsv,
             localizedTexts: extractLocalizedStrings(
               localizedSrings,
-              (x) => x.exportCsv
+              (x) => x.exportCsv,
             ),
           },
           excel: {
@@ -350,7 +350,7 @@ export namespace DefaultCommandBuilder {
             text: strings.exportExcel,
             localizedTexts: extractLocalizedStrings(
               localizedSrings,
-              (x) => x.exportExcel
+              (x) => x.exportExcel,
             ),
           },
         }),

@@ -23,13 +23,13 @@ namespace EnabledRules {
   }
 
   export function HasSingleRecordSelected(
-    context: EntitySubGridCommandContext
+    context: EntitySubGridCommandContext,
   ) {
     return context.secondaryControl.selectedIds.length === 1;
   }
 
   export function HasAtLeastOneRecordSelected(
-    context: EntitySubGridCommandContext
+    context: EntitySubGridCommandContext,
   ) {
     return context.secondaryControl.selectedIds.length > 0;
   }
@@ -97,12 +97,14 @@ export namespace SubgridCommandBuilder {
       onClick: (context) => {
         context.secondaryControl.openRecord(
           context.secondaryControl.selectedIds[0],
-          context.secondaryControl.schema.logicalName
+          context.secondaryControl.schema.logicalName,
         );
       },
       hidden: [
         (context) => !EnabledRules.HasSingleRecordSelected(context),
-        (context) => !EnabledRules.IsPhysicalSchema(context),
+        (context) =>
+          !EnabledRules.IsPhysicalSchema(context) ||
+          !EnabledRules.HasUpdatePermission(context),
       ],
     };
   }
@@ -125,12 +127,14 @@ export namespace SubgridCommandBuilder {
       onClick: (context) => {
         context.secondaryControl.openRecord(
           context.secondaryControl.selectedIds[0],
-          context.secondaryControl.schema.logicalName
+          context.secondaryControl.schema.logicalName,
         );
       },
       hidden: [
         (context) => !EnabledRules.HasSingleRecordSelected(context),
-        (context) => EnabledRules.IsPhysicalSchema(context),
+        (context) =>
+          EnabledRules.IsPhysicalSchema(context) &&
+          EnabledRules.HasUpdatePermission(context),
       ],
     };
   }
@@ -138,14 +142,14 @@ export namespace SubgridCommandBuilder {
   function plurialize(
     count: number,
     singular: string | string[],
-    plural?: string
+    plural?: string,
   ): string {
     if (Array.isArray(singular)) {
       plural = singular[1];
       singular = singular[0];
     }
 
-    let msg = count === 1 ? singular : plural ?? singular;
+    let msg = count === 1 ? singular : (plural ?? singular);
 
     msg = msg.replace('{count}', count.toString());
 
@@ -182,24 +186,24 @@ export namespace SubgridCommandBuilder {
         const localizeSelector = createLocalizedSelector(
           stringSet,
           localizedStringSet,
-          context.locale.language
+          context.locale.language,
         );
 
         try {
           const confirmResult = await context.utility.openConfirmDialog({
             title: plurialize(
               recordIds.length,
-              localizeSelector((s) => s.confirmation.title)
+              localizeSelector((s) => s.confirmation.title),
             ),
             text: plurialize(
               recordIds.length,
-              localizeSelector((s) => s.confirmation.text)
+              localizeSelector((s) => s.confirmation.text),
             ),
             cancelButtonLabel: localizeSelector(
-              (s) => s.confirmation.buttonCancel
+              (s) => s.confirmation.buttonCancel,
             ),
             confirmButtonLabel: localizeSelector(
-              (s) => s.confirmation.buttonConfirm
+              (s) => s.confirmation.buttonConfirm,
             ),
           });
 
@@ -210,25 +214,25 @@ export namespace SubgridCommandBuilder {
           context.utility.showProgressIndicator(
             plurialize(
               recordIds.length,
-              localizeSelector((s) => s.status.deleting)
-            ) + '...'
+              localizeSelector((s) => s.status.deleting),
+            ) + '...',
           );
 
           for (const recordId of recordIds) {
             await context.dataService.deleteRecord(
               context.secondaryControl.logicalName,
-              recordId
+              recordId,
             );
           }
 
           context.utility.showNotification({
             title: plurialize(
               recordIds.length,
-              localizeSelector((s) => s.successNotification.title)
+              localizeSelector((s) => s.successNotification.title),
             ),
             text: plurialize(
               recordIds.length,
-              localizeSelector((s) => s.successNotification.text)
+              localizeSelector((s) => s.successNotification.text),
             ),
             type: 'success',
           });

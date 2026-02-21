@@ -11,7 +11,7 @@ import { Widgets } from './Widgets';
 export function InsightsContainer() {
   const config = useContextSelector(
     InsightsContext,
-    (state) => state.config as unknown as InsightConfig
+    (state) => state.config as unknown as InsightConfig,
   );
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -121,7 +121,7 @@ export function InsightsContainer() {
               // backgroundColor: isScrolled
               //   ? tokens.colorNeutralBackground1
               //   : 'transparent',
-              zIndex: 1,
+              zIndex: 50,
               position: 'sticky',
               top: 0,
             }}

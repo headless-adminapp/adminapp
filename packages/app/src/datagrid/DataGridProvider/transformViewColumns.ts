@@ -9,7 +9,7 @@ export function transformViewColumns<S extends SchemaAttributes>(
   logicalName: string,
   columns: ViewColumn<S>[],
   schemaStore: ISchemaStore,
-  language: string
+  language: string,
 ): TransformedViewColumn<S>[] {
   const schema = schemaStore.getSchema(logicalName);
 
@@ -40,7 +40,7 @@ export function transformViewColumns<S extends SchemaAttributes>(
         return {
           ...column,
           id: `${column.name as string}.${column.expandedKey}`,
-          label: `${lookupLabel} (${label})`,
+          label: column.label ?? `${lookupLabel} (${label})`,
         };
       }
 
