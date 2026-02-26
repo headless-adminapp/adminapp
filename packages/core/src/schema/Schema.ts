@@ -34,10 +34,12 @@ export interface Schema<
   ownership?:
     | 'scoped' // Records are scoped to user or team, only they can see their records
     | 'global'; // Records are global, user can see all records
-  virtual?: boolean; // Not a physical collection and used for query only
-  baseSchemaLogicalName?: string; // Base entity for the schema
-  baseSchemaLogicalNames?: string[]; // Base entities for the schema (Used to create record)
-  virtualLogicalNameAttribute?: keyof A; // Attribute that contains the schema logical name for virtual entities
+  // Not a physical collection and used for query only
+  virtual?: {
+    baseSchemaLogicalName?: string; // Base entity for the schema
+    baseSchemaLogicalNames?: string[]; // Base entities for the schema (Used to create record)
+    baseSchemaLogicalNameAttribute?: keyof A; // Attribute that contains the schema logical name for virtual entities
+  };
   additionalMetadata?: Record<string, any>; // Additional metadata
   attributes: A; // Attributes of the schema
   restrictions?: {

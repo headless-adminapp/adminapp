@@ -52,7 +52,7 @@ export interface SequelizeDatabaseContext {
 interface SequelizeServerSdkOptions<
   SdkContext extends ServerSdkContext = ServerSdkContext,
   DbContext extends SequelizeDatabaseContext = SequelizeDatabaseContext,
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 > extends ServerSdkOptions<SdkContext, DbContext, SA> {
   schemaStore: SequelizeSchemaStore<SA>;
   sequelize: Sequelize;
@@ -62,11 +62,8 @@ export class SequelizeServerSdk<
   SdkContext extends ServerSdkContext = ServerSdkContext,
   DbContext extends SequelizeDatabaseContext = SequelizeDatabaseContext,
   SA extends SchemaAttributes = SchemaAttributes,
-  Options extends SequelizeServerSdkOptions<
-    SdkContext,
-    DbContext,
-    SA
-  > = SequelizeServerSdkOptions<SdkContext, DbContext, SA>
+  Options extends SequelizeServerSdkOptions<SdkContext, DbContext, SA> =
+    SequelizeServerSdkOptions<SdkContext, DbContext, SA>,
 > extends ServerSdk<SdkContext, DbContext, SA, Options> {
   protected session: Transaction | null = null;
 
@@ -115,7 +112,7 @@ export class SequelizeServerSdk<
         schemaStore: this.options.schemaStore,
         timezone: this.timezone,
         sequelize: this.options.sequelize,
-      }
+      },
     );
 
     if (orgFilter) {
@@ -135,7 +132,7 @@ export class SequelizeServerSdk<
         schemaStore: this.options.schemaStore,
         timezone: this.timezone,
         sequelize: this.options.sequelize,
-      }
+      },
     );
 
     if (permissionFilter) {
@@ -158,9 +155,9 @@ export class SequelizeServerSdk<
         new Set([
           schema.primaryAttribute,
           ...Object.keys(schema.attributes).filter(
-            (x) => schema.attributes[x].searchable
+            (x) => schema.attributes[x].searchable,
           ),
-        ])
+        ]),
       );
 
       const searchFilter = searchFields
@@ -184,14 +181,14 @@ export class SequelizeServerSdk<
             };
           } else if (attribute.type === 'lookup') {
             const lookupSchema = this.options.schemaStore.getSchema(
-              attribute.entity
+              attribute.entity,
             );
 
             return {
               [`$${this.options.schemaStore.getRelationAlias(
                 schema.collectionName ?? schema.logicalName,
                 x as string,
-                lookupSchema.collectionName ?? lookupSchema.logicalName
+                lookupSchema.collectionName ?? lookupSchema.logicalName,
               )}.${lookupSchema.primaryAttribute as string}$`]: {
                 [getLikeOperator(this.options.sequelize)]: `%${search}%`,
               },
@@ -242,7 +239,7 @@ export class SequelizeServerSdk<
           (!!sort && sort.find((x) => x.field === key))
         ) {
           const lookupSchema = this.options.schemaStore.getSchema(
-            attribute.entity
+            attribute.entity,
           );
 
           const nestedIncludes: any[] = [];
@@ -254,17 +251,17 @@ export class SequelizeServerSdk<
 
             for (const expandedAttribute of expandedAttributes) {
               const nestedSchema = this.options.schemaStore.getSchema(
-                expandedAttribute.entity
+                expandedAttribute.entity,
               );
 
               nestedIncludes.push({
                 model: this.options.schemaStore.getModel(
-                  expandedAttribute.entity
+                  expandedAttribute.entity,
                 ),
                 as: this.options.schemaStore.getRelationAlias(
                   lookupSchema.collectionName ?? lookupSchema.logicalName,
                   key,
-                  nestedSchema.collectionName ?? nestedSchema.logicalName
+                  nestedSchema.collectionName ?? nestedSchema.logicalName,
                 ),
                 attributes: [
                   nestedSchema.idAttribute,
@@ -279,7 +276,7 @@ export class SequelizeServerSdk<
             as: this.options.schemaStore.getRelationAlias(
               schema.collectionName ?? schema.logicalName,
               key,
-              lookupSchema.collectionName ?? lookupSchema.logicalName
+              lookupSchema.collectionName ?? lookupSchema.logicalName,
             ),
             includes: nestedIncludes,
           });
@@ -291,18 +288,18 @@ export class SequelizeServerSdk<
           (!!sort && sort.find((x) => x.field === key))
         ) {
           const lookupSchemas = attribute.entities.map((entity) =>
-            this.options.schemaStore.getSchema(entity)
+            this.options.schemaStore.getSchema(entity),
           );
 
           lookupSchemas.forEach((lookupSchema) => {
             includes.push({
               model: this.options.schemaStore.getModel(
-                lookupSchema.logicalName
+                lookupSchema.logicalName,
               ),
               as: this.options.schemaStore.getRelationAlias(
                 schema.collectionName ?? schema.logicalName,
                 key,
-                lookupSchema.collectionName ?? lookupSchema.logicalName
+                lookupSchema.collectionName ?? lookupSchema.logicalName,
               ),
             });
           });
@@ -346,15 +343,15 @@ export class SequelizeServerSdk<
       }
     });
 
-    if (schema.virtual && schema.virtualLogicalNameAttribute) {
-      attributes.push(schema.virtualLogicalNameAttribute as string);
+    if (schema.virtual && schema.virtual.baseSchemaLogicalNameAttribute) {
+      attributes.push(schema.virtual.baseSchemaLogicalNameAttribute as string);
     }
 
     return Array.from(new Set(attributes));
   }
 
   protected async retriveRecord<T extends Record<string, unknown>>(
-    params: RetriveRecordParams
+    params: RetriveRecordParams,
   ): Promise<RetriveRecordResult<T>> {
     const logicalName = params.logicalName;
 
@@ -405,7 +402,7 @@ export class SequelizeServerSdk<
   }
 
   protected async retriveRecords<T extends Record<string, unknown>>(
-    params: RetriveRecordsParams
+    params: RetriveRecordsParams,
   ): Promise<RetriveRecordsResult<T>> {
     const logicalName = params.logicalName;
 
@@ -431,7 +428,7 @@ export class SequelizeServerSdk<
 
         if (attribute.type === 'lookup') {
           const lookupSchema = this.options.schemaStore.getSchema(
-            attribute.entity
+            attribute.entity,
           );
           return [
             {
@@ -439,7 +436,7 @@ export class SequelizeServerSdk<
               as: this.options.schemaStore.getRelationAlias(
                 schema.collectionName ?? schema.logicalName,
                 x.field,
-                lookupSchema.collectionName ?? lookupSchema.logicalName
+                lookupSchema.collectionName ?? lookupSchema.logicalName,
               ),
             },
             lookupSchema.primaryAttribute as string,
@@ -480,7 +477,7 @@ export class SequelizeServerSdk<
   }
 
   protected async deleteRecord(
-    params: DeleteRecordParams
+    params: DeleteRecordParams,
   ): Promise<DeleteRecordResult> {
     const model = this.options.schemaStore.getModel(params.logicalName);
     const schema = this.options.schemaStore.getSchema(params.logicalName);
@@ -514,7 +511,7 @@ export class SequelizeServerSdk<
     let dependedRecordToBeDeleted: DependentRecord[] =
       await this.getDependentRecordsToDelete(
         schema.logicalName,
-        record[schema.idAttribute]
+        record[schema.idAttribute],
       );
 
     if (dependedRecordToBeDeleted.length) {
@@ -597,7 +594,7 @@ export class SequelizeServerSdk<
   }
 
   protected async createRecord(
-    params: CreateRecordParams
+    params: CreateRecordParams,
   ): Promise<CreateRecordResult> {
     if (!this.session) {
       throw new Error('Session is not started');
@@ -608,51 +605,54 @@ export class SequelizeServerSdk<
 
     let data = params.data;
 
-    data = Object.entries(data).reduce((acc, [key, value]) => {
-      const attribute = schema.attributes[key];
+    data = Object.entries(data).reduce(
+      (acc, [key, value]) => {
+        const attribute = schema.attributes[key];
 
-      if (!attribute) {
-        return acc;
-      }
-
-      if (attribute.systemDefined) {
-        return acc;
-      }
-
-      if (value === undefined) {
-        return acc;
-      }
-
-      if (value === null) {
-        acc[key] = null;
-        return acc;
-      }
-
-      if (schema.attributes[key]?.type === 'lookup') {
-        if (typeof value === 'object') {
-          value = value.id;
+        if (!attribute) {
+          return acc;
         }
 
-        acc[key] = value;
-      } else {
-        acc[key] = value;
-      }
+        if (attribute.systemDefined) {
+          return acc;
+        }
 
-      if (attribute.type === 'regarding') {
-        acc[key] = value.id;
-        acc[attribute.entityTypeAttribute] = value.logicalName;
-      }
+        if (value === undefined) {
+          return acc;
+        }
 
-      if (schema.attributes[key]?.type === 'attachment') {
-        if (typeof value === 'object') {
-          acc[key] = value.url;
-        } else if (typeof value === 'string') {
+        if (value === null) {
+          acc[key] = null;
+          return acc;
+        }
+
+        if (schema.attributes[key]?.type === 'lookup') {
+          if (typeof value === 'object') {
+            value = value.id;
+          }
+
+          acc[key] = value;
+        } else {
           acc[key] = value;
         }
-      }
 
-      return acc;
-    }, {} as Record<string, any>);
+        if (attribute.type === 'regarding') {
+          acc[key] = value.id;
+          acc[attribute.entityTypeAttribute] = value.logicalName;
+        }
+
+        if (schema.attributes[key]?.type === 'attachment') {
+          if (typeof value === 'object') {
+            acc[key] = value.url;
+          } else if (typeof value === 'string') {
+            acc[key] = value;
+          }
+        }
+
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
 
     const schemaDefaultValues = this.getSchemaDefaultValues(schema);
 
@@ -671,7 +671,7 @@ export class SequelizeServerSdk<
     const autoNumberAttributes = Object.entries(schema.attributes).filter(
       ([, attribute]) => {
         return attribute.type === 'number' && attribute.autoNumber;
-      }
+      },
     );
 
     if (autoNumberAttributes.length) {
@@ -733,7 +733,7 @@ export class SequelizeServerSdk<
   }
 
   protected async updateRecord(
-    params: UpdateRecordParams
+    params: UpdateRecordParams,
   ): Promise<UpdateRecordResult> {
     const model = this.options.schemaStore.getModel(params.logicalName);
     const schema = this.options.schemaStore.getSchema(params.logicalName);
@@ -742,49 +742,52 @@ export class SequelizeServerSdk<
       throw new ForbiddenError('Updating is disabled for this entity');
     }
 
-    const data = Object.entries(params.data).reduce((acc, [key, value]) => {
-      if (key === schema.idAttribute) {
-        return acc;
-      }
+    const data = Object.entries(params.data).reduce(
+      (acc, [key, value]) => {
+        if (key === schema.idAttribute) {
+          return acc;
+        }
 
-      const attribute = schema.attributes[key];
+        const attribute = schema.attributes[key];
 
-      if (!attribute) {
-        return acc;
-      }
+        if (!attribute) {
+          return acc;
+        }
 
-      if (value === undefined) {
-        return acc;
-      }
+        if (value === undefined) {
+          return acc;
+        }
 
-      if (value === null) {
-        acc[key] = null;
-        return acc;
-      }
+        if (value === null) {
+          acc[key] = null;
+          return acc;
+        }
 
-      if (attribute.type === 'lookup') {
-        value = value.id;
+        if (attribute.type === 'lookup') {
+          value = value.id;
 
-        acc[key] = value;
-      } else {
-        acc[key] = value;
-      }
-
-      if (attribute.type === 'regarding') {
-        acc[key] = value.id;
-        acc[attribute.entityTypeAttribute] = value.logicalName;
-      }
-
-      if (schema.attributes[key]?.type === 'attachment') {
-        if (typeof value === 'object') {
-          acc[key] = value.url;
-        } else if (typeof value === 'string') {
+          acc[key] = value;
+        } else {
           acc[key] = value;
         }
-      }
 
-      return acc;
-    }, {} as Record<string, any>);
+        if (attribute.type === 'regarding') {
+          acc[key] = value.id;
+          acc[attribute.entityTypeAttribute] = value.logicalName;
+        }
+
+        if (schema.attributes[key]?.type === 'attachment') {
+          if (typeof value === 'object') {
+            acc[key] = value.url;
+          } else if (typeof value === 'string') {
+            acc[key] = value;
+          }
+        }
+
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
 
     const existingRecords = await model.findAll({
       where: this.prepareWhereClause({
@@ -812,7 +815,7 @@ export class SequelizeServerSdk<
 
     let changedValues = this.getChangedValues(
       existingRecords[0].toJSON(),
-      data
+      data,
     );
 
     await this.options.pluginStore?.execute({
@@ -877,7 +880,7 @@ export class SequelizeServerSdk<
       schema: Schema<SA>;
       columns?: string[];
       expand?: RetriveRecordsParams['expand'];
-    }
+    },
   ) {
     return records.map((record) =>
       transformRecord({
@@ -887,7 +890,7 @@ export class SequelizeServerSdk<
           .schemaStore as unknown as SequelizeSchemaStore,
         columns,
         expand,
-      })
+      }),
     );
   }
 
@@ -946,7 +949,7 @@ export class SequelizeServerSdk<
             logicalName: schemaLogicalName,
             id: record.toJSON()[schema.idAttribute as string],
             record: record.toJSON(),
-          }))
+          })),
         );
         continue;
       }
@@ -959,7 +962,7 @@ export class SequelizeServerSdk<
 
   /** @todo unfinished code */
   protected async retriveAggregate<T = unknown>(
-    query: AggregateQuery
+    query: AggregateQuery,
   ): Promise<T[]> {
     const model = this.options.schemaStore.getModel(query.logicalName);
 
@@ -996,7 +999,7 @@ export class SequelizeServerSdk<
     }: {
       includes: Record<string, any>;
       schema: Schema<SA>;
-    }
+    },
   ): string | Literal | Fn | Col {
     switch (value.type) {
       case 'constant':
@@ -1020,13 +1023,13 @@ export class SequelizeServerSdk<
         // );
 
         const lookupSchema = this.options.schemaStore.getSchema(
-          attribute.entity
+          attribute.entity,
         );
 
         const alias = this.options.schemaStore.getRelationAlias(
           schema.collectionName ?? schema.logicalName,
           value.value,
-          lookupSchema.collectionName ?? lookupSchema.logicalName
+          lookupSchema.collectionName ?? lookupSchema.logicalName,
         );
 
         if (!includes[alias]) {
@@ -1052,7 +1055,7 @@ export class SequelizeServerSdk<
               this.resolveAggregateValue(value.params[0], {
                 includes,
                 schema,
-              })
+              }),
             );
           case 'date':
             if (value.params.length !== 1) {
@@ -1065,7 +1068,7 @@ export class SequelizeServerSdk<
                 includes,
                 schema,
               }),
-              'YYYY-MM-DD'
+              'YYYY-MM-DD',
             );
           case 'year_month':
             return Sequelize.fn(
@@ -1074,7 +1077,7 @@ export class SequelizeServerSdk<
                 includes,
                 schema,
               }),
-              'YYYY-MM'
+              'YYYY-MM',
             );
         }
         break;

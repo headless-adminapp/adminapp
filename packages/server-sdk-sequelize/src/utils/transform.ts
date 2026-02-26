@@ -32,7 +32,7 @@ function transformColumns({
           schemaStore.getRelationAlias(
             schema.collectionName ?? schema.logicalName,
             column,
-            lookupSchema.collectionName ?? lookupSchema.logicalName
+            lookupSchema.collectionName ?? lookupSchema.logicalName,
           )
         ];
 
@@ -76,7 +76,7 @@ function transformColumns({
           schemaStore.getRelationAlias(
             schema.collectionName ?? schema.logicalName,
             column,
-            regardingSchema.collectionName ?? regardingSchema.logicalName
+            regardingSchema.collectionName ?? regardingSchema.logicalName,
           )
         ];
 
@@ -134,7 +134,7 @@ const transformExpandedRecord = ({
         schemaStore.getRelationAlias(
           schema.collectionName ?? schema.logicalName,
           expandKey,
-          expandedSchema.collectionName ?? expandedSchema.logicalName
+          expandedSchema.collectionName ?? expandedSchema.logicalName,
         )
       ];
 
@@ -148,39 +148,44 @@ const transformExpandedRecord = ({
 
     Object.assign(
       transformedRecord['$expand'][expandKey],
-      expandedColumns.reduce((acc, column) => {
-        const attribute = expandedSchema.attributes[column];
-        if (!attribute) {
-          return acc;
-        }
-
-        if (attribute.type === 'lookup') {
-          const nestedExpandedSchema = schemaStore.getSchema(attribute.entity);
-          const nestedExpandedRecord =
-            expandedRecord[
-              schemaStore.getRelationAlias(
-                expandedSchema.collectionName ?? expandedSchema.logicalName,
-                column,
-                nestedExpandedSchema.collectionName ??
-                  nestedExpandedSchema.logicalName
-              )
-            ];
-
-          if (!nestedExpandedRecord) {
-            acc[column] = null;
-          } else {
-            acc[column] = {
-              id: nestedExpandedRecord[expandedSchema.idAttribute],
-              name: nestedExpandedRecord[expandedSchema.primaryAttribute],
-              logicalName: attribute.entity,
-            };
+      expandedColumns.reduce(
+        (acc, column) => {
+          const attribute = expandedSchema.attributes[column];
+          if (!attribute) {
+            return acc;
           }
-        } else {
-          acc[column] = expandedRecord[column];
-        }
 
-        return acc;
-      }, {} as Record<string, any>)
+          if (attribute.type === 'lookup') {
+            const nestedExpandedSchema = schemaStore.getSchema(
+              attribute.entity,
+            );
+            const nestedExpandedRecord =
+              expandedRecord[
+                schemaStore.getRelationAlias(
+                  expandedSchema.collectionName ?? expandedSchema.logicalName,
+                  column,
+                  nestedExpandedSchema.collectionName ??
+                    nestedExpandedSchema.logicalName,
+                )
+              ];
+
+            if (!nestedExpandedRecord) {
+              acc[column] = null;
+            } else {
+              acc[column] = {
+                id: nestedExpandedRecord[expandedSchema.idAttribute],
+                name: nestedExpandedRecord[expandedSchema.primaryAttribute],
+                logicalName: attribute.entity,
+              };
+            }
+          } else {
+            acc[column] = expandedRecord[column];
+          }
+
+          return acc;
+        },
+        {} as Record<string, any>,
+      ),
     );
   }
 };
@@ -206,10 +211,11 @@ export function transformRecord({
 
   if (
     schema.virtual &&
-    schema.virtualLogicalNameAttribute &&
-    recordJson[schema.virtualLogicalNameAttribute]
+    schema.virtual.baseSchemaLogicalNameAttribute &&
+    recordJson[schema.virtual.baseSchemaLogicalNameAttribute]
   ) {
-    transformedRecord.$entity = recordJson[schema.virtualLogicalNameAttribute];
+    transformedRecord.$entity =
+      recordJson[schema.virtual.baseSchemaLogicalNameAttribute];
   }
 
   transformedRecord[schema.idAttribute] = recordJson[schema.idAttribute];

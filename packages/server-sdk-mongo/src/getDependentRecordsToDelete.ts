@@ -80,6 +80,14 @@ export async function getDependentRecordsToDelete<
     behavior,
     entityTypeAttribute,
   } of dependedAttributes) {
+    const schema = schemaStore.getSchema(schemaLogicalName);
+
+    if (schema.virtual) {
+      // We only check for direct dependencies
+      // so we can skip virtual schemas as they don't have their own collection
+      continue;
+    }
+
     const dependedModel = schemaStore.getModel(schemaLogicalName);
 
     const filter: Record<string, any> = {

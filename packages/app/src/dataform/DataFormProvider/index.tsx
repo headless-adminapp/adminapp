@@ -39,15 +39,16 @@ import { getRecord } from './getRecord';
 import { InitialValueResolver } from './InitialValueResolver';
 import { ReadonlyInfoResolver } from './ReadonlyInfoResolver';
 import { RetriveRecordFn } from './types';
-import { UnsavedChangesInfoSetter } from './UnsavedChangesInfoSetter';
 import { transformFormInternal } from './utils';
 
 export interface DataFormProviderProps<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 > {
   schema: Schema<S>;
   form: Form<S>;
   recordId?: string;
+  navigatorLogicalName?: string;
+  navigatorRecordId?: string;
   commands: EntityMainFormCommandItemExperience[][];
   retriveRecordFn?: RetriveRecordFn<S>;
   saveRecordFn?: SaveRecordFn;
@@ -55,7 +56,7 @@ export interface DataFormProviderProps<
 
 function mergeInitialWithHistory<T>(
   initialValue: T,
-  historyState: Partial<T> | undefined
+  historyState: Partial<T> | undefined,
 ): T {
   return {
     ...initialValue,
@@ -64,7 +65,7 @@ function mergeInitialWithHistory<T>(
 }
 
 export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
-  props: PropsWithChildren<DataFormProviderProps<S>>
+  props: PropsWithChildren<DataFormProviderProps<S>>,
 ) {
   const { schemaStore } = useMetadata();
   const { language, region } = useLocale();
@@ -92,7 +93,7 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
   });
 
   const saveRecordFnRef = useRef<SaveRecordFn | null | undefined>(
-    props.saveRecordFn
+    props.saveRecordFn,
   );
   saveRecordFnRef.current = props.saveRecordFn;
 
@@ -102,7 +103,7 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
         ? saveRecordFnRef.current(options)
         : saveRecord(options);
     },
-    []
+    [],
   );
 
   const contextValue = useCreateContextStore<DataFormContextState<S>>(() =>
@@ -114,6 +115,8 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
         commands: props.commands,
         dataState: { isFetching: true },
         recordId: props.recordId,
+        navigatorLogicalName: props.navigatorLogicalName,
+        navigatorRecordId: props.navigatorRecordId,
         refresh: async () => {}, // Initial value, will be overridden
         cloneId: undefined,
         // formInstance,
@@ -130,15 +133,15 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
         hiddenTabs: {},
         formInternal: transformFormInternal(props.form),
       },
-      router.getState<Partial<DataFormContextState<S>>>(historyKey)
-    )
+      router.getState<Partial<DataFormContextState<S>>>(historyKey),
+    ),
   );
 
   useEffect(() => {
     function listener(
       state: DataFormContextState<S>,
       prevState: DataFormContextState<S>,
-      changes: Partial<DataFormContextState<S>>
+      changes: Partial<DataFormContextState<S>>,
     ) {
       if (['activeTab', 'selectedRelatedItem'].some((key) => key in changes)) {
         router.setState(historyKey, {
@@ -168,11 +171,15 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
       hiddenSections: {},
       hiddenTabs: {},
       formInternal: transformFormInternal(props.form),
+      navigatorLogicalName: props.navigatorLogicalName,
+      navigatorRecordId: props.navigatorRecordId,
     });
   }, [
     props.form,
     props.schema,
     props.recordId,
+    props.navigatorLogicalName,
+    props.navigatorRecordId,
     contextValue,
     schemaStore,
     props.commands,

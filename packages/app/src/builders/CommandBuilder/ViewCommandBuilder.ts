@@ -24,9 +24,9 @@ export namespace EnabledRules {
 
     if (context.primaryControl.schema.virtual) {
       const baseSchemaLogicalName =
-        context.primaryControl.schema.baseSchemaLogicalName;
+        context.primaryControl.schema.virtual.baseSchemaLogicalName;
       const virtualLogicalNameAttribute =
-        context.primaryControl.schema.virtualLogicalNameAttribute;
+        context.primaryControl.schema.virtual.baseSchemaLogicalNameAttribute;
 
       if (!baseSchemaLogicalName && !virtualLogicalNameAttribute) {
         return false;
@@ -34,7 +34,7 @@ export namespace EnabledRules {
 
       if (baseSchemaLogicalName) {
         const baseSchema = context.stores.schemaStore.getSchema(
-          baseSchemaLogicalName
+          baseSchemaLogicalName,
         );
 
         if (!baseSchema) {
@@ -46,11 +46,11 @@ export namespace EnabledRules {
         }
       } else if (virtualLogicalNameAttribute) {
         const logicalNames = Array.from(
-          new Set(context.primaryControl.selectedRecords.map((x) => x.$entity))
+          new Set(context.primaryControl.selectedRecords.map((x) => x.$entity)),
         );
 
         const schemas = logicalNames.map((x) =>
-          context.stores.schemaStore.getSchema(x)
+          context.stores.schemaStore.getSchema(x),
         );
 
         if (
@@ -67,13 +67,13 @@ export namespace EnabledRules {
   }
 
   export function HasSingleRecordSelected(
-    context: EntityMainGridCommandContext
+    context: EntityMainGridCommandContext,
   ) {
     return context.primaryControl.selectedIds.length === 1;
   }
 
   export function HasAtLeastOneRecordSelected(
-    context: EntityMainGridCommandContext
+    context: EntityMainGridCommandContext,
   ) {
     return context.primaryControl.selectedIds.length > 0;
   }
@@ -133,7 +133,9 @@ export namespace ViewCommandBuilder {
       text,
       localizedText: localizedTexts,
       onClick: async (context) => {
-        if (!context.primaryControl.schema.baseSchemaLogicalNames?.length) {
+        if (
+          !context.primaryControl.schema.virtual?.baseSchemaLogicalNames?.length
+        ) {
           return;
         }
 
@@ -146,7 +148,7 @@ export namespace ViewCommandBuilder {
               string: true,
               required: true,
               options:
-                context.primaryControl.schema.baseSchemaLogicalNames?.map(
+                context.primaryControl.schema.virtual.baseSchemaLogicalNames?.map(
                   (x) => {
                     const schema = context.stores.schemaStore.getSchema(x);
 
@@ -154,7 +156,7 @@ export namespace ViewCommandBuilder {
                       value: x,
                       label: schema.label,
                     };
-                  }
+                  },
                 ),
             },
           },
@@ -174,7 +176,9 @@ export namespace ViewCommandBuilder {
           return true;
         }
 
-        if (!context.primaryControl.schema.baseSchemaLogicalNames?.length) {
+        if (
+          !context.primaryControl.schema.virtual?.baseSchemaLogicalNames?.length
+        ) {
           return true;
         }
 
@@ -202,16 +206,22 @@ export namespace ViewCommandBuilder {
         if (EnabledRules.IsPhysicalSchema(context)) {
           context.primaryControl.openRecord(
             context.primaryControl.selectedIds[0],
-            context.primaryControl.schema.logicalName
+            context.primaryControl.schema.logicalName,
           );
         } else {
-          if (!context.primaryControl.schema.virtualLogicalNameAttribute) {
+          if (
+            !context.primaryControl.schema.virtual
+              ?.baseSchemaLogicalNameAttribute
+          ) {
             return;
           }
 
           const logicalName = (
             context.primaryControl.selectedRecords[0] as any
-          )[context.primaryControl.schema.virtualLogicalNameAttribute];
+          )[
+            context.primaryControl.schema.virtual
+              ?.baseSchemaLogicalNameAttribute
+          ];
 
           if (!logicalName) {
             return;
@@ -219,7 +229,7 @@ export namespace ViewCommandBuilder {
 
           context.primaryControl.openRecord(
             context.primaryControl.selectedIds[0],
-            logicalName
+            logicalName,
           );
         }
       },
@@ -230,13 +240,19 @@ export namespace ViewCommandBuilder {
             return false;
           }
 
-          if (!context.primaryControl.schema.virtualLogicalNameAttribute) {
+          if (
+            !context.primaryControl.schema.virtual
+              ?.baseSchemaLogicalNameAttribute
+          ) {
             return true;
           }
 
           const logicalName = (
             context.primaryControl.selectedRecords[0] as any
-          )[context.primaryControl.schema.virtualLogicalNameAttribute];
+          )[
+            context.primaryControl.schema.virtual
+              ?.baseSchemaLogicalNameAttribute
+          ];
 
           if (!logicalName) {
             return true;
@@ -266,7 +282,7 @@ export namespace ViewCommandBuilder {
       onClick: (context) => {
         context.primaryControl.openRecord(
           context.primaryControl.selectedIds[0],
-          context.primaryControl.schema.logicalName
+          context.primaryControl.schema.logicalName,
         );
       },
       hidden: [
@@ -277,8 +293,9 @@ export namespace ViewCommandBuilder {
           }
 
           if (
-            context.primaryControl.schema.virtualLogicalNameAttribute ||
-            context.primaryControl.schema.baseSchemaLogicalName
+            context.primaryControl.schema.virtual
+              ?.baseSchemaLogicalNameAttribute ||
+            context.primaryControl.schema.virtual?.baseSchemaLogicalName
           ) {
             return true;
           }
@@ -450,7 +467,7 @@ async function retrieveFilteredRecords(context: EntityMainGridCommandContext) {
 }
 
 export async function exportRecordsToExcel(
-  context: EntityMainGridCommandContext
+  context: EntityMainGridCommandContext,
 ) {
   context.utility.showProgressIndicator('Exporting to Excel...');
   try {
@@ -470,7 +487,7 @@ export async function exportRecordsToExcel(
 }
 
 export async function exportRecordsToCSV(
-  context: EntityMainGridCommandContext
+  context: EntityMainGridCommandContext,
 ) {
   context.utility.showProgressIndicator('Exporting to CSV...');
   try {
@@ -497,7 +514,7 @@ export async function processDeleteRecordRequest(
   }: {
     stringSet: ViewCommandBuilder.DeleteRecordCommandStringSet;
     localizedStringSet?: Localized<ViewCommandBuilder.DeleteRecordCommandStringSet>;
-  }
+  },
 ) {
   const recordIds = context.primaryControl.selectedIds;
 
@@ -509,14 +526,14 @@ export async function processDeleteRecordRequest(
 
   if (context.primaryControl.schema.virtual) {
     const baseSchemaLogicalName =
-      context.primaryControl.schema.baseSchemaLogicalName;
+      context.primaryControl.schema.virtual.baseSchemaLogicalName;
 
     if (!baseSchemaLogicalName) {
       return;
     }
 
     const baseSchema = context.stores.schemaStore.getSchema(
-      baseSchemaLogicalName
+      baseSchemaLogicalName,
     );
 
     if (!baseSchema) {
@@ -529,18 +546,18 @@ export async function processDeleteRecordRequest(
   const localizeSelector = createLocalizedSelector(
     stringSet,
     localizedStringSet,
-    context.locale.language
+    context.locale.language,
   );
 
   try {
     const confirmResult = await context.utility.openConfirmDialog({
       title: plurialize(
         recordIds.length,
-        localizeSelector((s) => s.confirmation.title)
+        localizeSelector((s) => s.confirmation.title),
       ),
       text: plurialize(
         recordIds.length,
-        localizeSelector((s) => s.confirmation.text)
+        localizeSelector((s) => s.confirmation.text),
       ),
       cancelButtonLabel: localizeSelector((s) => s.confirmation.buttonCancel),
       confirmButtonLabel: localizeSelector((s) => s.confirmation.buttonConfirm),
@@ -553,8 +570,8 @@ export async function processDeleteRecordRequest(
     context.utility.showProgressIndicator(
       plurialize(
         recordIds.length,
-        localizeSelector((s) => s.status.deleting)
-      ) + '...'
+        localizeSelector((s) => s.status.deleting),
+      ) + '...',
     );
 
     for (const recordId of recordIds) {
@@ -564,11 +581,11 @@ export async function processDeleteRecordRequest(
     context.utility.showNotification({
       title: plurialize(
         recordIds.length,
-        localizeSelector((s) => s.successNotification.title)
+        localizeSelector((s) => s.successNotification.title),
       ),
       text: plurialize(
         recordIds.length,
-        localizeSelector((s) => s.successNotification.text)
+        localizeSelector((s) => s.successNotification.text),
       ),
       type: 'success',
     });

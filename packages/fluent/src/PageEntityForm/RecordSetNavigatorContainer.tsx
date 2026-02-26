@@ -6,11 +6,9 @@ import {
   tokens,
 } from '@fluentui/react-components';
 import { ScrollView } from '@headless-adminapp/app/components/ScrollView';
-import {
-  useDataFormSchema,
-  useRecordId,
-} from '@headless-adminapp/app/dataform/hooks';
+import { DataFormContext } from '@headless-adminapp/app/dataform';
 import { useLocale } from '@headless-adminapp/app/locale';
+import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { useOpenForm } from '@headless-adminapp/app/navigation';
 import {
   useRecordSetResult,
@@ -42,8 +40,14 @@ export const RecordSetNavigatorContainer: FC = () => {
 
   const [visible] = useRecordSetVisibility();
 
-  const recordId = useRecordId();
-  const formSchema = useDataFormSchema();
+  const navigatorRecordId = useContextSelector(
+    DataFormContext,
+    (state) => state.navigatorRecordId ?? state.recordId,
+  );
+  const navigatorLogicalName = useContextSelector(
+    DataFormContext,
+    (state) => state.navigatorLogicalName ?? state.schema.logicalName,
+  );
 
   const styles = useStyles();
 
@@ -58,7 +62,7 @@ export const RecordSetNavigatorContainer: FC = () => {
     return null;
   }
 
-  if (schema.logicalName !== formSchema?.logicalName) {
+  if (schema.logicalName !== navigatorLogicalName) {
     return null;
   }
 
@@ -105,10 +109,11 @@ export const RecordSetNavigatorContainer: FC = () => {
                   role="button"
                   className={mergeClasses(
                     styles.item,
-                    recordId === record[schema.idAttribute] && styles.selected
+                    navigatorRecordId === record[schema.idAttribute] &&
+                      styles.selected,
                   )}
                   onClick={() => {
-                    openForm({
+                    void openForm({
                       logicalName: schema.logicalName,
                       id: record[schema.idAttribute] as string,
                       replace: true,
@@ -119,7 +124,7 @@ export const RecordSetNavigatorContainer: FC = () => {
                     cardView={cardView!}
                     record={record}
                     schema={schema}
-                    selected={recordId === record[schema.idAttribute]}
+                    selected={navigatorRecordId === record[schema.idAttribute]}
                   />
                 </div>
                 <div style={{ paddingInline: tokens.spacingHorizontalL }}>

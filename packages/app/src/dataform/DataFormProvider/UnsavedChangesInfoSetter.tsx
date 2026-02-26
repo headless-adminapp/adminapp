@@ -1,13 +1,13 @@
 import { setUnsavedChangesInfo } from '@headless-adminapp/app/navigation/unsaved-changes';
 import { FC, useEffect } from 'react';
 
-import { useFormInstance } from '../hooks';
+import { useFormIsDirty } from '../hooks';
 
 export const UnsavedChangesInfoSetter: FC = () => {
-  const form = useFormInstance();
+  const isDirty = useFormIsDirty();
 
   useEffect(() => {
-    if (!form.formState.isDirty) {
+    if (!isDirty) {
       setUnsavedChangesInfo(null);
     } else {
       setUnsavedChangesInfo({
@@ -20,7 +20,7 @@ export const UnsavedChangesInfoSetter: FC = () => {
     return () => {
       setUnsavedChangesInfo(null);
     };
-  }, [form.formState.isDirty]);
+  }, [isDirty]);
 
   return null;
 };

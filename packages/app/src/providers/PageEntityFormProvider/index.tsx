@@ -14,6 +14,8 @@ interface PageEntityFormProviderProps<S extends SchemaAttributes> {
   schema: Schema<S>;
   form: Form<S>;
   recordId?: string;
+  navigatorLogicalName?: string;
+  navigatorRecordId?: string;
   commands: EntityMainFormCommandItemExperience[][];
   retriveRecordFn?: RetriveRecordFn<S>;
   saveRecordFn?: SaveRecordFn;
@@ -23,6 +25,8 @@ export function PageEntityFormProvider<S extends SchemaAttributes>({
   schema,
   form,
   recordId,
+  navigatorLogicalName,
+  navigatorRecordId,
   children,
   commands,
   retriveRecordFn,
@@ -33,6 +37,8 @@ export function PageEntityFormProvider<S extends SchemaAttributes>({
       schema={schema}
       form={form}
       recordId={recordId}
+      navigatorLogicalName={navigatorLogicalName}
+      navigatorRecordId={navigatorRecordId}
       commands={commands}
       retriveRecordFn={retriveRecordFn}
       saveRecordFn={saveRecordFn}

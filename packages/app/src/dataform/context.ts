@@ -26,7 +26,7 @@ export interface RelatedItemInfo {
 }
 
 export type DataFormContextState<
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 > = {
   contextKey: number; // used to check if props have changed and reset the context
 
@@ -34,6 +34,8 @@ export type DataFormContextState<
   schema: Schema<SA>;
   form: Form<SA>;
   recordId?: string | number;
+  navigatorLogicalName?: string;
+  navigatorRecordId?: string | number;
   cloneId?: string | number;
   commands: EntityMainFormCommandItemExperience[][];
   saveRecordFn: SaveRecordFn;

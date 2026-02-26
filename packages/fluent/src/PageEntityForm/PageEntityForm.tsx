@@ -16,12 +16,16 @@ interface PageEntityFormProps {
   logicalName: string;
   formId?: string;
   recordId?: string;
+  navigatorLogicalName?: string;
+  navigatorRecordId?: string;
 }
 
 export const PageEntityForm: FC<PageEntityFormProps> = ({
   logicalName,
   formId,
   recordId,
+  navigatorLogicalName,
+  navigatorRecordId,
 }) => {
   const result = useLoadFormGridPage(logicalName, formId);
   useMobileHeader(true);
@@ -70,6 +74,8 @@ export const PageEntityForm: FC<PageEntityFormProps> = ({
         <PageEntityFormProvider
           schema={schema}
           form={form}
+          navigatorLogicalName={navigatorLogicalName}
+          navigatorRecordId={navigatorRecordId}
           recordId={recordId}
           commands={commands}
         >

@@ -41,7 +41,7 @@ export function useRecordSetResult() {
           .filter((x) => !x.expandedKey)
           .map((x) => x.name),
         ...(cardView.rightColumn ?? []).map((x) => x.name),
-      ])
+      ]),
     ).filter(Boolean) as string[];
   }, [cardView]);
 
@@ -74,7 +74,7 @@ export function useRecordSetResult() {
       });
 
       const sortedData = sortBy(result.records, (x) =>
-        context.ids.indexOf(x[schema.idAttribute as keyof typeof x] as Id)
+        context.ids.indexOf(x[schema.idAttribute as keyof typeof x] as Id),
       );
 
       return sortedData;

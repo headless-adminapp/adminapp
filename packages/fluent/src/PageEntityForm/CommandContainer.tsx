@@ -1,9 +1,7 @@
 import { SkeletonItem, tokens } from '@fluentui/react-components';
 import { CommandItemState } from '@headless-adminapp/app/command';
-import {
-  useDataFormSchema,
-  useMainFormCommands,
-} from '@headless-adminapp/app/dataform/hooks';
+import { DataFormContext } from '@headless-adminapp/app/dataform';
+import { useMainFormCommands } from '@headless-adminapp/app/dataform/hooks';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
@@ -27,11 +25,14 @@ export const CommandContainer: FC<CommandContainerProps> = ({ skeleton }) => {
   const router = useRouter();
   const isMobile = useIsMobile();
 
-  const schema = useDataFormSchema();
   const [recordSetVisible, setRecordSetVisible] = useRecordSetVisibility();
   const recordSetContext = useContextSelector(
     RecordSetContext,
-    (state) => state
+    (state) => state,
+  );
+  const navigatorLogicalName = useContextSelector(
+    DataFormContext,
+    (state) => state.navigatorLogicalName ?? state.schema.logicalName,
   );
 
   const navigationCommands = useMemo(() => {
@@ -45,7 +46,7 @@ export const CommandContainer: FC<CommandContainerProps> = ({ skeleton }) => {
           },
         } as CommandItemState,
       ],
-      ...(recordSetContext.logicalName === schema.logicalName &&
+      ...(recordSetContext.logicalName === navigatorLogicalName &&
       recordSetContext.ids.length > 0 &&
       !isMobile
         ? [
@@ -67,7 +68,7 @@ export const CommandContainer: FC<CommandContainerProps> = ({ skeleton }) => {
     recordSetContext.logicalName,
     recordSetVisible,
     router,
-    schema.logicalName,
+    navigatorLogicalName,
     setRecordSetVisible,
   ]);
 
@@ -94,7 +95,7 @@ export const CommandContainer: FC<CommandContainerProps> = ({ skeleton }) => {
                       {renderCommandItem(
                         `${groupIndex}-${index}`,
                         item,
-                        language
+                        language,
                       )}
                     </Fragment>
                   );

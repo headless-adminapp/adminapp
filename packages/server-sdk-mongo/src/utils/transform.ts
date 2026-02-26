@@ -181,8 +181,9 @@ export function transformRecord({
 }) {
   let logicalName = schema.logicalName;
 
-  if (schema.virtual && schema.virtualLogicalNameAttribute) {
-    const virtualLogicalName = record[schema.virtualLogicalNameAttribute];
+  if (schema.virtual && schema.virtual.baseSchemaLogicalNameAttribute) {
+    const virtualLogicalName =
+      record[schema.virtual.baseSchemaLogicalNameAttribute];
 
     if (virtualLogicalName) {
       logicalName = virtualLogicalName;
