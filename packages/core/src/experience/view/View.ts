@@ -1,4 +1,4 @@
-import { SchemaAttributes } from '../../schema';
+import { Schema, SchemaAttributes } from '../../schema';
 import { Filter, SortOrder } from '../../transport';
 import { AllowAsync } from '../../types';
 import { Metadata } from '../types';
@@ -13,13 +13,15 @@ export interface BaseView<S extends SchemaAttributes = SchemaAttributes> {
   }>;
 }
 
-export interface View<S extends SchemaAttributes = SchemaAttributes>
-  extends Metadata {
+export interface View<
+  S extends SchemaAttributes = SchemaAttributes,
+> extends Metadata {
   experience: ViewExperience<S>;
 }
 
-export interface AsyncView<S extends SchemaAttributes = SchemaAttributes>
-  extends Metadata {
+export interface AsyncView<
+  S extends SchemaAttributes = SchemaAttributes,
+> extends Metadata {
   experience: AllowAsync<ViewExperience<S>>;
 }
 
@@ -36,7 +38,7 @@ export type GridView<S extends SchemaAttributes = SchemaAttributes> = {
 };
 
 export type CardViewSecondaryColumn<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 > = {
   name: keyof S;
   expandedKey?: string;
@@ -53,4 +55,10 @@ export type CardView<S extends SchemaAttributes = SchemaAttributes> = {
     name: keyof S;
     variant: 'strong' | 'caption' | 'choice';
   }>;
+  Renderer?: React.ComponentType<{
+    record: any;
+    schema: Schema<any>;
+    selected?: boolean;
+  }>;
+  Skeleton?: React.ComponentType;
 };

@@ -116,7 +116,7 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
 
   const { isLoading: isViewLoading, view } = useGetLookupView(
     schema.logicalName,
-    viewId
+    viewId,
   );
 
   const { data, isLoading } = useLookupData({
@@ -140,7 +140,7 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
 
       const lastElementChild =
         tagGroupContainerRef.current?.lastElementChild?.querySelector(
-          '.fui-Tag:last-of-type'
+          '.fui-Tag:last-of-type',
         );
 
       if (!lastElementChild) {
@@ -174,7 +174,7 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
   }, []);
 
   const handleAdd = (
-    selectedValue: Data<InferredSchemaType<SchemaAttributes>>
+    selectedValue: Data<InferredSchemaType<SchemaAttributes>>,
   ) => {
     setSearchText('');
     if (!value) {
@@ -259,7 +259,7 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
         }}
         onOptionSelect={(e, item) => {
           const _item = data?.records.find(
-            (x) => String(x[schema.idAttribute]) === String(item.optionValue)
+            (x) => String(x[schema.idAttribute]) === String(item.optionValue),
           );
 
           if (!_item) return;
@@ -267,7 +267,7 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
           recentItemStore.addItem(
             createLookupRecentKey(schema.logicalName),
             _item[schema.idAttribute] as Id,
-            _item[schema.idAttribute] as string
+            _item[schema.idAttribute] as string,
           );
 
           handleAdd(_item);
@@ -285,11 +285,15 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
             className={mergeClasses(styles.option)}
             text={item[schema.primaryAttribute] as string}
           >
-            <RecordCard
-              cardView={view?.experience.card!}
-              record={item}
-              schema={schema}
-            />
+            {view?.experience.card.Renderer ? (
+              <view.experience.card.Renderer record={item} schema={schema} />
+            ) : (
+              <RecordCard
+                cardView={view?.experience.card!}
+                record={item}
+                schema={schema}
+              />
+            )}
           </Option>
         ))}
         {!isLoading && !data?.records.length && (
@@ -386,7 +390,7 @@ function TagItem({
 
       router.push(path);
     },
-    [path, router]
+    [path, router],
   );
   return (
     <Tag

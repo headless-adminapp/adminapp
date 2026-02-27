@@ -205,12 +205,16 @@ export const GridListContainer: FC<GridListContainerProps> = () => {
                   transform: `translateY(${virtualSize}px)`,
                 }}
               >
-                {Array.from({ length: 10 }).map((_, index) => (
-                  <RecordCardLoading
-                    key={index}
-                    cardView={view.experience.card}
-                  />
-                ))}
+                {Array.from({ length: 10 }).map((_, index) =>
+                  view.experience.card.Skeleton ? (
+                    <view.experience.card.Skeleton key={index} />
+                  ) : (
+                    <RecordCardLoading
+                      key={index}
+                      cardView={view.experience.card}
+                    />
+                  ),
+                )}
               </div>
             )}
           </div>
@@ -272,12 +276,16 @@ const Item: FC<ItemProps> = ({
       {...longPressEvent}
       onClick={onClick}
     >
-      <RecordCard
-        cardView={card}
-        record={record}
-        schema={schema}
-        selected={selected}
-      />
+      {card.Renderer ? (
+        <card.Renderer record={record} schema={schema} selected={selected} />
+      ) : (
+        <RecordCard
+          cardView={card}
+          record={record}
+          schema={schema}
+          selected={selected}
+        />
+      )}
     </div>
   );
 };

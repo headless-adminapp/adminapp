@@ -138,7 +138,7 @@ const LookupControlMd: FC<RegardingControlProps> = ({
 
       await router.push(path);
     },
-    [path, router]
+    [path, router],
   );
 
   useEffect(() => {
@@ -162,7 +162,7 @@ const LookupControlMd: FC<RegardingControlProps> = ({
             schema,
             view: view?.experience as ViewExperience | null,
           };
-        })
+        }),
       );
     },
     throwOnError: true,
@@ -188,7 +188,7 @@ const LookupControlMd: FC<RegardingControlProps> = ({
   }, [value]);
 
   const handleChange = (
-    value: Data<InferredSchemaType<SchemaAttributes>> | null
+    value: Data<InferredSchemaType<SchemaAttributes>> | null,
   ) => {
     setSearchText('');
     if (!value) {
@@ -253,7 +253,7 @@ const LookupControlMd: FC<RegardingControlProps> = ({
 
               const record = data?.records.find(
                 (x) =>
-                  String(x[schema.idAttribute]) === String(item.optionValue)
+                  String(x[schema.idAttribute]) === String(item.optionValue),
               );
 
               return record;
@@ -290,11 +290,15 @@ const LookupControlMd: FC<RegardingControlProps> = ({
                     text={item[schema.primaryAttribute] as string}
                   >
                     {view?.card ? (
-                      <RecordCard
-                        cardView={view.card}
-                        record={item}
-                        schema={schema}
-                      />
+                      view.card.Renderer ? (
+                        <view.card.Renderer record={item} schema={schema} />
+                      ) : (
+                        <RecordCard
+                          cardView={view.card}
+                          record={item}
+                          schema={schema}
+                        />
+                      )
                     ) : (
                       (item[schema.primaryAttribute] as string)
                     )}
@@ -306,7 +310,7 @@ const LookupControlMd: FC<RegardingControlProps> = ({
         })}
         {!isLoading &&
           result.every(
-            (item) => !(item.data as RetriveRecordsResult)?.records.length
+            (item) => !(item.data as RetriveRecordsResult)?.records.length,
           ) && (
             <div
               style={{

@@ -10,7 +10,7 @@ interface ChoiceBadgeProps {
     | ChoiceAttribute<string | number>
     | ChoicesAttribute<string | number>;
   formattedValue?: string | null;
-  size?: 'small' | 'medium';
+  size?: 'small' | 'medium' | 'large' | 'extra-large';
 }
 
 export function ChoiceBadge(props: Readonly<ChoiceBadgeProps>) {
@@ -20,7 +20,7 @@ export function ChoiceBadge(props: Readonly<ChoiceBadgeProps>) {
     }
 
     return props.attribute.options.find(
-      (option) => option.value === props.value
+      (option) => option.value === props.value,
     )?.color;
   }, [props.attribute.options, props.value]);
 
@@ -42,7 +42,7 @@ export function ChoiceBadge(props: Readonly<ChoiceBadgeProps>) {
     }
 
     const choice = props.attribute.options.find(
-      (option) => option.value === props.value
+      (option) => option.value === props.value,
     );
 
     if (!choice) {

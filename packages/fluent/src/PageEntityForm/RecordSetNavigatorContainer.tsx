@@ -120,12 +120,24 @@ export const RecordSetNavigatorContainer: FC = () => {
                     });
                   }}
                 >
-                  <RecordCard
-                    cardView={cardView!}
-                    record={record}
-                    schema={schema}
-                    selected={navigatorRecordId === record[schema.idAttribute]}
-                  />
+                  {cardView?.Renderer ? (
+                    <cardView.Renderer
+                      record={record}
+                      schema={schema}
+                      selected={
+                        navigatorRecordId === record[schema.idAttribute]
+                      }
+                    />
+                  ) : (
+                    <RecordCard
+                      cardView={cardView!}
+                      record={record}
+                      schema={schema}
+                      selected={
+                        navigatorRecordId === record[schema.idAttribute]
+                      }
+                    />
+                  )}
                 </div>
                 <div style={{ paddingInline: tokens.spacingHorizontalL }}>
                   <Divider vertical={false} style={{ opacity: 0.2 }} />

@@ -92,7 +92,7 @@ const useStyles = makeStyles({
 
 const recordToDataLookup = (
   value: Data<InferredSchemaType<SchemaAttributes>>,
-  schema: Schema<SchemaAttributes>
+  schema: Schema<SchemaAttributes>,
 ) => {
   return {
     id: value[schema.idAttribute] as string,
@@ -157,7 +157,7 @@ const LookupControlMd: FC<LookupControlProps> = ({
 
       await router.push(path);
     },
-    [path, router]
+    [path, router],
   );
 
   useEffect(() => {
@@ -170,7 +170,7 @@ const LookupControlMd: FC<LookupControlProps> = ({
 
   const { isLoading: isViewLoading, view } = useGetLookupView(
     schema.logicalName,
-    viewId
+    viewId,
   );
 
   const { data, isLoading } = useLookupData({
@@ -194,7 +194,7 @@ const LookupControlMd: FC<LookupControlProps> = ({
   }, [value]);
 
   const handleChange = (
-    value: Data<InferredSchemaType<SchemaAttributes>> | null
+    value: Data<InferredSchemaType<SchemaAttributes>> | null,
   ) => {
     setSearchText('');
     if (!value) {
@@ -243,14 +243,14 @@ const LookupControlMd: FC<LookupControlProps> = ({
         }}
         onOptionSelect={(e, item) => {
           const _item = data?.records.find(
-            (x) => String(x[schema.idAttribute]) === String(item.optionValue)
+            (x) => String(x[schema.idAttribute]) === String(item.optionValue),
           );
 
           if (_item) {
             recentItemStore.addItem(
               createLookupRecentKey(schema.logicalName),
               _item[schema.idAttribute] as Id,
-              _item[schema.idAttribute] as string
+              _item[schema.idAttribute] as string,
             );
           }
 
@@ -273,11 +273,19 @@ const LookupControlMd: FC<LookupControlProps> = ({
             text={item[schema.primaryAttribute] as string}
           >
             {view?.experience.card ? (
-              <RecordCard
-                cardView={view.experience.card}
-                record={item}
-                schema={schema}
-              />
+              view.experience.card.Renderer ? (
+                <view.experience.card.Renderer
+                  record={item}
+                  schema={schema}
+                  selected={false}
+                />
+              ) : (
+                <RecordCard
+                  cardView={view.experience.card}
+                  record={item}
+                  schema={schema}
+                />
+              )
             ) : (
               (item[schema.primaryAttribute] as string)
             )}
@@ -311,7 +319,7 @@ const LookupControlMd: FC<LookupControlProps> = ({
                       recentItemStore.addItem(
                         createLookupRecentKey(schema.logicalName),
                         result.id,
-                        result.id
+                        result.id,
                       );
                     }
                   } else {
@@ -319,7 +327,7 @@ const LookupControlMd: FC<LookupControlProps> = ({
                       routeResolver({
                         logicalName: schema.logicalName,
                         type: PageType.EntityForm,
-                      })
+                      }),
                     );
                   }
                 }}
