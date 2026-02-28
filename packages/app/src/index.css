@@ -3,6 +3,11 @@
   margin-left: -15px;
 }
 
+.hdl-scrollbar-column > div {
+  display: flex;
+  flex-direction: column;
+}
+
 .hdl-scrollbar-shadow-top::before {
   content: ' ';
   position: absolute;

@@ -55,7 +55,7 @@ export const PageEntityFormDesktopContainer: FC = () => {
   const record = useContextSelector(DataFormContext, (state) => state.record);
   const selectedRelatedItem = useContextSelector(
     DataFormContext,
-    (state) => state.selectedRelatedItem
+    (state) => state.selectedRelatedItem,
   );
   const { language } = useLocale();
 
@@ -189,8 +189,8 @@ export const PageEntityFormDesktopContainer: FC = () => {
                             {isDirty
                               ? `- ${strings.unsaved}`
                               : record
-                              ? `- ${strings.saved}`
-                              : ''}
+                                ? `- ${strings.saved}`
+                                : ''}
                           </Caption1>
                         </div>
                         <Body1
@@ -244,7 +244,7 @@ export const PageEntityFormDesktopContainer: FC = () => {
                                     {getAttributeFormattedValue(
                                       attribute,
                                       field.value,
-                                      locale
+                                      locale,
                                     )}
                                   </Body1>
                                 );
@@ -253,7 +253,7 @@ export const PageEntityFormDesktopContainer: FC = () => {
                           </div>
                         </Fragment>
                       );
-                    }
+                    },
                   )}
                 </div>
               </div>
@@ -321,7 +321,7 @@ const Wrapper: FC<PropsWithChildren<WrapperProps>> = ({
 
   if (isMobile) {
     return (
-      <ScrollView>
+      <ScrollView flexColumn>
         <div
           style={{
             background: tokens.colorNeutralBackgroundAlpha2,

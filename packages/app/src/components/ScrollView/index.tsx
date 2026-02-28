@@ -8,6 +8,7 @@ interface ScrollViewProps {
   rtl?: boolean;
   onScroll?: ScrollbarProps['onScroll'];
   shadowEffect?: boolean;
+  flexColumn?: boolean;
 }
 
 export const ScrollView: FC<PropsWithChildren<ScrollViewProps>> = ({
@@ -17,6 +18,7 @@ export const ScrollView: FC<PropsWithChildren<ScrollViewProps>> = ({
   autoHide,
   onScroll,
   shadowEffect = false,
+  flexColumn = false,
 }) => {
   const [isTop, setIsTop] = useState(true);
   const [isBottom, setIsBottom] = useState(false);
@@ -49,7 +51,8 @@ export const ScrollView: FC<PropsWithChildren<ScrollViewProps>> = ({
         'hdl-scrollbar',
         rtl && 'rtl',
         shadowEffect && !isTop && 'hdl-scrollbar-shadow-top',
-        shadowEffect && !isBottom && 'hdl-scrollbar-shadow-bottom'
+        shadowEffect && !isBottom && 'hdl-scrollbar-shadow-bottom',
+        flexColumn && 'hdl-scrollbar-column',
       )}
       onScroll={handleScroll}
       onUpdate={handleOnUpdate}
