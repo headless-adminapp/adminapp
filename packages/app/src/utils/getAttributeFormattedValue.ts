@@ -34,7 +34,7 @@ export function getAttributeLookupsFormattedValue(
   value: unknown,
   options?: {
     maxCount?: number;
-  }
+  },
 ) {
   const items = (value as DataLookup<string>[])?.map((v) => v.name);
 
@@ -66,7 +66,7 @@ export function getAttributeAttachmentFormattedValue(value: unknown) {
 export function getAttributeDateFormattedValue(
   attribute: DateAttribute,
   value: unknown,
-  locale: Locale
+  locale: Locale,
 ) {
   if (attribute.format === 'datetime') {
     return dayjs(value as string)
@@ -79,7 +79,7 @@ export function getAttributeDateFormattedValue(
 
 export function getAttributeDateRangeFormattedValue(
   value: unknown,
-  locale: Locale
+  locale: Locale,
 ) {
   if (!value) {
     return '';
@@ -129,18 +129,18 @@ export function getAttributeBooleanFormattedValue(
   value: unknown,
   options?: {
     strings?: AttributeFormattedValueStringsSet;
-  }
+  },
 ) {
   const strings = options?.strings ?? defaultAttributeFormattedValueStrings;
 
   return value
-    ? attribute.trueLabel ?? strings.yes
-    : attribute.falseLabel ?? strings.no;
+    ? (attribute.trueLabel ?? strings.yes)
+    : (attribute.falseLabel ?? strings.no);
 }
 
-function getAttributeChoiceFormattedValue(
+export function getAttributeChoiceFormattedValue(
   attribute: ChoiceAttribute<string | number>,
-  value: unknown
+  value: unknown,
 ) {
   return (
     attribute.options.find((option) => option.value === value) ?? {
@@ -151,7 +151,7 @@ function getAttributeChoiceFormattedValue(
 
 export function getAttributeChoicesFormattedValue(
   attribute: ChoicesAttribute<string | number>,
-  value: unknown
+  value: unknown,
 ) {
   return (value as string[])
     .map((v) => {
@@ -174,7 +174,7 @@ export function getAttributeRegardingFormattedValue(value: unknown) {
 
 export function getAttributeMoneyFormattedValue(
   value: unknown,
-  locale: Locale
+  locale: Locale,
 ) {
   return new Intl.NumberFormat(locale.locale, {
     style: 'currency',
@@ -187,7 +187,7 @@ export function getAttributeMoneyFormattedValue(
 function getAttributeNumberFormattedValue(
   attribute: NumberAttribute,
   value: unknown,
-  locale: Locale
+  locale: Locale,
 ) {
   if (attribute.format === 'duration') {
     return formatDuration(value as number);
@@ -254,7 +254,7 @@ export function getAttributeFormattedValue<A extends Attribute = Attribute>(
   options?: {
     maxCount?: number; // for choices and lookups
     strings?: AttributeFormattedValueStringsSet;
-  }
+  },
 ): string | null {
   if (value === null || value === undefined) {
     return null;

@@ -28,6 +28,7 @@ import { NavMiniCategoryMenu } from './NavMiniCategoryMenu';
 import { NavSubItemComponent } from './NavSubItemComponent';
 import { DrawerType, NavItemInfo, NavSubItemInfo } from './types';
 import { transformNavSections } from './utils';
+import { AccountAvatar } from '../AppHeaderContianer';
 
 const useStyles = makeStyles({
   root: {
@@ -82,7 +83,7 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
       routeResolver,
       isRouteActive,
       pathname,
-    ]
+    ],
   );
 
   const handleNavigation = async (item: NavItemInfo | NavSubItemInfo) => {
@@ -117,6 +118,7 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
               style={{
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'space-between',
                 height: 50,
                 minHeight: 50,
                 paddingInline: 12,
@@ -124,6 +126,7 @@ export const NavigationContainer: FC<NavigationContainerProps> = ({
               }}
             >
               <Hamburger onClick={() => onOpenChange(false)} />
+              <AccountAvatar />
             </div>
           </NavDrawerHeader>
         )}

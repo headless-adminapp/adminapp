@@ -4,6 +4,7 @@ import { PropsWithChildren } from 'react';
 interface SectionControlWrapperProps {
   label: string;
   labelPosition?: 'top' | 'left';
+  description?: string;
   labelHidden?: boolean;
   required?: boolean;
   isError?: boolean;
@@ -12,16 +13,23 @@ interface SectionControlWrapperProps {
 }
 
 export function SectionControlWrapper(
-  props: PropsWithChildren<SectionControlWrapperProps>
+  props: PropsWithChildren<SectionControlWrapperProps>,
 ) {
   const gridTemplateRows = !props.grow
     ? undefined
     : props.labelPosition === 'top' && !props.labelHidden
-    ? 'auto 1fr auto auto'
-    : '1fr auto auto auto';
+      ? 'auto 1fr auto auto'
+      : '1fr auto auto auto';
   return (
     <Field
-      label={props.labelHidden ? undefined : props.label}
+      label={
+        props.labelHidden
+          ? undefined
+          : {
+              children: props.label,
+              title: props.description,
+            }
+      }
       orientation={props.labelPosition === 'top' ? 'vertical' : 'horizontal'}
       required={props.labelHidden ? undefined : props.required}
       validationState={props.isError ? 'error' : undefined}

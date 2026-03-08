@@ -174,6 +174,7 @@ export function SectionContainer<
                         label={label}
                         labelHidden={labelHidden}
                         labelPosition={isMobile ? 'top' : section.labelPosition}
+                        description={attribute.description}
                         required={required}
                         isError={isError}
                         errorMessage={errorMessage}

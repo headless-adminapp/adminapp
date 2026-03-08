@@ -119,13 +119,13 @@ const NavTitle: FC = () => {
   );
 };
 
-const NavActions: FC = () => {
+export const AccountAvatar: FC = () => {
   const { appExperience: app } = useAppContext();
+  const { language } = useLocale();
   const authSession = useAuthSession();
   const isSkipAuthCheck = useIsSkipAuthCheck();
   const logout = useLogout();
   const strings = useAppStrings();
-  const { language } = useLocale();
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 
   const initials = useMemo(() => {
@@ -137,10 +137,111 @@ const NavActions: FC = () => {
       .join('');
   }, [authSession?.fullName]);
 
-  const quickActionItems = useItemsWithKey(app.quickActionItems);
   const accountMenuItems = useItemsWithKey(app.accountMenuItems);
   const router = useRouter();
   const basePath = useBasePath();
+
+  if (isSkipAuthCheck && !accountMenuItems?.length) {
+    // if auth check is skipped and there is no account menu item, we don't show the avatar and menu
+    return null;
+  }
+
+  const content = (
+    <Avatar
+      initials={initials}
+      color="neutral"
+      style={{ cursor: 'pointer' }}
+      image={{
+        src: authSession?.profilePicture,
+      }}
+    />
+  );
+
+  if (!accountMenuItems?.length) {
+    return content;
+  }
+
+  return (
+    <Popover
+      open={accountMenuOpen}
+      onOpenChange={(e, data) => setAccountMenuOpen(data.open)}
+    >
+      <PopoverTrigger disableButtonEnhancement>{content}</PopoverTrigger>
+      <PopoverSurface tabIndex={-1} style={{ padding: 0 }}>
+        {!isSkipAuthCheck && (
+          <div
+            style={{
+              display: 'flex',
+              gap: 8,
+              padding: 8,
+              overflow: 'hidden',
+              width: 200,
+            }}
+          >
+            <div>
+              <Avatar
+                initials={initials}
+                color="neutral"
+                image={{
+                  src: authSession?.profilePicture,
+                }}
+              />
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+                flex: 1,
+              }}
+            >
+              <Caption1Strong>{authSession?.fullName}</Caption1Strong>
+              <Caption1
+                style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
+              >
+                {authSession?.email}
+              </Caption1>
+            </div>
+          </div>
+        )}
+        {!isSkipAuthCheck && <MenuDivider style={{ marginInline: 0 }} />}
+        <MenuList style={{ width: 200, marginBottom: 4 }}>
+          {accountMenuItems?.map((item) => {
+            const Icon = item.icon;
+
+            return (
+              <MenuItem
+                key={item.__key}
+                icon={<Icon size="inherit" />}
+                onClick={async () => {
+                  setAccountMenuOpen(false);
+                  if (item.onClick) {
+                    item.onClick();
+                  } else if (item.link) {
+                    await router.push(basePath + item.link);
+                  }
+                }}
+              >
+                {item.localizedLabel?.[language] ?? item.label}
+              </MenuItem>
+            );
+          })}
+          {!isSkipAuthCheck && (
+            <MenuItem icon={<Icons.SignOut />} onClick={() => logout()}>
+              {strings.logout}
+            </MenuItem>
+          )}
+        </MenuList>
+      </PopoverSurface>
+    </Popover>
+  );
+};
+
+const NavActions: FC = () => {
+  const { appExperience: app } = useAppContext();
+  const { language } = useLocale();
+
+  const quickActionItems = useItemsWithKey(app.quickActionItems);
 
   return (
     <div
@@ -167,89 +268,7 @@ const NavActions: FC = () => {
           );
         })}
       </div>
-      {(!isSkipAuthCheck || !!accountMenuItems?.length) && (
-        <Popover
-          open={accountMenuOpen}
-          onOpenChange={(e, data) => setAccountMenuOpen(data.open)}
-        >
-          <PopoverTrigger disableButtonEnhancement>
-            <Avatar
-              initials={initials}
-              color="neutral"
-              style={{ cursor: 'pointer' }}
-              image={{
-                src: authSession?.profilePicture,
-              }}
-            />
-          </PopoverTrigger>
-          <PopoverSurface tabIndex={-1} style={{ padding: 0 }}>
-            {!isSkipAuthCheck && (
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 8,
-                  padding: 8,
-                  overflow: 'hidden',
-                  width: 200,
-                }}
-              >
-                <div>
-                  <Avatar
-                    initials={initials}
-                    color="neutral"
-                    image={{
-                      src: authSession?.profilePicture,
-                    }}
-                  />
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    overflow: 'hidden',
-                    flex: 1,
-                  }}
-                >
-                  <Caption1Strong>{authSession?.fullName}</Caption1Strong>
-                  <Caption1
-                    style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
-                  >
-                    {authSession?.email}
-                  </Caption1>
-                </div>
-              </div>
-            )}
-            {!isSkipAuthCheck && <MenuDivider style={{ marginInline: 0 }} />}
-            <MenuList style={{ width: 200, marginBottom: 4 }}>
-              {accountMenuItems?.map((item) => {
-                const Icon = item.icon;
-
-                return (
-                  <MenuItem
-                    key={item.__key}
-                    icon={<Icon size="inherit" />}
-                    onClick={async () => {
-                      setAccountMenuOpen(false);
-                      if (item.onClick) {
-                        item.onClick();
-                      } else if (item.link) {
-                        await router.push(basePath + item.link);
-                      }
-                    }}
-                  >
-                    {item.localizedLabel?.[language] ?? item.label}
-                  </MenuItem>
-                );
-              })}
-              {!isSkipAuthCheck && (
-                <MenuItem icon={<Icons.SignOut />} onClick={() => logout()}>
-                  {strings.logout}
-                </MenuItem>
-              )}
-            </MenuList>
-          </PopoverSurface>
-        </Popover>
-      )}
+      <AccountAvatar />
     </div>
   );
 };
@@ -301,7 +320,7 @@ const AppDesktopHeader: FC<AppHeaderContainerProps> = ({ onNavToggle }) => {
 const AppMobileHeader: FC<AppHeaderContainerProps> = ({ onNavToggle }) => {
   const showCustomHeader = useContextSelector(
     HeaderContext,
-    (state) => state.showBackButton.length > 0
+    (state) => state.showBackButton.length > 0,
   );
   const { appExperience: app } = useAppContext();
   const headerTitle = useHeaderValue<ReactNode>('title');
