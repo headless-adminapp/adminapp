@@ -11,6 +11,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { FilterQuery, Types } from 'mongoose';
 
+import { MongoSchemaStore } from './MongoSchemaStore';
 import { MongoRequiredSchemaAttributes } from './types';
 
 dayjs.extend(utc);
@@ -723,10 +724,18 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
   },
 };
 
-export function transformCondition(
+export interface ConditionTransformerOptionsWithSchemaStore<
+  SA extends MongoRequiredSchemaAttributes = MongoRequiredSchemaAttributes,
+> extends ConditionTransformerOptions {
+  schemaStore: MongoSchemaStore<SA>;
+}
+
+export function transformCondition<
+  SA extends MongoRequiredSchemaAttributes = MongoRequiredSchemaAttributes,
+>(
   condition: Condition,
   attribute: Attribute,
-  options: ConditionTransformerOptions,
+  options: ConditionTransformerOptionsWithSchemaStore<SA>,
 ): { [key: string]: any } | null {
   const transformer = conditionTransformers[condition.operator];
 
@@ -738,13 +747,40 @@ export function transformCondition(
     throw new Error(`Attribute not found: ${condition.field}`);
   }
 
+  if (condition.extendedKey) {
+    if (attribute.type !== 'lookup') {
+      throw new Error(
+        `Extended conditions are only supported for lookup attributes. Attribute "${condition.field}" is of type "${attribute.type}"`,
+      );
+    }
+
+    const relatedSchema = options.schemaStore.getSchema(attribute.entity);
+
+    const relatedAttribute = relatedSchema.attributes[condition.extendedKey];
+
+    if (!relatedAttribute) {
+      throw new Error(
+        `Related attribute not found: ${condition.extendedKey} in entity ${attribute.entity}`,
+      );
+    }
+
+    return transformer(
+      {
+        ...condition,
+        field: `@expand.${condition.field}.${condition.extendedKey}`,
+      },
+      relatedAttribute,
+      options,
+    );
+  }
+
   return transformer(condition, attribute, options);
 }
 
 export function transformFilter<SA extends MongoRequiredSchemaAttributes>(
   filter: Filter | null | undefined,
   schema: Schema<SA>,
-  options: ConditionTransformerOptions,
+  options: ConditionTransformerOptionsWithSchemaStore<SA>,
 ): FilterQuery<any> | null {
   if (!filter) {
     return null;

@@ -10,6 +10,7 @@ import {
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { transformCondition, transformFilter } from './conditions';
+import { MongoSchemaStore } from './MongoSchemaStore';
 
 const PANAMA_TIMEZONE = 'America/Panama'; // NO DST
 const UTC_TIMEZONE = 'UTC';
@@ -348,6 +349,8 @@ const dates = {
   } as TimezoneDates,
 };
 
+const schemaStore = new MongoSchemaStore();
+
 const attributes = defineSchemaAttributes({
   integer: {
     type: 'number',
@@ -432,6 +435,11 @@ const attributes = defineSchemaAttributes({
   },
 });
 
+const defaultOptions = {
+  timezone,
+  schemaStore,
+};
+
 describe('conditions', () => {
   describe.each([['lt'], ['lte'], ['gt'], ['gte']])('%s', (operator) => {
     it('number', () => {
@@ -442,6 +450,7 @@ describe('conditions', () => {
       };
       const result = transformCondition(condition, attributes.integer, {
         timezone,
+        schemaStore,
       });
       expect(result).toEqual({
         age: {
@@ -460,6 +469,7 @@ describe('conditions', () => {
       };
       const result = transformCondition(condition, attributes.string, {
         timezone,
+        schemaStore,
       });
       expect(result).toEqual({
         name: {
@@ -477,9 +487,11 @@ describe('conditions', () => {
         operator: 'not-like',
         value: 'John',
       };
-      const result = transformCondition(condition, attributes.string, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.string,
+        defaultOptions,
+      );
       expect(result).toEqual({
         name: {
           $regex: '^((?!John).)*$',
@@ -496,9 +508,11 @@ describe('conditions', () => {
         operator: 'begins-with',
         value: 'John',
       };
-      const result = transformCondition(condition, attributes.string, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.string,
+        defaultOptions,
+      );
       expect(result).toEqual({
         name: {
           $regex: '^John',
@@ -515,9 +529,11 @@ describe('conditions', () => {
         operator: 'ends-with',
         value: 'John',
       };
-      const result = transformCondition(condition, attributes.string, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.string,
+        defaultOptions,
+      );
       expect(result).toEqual({
         name: {
           $regex: 'John$',
@@ -534,9 +550,11 @@ describe('conditions', () => {
         operator: 'not-begin-with',
         value: 'John',
       };
-      const result = transformCondition(condition, attributes.string, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.string,
+        defaultOptions,
+      );
       expect(result).toEqual({
         name: {
           $regex: '^((?!^John).)*$',
@@ -553,9 +571,11 @@ describe('conditions', () => {
         operator: 'not-end-with',
         value: 'John',
       };
-      const result = transformCondition(condition, attributes.string, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.string,
+        defaultOptions,
+      );
       expect(result).toEqual({
         name: {
           $regex: '^((?!John$).)*$',
@@ -796,6 +816,7 @@ describe('conditions', () => {
           value,
         };
         const result = transformCondition(condition, attributes.date, {
+          ...defaultOptions,
           timezone,
         });
         expect(result).toEqual({
@@ -810,6 +831,7 @@ describe('conditions', () => {
           value: value,
         };
         const result = transformCondition(condition, attributes.datetime, {
+          ...defaultOptions,
           timezone,
         });
         expect(result).toEqual({
@@ -826,9 +848,11 @@ describe('conditions', () => {
         operator: 'eq',
         value: 'John',
       };
-      const result = transformCondition(condition, attributes.string, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.string,
+        defaultOptions,
+      );
       expect(result).toEqual({
         name: {
           $regex: '^John$',
@@ -847,9 +871,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.lookupObjectId,
-          {
-            timezone,
-          }
+          defaultOptions,
         );
         expect(result?.parent.toString()).toBe('0123456789abcdef01234567');
       });
@@ -859,9 +881,11 @@ describe('conditions', () => {
           operator: 'eq',
           value: 'abc',
         };
-        const result = transformCondition(condition, attributes.lookupString, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.lookupString,
+          defaultOptions,
+        );
         expect(result).toEqual({
           parent: {
             $eq: 'abc',
@@ -874,9 +898,11 @@ describe('conditions', () => {
           operator: 'eq',
           value: 123,
         };
-        const result = transformCondition(condition, attributes.lookupString, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.lookupString,
+          defaultOptions,
+        );
         expect(result).toEqual({
           parent: {
             $eq: 123,
@@ -893,9 +919,11 @@ describe('conditions', () => {
         operator: 'ne',
         value: 'John',
       };
-      const result = transformCondition(condition, attributes.string, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.string,
+        defaultOptions,
+      );
       expect(result).toEqual({
         name: {
           $regex: '^((?!^John$).)*$',
@@ -914,9 +942,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.lookupObjectId,
-          {
-            timezone,
-          }
+          defaultOptions,
         );
         expect(result?.parent.$ne.toString()).toBe('0123456789abcdef01234567');
       });
@@ -926,9 +952,11 @@ describe('conditions', () => {
           operator: 'ne',
           value: 'abc',
         };
-        const result = transformCondition(condition, attributes.lookupString, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.lookupString,
+          defaultOptions,
+        );
         expect(result).toEqual({
           parent: {
             $ne: 'abc',
@@ -941,9 +969,11 @@ describe('conditions', () => {
           operator: 'ne',
           value: 123,
         };
-        const result = transformCondition(condition, attributes.lookupString, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.lookupString,
+          defaultOptions,
+        );
         expect(result).toEqual({
           parent: {
             $ne: 123,
@@ -962,9 +992,11 @@ describe('conditions', () => {
           value: ['2025-01-01', '2025-01-01'],
         };
 
-        const result = transformCondition(condition, attributes.date, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.date,
+          defaultOptions,
+        );
 
         expect(result).toEqual({
           createdAt: {
@@ -983,9 +1015,11 @@ describe('conditions', () => {
           value: ['2025-01-01', '2025-01-01'],
         };
 
-        const result = transformCondition(condition, attributes.datetime, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.datetime,
+          defaultOptions,
+        );
 
         expect(result).toEqual({
           createdAt: {
@@ -1002,9 +1036,11 @@ describe('conditions', () => {
           value: ['2025-01-01T04:00:00.000Z', '2025-01-01T06:00:00.000Z'],
         };
 
-        const result = transformCondition(condition, attributes.datetime, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.datetime,
+          defaultOptions,
+        );
 
         expect(result).toEqual({
           createdAt: {
@@ -1022,9 +1058,11 @@ describe('conditions', () => {
         value: [4, 9],
       };
 
-      const result = transformCondition(condition, attributes.number, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.number,
+        defaultOptions,
+      );
 
       expect(result).toEqual({
         age: {
@@ -1041,9 +1079,11 @@ describe('conditions', () => {
         value: [450, 950],
       };
 
-      const result = transformCondition(condition, attributes.money, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.money,
+        defaultOptions,
+      );
 
       expect(result).toEqual({
         age: {
@@ -1059,9 +1099,11 @@ describe('conditions', () => {
         operator: 'between',
         value: ['John', 'Doe'],
       };
-      const result = transformCondition(condition, attributes.string, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.string,
+        defaultOptions,
+      );
       expect(result).toBeNull();
     });
   });
@@ -1072,9 +1114,11 @@ describe('conditions', () => {
       operator: 'not-null',
       value: null,
     };
-    const result = transformCondition(condition, attributes.string, {
-      timezone,
-    });
+    const result = transformCondition(
+      condition,
+      attributes.string,
+      defaultOptions,
+    );
     expect(result).toEqual({
       name: {
         $ne: null,
@@ -1088,9 +1132,11 @@ describe('conditions', () => {
       operator: 'null',
       value: null,
     };
-    const result = transformCondition(condition, attributes.string, {
-      timezone,
-    });
+    const result = transformCondition(
+      condition,
+      attributes.string,
+      defaultOptions,
+    );
     expect(result).toEqual({
       $or: [
         {
@@ -1115,9 +1161,7 @@ describe('conditions', () => {
         value: 'John',
       };
       expect(() => {
-        transformCondition(condition, attributes.string, {
-          timezone,
-        });
+        transformCondition(condition, attributes.string, defaultOptions);
       }).toThrow('Value for "in" operator must be an array');
     });
 
@@ -1128,9 +1172,7 @@ describe('conditions', () => {
         value: [],
       };
       expect(() => {
-        transformCondition(condition, attributes.string, {
-          timezone,
-        });
+        transformCondition(condition, attributes.string, defaultOptions);
       }).toThrow('Value for "in" operator cannot be an empty array');
     });
 
@@ -1142,9 +1184,11 @@ describe('conditions', () => {
           value: [true, false],
         };
 
-        const result = transformCondition(condition, attributes.boolean, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.boolean,
+          defaultOptions,
+        );
 
         expect(result).toEqual({
           $or: [
@@ -1173,9 +1217,7 @@ describe('conditions', () => {
           value: [1],
         };
         expect(() => {
-          transformCondition(condition, attributes.boolean, {
-            timezone,
-          });
+          transformCondition(condition, attributes.boolean, defaultOptions);
         }).toThrow('Invalid value for boolean type');
       });
     });
@@ -1186,9 +1228,11 @@ describe('conditions', () => {
         operator: 'in',
         value: ['active', 'inactive'],
       };
-      const result = transformCondition(condition, attributes.choice, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.choice,
+        defaultOptions,
+      );
       expect(result).toEqual({
         status: {
           $in: ['active', 'inactive'],
@@ -1202,9 +1246,11 @@ describe('conditions', () => {
         operator: 'in',
         value: ['active', 'inactive'],
       };
-      const result = transformCondition(condition, attributes.choices, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.choices,
+        defaultOptions,
+      );
       expect(result).toEqual({
         status: {
           $in: ['active', 'inactive'],
@@ -1219,9 +1265,11 @@ describe('conditions', () => {
           operator: 'in',
           value: ['0123456789abcdef01234567', 'abcdef0123456789abcdef01'],
         };
-        const result = transformCondition(condition, attributes.idObjectId, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.idObjectId,
+          defaultOptions,
+        );
         expect(result?.parent.$in.map((x: any) => x.toString())).toEqual([
           '0123456789abcdef01234567',
           'abcdef0123456789abcdef01',
@@ -1234,9 +1282,11 @@ describe('conditions', () => {
           operator: 'in',
           value: ['abc', 'def'],
         };
-        const result = transformCondition(condition, attributes.idString, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.idString,
+          defaultOptions,
+        );
         expect(result).toEqual({
           parent: {
             $in: ['abc', 'def'],
@@ -1249,9 +1299,11 @@ describe('conditions', () => {
           operator: 'in',
           value: [123, 456],
         };
-        const result = transformCondition(condition, attributes.idNumber, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.idNumber,
+          defaultOptions,
+        );
         expect(result).toEqual({
           parent: {
             $in: [123, 456],
@@ -1270,9 +1322,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.lookupObjectId,
-          {
-            timezone,
-          }
+          defaultOptions,
         );
         expect(result?.parent.$in.map((x: any) => x.toString())).toEqual([
           '0123456789abcdef01234567',
@@ -1286,9 +1336,11 @@ describe('conditions', () => {
           operator: 'in',
           value: ['abc', 'def'],
         };
-        const result = transformCondition(condition, attributes.lookupString, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.lookupString,
+          defaultOptions,
+        );
         expect(result).toEqual({
           parent: {
             $in: ['abc', 'def'],
@@ -1302,9 +1354,11 @@ describe('conditions', () => {
           operator: 'in',
           value: [123, 456],
         };
-        const result = transformCondition(condition, attributes.lookupNumber, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.lookupNumber,
+          defaultOptions,
+        );
         expect(result).toEqual({
           parent: {
             $in: [123, 456],
@@ -1319,9 +1373,11 @@ describe('conditions', () => {
         operator: 'in',
         value: ['John', 'Doe'],
       };
-      const result = transformCondition(condition, attributes.string, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.string,
+        defaultOptions,
+      );
       expect(result).toEqual({
         name: {
           $in: ['John', 'Doe'],
@@ -1337,9 +1393,7 @@ describe('conditions', () => {
       };
 
       expect(() => {
-        transformCondition(condition, attributes.date, {
-          timezone,
-        });
+        transformCondition(condition, attributes.date, defaultOptions);
       }).toThrow('Invalid type');
     });
   });
@@ -1352,9 +1406,7 @@ describe('conditions', () => {
         value: 'John',
       };
       expect(() => {
-        transformCondition(condition, attributes.string, {
-          timezone,
-        });
+        transformCondition(condition, attributes.string, defaultOptions);
       }).toThrow('Value for "not-in" operator must be an array');
     });
 
@@ -1365,9 +1417,7 @@ describe('conditions', () => {
         value: [],
       };
       expect(() => {
-        transformCondition(condition, attributes.string, {
-          timezone,
-        });
+        transformCondition(condition, attributes.string, defaultOptions);
       }).toThrow('Value for "not-in" operator cannot be an empty array');
     });
 
@@ -1379,9 +1429,11 @@ describe('conditions', () => {
           value: [true],
         };
 
-        const result = transformCondition(condition, attributes.boolean, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.boolean,
+          defaultOptions,
+        );
         expect(result).toEqual({
           $and: [
             {
@@ -1407,9 +1459,11 @@ describe('conditions', () => {
           value: [false],
         };
 
-        const result = transformCondition(condition, attributes.boolean, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.boolean,
+          defaultOptions,
+        );
 
         expect(result).toEqual({
           $and: [
@@ -1427,9 +1481,11 @@ describe('conditions', () => {
           value: [true, false],
         };
 
-        const result = transformCondition(condition, attributes.boolean, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.boolean,
+          defaultOptions,
+        );
 
         expect(result).toEqual({
           $and: [
@@ -1458,9 +1514,7 @@ describe('conditions', () => {
           value: [1],
         };
         expect(() => {
-          transformCondition(condition, attributes.boolean, {
-            timezone,
-          });
+          transformCondition(condition, attributes.boolean, defaultOptions);
         }).toThrow('Invalid value for boolean type');
       });
     });
@@ -1471,9 +1525,11 @@ describe('conditions', () => {
         operator: 'not-in',
         value: ['active', 'inactive'],
       };
-      const result = transformCondition(condition, attributes.choice, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.choice,
+        defaultOptions,
+      );
       expect(result).toEqual({
         status: {
           $nin: ['active', 'inactive'],
@@ -1487,9 +1543,11 @@ describe('conditions', () => {
         operator: 'not-in',
         value: ['active', 'inactive'],
       };
-      const result = transformCondition(condition, attributes.choices, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.choices,
+        defaultOptions,
+      );
       expect(result).toEqual({
         status: {
           $nin: ['active', 'inactive'],
@@ -1504,9 +1562,11 @@ describe('conditions', () => {
           operator: 'not-in',
           value: ['0123456789abcdef01234567', 'abcdef0123456789abcdef01'],
         };
-        const result = transformCondition(condition, attributes.idObjectId, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.idObjectId,
+          defaultOptions,
+        );
         expect(result?.parent.$nin.map((x: any) => x.toString())).toEqual([
           '0123456789abcdef01234567',
           'abcdef0123456789abcdef01',
@@ -1519,9 +1579,11 @@ describe('conditions', () => {
           operator: 'not-in',
           value: ['abc', 'def'],
         };
-        const result = transformCondition(condition, attributes.idString, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.idString,
+          defaultOptions,
+        );
         expect(result).toEqual({
           parent: {
             $nin: ['abc', 'def'],
@@ -1534,9 +1596,11 @@ describe('conditions', () => {
           operator: 'not-in',
           value: [123, 456],
         };
-        const result = transformCondition(condition, attributes.idNumber, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.idNumber,
+          defaultOptions,
+        );
         expect(result).toEqual({
           parent: {
             $nin: [123, 456],
@@ -1555,9 +1619,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.lookupObjectId,
-          {
-            timezone,
-          }
+          defaultOptions,
         );
         expect(result?.parent.$nin.map((x: any) => x.toString())).toEqual([
           '0123456789abcdef01234567',
@@ -1571,9 +1633,11 @@ describe('conditions', () => {
           operator: 'not-in',
           value: ['abc', 'def'],
         };
-        const result = transformCondition(condition, attributes.lookupString, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.lookupString,
+          defaultOptions,
+        );
         expect(result).toEqual({
           parent: {
             $nin: ['abc', 'def'],
@@ -1587,9 +1651,11 @@ describe('conditions', () => {
           operator: 'not-in',
           value: [123, 456],
         };
-        const result = transformCondition(condition, attributes.lookupNumber, {
-          timezone,
-        });
+        const result = transformCondition(
+          condition,
+          attributes.lookupNumber,
+          defaultOptions,
+        );
         expect(result).toEqual({
           parent: {
             $nin: [123, 456],
@@ -1604,9 +1670,11 @@ describe('conditions', () => {
         operator: 'not-in',
         value: ['John', 'Doe'],
       };
-      const result = transformCondition(condition, attributes.string, {
-        timezone,
-      });
+      const result = transformCondition(
+        condition,
+        attributes.string,
+        defaultOptions,
+      );
       expect(result).toEqual({
         name: {
           $nin: ['John', 'Doe'],
@@ -1622,9 +1690,7 @@ describe('conditions', () => {
       };
 
       expect(() => {
-        transformCondition(condition, attributes.date, {
-          timezone,
-        });
+        transformCondition(condition, attributes.date, defaultOptions);
       }).toThrow('Invalid type');
     });
   });
@@ -1638,9 +1704,11 @@ describe('transformCondition', () => {
       value: 'John',
     } as any;
 
-    const result = transformCondition(condition, attributes.string, {
-      timezone,
-    });
+    const result = transformCondition(
+      condition,
+      attributes.string,
+      defaultOptions,
+    );
     expect(result).toBeNull();
   });
 
@@ -1651,9 +1719,7 @@ describe('transformCondition', () => {
       value: 'John',
     } as any;
     expect(() => {
-      transformCondition(condition, null as any, {
-        timezone,
-      });
+      transformCondition(condition, null as any, defaultOptions);
     }).toThrow('Attribute not found: name');
   });
 });
@@ -1664,7 +1730,7 @@ describe('transformFilter', () => {
   } as any) as any;
 
   it('should return null for nullish filter', () => {
-    const result = transformFilter(null, schema, { timezone });
+    const result = transformFilter(null, schema, defaultOptions);
     expect(result).toBeNull();
   });
 
@@ -1672,7 +1738,7 @@ describe('transformFilter', () => {
     const result = transformFilter(
       { type: 'and', conditions: [] } as any,
       schema,
-      { timezone }
+      defaultOptions,
     );
     expect(result).toBeNull();
   });
@@ -1710,7 +1776,7 @@ describe('transformFilter', () => {
         },
       ],
     };
-    const result = transformFilter(filter, schema, { timezone });
+    const result = transformFilter(filter, schema, defaultOptions);
     expect(result).toEqual({
       $and: [
         {

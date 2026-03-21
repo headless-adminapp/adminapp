@@ -147,6 +147,7 @@ export class MongoServerSdk<
       schema,
       {
         timezone: this.timezone,
+        schemaStore: this.options.schemaStore,
       },
     );
 
@@ -167,6 +168,7 @@ export class MongoServerSdk<
       schema,
       {
         timezone: this.timezone,
+        schemaStore: this.options.schemaStore,
       },
     );
 
@@ -396,47 +398,55 @@ export class MongoServerSdk<
 
     const basePipelines: PipelineStage[] = [];
 
-    const orgFilter = transformFilter(
-      this.options.dataFilter?.getOrganizationFilter({
-        logicalName,
-        dbContext: {
-          session: this.session,
-        } as any,
-        sdkContext: this.options.context,
-      }),
-      schema,
-      {
-        timezone: this.timezone,
-      },
-    );
+    const orgFilter = this.options.dataFilter?.getOrganizationFilter({
+      logicalName,
+      dbContext: {
+        session: this.session,
+      } as any,
+      sdkContext: this.options.context,
+    });
 
-    if (orgFilter) {
+    const transformedOrgFilter = transformFilter(orgFilter, schema, {
+      timezone: this.timezone,
+      schemaStore: this.options.schemaStore,
+    });
+
+    if (transformedOrgFilter) {
       basePipelines.push({
-        $match: orgFilter,
+        $match: transformedOrgFilter,
       });
     }
 
-    const permissionFilter = transformFilter(
-      this.options.dataFilter?.getPermissionFilter({
-        logicalName,
-        dbContext: {
-          session: this.session,
-        } as any,
-        sdkContext: this.options.context,
-      }),
+    const permissionFilter = this.options.dataFilter?.getPermissionFilter({
+      logicalName,
+      dbContext: {
+        session: this.session,
+      } as any,
+      sdkContext: this.options.context,
+    });
+
+    const transformedPermissionFilter = transformFilter(
+      permissionFilter,
       schema,
       {
         timezone: this.timezone,
+        schemaStore: this.options.schemaStore,
       },
     );
 
-    if (permissionFilter) {
+    if (transformedPermissionFilter) {
       basePipelines.push({
-        $match: permissionFilter,
+        $match: transformedPermissionFilter,
       });
     }
 
     const lookupPipelines: PipelineStage[] = [];
+
+    const extendedKeys = extractExtendedKeyFromFilters(
+      permissionFilter,
+      orgFilter,
+      params.filter,
+    );
 
     Object.entries(schema.attributes).forEach(([key, attribute]) => {
       if (attribute.type === 'lookup') {
@@ -446,7 +456,8 @@ export class MongoServerSdk<
         if (
           params?.columns?.includes(key) ||
           params?.expand?.[key]?.length ||
-          (!!params?.search && attribute.searchable)
+          (!!params?.search && attribute.searchable) ||
+          extendedKeys.includes(key)
         ) {
           const lookupSchema = this.options.schemaStore.getSchema(
             attribute.entity,
@@ -494,6 +505,7 @@ export class MongoServerSdk<
     if (params?.filter) {
       const transformedFilter = transformFilter(params.filter, schema, {
         timezone: this.timezone,
+        schemaStore: this.options.schemaStore,
       });
       if (transformedFilter) {
         basePipelines.push({
@@ -668,6 +680,7 @@ export class MongoServerSdk<
       schema,
       {
         timezone: this.timezone,
+        schemaStore: this.options.schemaStore,
       },
     );
 
@@ -686,6 +699,7 @@ export class MongoServerSdk<
       schema,
       {
         timezone: this.timezone,
+        schemaStore: this.options.schemaStore,
       },
     );
 
@@ -1042,6 +1056,7 @@ export class MongoServerSdk<
       schema,
       {
         timezone: this.timezone,
+        schemaStore: this.options.schemaStore,
       },
     );
 
@@ -1062,6 +1077,7 @@ export class MongoServerSdk<
       schema,
       {
         timezone: this.timezone,
+        schemaStore: this.options.schemaStore,
       },
     );
 
@@ -1103,20 +1119,8 @@ export class MongoServerSdk<
       extractExtendedKeyFromValue(key, value);
     });
 
-    function extractExtendedKeyFromFilter(filter: Filter) {
-      filter?.conditions?.forEach((condition) => {
-        if (condition.extendedKey) {
-          set.add(condition.field);
-        }
-      });
-
-      filter.filters?.forEach((filter) => {
-        extractExtendedKeyFromFilter(filter);
-      });
-    }
-
     if (query.filter) {
-      extractExtendedKeyFromFilter(query.filter);
+      extractExtendedKeyFromFilters(query.filter).forEach((x) => set.add(x));
     }
 
     Object.entries(schema.attributes).forEach(([key, attribute]) => {
@@ -1149,8 +1153,9 @@ export class MongoServerSdk<
     basePipelines.push(...lookupPipelines);
 
     if (query.filter) {
-      const transformedFilter = transformFilter(query.filter, schema, {
+      const transformedFilter = transformFilter<SA>(query.filter, schema, {
         timezone: this.timezone,
+        schemaStore: this.options.schemaStore,
       });
       if (transformedFilter) {
         basePipelines.push({
@@ -1263,4 +1268,30 @@ export abstract class AutoNumberProviderBase<
   abstract resolveAutoNumber<T extends string | number = string>(
     params: ResovleAutoNumberParams,
   ): Promise<T>;
+}
+
+function extractExtendedKeyFromFilters(
+  ...filters: Array<Filter | null | undefined>
+): string[] {
+  const set = new Set<string>();
+
+  for (const filter of filters) {
+    if (!filter) {
+      continue;
+    }
+
+    filter?.conditions?.forEach((condition) => {
+      if (condition.extendedKey) {
+        set.add(condition.field);
+      }
+    });
+
+    if (filter.filters?.length) {
+      extractExtendedKeyFromFilters(...filter.filters).forEach((x) =>
+        set.add(x),
+      );
+    }
+  }
+
+  return Array.from(set);
 }
