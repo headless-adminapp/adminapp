@@ -157,10 +157,6 @@ export const AccountAvatar: FC = () => {
     />
   );
 
-  if (!accountMenuItems?.length) {
-    return content;
-  }
-
   return (
     <Popover
       open={accountMenuOpen}
