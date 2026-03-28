@@ -1,4 +1,4 @@
-import { tokens } from '@fluentui/react-components';
+import { mergeClasses, tokens } from '@fluentui/react-components';
 import { DatePicker } from '@fluentui/react-datepicker-compat';
 import { TimePicker } from '@fluentui/react-timepicker-compat';
 import { useLocale } from '@headless-adminapp/app/locale';
@@ -45,7 +45,7 @@ export function DateTimeControl({
     timezone,
   } = useLocale();
   const [internalTimeValue, setInternalTimeValue] = useState<string>(
-    value ? dayjs(value).tz(timezone).format(timeFormat) : ''
+    value ? dayjs(value).tz(timezone).format(timeFormat) : '',
   );
 
   const internalTimeValueRef = useRef(internalTimeValue);
@@ -114,6 +114,7 @@ export function DateTimeControl({
         formatDate={(date) =>
           date ? dayjs(date).tz(timezone).format(dateFormat) : ''
         }
+        disabled={isReadonly}
         readOnly={isReadonly}
         value={value ? new Date(value) : null}
         onSelectDate={(date) => {
@@ -131,7 +132,7 @@ export function DateTimeControl({
                 .set('minute', dayjs(value).tz(timezone).minute())
                 .set('second', 0)
                 .set('millisecond', 0)
-                .toISOString()
+                .toISOString(),
             );
           }
         }}
@@ -154,8 +155,19 @@ export function DateTimeControl({
           borderRadius: extendedTokens.controlBorderRadius,
           minHeight: extendedTokens.controlMinHeightM,
         }}
+        className={mergeClasses(
+          calendarStyles.root,
+          isReadonly && calendarStyles.readonly,
+        )}
         input={{
-          style: { minWidth: 0, width: '100%' },
+          style: {
+            minWidth: 0,
+            width: '100%',
+            color: tokens.colorNeutralForeground1,
+            cursor: isReadonly ? 'text' : 'pointer',
+          },
+          disabled: false,
+          readOnly: isReadonly,
         }}
         popupSurface={{
           style: {
@@ -171,19 +183,29 @@ export function DateTimeControl({
         style={{
           flex: 1,
           minWidth: 0,
-          pointerEvents: isReadonly ? 'none' : 'auto',
           borderRadius: extendedTokens.controlBorderRadius,
           minHeight: extendedTokens.controlMinHeightM,
         }}
+        className={mergeClasses(
+          timePickerStyles.root,
+          (isReadonly || !value) && timePickerStyles.readonly,
+        )}
         input={{
-          style: { minWidth: 0 },
+          style: {
+            minWidth: 0,
+            color: tokens.colorNeutralForeground1,
+            cursor: 'text',
+          },
+          disabled: false,
+          readOnly: isReadonly || !value,
         }}
+        disabled={isReadonly || !value}
         readOnly={isReadonly || !value}
         // selectedTime={value ? new Date(value) : null}
         selectedTime={
           value
             ? dayjs(
-                dayjs(value).tz(timezone).format('YYYY-MM-DD HH:mm:ss')
+                dayjs(value).tz(timezone).format('YYYY-MM-DD HH:mm:ss'),
               ).toDate()
             : null
         }
@@ -202,21 +224,21 @@ export function DateTimeControl({
                 .set('hour', dayjs(data.selectedTime).tz(timezone, true).hour())
                 .set(
                   'minute',
-                  dayjs(data.selectedTime).tz(timezone, true).minute()
+                  dayjs(data.selectedTime).tz(timezone, true).minute(),
                 )
                 .set('second', 0)
                 .set('millisecond', 0)
-                .toISOString()
+                .toISOString(),
             );
           } else if (data.selectedTimeText) {
             let resolvedTime = resolveTimeValue(
               data.selectedTimeText,
-              timeFormat
+              timeFormat,
             );
 
             if (!resolvedTime) {
               setInternalTimeValue(
-                value ? dayjs(value).format(timeFormat) : ''
+                value ? dayjs(value).format(timeFormat) : '',
               );
               return;
             }
@@ -231,7 +253,7 @@ export function DateTimeControl({
             }
 
             setInternalTimeValue(
-              newValue ? dayjs(newValue).tz(timezone).format(timeFormat) : ''
+              newValue ? dayjs(newValue).tz(timezone).format(timeFormat) : '',
             );
           }
         }}

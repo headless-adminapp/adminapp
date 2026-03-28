@@ -1,5 +1,5 @@
 import { DayOfWeek } from '@fluentui/react-calendar-compat';
-import { makeStyles, tokens } from '@fluentui/react-components';
+import { makeStyles, mergeClasses, tokens } from '@fluentui/react-components';
 import { DatePicker } from '@fluentui/react-datepicker-compat';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { Icons } from '@headless-adminapp/icons';
@@ -16,6 +16,11 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export const useCalendarStyles = makeStyles({
+  root: {
+    border: `${tokens.strokeWidthThin} solid ${tokens.colorTransparentStroke}`,
+    backgroundColor: tokens.colorNeutralBackground3,
+    cursor: 'auto',
+  },
   calendar: {
     width: `calc(${extendedTokens.calendarTableWidth} + 24px)`,
     '& .fui-CalendarDay': {
@@ -52,6 +57,14 @@ export const useCalendarStyles = makeStyles({
       lineHeight: extendedTokens.calendarGoTodayButtonHeight,
     },
   },
+  readonly: {
+    '&::after': {
+      borderBottomColor: tokens.colorNeutralStrokeDisabled,
+    },
+    '&:focus-within:active::after': {
+      borderBottomColor: tokens.colorNeutralStrokeDisabled,
+    },
+  },
 });
 
 export interface DateControlProps extends ControlProps<string> {
@@ -75,6 +88,8 @@ export function DateControl({
   const { datePickerStrings } = useAppStrings();
   const calendarStyles = useCalendarStyles();
 
+  const isReadonly = readOnly || disabled;
+
   if (skeleton) {
     return <SkeletonControl />;
   }
@@ -89,8 +104,8 @@ export function DateControl({
       appearance="filled-darker"
       firstDayOfWeek={DayOfWeek.Monday}
       showMonthPickerAsOverlay
-      disabled={disabled}
-      readOnly={readOnly}
+      disabled={isReadonly}
+      readOnly={isReadonly}
       formatDate={(date) => (date ? dayjs(date).format(dateFormats.short) : '')}
       value={value ? new Date(value) : null}
       onSelectDate={(date) => {
@@ -102,10 +117,18 @@ export function DateControl({
         borderRadius: extendedTokens.controlBorderRadius,
         minHeight: extendedTokens.controlMinHeightM,
       }}
+      className={mergeClasses(
+        calendarStyles.root,
+        isReadonly && calendarStyles.readonly,
+      )}
       input={{
         style: {
           width: '100%',
+          color: tokens.colorNeutralForeground1,
+          cursor: isReadonly ? 'text' : 'pointer',
         },
+        disabled: false,
+        readOnly: isReadonly,
       }}
       popupSurface={{
         style: {

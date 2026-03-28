@@ -1,15 +1,28 @@
-import { makeStyles, tokens } from '@fluentui/react-components';
+import { makeStyles, mergeClasses, tokens } from '@fluentui/react-components';
 import { formatDuration } from '@headless-adminapp/app/utils';
 import { FC, useEffect, useMemo, useState } from 'react';
 
-import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
 import { Combobox } from '../../components/fluent';
 import { Option } from '../../components/fluent/Option';
+import { SkeletonControl } from './SkeletonControl';
+import { ControlProps } from './types';
 
 const useStyles = makeStyles({
+  root: {
+    border: `${tokens.strokeWidthThin} solid ${tokens.colorTransparentStroke}`,
+    backgroundColor: tokens.colorNeutralBackground3,
+    cursor: 'auto',
+  },
   listbox: {
     maxHeight: '300px !important',
+  },
+  readonly: {
+    '&::after': {
+      borderBottomColor: tokens.colorNeutralStrokeDisabled,
+    },
+    '&:focus-within:active::after': {
+      borderBottomColor: tokens.colorNeutralStrokeDisabled,
+    },
   },
 });
 
@@ -124,6 +137,7 @@ export const DurationControl: FC<DurationControlProps> = ({
   const [filterEnabled, setFilterEnabled] = useState(false);
 
   const styles = useStyles();
+  const isReadonly = readOnly || disabled;
 
   useEffect(() => {
     setSearchText(formatDuration(value));
@@ -135,7 +149,7 @@ export const DurationControl: FC<DurationControlProps> = ({
     }
 
     return options.filter((item) =>
-      item.text.toLowerCase().includes(searchText.toLowerCase())
+      item.text.toLowerCase().includes(searchText.toLowerCase()),
     );
   }, [searchText, filterEnabled]);
 
@@ -155,9 +169,19 @@ export const DurationControl: FC<DurationControlProps> = ({
           minWidth: 'unset',
           paddingRight: tokens.spacingHorizontalXS,
         }}
+        className={mergeClasses(styles.root, isReadonly && styles.readonly)}
         listbox={{ className: styles.listbox }}
+        input={{
+          style: {
+            color: tokens.colorNeutralForeground1,
+            cursor: 'text',
+          },
+          disabled: false,
+          readOnly: isReadonly,
+        }}
         autoComplete="off"
-        readOnly={readOnly || disabled}
+        disabled={isReadonly}
+        readOnly={isReadonly}
         value={searchText}
         disableAutoFocus
         selectedOptions={value ? [value.toString()] : []}

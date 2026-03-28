@@ -1,10 +1,26 @@
-import { tokens } from '@fluentui/react-components';
+import { makeStyles, mergeClasses, tokens } from '@fluentui/react-components';
 import { useMemo } from 'react';
 
 import { Dropdown, Option } from '../../components/fluent';
 import { Lookup } from './SelectControl';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
+
+const useStyles = makeStyles({
+  root: {
+    border: `${tokens.strokeWidthThin} solid ${tokens.colorTransparentStroke}`,
+    backgroundColor: tokens.colorNeutralBackground3,
+    cursor: 'auto',
+  },
+  readonly: {
+    '&::after': {
+      borderBottomColor: tokens.colorNeutralStrokeDisabled,
+    },
+    '&:focus-within:active::after': {
+      borderBottomColor: tokens.colorNeutralStrokeDisabled,
+    },
+  },
+});
 
 export interface MultiSelectControlProps<T> extends ControlProps<T[]> {
   options: Lookup<T>[];
@@ -17,26 +33,29 @@ export default function MultiSelectControl<T extends string | number>({
   id,
   name,
   disabled,
+  readOnly,
   onBlur,
   onFocus,
   placeholder,
   skeleton,
 }: Readonly<MultiSelectControlProps<T>>) {
+  const styles = useStyles();
+  const isReadonly = disabled || readOnly;
   const transformedOptions = useMemo(
     () => options.map((x) => ({ label: x.label, value: String(x.value) })),
-    [options]
+    [options],
   );
 
   const handleChange = (value: string[]) => {
     const selectedOptions = options.filter((x) =>
-      value.includes(String(x.value))
+      value.includes(String(x.value)),
     );
     onChange?.(selectedOptions.map((x) => x.value));
   };
 
   const selectedOptions = useMemo(
     () => options.filter((x) => value?.includes(x.value)),
-    [options, value]
+    [options, value],
   );
 
   if (skeleton) {
@@ -57,10 +76,11 @@ export default function MultiSelectControl<T extends string | number>({
       }}
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}
-      disabled={disabled}
+      disabled={isReadonly}
       style={{
         width: '100%',
       }}
+      className={mergeClasses(styles.root, isReadonly && styles.readonly)}
       clearButton={{
         style: {
           marginRight: tokens.spacingHorizontalXS,
@@ -70,6 +90,13 @@ export default function MultiSelectControl<T extends string | number>({
         style: {
           marginRight: -6,
         },
+      }}
+      button={{
+        style: {
+          color: tokens.colorNeutralForeground1,
+          cursor: isReadonly ? 'auto' : 'pointer',
+        },
+        disabled: false,
       }}
     >
       {transformedOptions.map((x) => (

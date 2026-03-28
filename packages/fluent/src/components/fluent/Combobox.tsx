@@ -4,6 +4,7 @@ import {
   ForwardRefComponent,
   makeStyles,
   mergeClasses,
+  tokens,
 } from '@fluentui/react-components';
 import { forwardRef } from 'react';
 
@@ -17,6 +18,14 @@ const useStyles = makeStyles({
   listbox: {
     borderRadius: extendedTokens.paperBorderRadius,
   },
+  readonly: {
+    '&::after': {
+      borderBottomColor: tokens.colorNeutralStrokeDisabled,
+    },
+    '&:focus-within:active::after': {
+      borderBottomColor: tokens.colorNeutralStrokeDisabled,
+    },
+  },
 });
 
 type ExtendedComboboxProps = ComboboxProps;
@@ -27,12 +36,16 @@ export const Combobox: ForwardRefComponent<ExtendedComboboxProps> = forwardRef(
     return (
       <ComboboxInternal
         {...rest}
-        className={mergeClasses(styles.root, className)}
+        className={mergeClasses(
+          styles.root,
+          rest.readOnly && styles.readonly,
+          className,
+        )}
         ref={ref}
         listbox={{
           className: styles.listbox,
         }}
       />
     );
-  }
+  },
 );

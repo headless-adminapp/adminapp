@@ -40,6 +40,7 @@ export function DateRangeControl({
 }: Readonly<DateRangeControlProps>) {
   const [open, setOpen] = useState(false);
   const styles = useStyles();
+  const isReadonly = disabled || readOnly;
 
   const { dateRangeFormats } = useLocale();
 
@@ -55,7 +56,7 @@ export function DateRangeControl({
     <Popover
       open={open}
       onOpenChange={(_, data) => {
-        if (readOnly || disabled) {
+        if (isReadonly) {
           return;
         }
         onFocus?.();
@@ -66,7 +67,7 @@ export function DateRangeControl({
       <PopoverTrigger disableButtonEnhancement>
         <Input
           appearance="filled-darker"
-          readOnly
+          readOnly={isReadonly}
           className={styles.input}
           value={formattedValue}
           onChange={() => {}}

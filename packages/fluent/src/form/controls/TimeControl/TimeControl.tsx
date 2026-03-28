@@ -1,4 +1,4 @@
-import { makeStyles, tokens } from '@fluentui/react-components';
+import { makeStyles, mergeClasses, tokens } from '@fluentui/react-components';
 import { TimePicker } from '@fluentui/react-timepicker-compat';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { Icons } from '@headless-adminapp/icons';
@@ -14,11 +14,24 @@ import { resolveTimeValue } from './utils';
 dayjs.extend(customParseFormat);
 
 export const useTimePickerStyles = makeStyles({
+  root: {
+    border: `${tokens.strokeWidthThin} solid ${tokens.colorTransparentStroke}`,
+    backgroundColor: tokens.colorNeutralBackground3,
+    cursor: 'auto',
+  },
   listbox: {
     borderRadius: extendedTokens.paperBorderRadius,
     '& .fui-Option': {
       borderRadius: extendedTokens.controlBorderRadius,
       padding: `${extendedTokens.optionPaddingVertical} ${tokens.spacingHorizontalS}`,
+    },
+  },
+  readonly: {
+    '&::after': {
+      borderBottomColor: tokens.colorNeutralStrokeDisabled,
+    },
+    '&:focus-within:active::after': {
+      borderBottomColor: tokens.colorNeutralStrokeDisabled,
     },
   },
 });
@@ -42,7 +55,9 @@ export function TimeControl({
     timezone,
   } = useLocale();
   const [internalTimeValue, setInternalTimeValue] = useState<string>(
-    value ? dayjs().startOf('day').add(value, 'minutes').format(timeFormat) : ''
+    value
+      ? dayjs().startOf('day').add(value, 'minutes').format(timeFormat)
+      : '',
   );
 
   const internalTimeValueRef = useRef(internalTimeValue);
@@ -86,16 +101,27 @@ export function TimeControl({
         style={{
           flex: 1,
           minWidth: 0,
-          pointerEvents: isReadonly ? 'none' : 'auto',
           borderRadius: extendedTokens.controlBorderRadius,
           minHeight: extendedTokens.controlMinHeightM,
         }}
+        className={mergeClasses(
+          timePickerStyles.root,
+          isReadonly && timePickerStyles.readonly,
+        )}
+        onClick={(e) => e.preventDefault()}
         placeholder={placeholder}
         id={id}
         name={name}
         input={{
-          style: { minWidth: 0 },
+          style: {
+            minWidth: 0,
+            color: tokens.colorNeutralForeground1,
+            cursor: 'text',
+          },
+          disabled: false,
+          readOnly: isReadonly,
         }}
+        disabled={isReadonly}
         readOnly={isReadonly}
         selectedTime={selectedTime}
         freeform
@@ -103,24 +129,24 @@ export function TimeControl({
         onTimeChange={(_, data) => {
           if (data.selectedTime) {
             onChange?.(
-              dayjs(data.selectedTime).diff(dayjs().startOf('day'), 'minutes')
+              dayjs(data.selectedTime).diff(dayjs().startOf('day'), 'minutes'),
             );
           } else if (data.selectedTimeText) {
             let resolvedTime = resolveTimeValue(
               data.selectedTimeText,
-              timeFormat
+              timeFormat,
             );
 
             if (!resolvedTime) {
               setInternalTimeValue(
-                value ? dayjs(value).format(timeFormat) : ''
+                value ? dayjs(value).format(timeFormat) : '',
               );
               return;
             }
 
             const newValue = dayjs(resolvedTime).diff(
               dayjs().startOf('day'),
-              'minutes'
+              'minutes',
             );
 
             if (newValue !== value) {

@@ -4,6 +4,7 @@ import {
   mergeClasses,
   SpinButton as SpinButtonInternal,
   SpinButtonProps,
+  tokens,
 } from '@fluentui/react-components';
 import { forwardRef } from 'react';
 
@@ -13,6 +14,14 @@ const useStyles = makeStyles({
   root: {
     borderRadius: extendedTokens.controlBorderRadius,
     minHeight: extendedTokens.controlMinHeightM,
+  },
+  readonly: {
+    '&::after': {
+      borderBottomColor: tokens.colorNeutralStrokeDisabled,
+    },
+    '&:focus-within:active::after': {
+      borderBottomColor: tokens.colorNeutralStrokeDisabled,
+    },
   },
 });
 
@@ -24,7 +33,11 @@ export const SpinButton: ForwardRefComponent<ExtendedSpinButtonProps> =
     return (
       <SpinButtonInternal
         {...rest}
-        className={mergeClasses(styles.root, className)}
+        className={mergeClasses(
+          styles.root,
+          rest.readOnly && styles.readonly,
+          className,
+        )}
         ref={ref}
       />
     );

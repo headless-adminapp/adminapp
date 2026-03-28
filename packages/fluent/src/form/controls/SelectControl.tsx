@@ -1,10 +1,31 @@
-import { DropdownProps, tokens } from '@fluentui/react-components';
+import {
+  DropdownProps,
+  makeStyles,
+  mergeClasses,
+  tokens,
+} from '@fluentui/react-components';
 import { useMemo } from 'react';
 
 import { Dropdown } from '../../components/fluent';
 import { Option } from '../../components/fluent/Option';
 import { SkeletonControl } from './SkeletonControl';
 import { ControlProps } from './types';
+
+const useStyles = makeStyles({
+  root: {
+    border: `${tokens.strokeWidthThin} solid ${tokens.colorTransparentStroke}`,
+    backgroundColor: tokens.colorNeutralBackground3,
+    cursor: 'auto',
+  },
+  readonly: {
+    '&::after': {
+      borderBottomColor: tokens.colorNeutralStrokeDisabled,
+    },
+    '&:focus-within:active::after': {
+      borderBottomColor: tokens.colorNeutralStrokeDisabled,
+    },
+  },
+});
 
 export interface Lookup<T = string> {
   label: string;
@@ -24,6 +45,7 @@ export default function SelectControl<T extends string | number>({
   id,
   name,
   disabled,
+  readOnly,
   onBlur,
   onFocus,
   placeholder,
@@ -31,9 +53,11 @@ export default function SelectControl<T extends string | number>({
   clearable,
   size,
 }: Readonly<SelectControlProps<T>>) {
+  const styles = useStyles();
+  const isReadonly = disabled || readOnly;
   const transformedOptions = useMemo(
     () => options.map((x) => ({ label: x.label, value: String(x.value) })),
-    [options]
+    [options],
   );
 
   const handleChange = (value: string) => {
@@ -47,7 +71,7 @@ export default function SelectControl<T extends string | number>({
 
   const selectedOption = useMemo(
     () => options.find((x) => x.value === value),
-    [options, value]
+    [options, value],
   );
 
   if (skeleton) {
@@ -70,11 +94,12 @@ export default function SelectControl<T extends string | number>({
       }}
       onBlur={() => onBlur?.()}
       onFocus={() => onFocus?.()}
+      disabled={isReadonly}
       style={{
-        pointerEvents: disabled ? 'none' : undefined,
         width: '100%',
         minWidth: 'unset',
       }}
+      className={mergeClasses(styles.root, isReadonly && styles.readonly)}
       clearable={clearable}
       clearButton={{
         style: {
@@ -85,6 +110,13 @@ export default function SelectControl<T extends string | number>({
         style: {
           marginRight: -6,
         },
+      }}
+      button={{
+        style: {
+          color: tokens.colorNeutralForeground1,
+          cursor: isReadonly ? 'auto' : 'pointer',
+        },
+        disabled: false,
       }}
     >
       {transformedOptions.map((x) => (
