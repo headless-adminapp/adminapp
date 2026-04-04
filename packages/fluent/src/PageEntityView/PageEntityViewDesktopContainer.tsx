@@ -10,23 +10,37 @@ import { GridTableContainer } from '../DataGrid/GridTableContainer';
 import { PageEntityViewDesktopFrame } from './PageEntityViewDesktopFrame';
 import { PageEntityViewDesktopFrameV2 } from './PageEntityViewDesktopFrameV2';
 
-export const PageEntityViewDesktopContainer: FC = () => {
+interface PageEntityViewDesktopContainerProps {
+  rowHeight?: number;
+}
+
+export const PageEntityViewDesktopContainer: FC<
+  PageEntityViewDesktopContainerProps
+> = ({ rowHeight }) => {
   return (
     <PageEntityViewDesktopFrame
       commandBar={<CommandContainer />}
       header={<GridHeaderContainer />}
-      content={<GridTableContainer headerHeight={33} rowHeight={44} />}
+      content={
+        <GridTableContainer headerHeight={33} rowHeight={rowHeight ?? 44} />
+      }
       footer={<GridPaginationContainer />}
     />
   );
 };
 
-export const PageEntityViewDesktopContainerV2: FC = () => {
+export const PageEntityViewDesktopContainerV2: FC<
+  PageEntityViewDesktopContainerProps
+> = ({ rowHeight }) => {
   return (
     <PageEntityViewDesktopFrameV2
       header={<GridHeaderContainerV2 />}
       content={
-        <GridTableContainer noPadding headerHeight={40} rowHeight={44} />
+        <GridTableContainer
+          noPadding
+          headerHeight={40}
+          rowHeight={rowHeight ?? 44}
+        />
       }
       footer={<GridPaginationContainer />}
     />

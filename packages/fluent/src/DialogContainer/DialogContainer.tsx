@@ -68,6 +68,7 @@ export const DialogContainer = () => {
                 open={isOpen}
                 cancelText={options.cancelButtonLabel}
                 confirmText={options.confirmButtonLabel}
+                labelPosition={options.labelPosition}
               />
             );
           case 'custom':

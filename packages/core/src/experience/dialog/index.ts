@@ -44,13 +44,14 @@ export interface ErrorDialogOptions {
 }
 
 export interface PromptDialogOptions<
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 > {
   type: 'prompt';
   title?: string;
   text?: string;
   attributes: SA;
   defaultValues: Partial<Nullable<InferredSchemaType<SA>>>;
+  labelPosition?: 'top' | 'left';
   cancelButtonLabel?: string;
   confirmButtonLabel?: string;
   allowDismiss?: boolean;

@@ -20,6 +20,7 @@ interface PageEntityViewProps {
   viewId?: string;
   onChangeView?: (viewId: string) => void;
   useV2?: boolean; // Exprement component
+  rowHeight?: number; // Row height for desktop version, default to 44px
 }
 
 export const PageEntityView: FC<PageEntityViewProps> = ({
@@ -27,6 +28,7 @@ export const PageEntityView: FC<PageEntityViewProps> = ({
   viewId,
   onChangeView,
   useV2,
+  rowHeight,
 }) => {
   const result = useLoadMainGridPage(logicalName, viewId);
   const isMobile = useIsMobile();
@@ -53,9 +55,9 @@ export const PageEntityView: FC<PageEntityViewProps> = ({
   if (isMobile) {
     content = <PageEntityViewMobileContainer />;
   } else if (!useV2) {
-    content = <PageEntityViewDesktopContainer />;
+    content = <PageEntityViewDesktopContainer rowHeight={rowHeight} />;
   } else {
-    content = <PageEntityViewDesktopContainerV2 />;
+    content = <PageEntityViewDesktopContainerV2 rowHeight={rowHeight} />;
   }
 
   return (

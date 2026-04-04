@@ -22,9 +22,10 @@ interface PromptDialogProps<SA extends SchemaAttributes = SchemaAttributes> {
   open: boolean;
   title?: PromptDialogOptions<SA>['title'];
   text?: PromptDialogOptions<SA>['text'];
-  cancelText?: PromptDialogOptions<SA>['cancelButtonLabel'];
   attributes: PromptDialogOptions<SA>['attributes'];
   defaultValues: PromptDialogOptions<SA>['defaultValues'];
+  labelPosition?: PromptDialogOptions<SA>['labelPosition'];
+  cancelText?: PromptDialogOptions<SA>['cancelButtonLabel'];
   confirmText?: PromptDialogOptions<SA>['confirmButtonLabel'];
   onConfirm?: PromptDialogOptions<SA>['onConfirm'];
   onCancel?: PromptDialogOptions<SA>['onCancel'];
@@ -87,7 +88,7 @@ export function PromptDialog(props: Readonly<PromptDialogProps>) {
                         return (
                           <SectionControlWrapper
                             label={attribute.label}
-                            labelPosition="left"
+                            labelPosition={props.labelPosition ?? 'left'}
                             required={attribute.required}
                             isError={isError}
                             errorMessage={errorMessage}
@@ -107,7 +108,7 @@ export function PromptDialog(props: Readonly<PromptDialogProps>) {
                       }}
                     />
                   );
-                }
+                },
               )}
             </div>
           </DialogContent>
