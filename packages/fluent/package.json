@@ -53,7 +53,7 @@
     "dayjs": "^1.11.13",
     "dnd-core": "^16.0.1",
     "immutability-helper": "^3.1.1",
-    "lodash": "^4.17.21",
+    "lodash": "^4.18.0",
     "moment-timezone": "0.5.46",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
@@ -65,7 +65,7 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
-    "@types/lodash": "4.17.20"
+    "@types/lodash": "^4.17.20"
   },
   "gitHead": "a28ee863fccb6157774e75b4cc421c6940cda469"
 }

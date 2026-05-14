@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "16.2.4",
+    "next": "16.2.6",
     "react": "^19",
     "react-dom": "^19"
   },
@@ -44,7 +44,7 @@
     "immutability-helper": "^3.1.1",
     "json-to-csv-export": "^2.1.1",
     "libphonenumber-js": "1.11.20",
-    "lodash": "^4.17.21",
+    "lodash": "^4.18.0",
     "moment-timezone": "0.5.46",
     "react-custom-scrollbars-2": "^4.5.0",
     "react-dnd": "^16.0.1",

@@ -29,7 +29,7 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.8"
   },
   "dependencies": {
     "@headless-adminapp/core": "workspace:*",
