@@ -14,7 +14,7 @@ import {
   useRecordSetResult,
   useRecordSetVisibility,
 } from '@headless-adminapp/app/recordset/hooks';
-import { FC, Fragment } from 'react';
+import { type FC, Fragment } from 'react';
 
 import { extendedTokens } from '../components/fluent';
 import { RecordCard } from './RecordCard';

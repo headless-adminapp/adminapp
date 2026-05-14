@@ -1,6 +1,6 @@
-import { FC, memo, PropsWithChildren } from 'react';
+import { type FC, memo, type PropsWithChildren } from 'react';
 
-import { CellDisplayType, TableCellBase } from './TableCellBase';
+import { type CellDisplayType, TableCellBase } from './TableCellBase';
 
 export interface TableCellTextProps {
   value: string;
@@ -27,7 +27,7 @@ export const TableCellText: FC<TableCellTextProps> = memo(
         <TableCellTextContent>{value}</TableCellTextContent>
       </TableCellBase>
     );
-  }
+  },
 );
 
 TableCellText.displayName = 'TableCellText';

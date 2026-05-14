@@ -30,7 +30,14 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  type FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { usePageEntityViewStrings } from '../PageEntityView/PageEntityViewStringContext';
@@ -38,7 +45,7 @@ import {
   DEFAULT_TABLE_HEADER_HEIGHT,
   DEFAULT_TABLE_ROW_HEIGHT,
 } from './constants';
-import { UniqueRecord } from './types';
+import type { UniqueRecord } from './types';
 import { useDataGridKeyboardEvent } from './useDataGridKeyboardEvent';
 import { useTableColumns } from './useTableColumns';
 import { adjustTableHeight } from './utils';
@@ -235,9 +242,11 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
     return selectedIds.reduce((acc, id) => {
       acc[idMapping[id]] = true;
       return acc;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }, {} as any);
   }, [selectedIds, idMapping]);
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: uniqueRecords,
     columns: tableColumns,
@@ -347,6 +356,7 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
           <Table
             style={{
               height: virtualizer.getTotalSize() + headerHeight,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               ['--action-shadow' as any]: !isScrolledToRight
                 ? '-2px 0px 6px rgba(0, 0, 0, 0.12)'
                 : 'none',

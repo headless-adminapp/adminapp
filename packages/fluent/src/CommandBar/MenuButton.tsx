@@ -1,21 +1,21 @@
 import {
-  ForwardRefComponent,
+  type ForwardRefComponent,
   makeStyles,
   Menu,
   MenuButton,
-  MenuButtonProps,
+  type MenuButtonProps,
   MenuTrigger,
   mergeClasses,
   SplitButton,
   tokens,
 } from '@fluentui/react-components';
-import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
-import { Icon } from '@headless-adminapp/icons';
-import { forwardRef, memo, MemoExoticComponent } from 'react';
+import type { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
+import type { Icon } from '@headless-adminapp/icons';
+import { forwardRef, memo } from 'react';
 
 import { extendedTokens } from '../components/fluent';
 import { MenuPopover } from '../components/fluent/MenuPopover';
-import { MenuItemProps } from './MenuItem';
+import type { MenuItemProps } from './MenuItem';
 import { MenuList } from './MenuList';
 
 const useStyles = makeStyles({
@@ -91,12 +91,10 @@ export interface CommandMenuButtonProps {
   items: ArrayGroupWithAtLeastOne<MenuItemProps>;
 }
 
-export const CommandMenuButton: MemoExoticComponent<
-  ForwardRefComponent<CommandMenuButtonProps>
-> = memo(
+export const CommandMenuButton = memo(
   forwardRef(function CommandMenuButton(
     { Icon, items, text, danger, disabled, onClick },
-    ref
+    ref,
   ) {
     const styles = useStyles();
 
@@ -111,7 +109,7 @@ export const CommandMenuButton: MemoExoticComponent<
                 appearance="subtle"
                 className={mergeClasses(
                   styles.splitButton,
-                  danger && styles.splitButtonDanger
+                  danger && styles.splitButtonDanger,
                 )}
                 menuButton={triggerProps}
                 disabled={disabled}
@@ -141,7 +139,7 @@ export const CommandMenuButton: MemoExoticComponent<
         </MenuPopover>
       </Menu>
     );
-  })
-);
+  }),
+) as ForwardRefComponent<CommandMenuButtonProps>;
 
 CommandMenuButton.displayName = 'CommandMenuButton';

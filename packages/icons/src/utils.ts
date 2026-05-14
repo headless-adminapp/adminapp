@@ -1,10 +1,11 @@
 import { IconPlaceholder } from './IconPlaceholder';
-import { Icon, IconSet } from './types';
+import type { Icon, IconSet } from './types';
 
 export function resolveIcon<T extends IconSet>(
   name: keyof T | {},
-  iconSet: T
+  iconSet: T,
 ): Icon | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (iconSet as any)[name];
 }
 

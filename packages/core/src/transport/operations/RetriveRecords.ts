@@ -1,6 +1,6 @@
-import { Filter } from '../Filter';
-import { SortOrder } from '../SortOrder';
-import { Data } from './Data';
+import type { Filter } from '../Filter';
+import type { SortOrder } from '../SortOrder';
+import type { Data } from './Data';
 
 /*** @todo merge required */
 export interface RetriveRecordsFnOptions<T = unknown> {

@@ -1,12 +1,12 @@
 import { useContextSetValue } from '@headless-adminapp/app/mutable';
-import { DataLookup, Id } from '@headless-adminapp/core/attributes';
+import type { DataLookup, Id } from '@headless-adminapp/core/attributes';
 import { useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import {
   QuickCreateContext,
-  QuickCreateItemState,
-  QuickCreateOptions,
+  type QuickCreateItemState,
+  type QuickCreateOptions,
 } from '../context';
 
 function markAsClosed(items: QuickCreateItemState[], id: string) {
@@ -66,7 +66,7 @@ export function useOpenQuickCreate() {
         });
       });
     },
-    [setValue]
+    [setValue],
   );
 
   return openQuickCreate;

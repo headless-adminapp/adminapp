@@ -1,14 +1,14 @@
-import {
+import type {
   EntityMainFormCommandItemExperience,
   Form,
 } from '@headless-adminapp/core/experience/form';
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
-import { PropsWithChildren } from 'react';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { PropsWithChildren } from 'react';
 
 import { DataFormProvider } from '../../dataform/DataFormProvider';
-import { RetriveRecordFn } from '../../dataform/DataFormProvider/types';
+import type { RetriveRecordFn } from '../../dataform/DataFormProvider/types';
 import { UnsavedChangesInfoSetter } from '../../dataform/DataFormProvider/UnsavedChangesInfoSetter';
-import { SaveRecordFn } from '../../dataform/utils/saveRecord';
+import type { SaveRecordFn } from '../../dataform/utils/saveRecord';
 
 interface PageEntityFormProviderProps<S extends SchemaAttributes> {
   schema: Schema<S>;

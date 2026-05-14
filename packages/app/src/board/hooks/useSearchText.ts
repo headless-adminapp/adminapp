@@ -6,7 +6,7 @@ import { BoardContext } from '../context';
 export function useSearchText() {
   const searchText = useContextSelector(
     BoardContext,
-    (context) => context.searchText
+    (context) => context.searchText,
   );
 
   const setValue = useContextSetValue(BoardContext);
@@ -15,7 +15,7 @@ export function useSearchText() {
     (value: string) => {
       setValue({ searchText: value });
     },
-    [setValue]
+    [setValue],
   );
 
   return [searchText, setSearchText] as const;

@@ -1,6 +1,6 @@
-import { Attribute } from '../../attributes';
-import { InferredSchemaType, SchemaAttributes } from '../../schema';
-import { Data } from '../../transport';
+import type { Attribute } from '../../attributes';
+import type { InferredSchemaType, SchemaAttributes } from '../../schema';
+import type { Data } from '../../transport';
 
 export interface ViewColumnProps {
   column: ViewColumn;
@@ -22,7 +22,7 @@ export interface ViewColumn<S extends SchemaAttributes = SchemaAttributes> {
 }
 
 export interface TransformedViewColumn<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 > extends ViewColumn<S> {
   id: string;
   label: string;

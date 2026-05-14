@@ -1,12 +1,12 @@
-import { InferredSchemaType, Schema, SchemaAttributes } from '../../schema';
-import { Data, Filter, RetriveRecordsResult } from '../../transport';
-import { CommandContextBase } from '../command';
-import { CommandItemExperience } from '../command/CommandItemExperience';
-import { Form } from '../form';
-import { SaveMode } from '../form/types';
-import { ColumnCondition, SortingState } from './types';
-import { View } from './View';
-import { TransformedViewColumn } from './ViewColumn';
+import type { InferredSchemaType, Schema, SchemaAttributes } from '../../schema';
+import type { Data, Filter, RetriveRecordsResult } from '../../transport';
+import type { CommandContextBase } from '../command';
+import type { CommandItemExperience } from '../command/CommandItemExperience';
+import type { Form } from '../form';
+import type { SaveMode } from '../form/types';
+import type { ColumnCondition, SortingState } from './types';
+import type { View } from './View';
+import type { TransformedViewColumn } from './ViewColumn';
 
 export interface EntityMainGridCommandContext extends CommandContextBase {
   primaryControl: {

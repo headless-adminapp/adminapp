@@ -1,21 +1,21 @@
 import { tokens } from '@fluentui/react-components';
-import { RetriveRecordFn } from '@headless-adminapp/app/dataform/DataFormProvider/types';
-import { SaveRecordFn } from '@headless-adminapp/app/dataform/utils/saveRecord';
+import type { RetriveRecordFn } from '@headless-adminapp/app/dataform/DataFormProvider/types';
+import type { SaveRecordFn } from '@headless-adminapp/app/dataform/utils/saveRecord';
 import { useMobileHeader } from '@headless-adminapp/app/header';
 import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 import { PageEntityFormProvider } from '@headless-adminapp/app/providers/PageEntityFormProvider';
 import { RecordSetProvider } from '@headless-adminapp/app/recordset';
-import {
+import type {
   EntityMainFormCommandItemExperience,
   Form,
 } from '@headless-adminapp/core/experience/form';
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 
 import { PageEntityFormDesktopContainer } from './PageEntityFormDesktopContainer';
 import { RecordSetNavigatorContainer } from './RecordSetNavigatorContainer';
 
 interface PageCustomEntityFormProps<
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 > {
   recordId?: string;
   schema: Schema<SA>;
@@ -26,7 +26,7 @@ interface PageCustomEntityFormProps<
 }
 
 export function PageCustomEntityForm<
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 >({
   recordId,
   commands,

@@ -1,11 +1,11 @@
-import { Attribute } from '@headless-adminapp/core';
-import { Section } from '@headless-adminapp/core/experience/form';
-import { SectionControl } from '@headless-adminapp/core/experience/form/SectionControl';
-import { Tab } from '@headless-adminapp/core/experience/form/Tab';
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { Attribute } from '@headless-adminapp/core';
+import type { Section } from '@headless-adminapp/core/experience/form';
+import type { SectionControl } from '@headless-adminapp/core/experience/form/SectionControl';
+import type { Tab } from '@headless-adminapp/core/experience/form/Tab';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 
-import { ContextValue } from '../mutable';
-import { DataFormContextState } from './context';
+import type { ContextValue } from '../mutable';
+import type { DataFormContextState } from './context';
 import {
   getIsControlHidden,
   getIsFieldDisabled,
@@ -14,7 +14,7 @@ import {
 
 export class FormManager<SA extends SchemaAttributes = SchemaAttributes> {
   constructor(
-    private readonly contextState: ContextValue<DataFormContextState<SA>>
+    private readonly contextState: ContextValue<DataFormContextState<SA>>,
   ) {}
 
   private get context() {
@@ -25,7 +25,7 @@ export class FormManager<SA extends SchemaAttributes = SchemaAttributes> {
     return new FormAttribute<SA>(
       this.contextState,
       attributeName,
-      this.context.schema.attributes[attributeName]
+      this.context.schema.attributes[attributeName],
     );
   }
 
@@ -63,7 +63,7 @@ class FormAttribute<SA extends SchemaAttributes = SchemaAttributes> {
   constructor(
     private readonly contextState: ContextValue<DataFormContextState<SA>>,
     private readonly attributeName: keyof SA,
-    private readonly attribute: Attribute
+    private readonly attribute: Attribute,
   ) {}
 
   public getInnerAttribute() {
@@ -125,7 +125,7 @@ class FormAttribute<SA extends SchemaAttributes = SchemaAttributes> {
       .filter(
         (control) =>
           control.type === 'standard' &&
-          control.attributeName === this.attributeName
+          control.attributeName === this.attributeName,
       )
       .map((control) => new Control(this.contextState, control));
   }
@@ -134,7 +134,7 @@ class FormAttribute<SA extends SchemaAttributes = SchemaAttributes> {
 class Control<SA extends SchemaAttributes = SchemaAttributes> {
   constructor(
     private readonly contextState: ContextValue<DataFormContextState<SA>>,
-    private readonly control: SectionControl<SA>
+    private readonly control: SectionControl<SA>,
   ) {}
 
   private get context() {
@@ -241,7 +241,7 @@ class Control<SA extends SchemaAttributes = SchemaAttributes> {
 class FormSection<SA extends SchemaAttributes = SchemaAttributes> {
   constructor(
     private readonly contextState: ContextValue<DataFormContextState<SA>>,
-    private readonly section: Section<SA>
+    private readonly section: Section<SA>,
   ) {}
   public setHidden(state: boolean) {
     this.contextState.setValue((prev) => {
@@ -274,7 +274,7 @@ class FormSection<SA extends SchemaAttributes = SchemaAttributes> {
 class FormTab<SA extends SchemaAttributes = SchemaAttributes> {
   constructor(
     private readonly contextState: ContextValue<DataFormContextState<SA>>,
-    private readonly tab: Tab<SA>
+    private readonly tab: Tab<SA>,
   ) {}
   public setHidden(state: boolean) {
     this.contextState.setValue((prev) => {

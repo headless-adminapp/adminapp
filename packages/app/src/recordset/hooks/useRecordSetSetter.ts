@@ -15,7 +15,7 @@ export function useRecordSetSetter() {
         visibleNavigator: false,
       });
     },
-    [setValue]
+    [setValue],
   );
 
   return setRecordSet;

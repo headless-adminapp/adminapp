@@ -1,5 +1,5 @@
 import type { EventInput } from '@fullcalendar/core';
-import { CalendarEvent } from '@headless-adminapp/app/calendar/types';
+import type { CalendarEvent } from '@headless-adminapp/app/calendar/types';
 
 export function transformEvent(event: CalendarEvent): EventInput {
   const { id, title, description, end, start, ...rest } = event;

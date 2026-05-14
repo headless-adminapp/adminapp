@@ -8,7 +8,7 @@ import { useLocale } from '@headless-adminapp/app/locale';
 import { useOpenForm } from '@headless-adminapp/app/navigation';
 import { useRouter, useRouteResolver } from '@headless-adminapp/app/route';
 import { useOpenToastNotification } from '@headless-adminapp/app/toast-notification';
-import {
+import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
@@ -18,7 +18,8 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { lazy, Suspense, useMemo, useState } from 'react';
-import { DefaultValues, useForm } from 'react-hook-form';
+import type { DefaultValues } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 
 import { EventDialog } from './EventDialog/EventDialog';
 import { Header } from './Header';
@@ -26,7 +27,7 @@ import { ViewType } from './types';
 import { transformEvent } from './utils';
 
 const CalendarSection = lazy(() =>
-  import('./CalendarSection').then((mod) => ({ default: mod.CalendarSection }))
+  import('./CalendarSection').then((mod) => ({ default: mod.CalendarSection })),
 );
 
 dayjs.extend(utc);
@@ -79,7 +80,7 @@ interface PageCalendarUIProps {
 }
 
 export function PageCalendarUI<SA3 extends SchemaAttributes = SchemaAttributes>(
-  props: Readonly<PageCalendarUIProps>
+  props: Readonly<PageCalendarUIProps>,
 ) {
   const config = useConfig();
 
@@ -92,7 +93,7 @@ export function PageCalendarUI<SA3 extends SchemaAttributes = SchemaAttributes>(
   const [currentStartDate, setCurrentStartDate] = useState<Date | null>(null);
   const [currentEndDate, setCurrentEndDate] = useState<Date | null>(null);
   const [viewType, setViewType] = useState<ViewType>(
-    getInitialView(isMobile, props.initialView)
+    getInitialView(isMobile, props.initialView),
   );
 
   const filterForm = useForm<InferredSchemaType<SA3>>({
@@ -103,7 +104,9 @@ export function PageCalendarUI<SA3 extends SchemaAttributes = SchemaAttributes>(
     shouldUnregister: false,
   });
 
-  const filterValues = filterForm.watch();
+  const filterValues = useWatch({
+    control: filterForm.control,
+  }) as InferredSchemaType<SA3>;
   const auth = useAuthSession();
 
   const { data: events, isPending: loading } = useQuery({
@@ -246,7 +249,7 @@ export function PageCalendarUI<SA3 extends SchemaAttributes = SchemaAttributes>(
 
     props.onChange?.(
       viewTypeToStr(viewType),
-      dayjs(currentStart).tz(timezone).format('YYYY-MM-DD')
+      dayjs(currentStart).tz(timezone).format('YYYY-MM-DD'),
     );
   };
 

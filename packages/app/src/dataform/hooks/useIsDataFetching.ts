@@ -5,6 +5,6 @@ import { DataFormContext } from '../context';
 export function useIsFormDataFetching() {
   return useContextSelector(
     DataFormContext,
-    (state) => state.dataState.isFetching
+    (state) => state.dataState.isFetching,
   );
 }

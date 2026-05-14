@@ -1,20 +1,23 @@
-import { NavPageItem } from '@headless-adminapp/core/experience/app';
-import { RouterInstance } from '@headless-adminapp/core/navigation';
+import type { NavPageItem } from '@headless-adminapp/core/experience/app';
+import type { RouterInstance } from '@headless-adminapp/core/navigation';
 import { createContext } from 'react';
 
-import { ReadonlyURLSearchParams } from './types';
+import type { ReadonlyURLSearchParams } from './types';
 
 export type InternalRouteResolver = (item: NavPageItem) => string;
 export type InternalIsRouteActive = (
   path: string,
-  item: NavPageItem
+  item: NavPageItem,
 ) => boolean;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const RouterContext = createContext<RouterInstance>(null as any);
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const RouterPathnameContext = createContext<string>(null as any);
 export const RouterSearchParamsContext = createContext<ReadonlyURLSearchParams>(
-  null as any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  null as any,
 );
 export const RouterBasePathContext = createContext<string>('');
 
@@ -24,5 +27,6 @@ export interface RouteHelperContext {
 }
 
 export const RouteHelperContext = createContext<RouteHelperContext>(
-  null as any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  null as any,
 );

@@ -29,7 +29,7 @@ export function useOpenRecord() {
               ? {
                   ids:
                     dataRef.current?.records.map(
-                      (x) => x[schema.idAttribute] as string
+                      (x) => x[schema.idAttribute] as string,
                     ) ?? [],
                   visible: false,
                   logicalName: schema.logicalName,
@@ -38,6 +38,6 @@ export function useOpenRecord() {
         },
       });
     },
-    [routeResolver, router, schema.idAttribute, schema.logicalName]
+    [routeResolver, router, schema.idAttribute, schema.logicalName],
   );
 }

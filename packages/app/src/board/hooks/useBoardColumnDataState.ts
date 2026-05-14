@@ -4,7 +4,7 @@ import { BoardColumnContext } from '../context';
 export function useBoardColumnDataState() {
   const data = useContextSelector(
     BoardColumnContext,
-    (state) => state.dataState
+    (state) => state.dataState,
   );
 
   return data;

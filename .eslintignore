@@ -1,3 +1,0 @@
-packages/*/dist/
-packages/*/coverage/
-packages/*/vitest.config.ts

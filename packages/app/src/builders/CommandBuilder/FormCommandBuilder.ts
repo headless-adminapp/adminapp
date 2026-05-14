@@ -1,9 +1,9 @@
-import {
+import type {
   EntityFormCommandContext,
   EntityMainFormCommandItemExperience,
 } from '@headless-adminapp/core/experience/form';
-import { Localized } from '@headless-adminapp/core/types';
-import { Icon } from '@headless-adminapp/icons';
+import type { Localized } from '@headless-adminapp/core/types';
+import type { Icon } from '@headless-adminapp/icons';
 
 import { createLocalizedSelector, plurialize } from './utils';
 
@@ -186,18 +186,18 @@ export namespace FormCommandBuilder {
         const localizeSelector = createLocalizedSelector(
           stringSet,
           localizedStringSet,
-          context.locale.language
+          context.locale.language,
         );
 
         try {
           const confirmResult = await context.utility.openConfirmDialog({
             title: plurialize(
               1,
-              localizeSelector((s) => s.confirmation.title)
+              localizeSelector((s) => s.confirmation.title),
             ),
             text: plurialize(
               1,
-              localizeSelector((s) => s.confirmation.text)
+              localizeSelector((s) => s.confirmation.text),
             ),
             cancelButtonLabel: stringSet.confirmation.buttonCancel,
             confirmButtonLabel: stringSet.confirmation.buttonConfirm,
@@ -210,23 +210,23 @@ export namespace FormCommandBuilder {
           context.utility.showProgressIndicator(
             plurialize(
               1,
-              localizeSelector((s) => s.status.deleting)
-            ) + '...'
+              localizeSelector((s) => s.status.deleting),
+            ) + '...',
           );
 
           await context.dataService.deleteRecord(
             context.primaryControl.logicalName,
-            recordId
+            recordId,
           );
 
           context.utility.showNotification({
             title: plurialize(
               1,
-              localizeSelector((s) => s.successNotification.title)
+              localizeSelector((s) => s.successNotification.title),
             ),
             text: plurialize(
               1,
-              localizeSelector((s) => s.successNotification.text)
+              localizeSelector((s) => s.successNotification.text),
             ),
             type: 'success',
           });

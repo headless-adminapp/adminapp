@@ -26,7 +26,7 @@ export namespace DefineFormExperience {
     | SectionControl<S>[];
 
   export function resolveExperience<
-    S extends SchemaAttributes = SchemaAttributes
+    S extends SchemaAttributes = SchemaAttributes,
   >(v: Experience<S>): $FormExperience<S> {
     if (Array.isArray(v)) {
       return {
@@ -75,7 +75,7 @@ export namespace DefineFormExperience {
         );
 
   function resolveTab<S extends SchemaAttributes = SchemaAttributes>(
-    v: Tab<S>
+    v: Tab<S>,
   ): $Tab<S> {
     const tab = {
       label: v.label,
@@ -118,7 +118,7 @@ export namespace DefineFormExperience {
   };
 
   function resolveTabColumn<S extends SchemaAttributes = SchemaAttributes>(
-    v: TabColumn<S>
+    v: TabColumn<S>,
   ): $TabColumn<S> {
     return {
       sections: v.sections.map(resolveSection),
@@ -142,7 +142,7 @@ export namespace DefineFormExperience {
       };
 
   function resolveSection<S extends SchemaAttributes = SchemaAttributes>(
-    v: Section<S>
+    v: Section<S>,
   ): $Section<S> {
     return {
       ...v,
@@ -155,7 +155,7 @@ export namespace DefineFormExperience {
     | keyof S;
 
   function resolveSectionControl<S extends SchemaAttributes = SchemaAttributes>(
-    v: DefineFormExperience.SectionControl<S>
+    v: DefineFormExperience.SectionControl<S>,
   ): $SectionControl<S> {
     if (typeof v === 'string') {
       return {

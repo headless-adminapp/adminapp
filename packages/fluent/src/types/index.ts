@@ -1,4 +1,4 @@
-import { Icon } from '@headless-adminapp/icons/types';
+import type { Icon } from '@headless-adminapp/icons/types';
 
 declare module '@headless-adminapp/icons/types' {
   export interface IconSet {

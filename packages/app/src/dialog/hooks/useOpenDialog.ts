@@ -1,9 +1,9 @@
-import { DialogOptions } from '@headless-adminapp/core/experience/dialog';
+import type { DialogOptions } from '@headless-adminapp/core/experience/dialog';
 import { useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { useContextSetValue } from '../../mutable/context';
-import { DialogContext, DialogItemState } from '../context';
+import { DialogContext, type DialogItemState } from '../context';
 import { useCloseDialog } from './useCloseDialog';
 
 /**
@@ -32,7 +32,7 @@ export function useOpenDialog() {
 
       return { id, close: () => closeDialog(id) };
     },
-    [setValue, closeDialog]
+    [setValue, closeDialog],
   );
 
   return openDialog;

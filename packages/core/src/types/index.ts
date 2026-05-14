@@ -4,6 +4,7 @@ export type IsRequired<A> = A extends {
   ? true
   : false;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Nullable<T extends Record<string, any>> = {
   [K in keyof T]: T[K] | null;
 };

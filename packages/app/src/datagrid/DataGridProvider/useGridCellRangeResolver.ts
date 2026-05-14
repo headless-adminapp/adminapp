@@ -1,21 +1,21 @@
 import {
-  MutableValue,
+  type MutableValue,
   useMutableStateSelector,
 } from '@headless-adminapp/app/mutable';
-import {
+import type {
   EntityMainGridCommandContext,
   EntitySubGridCommandContext,
 } from '@headless-adminapp/core/experience/view';
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { useEffect } from 'react';
 
-import { GridContextState } from '../context';
+import type { GridContextState } from '../context';
 
 export function useGridCellRangeResolver<
   S extends SchemaAttributes = SchemaAttributes,
   CommandContext extends
     | EntityMainGridCommandContext
-    | EntitySubGridCommandContext = EntityMainGridCommandContext
+    | EntitySubGridCommandContext = EntityMainGridCommandContext,
 >(context: MutableValue<GridContextState<S, CommandContext>>) {
   const data = useMutableStateSelector(context, (state) => state.data);
 

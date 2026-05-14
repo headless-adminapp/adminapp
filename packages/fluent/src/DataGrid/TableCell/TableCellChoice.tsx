@@ -1,8 +1,8 @@
-import { ChoiceAttribute } from '@headless-adminapp/core/attributes';
-import { FC } from 'react';
+import type { ChoiceAttribute } from '@headless-adminapp/core/attributes';
+import type { FC } from 'react';
 
 import { ChoiceBadge } from '../../components/ChoiceBadge';
-import { CellDisplayType, TableCellBase } from './TableCellBase';
+import { type CellDisplayType, TableCellBase } from './TableCellBase';
 
 interface TableCellChoiceProps {
   value: unknown;
@@ -41,7 +41,7 @@ interface TableCellChoiceContentProps {
 }
 
 export const TableCellChoiceContent: FC<TableCellChoiceContentProps> = (
-  props
+  props,
 ) => {
   return (
     <ChoiceBadge

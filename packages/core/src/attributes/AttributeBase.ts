@@ -1,4 +1,4 @@
-import { Localized } from '../types';
+import type { Localized } from '../types';
 
 /**
  * Base attribute type

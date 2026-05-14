@@ -6,7 +6,7 @@ import {
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { Icons } from '@headless-adminapp/icons';
 import { useQueryClient } from '@tanstack/react-query';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { useAppStrings } from '../App/AppStringContext';
 import { Button, SearchBox } from '../components/fluent';

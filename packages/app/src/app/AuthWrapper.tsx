@@ -1,6 +1,6 @@
-import { FC, PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 
-import { AuthContext, AuthProviderPlaceholderProps } from '../auth';
+import { AuthContext, type AuthProviderPlaceholderProps } from '../auth';
 import { useContextSelector } from '../mutable';
 
 interface AuthWrapperProps {

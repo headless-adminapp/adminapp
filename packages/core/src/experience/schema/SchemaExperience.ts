@@ -1,10 +1,10 @@
-import { Icon } from '@headless-adminapp/icons';
+import type { Icon } from '@headless-adminapp/icons';
 
-import { SchemaAttributes } from '../../schema';
-import { AsyncForm, AsyncQuickCreateForm } from '../form';
-import { EntityMainFormCommandItemExperience } from '../form/command';
-import { AsyncView } from '../view';
-import {
+import type { SchemaAttributes } from '../../schema';
+import type { AsyncForm, AsyncQuickCreateForm } from '../form';
+import type { EntityMainFormCommandItemExperience } from '../form/command';
+import type { AsyncView } from '../view';
+import type {
   EntityMainGridCommandItemExperience,
   SubGridCommandItemExperience,
 } from '../view/command';

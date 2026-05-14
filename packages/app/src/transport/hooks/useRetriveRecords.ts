@@ -1,14 +1,14 @@
 import { useDataService } from '@headless-adminapp/app/transport';
-import { SortingState } from '@headless-adminapp/core/experience/view';
-import {
+import type { SortingState } from '@headless-adminapp/core/experience/view';
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { Filter } from '@headless-adminapp/core/transport';
+import type { Filter } from '@headless-adminapp/core/transport';
 import {
-  QueryClient,
-  QueryKey,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
   useQueryClient,
 } from '@tanstack/react-query';
@@ -31,7 +31,7 @@ interface UseRetriveRecordProps<S extends SchemaAttributes = SchemaAttributes> {
 }
 
 export function useRetrieveRecordsKey<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >({
   schema,
   search,
@@ -53,7 +53,7 @@ export function useRetrieveRecordsKey<
       expand,
       maxRecords,
     ],
-    [schema.logicalName, search, filter, sorting, columns, expand, maxRecords]
+    [schema.logicalName, search, filter, sorting, columns, expand, maxRecords],
   );
 
   return queryKey;
@@ -72,7 +72,7 @@ export function useClearDataExceptFirstPage(queryKey: QueryKey) {
 
 function clearDataExceptFirstPage(
   queryClient: QueryClient,
-  queryKey: QueryKey
+  queryKey: QueryKey,
 ) {
   queryClient.setQueryData(
     queryKey,
@@ -89,12 +89,12 @@ function clearDataExceptFirstPage(
         pageParams: [oldData.pageParams[0]],
         pages: [oldData.pages[0]],
       };
-    }
+    },
   );
 }
 
 export function useRetriveRecordsInternal<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >(
   queryKey: QueryKey,
   {
@@ -106,7 +106,7 @@ export function useRetriveRecordsInternal<
     search,
     sorting,
     disabled,
-  }: UseRetriveRecordProps<S>
+  }: UseRetriveRecordProps<S>,
 ) {
   const dataService = useDataService();
   const queryClient = useQueryClient();
@@ -145,6 +145,7 @@ export function useRetriveRecordsInternal<
           filter,
           skip,
           limit,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           sort: sorting as any,
         });
         return {
@@ -196,14 +197,14 @@ export function useRetriveRecordsInternal<
     data: finalData,
     isFetching,
     hasNextPage,
-    fetchNextPage,
+    fetchNextPage: fetchNextPage as unknown as () => Promise<void>,
     isFetchingNextPage,
     refetch: refech,
   };
 }
 
 export function useRetriveRecords<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >({
   columns,
   expand,

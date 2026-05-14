@@ -58,7 +58,7 @@ export function useDeleteEvent() {
       openToastNotification,
       queryClient,
       showProgressIndicator,
-    ]
+    ],
   );
 
   return deleteEvent;

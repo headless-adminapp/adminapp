@@ -1,10 +1,10 @@
-import { Id } from '@headless-adminapp/core';
-import { IdTypes } from '@headless-adminapp/core/attributes/IdAttribute';
+import type { Id } from '@headless-adminapp/core';
+import type { IdTypes } from '@headless-adminapp/core/attributes/IdAttribute';
 
 import { IntegerControl } from './IntegerControl';
 import { SkeletonControl } from './SkeletonControl';
 import { TextControl } from './TextControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 function formatGuid(value: string) {
   if (!value) {

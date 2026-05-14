@@ -1,6 +1,6 @@
-import { ArrayGroupWithAtLeastOne, Localized } from '../../types';
-import { ActionableCommandExperience } from './ActionableCommandExperience';
-import { BaseCommandExperience } from './BaseCommandExperience';
+import type { ArrayGroupWithAtLeastOne, Localized } from '../../types';
+import type { ActionableCommandExperience } from './ActionableCommandExperience';
+import type { BaseCommandExperience } from './BaseCommandExperience';
 
 export interface MenuItemCommandExperience<Context>
   extends BaseCommandExperience<Context>,

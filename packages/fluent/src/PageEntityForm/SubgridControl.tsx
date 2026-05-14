@@ -7,8 +7,12 @@ import {
   useExperienceViewSubgridCommands,
   useSchema,
 } from '@headless-adminapp/app/metadata/hooks';
-import { ViewExperience } from '@headless-adminapp/core/experience/view';
-import { Filter } from '@headless-adminapp/core/transport';
+import { type CommandItemExperience } from '@headless-adminapp/core/experience/command';
+import type {
+  EntityMainGridCommandContext,
+  ViewExperience,
+} from '@headless-adminapp/core/experience/view';
+import type { Filter } from '@headless-adminapp/core/transport';
 import { useMemo, useState } from 'react';
 
 import { FormSubgridContainer } from '../PageEntityView/FormSubgridContainer';
@@ -18,6 +22,7 @@ interface SubgridControlProps {
   logicalName: string;
   allowViewSelection?: boolean;
   viewId?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   view?: ViewExperience<any>;
   availableViewIds?: string[];
   hideSelector?: boolean;
@@ -28,6 +33,7 @@ interface SubgridControlProps {
         id: string;
         refAttributeName: string;
       };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ContainerComponent?: React.ComponentType<any> | null;
 }
 
@@ -130,7 +136,11 @@ export function SubgridControl(props: Readonly<SubgridControlProps>) {
       view={view}
       views={viewLookup}
       onChangeView={setViewId}
-      commands={(props.associated ? subgridCommands : commands) as any}
+      commands={
+        (props.associated
+          ? subgridCommands
+          : commands) as CommandItemExperience<EntityMainGridCommandContext>[][]
+      }
       isSubGrid={!!props.associated}
       associated={props.associated}
       extraFilter={extraFilter}

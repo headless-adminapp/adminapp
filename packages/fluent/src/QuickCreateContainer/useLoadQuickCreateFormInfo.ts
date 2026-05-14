@@ -1,9 +1,9 @@
 import { useExperienceStore, useSchema } from '@headless-adminapp/app/metadata';
-import {
+import type {
   EntityMainFormCommandItemExperience,
   Form,
 } from '@headless-adminapp/core/experience/form';
-import { Schema } from '@headless-adminapp/core/schema';
+import type { Schema } from '@headless-adminapp/core/schema';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 type UseLoadMainFormPageResult =
@@ -26,7 +26,7 @@ type UseLoadMainFormPageResult =
 
 export function useLoadQuickCreateFormInfo(
   logicalName: string,
-  formId: string | undefined
+  formId: string | undefined,
 ): UseLoadMainFormPageResult {
   const schema = useSchema(logicalName);
   const experienceStore = useExperienceStore();

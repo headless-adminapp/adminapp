@@ -1,5 +1,8 @@
-import { getLocale, Locale } from '@headless-adminapp/core/experience/locale';
-import { FC, PropsWithChildren, useMemo } from 'react';
+import {
+  getLocale,
+  type Locale,
+} from '@headless-adminapp/core/experience/locale';
+import { type FC, type PropsWithChildren, useMemo } from 'react';
 
 import { LocaleContext } from './context';
 

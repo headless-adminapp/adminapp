@@ -1,7 +1,7 @@
 import { stringWithDefault } from '@headless-adminapp/core/utils';
 
 import { PageType } from '../app';
-import { IsRouteActive, RouteInfo, RouteResolver } from './types';
+import type { IsRouteActive, RouteInfo, RouteResolver } from './types';
 
 export const defaultRouteInfo: RouteInfo = {
   dashboard: 'dashboard',
@@ -70,7 +70,7 @@ export function createIsRouteActive(routeInfo: RouteInfo): IsRouteActive {
         );
       case PageType.EntityView:
         return path.startsWith(
-          `${basePath}/${routeInfo.entity}/${item.logicalName}`
+          `${basePath}/${routeInfo.entity}/${item.logicalName}`,
         );
       case PageType.Report:
         return path === `${basePath}/${routeInfo.report}/${item.reportId}`;

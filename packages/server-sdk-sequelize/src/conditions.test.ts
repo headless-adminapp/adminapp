@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   defineSchema,
   defineSchemaAttributes,
 } from '@headless-adminapp/core/schema/utils';
-import {
+import type {
   Condition,
   Filter,
   OperatorKey,
 } from '@headless-adminapp/core/transport';
-import { Op, Sequelize } from 'sequelize';
+import { Op, type Sequelize } from 'sequelize';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { transformCondition, transformFilter } from './conditions';
@@ -534,7 +535,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.integer,
-        defaultOptions
+        defaultOptions,
       );
       expect(result).toEqual({
         age: {
@@ -559,7 +560,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.string,
-          defaultOptions
+          defaultOptions,
         );
         expect(result).toEqual({
           name: {
@@ -578,7 +579,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.string,
-          defaultOptions
+          defaultOptions,
         );
         expect(result).toEqual({
           name: {
@@ -604,7 +605,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.string,
-          defaultOptions
+          defaultOptions,
         );
         expect(result).toEqual({
           name: {
@@ -623,7 +624,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.string,
-          defaultOptions
+          defaultOptions,
         );
         expect(result).toEqual({
           name: {
@@ -901,7 +902,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.string,
-          defaultOptions
+          defaultOptions,
         );
         expect(result).toEqual({
           name: {
@@ -920,7 +921,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.string,
-          defaultOptions
+          defaultOptions,
         );
         expect(result).toEqual({
           name: {
@@ -939,7 +940,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.number,
-        defaultOptions
+        defaultOptions,
       );
       expect(result).toEqual({
         age: 5,
@@ -958,7 +959,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.string,
-          defaultOptions
+          defaultOptions,
         );
         expect(result).toEqual({
           name: {
@@ -977,7 +978,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.string,
-          defaultOptions
+          defaultOptions,
         );
         expect(result).toEqual({
           name: {
@@ -996,7 +997,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.number,
-        defaultOptions
+        defaultOptions,
       );
       expect(result).toEqual({
         age: {
@@ -1018,7 +1019,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.date,
-          defaultOptions
+          defaultOptions,
         );
 
         expect(result).toEqual({
@@ -1040,7 +1041,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.datetime,
-          defaultOptions
+          defaultOptions,
         );
 
         expect(result).toEqual({
@@ -1061,7 +1062,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.datetime,
-          defaultOptions
+          defaultOptions,
         );
 
         expect(result).toEqual({
@@ -1085,7 +1086,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.number,
-        defaultOptions
+        defaultOptions,
       );
 
       expect(result).toEqual({
@@ -1105,7 +1106,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.money,
-        defaultOptions
+        defaultOptions,
       );
 
       expect(result).toEqual({
@@ -1124,7 +1125,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.string,
-        defaultOptions
+        defaultOptions,
       );
       expect(result).toBeNull();
     });
@@ -1139,7 +1140,7 @@ describe('conditions', () => {
     const result = transformCondition(
       condition,
       attributes.string,
-      defaultOptions
+      defaultOptions,
     );
     expect(result).toEqual({
       name: {
@@ -1157,7 +1158,7 @@ describe('conditions', () => {
     const result = transformCondition(
       condition,
       attributes.string,
-      defaultOptions
+      defaultOptions,
     );
     expect(result).toEqual({
       name: {
@@ -1200,7 +1201,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.boolean,
-          defaultOptions
+          defaultOptions,
         );
 
         expect(result).toEqual({
@@ -1237,7 +1238,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.choice,
-        defaultOptions
+        defaultOptions,
       );
       expect(result).toEqual({
         status: {
@@ -1255,7 +1256,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.choices,
-        defaultOptions
+        defaultOptions,
       );
       expect(result).toEqual({
         status: {
@@ -1273,7 +1274,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.idString,
-        defaultOptions
+        defaultOptions,
       );
       expect(result).toEqual({
         parent: {
@@ -1291,7 +1292,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.lookupString,
-        defaultOptions
+        defaultOptions,
       );
       expect(result).toEqual({
         parent: {
@@ -1309,7 +1310,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.string,
-        defaultOptions
+        defaultOptions,
       );
       expect(result).toEqual({
         name: {
@@ -1365,7 +1366,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.boolean,
-          defaultOptions
+          defaultOptions,
         );
         expect(result).toEqual({
           [Op.and]: [
@@ -1392,7 +1393,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.boolean,
-          defaultOptions
+          defaultOptions,
         );
 
         expect(result).toEqual({
@@ -1414,7 +1415,7 @@ describe('conditions', () => {
         const result = transformCondition(
           condition,
           attributes.boolean,
-          defaultOptions
+          defaultOptions,
         );
 
         expect(result).toEqual({
@@ -1455,7 +1456,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.choice,
-        defaultOptions
+        defaultOptions,
       );
       expect(result).toEqual({
         status: {
@@ -1473,7 +1474,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.choices,
-        defaultOptions
+        defaultOptions,
       );
       expect(result).toEqual({
         status: {
@@ -1491,7 +1492,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.idString,
-        defaultOptions
+        defaultOptions,
       );
       expect(result).toEqual({
         parent: {
@@ -1509,7 +1510,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.lookupString,
-        defaultOptions
+        defaultOptions,
       );
       expect(result).toEqual({
         parent: {
@@ -1527,7 +1528,7 @@ describe('conditions', () => {
       const result = transformCondition(
         condition,
         attributes.string,
-        defaultOptions
+        defaultOptions,
       );
       expect(result).toEqual({
         name: {
@@ -1561,7 +1562,7 @@ describe('transformCondition', () => {
     const result = transformCondition(
       condition,
       attributes.string,
-      defaultOptions
+      defaultOptions,
     );
     expect(result).toBeNull();
   });
@@ -1592,7 +1593,7 @@ describe('transformFilter', () => {
     const result = transformFilter(
       { type: 'and', conditions: [] } as any,
       schema,
-      defaultOptions
+      defaultOptions,
     );
     expect(result).toBeNull();
   });

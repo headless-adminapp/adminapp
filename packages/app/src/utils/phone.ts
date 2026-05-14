@@ -4,7 +4,7 @@ export function parsePhoneNumber(input: string, defaultCountry?: string) {
   try {
     const phoneNumber = parsePhoneNumberWithError(
       input,
-      defaultCountry as CountryCode
+      defaultCountry as CountryCode,
     );
 
     let rawValue = String(phoneNumber.number);

@@ -1,15 +1,15 @@
 import { tokens } from '@fluentui/react-components';
 import {
   BoardContext,
-  BoardContextState,
+  type BoardContextState,
 } from '@headless-adminapp/app/board/context';
-import { BoardConfig } from '@headless-adminapp/app/board/types';
+import type { BoardConfig } from '@headless-adminapp/app/board/types';
 import { ScrollView } from '@headless-adminapp/app/components/ScrollView';
 import {
-  ContextValue,
+  type ContextValue,
   useCreateContextStore,
 } from '@headless-adminapp/app/mutable/context';
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { useEffect } from 'react';
 
 import { DndProvider } from '../components/DndProvider';
@@ -22,7 +22,7 @@ interface PageBoardProps<S extends SchemaAttributes = SchemaAttributes> {
 }
 
 export function PageBoard<S extends SchemaAttributes = SchemaAttributes>(
-  props: Readonly<PageBoardProps<S>>
+  props: Readonly<PageBoardProps<S>>,
 ) {
   const contextValue = useCreateContextStore<BoardContextState<S>>({
     config: props.config,

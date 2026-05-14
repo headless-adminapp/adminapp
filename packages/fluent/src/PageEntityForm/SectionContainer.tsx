@@ -18,7 +18,7 @@ import { useLocale } from '@headless-adminapp/app/locale';
 import { localizedLabel } from '@headless-adminapp/app/locale/utils';
 import { useCalculatedAttributeStore } from '@headless-adminapp/app/metadata/hooks/useCalculatedAttributeStore';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
-import { Section } from '@headless-adminapp/core/experience/form';
+import type { Section } from '@headless-adminapp/core/experience/form';
 import type { StandardControlProps } from '@headless-adminapp/core/experience/form/SectionControl';
 import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { type FC, useMemo } from 'react';

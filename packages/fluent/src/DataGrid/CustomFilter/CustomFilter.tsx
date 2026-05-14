@@ -10,7 +10,7 @@ import {
   useGridSorting,
 } from '@headless-adminapp/app/datagrid';
 import { operatorOptions } from '@headless-adminapp/app/datagrid/column-filter/constants';
-import { FC, Fragment, useEffect, useMemo, useState } from 'react';
+import { type FC, Fragment, useEffect, useMemo, useState } from 'react';
 
 import { DrawerFooter } from '../../components/DrawerFooter';
 import { DrawerHeader } from '../../components/DrawerHeader';
@@ -69,6 +69,7 @@ const DrawerContent: FC<DrawerContentProps> = ({ onClose }) => {
   const handleAddFilter = (key: string) => {
     const attribute = schema.attributes[key];
     const defaultOperator = getDefaultOperator(undefined, attribute.type);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const defaultValues: any[] = [];
 
     setColumnFiltersInternal((prev) => ({
@@ -96,13 +97,14 @@ const DrawerContent: FC<DrawerContentProps> = ({ onClose }) => {
         }
 
         const selectedOption = operatorOptions[attribute.type].find(
-          (option) => option.value === condition.operator
+          (option) => option.value === condition.operator,
         );
 
         if (!selectedOption) {
           return false;
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const values: any[] = condition.value || [];
 
         return (
@@ -110,7 +112,7 @@ const DrawerContent: FC<DrawerContentProps> = ({ onClose }) => {
             return value !== null && value !== undefined;
           }).length === selectedOption.controls.length
         );
-      }
+      },
     );
 
     return isColumnFilterValid && isSortingValid;
@@ -229,7 +231,7 @@ const DrawerContent: FC<DrawerContentProps> = ({ onClose }) => {
                 handleAddFilter(value);
               }}
               options={attributeOptions.filter(
-                (x) => !columnFiltersInternal[x.value]
+                (x) => !columnFiltersInternal[x.value],
               )}
             />
           </div>

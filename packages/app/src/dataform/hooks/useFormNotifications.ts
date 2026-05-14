@@ -3,19 +3,21 @@ import { useMemo } from 'react';
 import { useFormInstance } from './useFormInstance';
 import { useFormIsReadonly } from './useFormIsReadonly';
 
+type Notification = {
+  level: 'info' | 'warning' | 'error';
+  message: string;
+};
+
 export function useFormNotifications() {
   const readonly = useFormIsReadonly();
 
   const formInstance = useFormInstance();
 
   const formInstanceAvailable = !!formInstance;
+  const errors = formInstance?.formState.errors;
+  const isSubmitted = formInstance?.formState.isSubmitted;
 
   return useMemo(() => {
-    type Notification = {
-      level: 'info' | 'warning' | 'error';
-      message: string;
-    };
-
     const notifications: Notification[] = [];
 
     if (readonly) {
@@ -27,8 +29,8 @@ export function useFormNotifications() {
 
     if (
       formInstanceAvailable &&
-      formInstance.formState.isSubmitted &&
-      Object.keys(formInstance.formState.errors).length > 0
+      isSubmitted &&
+      Object.keys(errors).length > 0
     ) {
       notifications.push({
         level: 'error',
@@ -37,10 +39,5 @@ export function useFormNotifications() {
     }
 
     return notifications;
-  }, [
-    formInstanceAvailable,
-    formInstance?.formState.errors,
-    formInstance?.formState.isSubmitted,
-    readonly,
-  ]);
+  }, [formInstanceAvailable, errors, isSubmitted, readonly]);
 }

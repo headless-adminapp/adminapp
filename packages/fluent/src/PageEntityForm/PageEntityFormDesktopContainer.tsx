@@ -25,7 +25,7 @@ import { useLocale } from '@headless-adminapp/app/locale';
 import { localizedLabel } from '@headless-adminapp/app/locale/utils';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
-import { FC, Fragment, PropsWithChildren, useRef } from 'react';
+import { type FC, Fragment, type PropsWithChildren, useRef } from 'react';
 import { Controller } from 'react-hook-form';
 
 import { extendedTokens, MessageBar } from '../components/fluent';
@@ -301,7 +301,7 @@ export const PageEntityFormDesktopContainer: FC = () => {
 };
 
 interface WrapperProps {
-  formHeaderDivRef: React.RefObject<HTMLDivElement>;
+  formHeaderDivRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const Wrapper: FC<PropsWithChildren<WrapperProps>> = ({

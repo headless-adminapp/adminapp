@@ -1,4 +1,4 @@
-import { View, ViewExperience } from '@headless-adminapp/core/experience/view';
+import type { View, ViewExperience } from '@headless-adminapp/core/experience/view';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { useExperienceStore } from './useExperienceStore';
@@ -8,6 +8,7 @@ export function useExperienceView(
   viewId?: string,
   associated?: boolean,
   viewIds?: string[],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   view?: ViewExperience<any>,
 ) {
   const experienceStore = useExperienceStore();

@@ -4,7 +4,7 @@ import {
   DEFAULT_DATE_RANGE_FORMATS,
   DEFAULT_TIME_FORMATS,
 } from './constants';
-import { Locale } from './types';
+import type { Locale } from './types';
 
 export function getLocale(
   locale: string,
@@ -15,14 +15,15 @@ export function getLocale(
     dateRangeFormats?: Locale['dateRangeFormats'];
     timeFormats?: Locale['timeFormats'];
     currency?: Partial<Locale['currency']>;
-  }
+  },
 ): Locale {
   const localeInfo = new Intl.Locale(locale);
   const language = localeInfo.language;
   let direction = options?.direction;
 
   if (!direction && 'textInfo' in localeInfo) {
-    direction = (localeInfo.textInfo as any).direction;
+    direction = (localeInfo.textInfo as { direction?: Locale['direction'] })
+      .direction;
   }
 
   return {

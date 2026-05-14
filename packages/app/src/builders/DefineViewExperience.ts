@@ -25,7 +25,7 @@ export namespace DefineViewExperience {
     | keyof S;
 
   export function resolveExperience<
-    S extends SchemaAttributes = SchemaAttributes
+    S extends SchemaAttributes = SchemaAttributes,
   >(v: Experience<S>): $ViewExperience<S> {
     return {
       ...v,
@@ -34,7 +34,7 @@ export namespace DefineViewExperience {
   }
 
   function resolveGridView<S extends SchemaAttributes = SchemaAttributes>(
-    v: GridView<S>
+    v: GridView<S>,
   ): $GridView<S> {
     if (Array.isArray(v)) {
       return {
@@ -48,7 +48,7 @@ export namespace DefineViewExperience {
   }
 
   function resolveViewColumn<S extends SchemaAttributes = SchemaAttributes>(
-    v: ViewColumn<S>
+    v: ViewColumn<S>,
   ): $ViewColumn<S> {
     if (typeof v === 'string') {
       return {

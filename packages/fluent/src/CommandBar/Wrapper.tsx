@@ -1,5 +1,5 @@
 import {
-  ForwardRefComponent,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   Toolbar,
@@ -7,9 +7,8 @@ import {
 import {
   forwardRef,
   memo,
-  MemoExoticComponent,
-  PropsWithChildren,
-  RefObject,
+  type PropsWithChildren,
+  type RefObject,
 } from 'react';
 
 const useStyles = makeStyles({
@@ -33,29 +32,27 @@ export interface CommandBarWrapperProps {
   align?: 'start' | 'end';
 }
 
-export const CommandBarWrapper: MemoExoticComponent<
-  ForwardRefComponent<PropsWithChildren<CommandBarWrapperProps>>
-> = memo(
+export const CommandBarWrapper = memo(
   forwardRef(function CommandBarWrapper(
     { children, overflow, className, align = 'start' },
-    ref
+    ref,
   ) {
     const styles = useStyles();
 
     return (
       <Toolbar
-        ref={ref as RefObject<HTMLDivElement>}
+        ref={ref as RefObject<HTMLDivElement | null>}
         style={{ justifyContent: 'flex-' + align }}
         className={mergeClasses(
           styles.root,
           overflow === 'hidden' ? styles.overflowHidden : styles.overflowAuto,
-          className
+          className,
         )}
       >
         {children}
       </Toolbar>
     );
-  })
-);
+  }),
+) as ForwardRefComponent<PropsWithChildren<CommandBarWrapperProps>>;
 
 CommandBarWrapper.displayName = 'CommandBarWrapper';

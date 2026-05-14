@@ -6,13 +6,13 @@ import { GridContext } from '../context';
 export function useChangeView() {
   const onChangeView = useContextSelector(
     GridContext,
-    (state) => state.onChangeView
+    (state) => state.onChangeView,
   );
 
   return useCallback(
     (viewId: string) => {
       onChangeView?.(viewId);
     },
-    [onChangeView]
+    [onChangeView],
   );
 }

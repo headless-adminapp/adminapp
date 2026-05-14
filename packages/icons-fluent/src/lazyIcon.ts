@@ -16,7 +16,7 @@ export function lazyIcon(name: keyof FluentReactIconsResult) {
   return lazy(() =>
     getFluentIconPromise().then((module) => ({
       default: module[name] as FluentIcon,
-    }))
+    })),
   );
 }
 
@@ -26,7 +26,7 @@ export function createLazyIcon(name: keyof FluentReactIconsResult) {
 
 export function bundleLazyIcon(
   regular: keyof FluentReactIconsResult,
-  filled: keyof FluentReactIconsResult
+  filled: keyof FluentReactIconsResult,
 ) {
   return bundleIcon(createLazyIcon(regular), createLazyIcon(filled));
 }

@@ -8,14 +8,14 @@ import {
   TagPickerList,
   tokens,
 } from '@fluentui/react-components';
-import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
+import type { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
 import { fileToObject } from '@headless-adminapp/core/utils';
 import { Icons } from '@headless-adminapp/icons';
-import { FC, useRef } from 'react';
+import { type FC, useRef } from 'react';
 
 import { Button, extendedTokens } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 export interface AttachmentsControlProps extends ControlProps<FileObject[]> {}
 
@@ -119,7 +119,7 @@ export const AttachmentsControl: FC<AttachmentsControlProps> = ({
 
           if (files?.length) {
             const fileObjects = await Promise.all(
-              Array.from(files).map((file) => fileToObject(file))
+              Array.from(files).map((file) => fileToObject(file)),
             );
             onChange?.([...(value ?? []), ...fileObjects]);
           }

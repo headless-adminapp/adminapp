@@ -2,7 +2,7 @@ import type { Attribute } from '@headless-adminapp/core/attributes';
 
 import type { SchemaAttributes } from '../../schema';
 import type { Localized } from '../../types';
-import { ViewExperience } from '../view';
+import type { ViewExperience } from '../view';
 import type { QuickViewForm } from './QuickViewForm';
 import type { SectionEditableGridControl } from './SectionEditableGridControl';
 
@@ -12,8 +12,10 @@ export interface StandardControlProps {
   isError?: boolean;
   errorMessage?: string;
   name: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any;
   placeholder?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: (value: any) => void;
   onBlur?: () => void;
   fileServiceContext?: Record<string, unknown>;
@@ -70,6 +72,7 @@ export interface SectionSubgridControl extends BaseSectionControl {
   logicalName: string;
   // attributeName: string;
   viewId?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   view?: ViewExperience<any>;
   availableViewIds?: string[];
   allowViewSelection?: boolean;

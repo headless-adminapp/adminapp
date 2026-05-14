@@ -1,14 +1,15 @@
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useOpenDialog } from '../../dialog/hooks/useOpenDialog';
 import { useOpenToastNotification } from '../../toast-notification/hooks/useOpenToastNotification';
-import { CalendarEventSaveData, CalendarEventSaveFnOptions } from '../types';
+import type { CalendarEventSaveData, CalendarEventSaveFnOptions } from '../types';
 import { useConfig } from './useConfig';
 
 export function useOpenDetailDialog<
   SA1 extends SchemaAttributes = SchemaAttributes,
-  SA2 extends SchemaAttributes = SchemaAttributes
+  SA2 extends SchemaAttributes = SchemaAttributes,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 >(DialogComponent: React.ComponentType<any>) {
   const openDialog = useOpenDialog();
   const openToastNotification = useOpenToastNotification();

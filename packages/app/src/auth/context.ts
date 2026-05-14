@@ -1,4 +1,4 @@
-import { AuthSession } from '@headless-adminapp/core/experience/auth';
+import type { AuthSession } from '@headless-adminapp/core/experience/auth';
 
 import { createContext } from '../mutable/context';
 

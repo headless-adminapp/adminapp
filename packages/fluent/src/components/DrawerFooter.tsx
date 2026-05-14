@@ -2,7 +2,7 @@ import {
   DrawerFooter as DrawerFooterInternal,
   tokens,
 } from '@fluentui/react-components';
-import { CSSProperties, FC, PropsWithChildren } from 'react';
+import type { CSSProperties, FC, PropsWithChildren } from 'react';
 
 interface DrawerFooterProps {
   justify?: CSSProperties['justifyContent'];

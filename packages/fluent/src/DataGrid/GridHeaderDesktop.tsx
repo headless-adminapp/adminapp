@@ -12,7 +12,7 @@ import {
 } from '@headless-adminapp/app/datagrid/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { Icons } from '@headless-adminapp/icons';
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 
 import { useAppStrings } from '../App/AppStringContext';
 import { Button, Input, MenuItem, MenuPopover } from '../components/fluent';

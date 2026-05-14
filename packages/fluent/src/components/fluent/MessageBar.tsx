@@ -1,9 +1,9 @@
 import {
-  ForwardRefComponent,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   MessageBar as MessageBarInternal,
-  MessageBarProps,
+  type MessageBarProps,
   tokens,
 } from '@fluentui/react-components';
 import { forwardRef } from 'react';

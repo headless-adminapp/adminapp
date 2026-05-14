@@ -1,13 +1,13 @@
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 
 import { useContextSelector } from '../../mutable/context';
-import { GridContext, TransformedViewColumn } from '../context';
+import { GridContext, type TransformedViewColumn } from '../context';
 
 export function useGridColumns<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >(): TransformedViewColumn<S>[] {
   return useContextSelector(
     GridContext,
-    (state) => state.columns as TransformedViewColumn<S>[]
+    (state) => state.columns as TransformedViewColumn<S>[],
   );
 }

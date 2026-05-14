@@ -1,5 +1,5 @@
 import { SkeletonItem, tokens } from '@fluentui/react-components';
-import { CommandItemState } from '@headless-adminapp/app/command';
+import type { CommandItemState } from '@headless-adminapp/app/command';
 import { DataFormContext } from '@headless-adminapp/app/dataform';
 import { useMainFormCommands } from '@headless-adminapp/app/dataform/hooks';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
@@ -9,7 +9,7 @@ import { RecordSetContext } from '@headless-adminapp/app/recordset';
 import { useRecordSetVisibility } from '@headless-adminapp/app/recordset/hooks';
 import { useRouter } from '@headless-adminapp/app/route/hooks';
 import { Icons } from '@headless-adminapp/icons';
-import { FC, Fragment, useMemo } from 'react';
+import { type FC, Fragment, useMemo } from 'react';
 
 import CommandBar from '../CommandBar';
 import { OverflowCommandBar, renderCommandItem } from '../OverflowCommandBar';

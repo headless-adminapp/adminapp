@@ -1,19 +1,19 @@
-import { AttachmentAttribute } from './AttachmentAttribute';
-import { AttachmentsAttribute } from './AttachmentsAttribute';
-import { BooleanAttribute } from './BooleanAttribute';
-import { ChoiceAttribute, ChoicesAttribute } from './ChoiceAttribute';
-import { DateAttribute } from './DateAttribute';
-import { DateRangeAttribute } from './DateRangeAttribute';
-import { IdAttribute } from './IdAttribute';
-import {
+import type { AttachmentAttribute } from './AttachmentAttribute';
+import type { AttachmentsAttribute } from './AttachmentsAttribute';
+import type { BooleanAttribute } from './BooleanAttribute';
+import type { ChoiceAttribute, ChoicesAttribute } from './ChoiceAttribute';
+import type { DateAttribute } from './DateAttribute';
+import type { DateRangeAttribute } from './DateRangeAttribute';
+import type { IdAttribute } from './IdAttribute';
+import type {
   LookupAttribute,
   MultiLookupAttribute,
   RegardingAttribute,
 } from './LookupAttribute';
-import { MixedAttribute } from './MixedAttribute';
-import { MoneyAttribute } from './MoneyAttribute';
-import { NumberAttribute } from './NumberAttribute';
-import { StringAttribute } from './StringAttribute';
+import type { MixedAttribute } from './MixedAttribute';
+import type { MoneyAttribute } from './MoneyAttribute';
+import type { NumberAttribute } from './NumberAttribute';
+import type { StringAttribute } from './StringAttribute';
 
 /**
  * Attribute union

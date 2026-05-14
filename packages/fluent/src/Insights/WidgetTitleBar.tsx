@@ -4,7 +4,7 @@ import {
   Divider,
   tokens,
 } from '@fluentui/react-components';
-import { CommandItemState } from '@headless-adminapp/app/command';
+import type { CommandItemState } from '@headless-adminapp/app/command';
 import { useLocale } from '@headless-adminapp/app/locale';
 
 import CommandBar from '../CommandBar';
@@ -50,7 +50,7 @@ export function WidgetTitleBar({
           {!!commands && commands[0]?.length > 0 && (
             <CommandBar.Wrapper align="end">
               {commands[0].map((command, index) =>
-                renderCommandItem(index, command, language)
+                renderCommandItem(index, command, language),
               )}
             </CommandBar.Wrapper>
           )}

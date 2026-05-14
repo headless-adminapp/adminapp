@@ -1,4 +1,4 @@
-import { Condition, SortOrder } from '../../transport';
+import type { Condition, SortOrder } from '../../transport';
 
 // used in ui only
 export interface PaginationState {

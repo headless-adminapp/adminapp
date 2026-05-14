@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useMemo } from 'react';
+import { type FC, type PropsWithChildren, useMemo } from 'react';
 
 import { GAP, ROW_GAP, ROW_HEIGHT } from './constants';
 
@@ -14,7 +14,7 @@ const Grid: FC<PropsWithChildren<GridProps>> = ({
 }) => {
   const gridTemplateColumns = useMemo(
     () => Array.from({ length: column }, () => '1fr').join(' '),
-    [column]
+    [column],
   );
 
   return (

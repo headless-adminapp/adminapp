@@ -4,7 +4,7 @@ import {
   useSearchText,
 } from '@headless-adminapp/app/datagrid/hooks';
 import { Icons } from '@headless-adminapp/icons';
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 
 import { useAppStrings } from '../App/AppStringContext';
 import { Button, Input } from '../components/fluent';

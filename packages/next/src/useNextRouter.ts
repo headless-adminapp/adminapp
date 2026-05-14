@@ -1,4 +1,4 @@
-import { GuardFn, RouterInstance } from '@headless-adminapp/core/navigation';
+import type { GuardFn, RouterInstance } from '@headless-adminapp/core/navigation';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 
@@ -23,7 +23,7 @@ function patchHistory() {
           ...window.history.state,
           [PENDING_STATE_KEY]: undefined,
         },
-        ''
+        '',
       );
       isPushNavigating = false;
     }
@@ -97,7 +97,7 @@ export function useNextRouter() {
       return data;
     };
 
-    const setState: RouterInstance['setState'] = (key: any, state?: any) => {
+    const setState: RouterInstance['setState'] = (key, state?) => {
       if (typeof key === 'string') {
         if (isKeyToIgnore(key)) {
           return;
@@ -116,7 +116,7 @@ export function useNextRouter() {
           ...window.history.state,
           [STATE_KEY]: state,
         },
-        ''
+        '',
       );
     };
 
@@ -147,7 +147,7 @@ export function useNextRouter() {
               ...window.history.state,
               [PENDING_STATE_KEY]: options?.state,
             },
-            ''
+            '',
           );
         }
 
@@ -161,7 +161,7 @@ export function useNextRouter() {
                 ...window.history.state,
                 [STATE_KEY]: options?.state,
               },
-              ''
+              '',
             );
           }
           isPushNavigating = false;
@@ -180,7 +180,7 @@ export function useNextRouter() {
               ...window.history.state,
               [STATE_KEY]: options?.state,
             },
-            ''
+            '',
           );
         }
       },

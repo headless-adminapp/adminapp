@@ -1,7 +1,7 @@
-import { FC, PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 
 import { useCreateContextStore } from '../mutable/context';
-import { QuickCreateContext, QuickCreateContextState } from './context';
+import { QuickCreateContext, type QuickCreateContextState } from './context';
 
 interface QuickCreateProviderProps {}
 

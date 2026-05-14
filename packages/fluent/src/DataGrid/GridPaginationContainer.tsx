@@ -8,7 +8,7 @@ import {
 } from '@headless-adminapp/app/datagrid/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
-import { FC, Fragment } from 'react';
+import { type FC, Fragment } from 'react';
 
 import { formatCurrency } from '../Insights/charts/formatters';
 import { usePageEntityViewStrings } from '../PageEntityView/PageEntityViewStringContext';
@@ -45,7 +45,7 @@ export const GridPaginationContainer: FC = () => {
 
   const range = useContextSelector(
     GridContext,
-    (state) => state.cellSelectionRange
+    (state) => state.cellSelectionRange,
   );
 
   const gridColumns = useGridColumns();

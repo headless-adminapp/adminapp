@@ -1,5 +1,5 @@
 import { PageType } from '@headless-adminapp/core/experience/app';
-import { OpenFormOptions } from '@headless-adminapp/core/experience/command';
+import type { OpenFormOptions } from '@headless-adminapp/core/experience/command';
 import { useCallback } from 'react';
 
 import { useRouter } from '../../route/hooks';
@@ -47,6 +47,6 @@ export function useOpenForm() {
         });
       }
     },
-    [routeResolver, router]
+    [routeResolver, router],
   );
 }

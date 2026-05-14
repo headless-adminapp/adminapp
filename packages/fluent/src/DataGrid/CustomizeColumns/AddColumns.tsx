@@ -5,14 +5,14 @@ import {
   tokens,
 } from '@fluentui/react-components';
 import {
-  TransformedViewColumn,
+  type TransformedViewColumn,
   transformViewColumns,
 } from '@headless-adminapp/app/datagrid';
 import { useDataGridSchema } from '@headless-adminapp/app/datagrid/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { localizedLabel } from '@headless-adminapp/app/locale/utils';
 import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
-import { LookupAttribute } from '@headless-adminapp/core/attributes';
+import type { LookupAttribute } from '@headless-adminapp/core/attributes';
 import { Icons } from '@headless-adminapp/icons';
 import { Fragment, useState } from 'react';
 
@@ -74,31 +74,34 @@ export function AddColumns({
           name: key,
         })),
         schemaStore,
-        language
+        language,
       ),
     },
-    ...lookupAttributes.reduce((acc, { key, attribute }) => {
-      const lookupSchema = schemaStore.getSchema(attribute.entity);
-      const columns = transformViewColumns(
-        schema.logicalName,
-        Object.keys(lookupSchema.attributes).map((nestedKey) => ({
-          name: key,
-          expandedKey: nestedKey,
-        })),
-        schemaStore,
-        language
-      );
+    ...lookupAttributes.reduce(
+      (acc, { key, attribute }) => {
+        const lookupSchema = schemaStore.getSchema(attribute.entity);
+        const columns = transformViewColumns(
+          schema.logicalName,
+          Object.keys(lookupSchema.attributes).map((nestedKey) => ({
+            name: key,
+            expandedKey: nestedKey,
+          })),
+          schemaStore,
+          language,
+        );
 
-      acc[key] = {
-        label:
-          localizedLabel(language, attribute) +
-          ' (' +
-          localizedLabel(language, lookupSchema) +
-          ')',
-        columns,
-      };
-      return acc;
-    }, {} as Record<string, { label: string; columns: TransformedViewColumn[] }>),
+        acc[key] = {
+          label:
+            localizedLabel(language, attribute) +
+            ' (' +
+            localizedLabel(language, lookupSchema) +
+            ')',
+          columns,
+        };
+        return acc;
+      },
+      {} as Record<string, { label: string; columns: TransformedViewColumn[] }>,
+    ),
   };
 
   const tableItems = Object.entries(columnGroups).map(([key, group]) => ({
@@ -115,13 +118,16 @@ export function AddColumns({
   const [searchText, setSearchText] = useState('');
 
   const filteredColumns = availableColumns.filter((column) =>
-    column.label.toLowerCase().includes(searchText.toLowerCase())
+    column.label.toLowerCase().includes(searchText.toLowerCase()),
   );
 
-  const includedColumnsObj = columns.reduce((acc, column) => {
-    acc[column.id] = true;
-    return acc;
-  }, {} as Record<string, boolean>);
+  const includedColumnsObj = columns.reduce(
+    (acc, column) => {
+      acc[column.id] = true;
+      return acc;
+    },
+    {} as Record<string, boolean>,
+  );
 
   return (
     <Drawer separator open={opened} position="end">

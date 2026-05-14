@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Label } from '@fluentui/react-components';
-import { JSX, useCallback, useMemo } from 'react';
+import { type JSX, useCallback, useMemo } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { CurrencyControl } from './controls/CurrencyControl';
@@ -17,7 +18,7 @@ import { TelephoneControl } from './controls/TelephoneControl';
 import { TextAreaControl } from './controls/TextAreaControl';
 import { TextControl } from './controls/TextControl';
 import { FormControlLoading } from './FormControlLoading';
-import { FormControlProps } from './types';
+import type { FormControlProps } from './types';
 
 function Control<T>(props: FormControlProps<T>): JSX.Element {
   const { type, label: _label, value, onChange, ...rest } = props;

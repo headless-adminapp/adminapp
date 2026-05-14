@@ -1,5 +1,5 @@
 import { tokens } from '@fluentui/react-components';
-import { DateSelectArg, DatesSetArg, EventInput } from '@fullcalendar/core';
+import type { DateSelectArg, DatesSetArg, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import momentTimezonePlugin from '@fullcalendar/moment-timezone';
@@ -261,8 +261,8 @@ export const CalendarSection = ({
                   props.start.month,
                   props.start.day,
                   props.start.hour,
-                  props.start.minute
-                )
+                  props.start.minute,
+                ),
               ).format(timeFormats.short);
             }}
             headerToolbar={false}

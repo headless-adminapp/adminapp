@@ -1,5 +1,5 @@
-import { Localized } from '../types';
-import { SchemaAttributes } from './SchemaAttributes';
+import type { Localized } from '../types';
+import type { SchemaAttributes } from './SchemaAttributes';
 
 export interface SchemaMetadata {
   logicalName: string;
@@ -40,6 +40,7 @@ export interface Schema<
     baseSchemaLogicalNames?: string[]; // Base entities for the schema (Used to create record)
     baseSchemaLogicalNameAttribute?: keyof A; // Attribute that contains the schema logical name for virtual entities
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   additionalMetadata?: Record<string, any>; // Additional metadata
   attributes: A; // Attributes of the schema
   restrictions?: {

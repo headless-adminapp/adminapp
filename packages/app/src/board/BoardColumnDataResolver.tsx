@@ -1,4 +1,4 @@
-import { Filter } from '@headless-adminapp/core/transport';
+import type { Filter } from '@headless-adminapp/core/transport';
 import { useEffect, useMemo } from 'react';
 
 import { useAuthSession } from '../auth';

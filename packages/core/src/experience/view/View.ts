@@ -1,9 +1,10 @@
-import { Schema, SchemaAttributes } from '../../schema';
-import { Filter, SortOrder } from '../../transport';
-import { AllowAsync } from '../../types';
-import { Metadata } from '../types';
-import { QuickFilter } from './QuickFilter';
-import { ViewColumn } from './ViewColumn';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Schema, SchemaAttributes } from '../../schema';
+import type { Filter, SortOrder } from '../../transport';
+import type { AllowAsync } from '../../types';
+import type { Metadata } from '../types';
+import type { QuickFilter } from './QuickFilter';
+import type { ViewColumn } from './ViewColumn';
 
 export interface BaseView<S extends SchemaAttributes = SchemaAttributes> {
   filter?: Filter | null;

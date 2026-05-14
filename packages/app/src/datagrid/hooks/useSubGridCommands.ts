@@ -1,11 +1,11 @@
 import { useAppContext } from '@headless-adminapp/app/app';
 import { useRecordTitle } from '@headless-adminapp/app/dataform';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
-import { CommandItemExperience } from '@headless-adminapp/core/experience/command';
-import { EntitySubGridCommandContext } from '@headless-adminapp/core/experience/view';
+import type { CommandItemExperience } from '@headless-adminapp/core/experience/command';
+import type { EntitySubGridCommandContext } from '@headless-adminapp/core/experience/view';
 
 import { useBaseCommandHandlerContext, useCommands } from '../../command';
-import { CommandItemState, MenuItemCommandState } from '../../command/types';
+import type { CommandItemState, MenuItemCommandState } from '../../command/types';
 import { useMainFormCommandHandlerContext } from '../../dataform/hooks/useMainFormCommands';
 import { GridContext } from '../context';
 import { useGridControlContext } from './useMainGridCommands';
@@ -18,7 +18,7 @@ export function useSubGridCommandHandlerContext(): EntitySubGridCommandContext {
 
   const associated = useContextSelector(
     GridContext,
-    (state) => state.associated
+    (state) => state.associated,
   );
   const [recordTitle] = useRecordTitle();
 
@@ -48,7 +48,7 @@ function useGridCommands() {
     (state) =>
       state.commands as
         | CommandItemExperience<EntitySubGridCommandContext>[][]
-        | undefined
+        | undefined,
   );
   const {
     appExperience: { subgridCommands: defaultCommands },
@@ -71,6 +71,6 @@ export function useSubGridContextCommands(): MenuItemCommandState[][] {
   return useCommands<EntitySubGridCommandContext>(
     commands,
     handlerContext,
-    (command) => ('isContextMenu' in command && command.isContextMenu) ?? false
+    (command) => ('isContextMenu' in command && command.isContextMenu) ?? false,
   ) as MenuItemCommandState[][];
 }

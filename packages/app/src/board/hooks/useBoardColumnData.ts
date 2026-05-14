@@ -1,10 +1,10 @@
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 
 import { useContextSelector } from '../../mutable/context';
-import { BoardColumnContext, BoardColumnContextState } from '../context';
+import { BoardColumnContext, type BoardColumnContextState } from '../context';
 
 export function useBoardColumnData<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >(): BoardColumnContextState<S>['data'] {
   const data = useContextSelector(BoardColumnContext, (state) => state.data);
 

@@ -1,8 +1,8 @@
-import {
+import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { Data } from '@headless-adminapp/core/transport';
+import type { Data } from '@headless-adminapp/core/transport';
 import { useEffect, useMemo, useRef } from 'react';
 
 import { useAuthSession } from '../../auth';
@@ -70,7 +70,7 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
             gridColumns,
             schema,
           }),
-    [isMobile, view.experience.card, schema, gridColumns]
+    [isMobile, view.experience.card, schema, gridColumns],
   );
 
   const expand = useMemo(
@@ -78,7 +78,7 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
       isMobile
         ? collectCardExpandedKeys({ cardView: view.experience.card })
         : collectExpandedKeys(gridColumns),
-    [gridColumns, isMobile, view.experience.card]
+    [gridColumns, isMobile, view.experience.card],
   );
 
   const quickFilterResults = useMemo(() => {
@@ -100,7 +100,7 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
       extraFilter,
       quickFilterResults,
       columnFilters,
-      schemaStore
+      schemaStore,
     );
   }, [
     columnFilters,
@@ -149,8 +149,8 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
 
     const selectedIds = selectedIdsRef.current.filter((x) =>
       data.records.some(
-        (y) => y[schema.idAttribute as keyof Data<InferredSchemaType<S>>] === x
-      )
+        (y) => y[schema.idAttribute as keyof Data<InferredSchemaType<S>>] === x,
+      ),
     );
 
     setState({

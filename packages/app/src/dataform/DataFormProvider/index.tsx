@@ -1,18 +1,18 @@
 import { useHistoryStateKey } from '@headless-adminapp/app/historystate';
 import { useRouter } from '@headless-adminapp/app/route';
 import { EventManager } from '@headless-adminapp/app/store';
-import {
+import type {
   EntityMainFormCommandItemExperience,
   Form,
 } from '@headless-adminapp/core/experience/form';
-import {
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { Nullable } from '@headless-adminapp/core/types';
+import type { Nullable } from '@headless-adminapp/core/types';
 import {
-  PropsWithChildren,
+  type PropsWithChildren,
   useCallback,
   useEffect,
   useMemo,
@@ -24,13 +24,13 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useFormValidationStrings } from '../../form/FormValidationStringContext';
 import { useLocale } from '../../locale/useLocale';
 import { useMetadata } from '../../metadata/hooks/useMetadata';
-import { ContextValue, useCreateContextStore } from '../../mutable';
-import { DataFormContext, DataFormContextState } from '../context';
+import { type ContextValue, useCreateContextStore } from '../../mutable';
+import { DataFormContext, type DataFormContextState } from '../context';
 import { formValidator } from '../utils';
 import {
   saveRecord,
-  SaveRecordFn,
-  SaveRecordFnOptions,
+  type SaveRecordFn,
+  type SaveRecordFnOptions,
 } from '../utils/saveRecord';
 import { CalculatedField } from './CalculatedField';
 import { CustomHookExecuter } from './CustomHookExecuter';
@@ -38,7 +38,7 @@ import { DataResolver } from './DataResolver';
 import { getRecord } from './getRecord';
 import { InitialValueResolver } from './InitialValueResolver';
 import { ReadonlyInfoResolver } from './ReadonlyInfoResolver';
-import { RetriveRecordFn } from './types';
+import type { RetriveRecordFn } from './types';
 import { transformFormInternal } from './utils';
 
 export interface DataFormProviderProps<
@@ -77,6 +77,7 @@ export function DataFormProvider<S extends SchemaAttributes = SchemaAttributes>(
 
   const [formReadOnly, setFormReadOnly] = useState(false); // A trick to provide readOnly info to formInstance
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formInstance = useForm<any>({
     mode: 'all',
     defaultValues: {},

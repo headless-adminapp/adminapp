@@ -1,7 +1,11 @@
 import { useEffect } from 'react';
 
 import { useContextSetValue } from '../../mutable';
-import { DataStack, HeaderContext, HeaderStoreState } from '../context';
+import {
+  type DataStack,
+  HeaderContext,
+  type HeaderStoreState,
+} from '../context';
 
 function mergeStack<T>(prevState: DataStack<T>, value: T, order: number) {
   return [
@@ -16,7 +20,7 @@ function mergeStack<T>(prevState: DataStack<T>, value: T, order: number) {
 export function useMobileHeaderSetValue<T>(
   value: T,
   order: number,
-  field: keyof HeaderStoreState
+  field: keyof HeaderStoreState,
 ) {
   const setValue = useContextSetValue(HeaderContext);
 

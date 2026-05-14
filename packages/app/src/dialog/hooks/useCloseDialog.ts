@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import { useContextSetValue } from '../../mutable/context';
-import { DialogContext, DialogItemState } from '../context';
+import { DialogContext, type DialogItemState } from '../context';
 
 function markDialogAsClosed(items: DialogItemState[], id: string) {
   return items.map((item) => {
@@ -36,7 +36,7 @@ export function useCloseDialog() {
         }));
       }, 1000);
     },
-    [setValue]
+    [setValue],
   );
 
   return closeDialog;

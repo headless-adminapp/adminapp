@@ -3,7 +3,7 @@ import { Icons } from '@headless-adminapp/icons';
 
 import { Button, Input } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 export interface EmailControlProps extends ControlProps<string> {
   autoComplete?: string;

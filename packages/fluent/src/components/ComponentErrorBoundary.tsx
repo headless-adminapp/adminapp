@@ -1,5 +1,5 @@
 import { Icons } from '@headless-adminapp/icons';
-import { Component, PropsWithChildren } from 'react';
+import { Component, type PropsWithChildren } from 'react';
 
 import { ComponentBroken } from './ComponentBroken';
 

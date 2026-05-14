@@ -1,5 +1,5 @@
 import { SkeletonItem, tokens } from '@fluentui/react-components';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 interface TextSkeletonProps {
   width?: number | string;

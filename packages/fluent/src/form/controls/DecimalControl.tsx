@@ -1,9 +1,8 @@
-/* eslint-disable unused-imports/no-unused-vars */
 import { useEffect, useRef, useState } from 'react';
 
 import { Input } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 export interface DecimalControlProps extends ControlProps<number> {
   decimalPlaces?: number;
@@ -16,16 +15,14 @@ export function DecimalControl({
   name,
   onBlur,
   onFocus,
-  error,
   disabled,
   placeholder,
-  borderOnFocusOnly,
   readOnly,
   decimalPlaces,
   skeleton,
 }: Readonly<DecimalControlProps>) {
   const [internalValue, setInternalValue] = useState<string>(
-    value ? value.toString() : ''
+    value ? value.toString() : '',
   );
 
   const internalValueRef = useRef(internalValue);

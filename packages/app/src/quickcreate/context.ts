@@ -1,5 +1,5 @@
-import { Id } from '@headless-adminapp/core';
-import { DataLookup } from '@headless-adminapp/core/attributes';
+import type { Id } from '@headless-adminapp/core';
+import type { DataLookup } from '@headless-adminapp/core/attributes';
 
 import { createContext } from '../mutable';
 

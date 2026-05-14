@@ -1,8 +1,9 @@
-import { Schema } from '@headless-adminapp/core/schema';
-import { RetriveRecordsParams } from '@headless-adminapp/core/transport';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Schema } from '@headless-adminapp/core/schema';
+import type { RetriveRecordsParams } from '@headless-adminapp/core/transport';
 import { urlToFileObject } from '@headless-adminapp/core/utils';
 
-import { SequelizeSchemaStore } from '../SequelizeSchemaStore';
+import type { SequelizeSchemaStore } from '../SequelizeSchemaStore';
 
 function transformColumns({
   recordJson,

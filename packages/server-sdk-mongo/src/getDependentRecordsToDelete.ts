@@ -1,16 +1,16 @@
-import {
+import type {
   LookupAttribute,
   LookupBehavior,
 } from '@headless-adminapp/core/attributes';
-import { RegardingAttribute } from '@headless-adminapp/core/attributes/LookupAttribute';
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
+import type { RegardingAttribute } from '@headless-adminapp/core/attributes/LookupAttribute';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { ISchemaStore } from '@headless-adminapp/core/store';
 import { ConflictError } from '@headless-adminapp/core/transport';
-import { DependentRecord } from '@headless-adminapp/server-sdk';
-import { ClientSession } from 'mongoose';
+import type { DependentRecord } from '@headless-adminapp/server-sdk';
+import type { ClientSession } from 'mongoose';
 
-import { MongoSchemaStore } from './MongoSchemaStore';
-import { MongoRequiredSchemaAttributes } from './types';
+import type { MongoSchemaStore } from './MongoSchemaStore';
+import type { MongoRequiredSchemaAttributes } from './types';
 
 export function getDependedAttributes<
   SA extends SchemaAttributes = SchemaAttributes,
@@ -90,6 +90,7 @@ export async function getDependentRecordsToDelete<
 
     const dependedModel = schemaStore.getModel(schemaLogicalName);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const filter: Record<string, any> = {
       [attributeName]: _id,
     };
@@ -108,6 +109,7 @@ export async function getDependentRecordsToDelete<
 
     if (behavior === 'dependent') {
       dependedRecordsResult.push(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ...dependedRecords.map((record: any) => ({
           logicalName: schemaLogicalName,
           id: record._id,

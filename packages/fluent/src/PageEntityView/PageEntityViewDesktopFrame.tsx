@@ -1,5 +1,5 @@
 import { Divider, tokens } from '@fluentui/react-components';
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 
 import { extendedTokens } from '../components/fluent';
 

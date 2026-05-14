@@ -11,11 +11,11 @@ import {
 import { useDataFormSchema } from '@headless-adminapp/app/dataform/hooks';
 import { useOpenErrorDialog } from '@headless-adminapp/app/dialog';
 import { useFileService } from '@headless-adminapp/app/transport';
-import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
+import type { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
 import { readFileAsDataURL } from '@headless-adminapp/core/utils';
 import { Icons } from '@headless-adminapp/icons';
 import { useMutation } from '@tanstack/react-query';
-import { FC, useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 
 import { Button, DialogSurface } from '../components/fluent';
 import { getAvatarColor } from '../utils/avatar';

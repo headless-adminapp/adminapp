@@ -1,16 +1,16 @@
-import {
+import type {
   InternalIsRouteActive,
   InternalRouteResolver,
 } from '@headless-adminapp/app/route/context';
 import {
-  NavPageItem,
-  NavPageSection,
+  type NavPageItem,
+  type NavPageSection,
   PageType,
 } from '@headless-adminapp/core/experience/app';
-import { SchemaExperienceMetadata } from '@headless-adminapp/core/experience/schema';
+import type { SchemaExperienceMetadata } from '@headless-adminapp/core/experience/schema';
 import { IconPlaceholder, Icons } from '@headless-adminapp/icons';
 
-import {
+import type {
   NavCategoryInfo,
   NavItemInfo,
   NavPageItemTransformed,
@@ -104,7 +104,7 @@ export function transformNavPageItem({
 }): NavPageItemTransformed {
   let Icon = item.Icon;
   let label = item.localizedLabel?.[language] ?? item.label;
-  let link = routeResolver(item);
+  const link = routeResolver(item);
 
   if (item.type === 'entityview') {
     const metadata = schemaMetadataObject?.[item.logicalName];

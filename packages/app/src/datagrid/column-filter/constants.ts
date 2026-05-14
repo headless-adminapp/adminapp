@@ -1,6 +1,6 @@
 import type { AttributeType } from '@headless-adminapp/core/attributes';
 
-import { OperatorOptionConfig, OperatorStrings } from './types';
+import type { OperatorOptionConfig, OperatorStrings } from './types';
 
 export const defaultOperatorStrings: OperatorStrings = {
   equals: 'Equals',

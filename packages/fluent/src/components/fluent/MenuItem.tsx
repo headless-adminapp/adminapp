@@ -1,8 +1,8 @@
 import {
-  ForwardRefComponent,
+  type ForwardRefComponent,
   makeStyles,
   MenuItem as MenuItemInternal,
-  MenuItemProps,
+  type MenuItemProps,
   mergeClasses,
 } from '@fluentui/react-components';
 import { forwardRef } from 'react';
@@ -28,5 +28,5 @@ export const MenuItem: ForwardRefComponent<ExtendedMenuItemProps> = forwardRef(
         ref={ref}
       />
     );
-  }
+  },
 );

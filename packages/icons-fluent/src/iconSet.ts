@@ -40,12 +40,12 @@ export const iconSet = defineIconSet({
   Save: bundleLazyIcon('Save24Regular', 'Save24Filled'),
   Refresh: bundleLazyIcon(
     'ArrowCounterclockwise24Regular',
-    'ArrowCounterclockwise24Regular'
+    'ArrowCounterclockwise24Regular',
   ),
   MoreVertical: bundleLazyIcon('MoreVertical24Regular', 'MoreVertical24Filled'),
   MoreHorizontal: bundleLazyIcon(
     'MoreHorizontal24Regular',
-    'MoreHorizontal24Filled'
+    'MoreHorizontal24Filled',
   ),
 
   // others
@@ -54,29 +54,29 @@ export const iconSet = defineIconSet({
   SignOut: bundleLazyIcon('SignOut24Regular', 'SignOut24Filled'),
   EditColumns: bundleLazyIcon(
     'TextGrammarSettings24Regular',
-    'TextGrammarSettings24Regular'
+    'TextGrammarSettings24Regular',
   ),
   Filter: bundleLazyIcon('Filter24Regular', 'Filter24Filled'),
   FilterDismiss: bundleLazyIcon(
     'FilterDismiss24Regular',
-    'FilterDismiss24Filled'
+    'FilterDismiss24Filled',
   ),
   ListLtr: bundleLazyIcon(
     'TextBulletListLtr24Regular',
-    'TextBulletListLtr24Filled'
+    'TextBulletListLtr24Filled',
   ),
   ListRtl: bundleLazyIcon(
     'TextBulletListRtl24Regular',
-    'TextBulletListRtl24Filled'
+    'TextBulletListRtl24Filled',
   ),
   Export: bundleLazyIcon('ArrowDownload24Regular', 'ArrowDownload24Filled'),
   ExportCsv: bundleIcon(
     createIcon(CsvRegular, true),
-    createIcon(CsvFilled, true)
+    createIcon(CsvFilled, true),
   ),
   ExportExcel: bundleIcon(
     createIcon(ExcelRegular, true),
-    createIcon(ExcelFilled, true)
+    createIcon(ExcelFilled, true),
   ),
   Entity: bundleLazyIcon('PuzzlePiece24Regular', 'PuzzlePiece24Filled'),
   OpenInNew: bundleLazyIcon('Open24Regular', 'Open24Filled'),
@@ -89,7 +89,7 @@ export const iconSet = defineIconSet({
   Checkmark: bundleLazyIcon('Checkmark24Regular', 'Checkmark24Filled'),
   Block: bundleIcon(
     createIcon(BlockRegular, true),
-    createIcon(BlockFilled, true)
+    createIcon(BlockFilled, true),
   ),
   Grid: bundleLazyIcon('Grid24Regular', 'Grid24Regular'),
 });

@@ -1,4 +1,4 @@
-import { FluentIcon } from '@fluentui/react-icons';
+import type { FluentIcon } from '@fluentui/react-icons';
 
 const ExcelFilled: FluentIcon = (props) => {
   return (

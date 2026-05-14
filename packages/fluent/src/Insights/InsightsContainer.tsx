@@ -2,7 +2,7 @@ import { tokens } from '@fluentui/react-components';
 import { ScrollView } from '@headless-adminapp/app/components/ScrollView';
 import { InsightsContext } from '@headless-adminapp/app/insights';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
-import { InsightConfig } from '@headless-adminapp/core/experience/insights';
+import type { InsightConfig } from '@headless-adminapp/core/experience/insights';
 import { useState } from 'react';
 
 import { Header } from './Header';

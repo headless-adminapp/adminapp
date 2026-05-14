@@ -1,5 +1,5 @@
 import {
-  DropdownProps,
+  type DropdownProps,
   makeStyles,
   mergeClasses,
   tokens,
@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 import { Dropdown } from '../../components/fluent';
 import { Option } from '../../components/fluent/Option';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 const useStyles = makeStyles({
   root: {

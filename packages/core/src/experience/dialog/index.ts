@@ -1,6 +1,6 @@
-import { Nullable } from '@headless-adminapp/core/types';
+import type { Nullable } from '@headless-adminapp/core/types';
 
-import { InferredSchemaType, SchemaAttributes } from '../../schema';
+import type { InferredSchemaType, SchemaAttributes } from '../../schema';
 
 export interface BasicDialogProps {
   id: string;
@@ -60,6 +60,7 @@ export interface PromptDialogOptions<
   onDismiss?: () => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface CustomDialogOptions<P = any> {
   type: 'custom';
   Component: React.ComponentType<P & BasicDialogProps>;

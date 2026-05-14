@@ -1,6 +1,6 @@
-import { LocalizedDataLookup } from '@headless-adminapp/core/attributes';
-import { CommandItemExperience } from '@headless-adminapp/core/experience/command';
-import {
+import type { LocalizedDataLookup } from '@headless-adminapp/core/attributes';
+import type { CommandItemExperience } from '@headless-adminapp/core/experience/command';
+import type {
   ColumnCondition,
   EntityMainGridCommandContext,
   EntitySubGridCommandContext,
@@ -8,12 +8,12 @@ import {
   View,
 } from '@headless-adminapp/core/experience/view';
 import { type TransformedViewColumn } from '@headless-adminapp/core/experience/view/ViewColumn';
-import {
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import {
+import type {
   Filter,
   RetriveRecordsResult,
 } from '@headless-adminapp/core/transport';
@@ -26,7 +26,7 @@ export interface GridContextState<
   S extends SchemaAttributes = SchemaAttributes,
   CommandContext extends
     | EntityMainGridCommandContext
-    | EntitySubGridCommandContext = EntityMainGridCommandContext
+    | EntitySubGridCommandContext = EntityMainGridCommandContext,
 > {
   // from props
   schema: Schema<S>;

@@ -1,8 +1,8 @@
 import { Link, TableCell, tokens } from '@fluentui/react-components';
 import { useRouter } from '@headless-adminapp/app/route/hooks';
-import { FC, memo, PropsWithChildren } from 'react';
+import { type FC, memo, type PropsWithChildren } from 'react';
 
-import { CellDisplayType } from './TableCellBase';
+import type { CellDisplayType } from './TableCellBase';
 
 export interface TableCellLinkProps {
   value: React.ReactNode | undefined | null;
@@ -34,7 +34,7 @@ export const TableCellLink: FC<TableCellLinkProps> = memo(
         </TableCellLinkContent>
       </TableCell>
     );
-  }
+  },
 );
 
 TableCellLink.displayName = 'TableCellLink';
@@ -71,7 +71,7 @@ export const TableCellLinkContent: FC<
         }
 
         if (href?.startsWith('/')) {
-          router.push(href);
+          void router.push(href);
           event.preventDefault();
         }
       }}

@@ -1,5 +1,5 @@
 import { useMainFormCommands } from '@headless-adminapp/app/dataform';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { MobileHeaderCommandContainer } from '../Header/MobileHeaderCommandContainer';
 

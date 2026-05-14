@@ -1,6 +1,6 @@
-import { Attribute } from '@headless-adminapp/core/attributes';
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
-import {
+import type { Attribute } from '@headless-adminapp/core/attributes';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type {
   Condition,
   Filter,
   OperatorKey,
@@ -9,9 +9,9 @@ import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import { Op, Sequelize } from 'sequelize';
+import { Op, type Sequelize } from 'sequelize';
 
-import { SequelizeSchemaStore } from './SequelizeSchemaStore';
+import type { SequelizeSchemaStore } from './SequelizeSchemaStore';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -26,7 +26,7 @@ declare module 'dayjs' {
 dayjs.extend((option, dayjsClass) => {
   dayjsClass.prototype.toAttributeDate = function (
     attribute,
-    timezone?: string
+    timezone?: string,
   ) {
     if (attribute.type === 'date' && attribute.format === 'date') {
       return this.tz(timezone).format('YYYY-MM-DD');
@@ -40,11 +40,15 @@ function isSqlite(sequelize: Sequelize) {
   return sequelize.getDialect() === 'sqlite';
 }
 
-export function getLikeOperator(sequelize: Sequelize): any {
+export function getLikeOperator(
+  sequelize: Sequelize,
+): typeof Op.like | typeof Op.iLike {
   return isSqlite(sequelize) ? Op.like : Op.iLike;
 }
 
-export function getNotLikeOperator(sequelize: Sequelize): any {
+export function getNotLikeOperator(
+  sequelize: Sequelize,
+): typeof Op.notLike | typeof Op.notILike {
   return isSqlite(sequelize) ? Op.notLike : Op.notILike;
 }
 
@@ -56,6 +60,7 @@ function hasTime(dateString: string): boolean {
   return /\d{1,2}:\d{2}(:\d{2})?/.test(dateString);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createDayjs(timezone: string, value?: any) {
   const d = dayjs(value);
 
@@ -82,7 +87,7 @@ function startOfFiscalYear(year: number, tz: string, attribute: Attribute) {
 }
 
 interface ConditionTransformerOptions<
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 > {
   timezone: string;
   schemaStore: SequelizeSchemaStore<SA>;
@@ -92,7 +97,8 @@ interface ConditionTransformerOptions<
 type ConditionTransformer = (
   condtion: Condition,
   attribute: Attribute,
-  options: ConditionTransformerOptions
+  options: ConditionTransformerOptions,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ) => { [key: string]: any } | null;
 
 const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
@@ -187,7 +193,7 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       createDayjs(timezone, condition.value)
         .startOf('day')
         .add(1, 'day')
-        .toISOString()
+        .toISOString(),
     );
     return {
       [condition.field]: {
@@ -271,12 +277,12 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
         [Op.gte]: startOfFiscalYear(
           fiscalYear,
           timezone,
-          attribute
+          attribute,
         ).toAttributeDate(attribute),
         [Op.lt]: startOfFiscalYear(
           fiscalYear + 1,
           timezone,
-          attribute
+          attribute,
         ).toAttributeDate(attribute),
       },
     };
@@ -335,12 +341,12 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
         [Op.gte]: startOfFiscalYear(
           fiscalYear,
           timezone,
-          attribute
+          attribute,
         ).toAttributeDate(attribute),
         [Op.lt]: startOfFiscalYear(
           fiscalYear + 1,
           timezone,
-          attribute
+          attribute,
         ).toAttributeDate(attribute),
       },
     };
@@ -413,12 +419,12 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
         [Op.gte]: startOfFiscalYear(
           fiscalYear,
           timezone,
-          attribute
+          attribute,
         ).toAttributeDate(attribute),
         [Op.lt]: startOfFiscalYear(
           fiscalYear + 1,
           timezone,
-          attribute
+          attribute,
         ).toAttributeDate(attribute),
       },
     };
@@ -463,12 +469,12 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       [Op.gte]: startOfFiscalYear(
         condition.value,
         timezone,
-        attribute
+        attribute,
       ).toAttributeDate(attribute),
       [Op.lt]: startOfFiscalYear(
         condition.value + 1,
         timezone,
-        attribute
+        attribute,
       ).toAttributeDate(attribute),
     },
   }),
@@ -540,10 +546,10 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
         [condition.field]: {
           [Op.between]: [
             createDayjs(timezone, condition.value[0]).toAttributeDate(
-              attribute
+              attribute,
             ),
             createDayjs(timezone, condition.value[1]).toAttributeDate(
-              attribute
+              attribute,
             ),
           ],
         },
@@ -701,11 +707,12 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
 };
 
 export function transformCondition<
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 >(
   condition: Condition,
   attribute: Attribute,
-  options: ConditionTransformerOptions<SA>
+  options: ConditionTransformerOptions<SA>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): { [key: string]: any } | null {
   const transformer = conditionTransformers[condition.operator];
 
@@ -727,7 +734,7 @@ export function transformCondition<
 export function transformFilter<SA extends SchemaAttributes>(
   filter: Filter | null | undefined,
   schema: Schema<SA>,
-  options: ConditionTransformerOptions<SA>
+  options: ConditionTransformerOptions<SA>,
 ) {
   if (!filter) {
     return null;
@@ -748,7 +755,7 @@ export function transformFilter<SA extends SchemaAttributes>(
         if (condition.extendedKey) {
           if (_attribute.type !== 'lookup') {
             throw new Error(
-              `Invalid column filter key: ${condition.field}. Key ${condition.field} is not a lookup column.`
+              `Invalid column filter key: ${condition.field}. Key ${condition.field} is not a lookup column.`,
             );
           }
 
@@ -759,20 +766,20 @@ export function transformFilter<SA extends SchemaAttributes>(
               field: `$${schemaStore.getRelationAlias(
                 schema.collectionName ?? schema.logicalName,
                 condition.field,
-                lookupSchema.collectionName ?? lookupSchema.logicalName
+                lookupSchema.collectionName ?? lookupSchema.logicalName,
               )}.${condition.extendedKey as string}$`,
               operator: condition.operator,
               value: condition.value,
             },
             lookupSchema.attributes[condition.extendedKey],
-            options
+            options,
           );
         }
 
         return transformCondition(
           condition,
           schema.attributes[condition.field],
-          options
+          options,
         );
       })
       .filter(Boolean);

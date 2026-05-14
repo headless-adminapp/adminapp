@@ -1,17 +1,17 @@
 import type { Id } from '@headless-adminapp/core/attributes';
-import {
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import {
+import type {
   AggregateAttribute,
   CreateRecordResult,
   Data,
   IDataService,
   InferredAggregateQueryResult,
 } from '@headless-adminapp/core/transport';
-import {
+import type {
   RetriveRecordsFnOptions,
   RetriveRecordsResult,
 } from '@headless-adminapp/core/transport/operations';
@@ -46,7 +46,7 @@ export class InMemoryDataService implements IDataService {
 
   public async retriveRecord<T = unknown>(
     logicalName: string,
-    id: Id
+    id: Id,
   ): Promise<Data<T>> {
     const schema = this.getSchema(logicalName);
     const records =
@@ -60,6 +60,7 @@ export class InMemoryDataService implements IDataService {
       throw new Error(`Record with id ${id} not found`);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return record as any;
   }
 
@@ -73,12 +74,13 @@ export class InMemoryDataService implements IDataService {
       logicalName,
       records: records as Data<T>[],
       count: records.length,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any;
   }
 
   public async createRecord<T>(
     logicalName: string,
-    data: Partial<T>
+    data: Partial<T>,
   ): Promise<CreateRecordResult> {
     const schema = this.getSchema(logicalName);
     const records =
@@ -93,13 +95,14 @@ export class InMemoryDataService implements IDataService {
 
     records.push(newRecord);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return { id: newId } as any;
   }
 
   public async updateRecord<T>(
     logicalName: string,
     id: string,
-    data: Partial<T>
+    data: Partial<T>,
   ) {
     const schema = this.getSchema(logicalName);
     const records =
@@ -115,6 +118,7 @@ export class InMemoryDataService implements IDataService {
 
     Object.assign(record, data);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return { id } as any;
   }
 
@@ -146,8 +150,9 @@ export class InMemoryDataService implements IDataService {
     Q extends Record<string, AggregateAttribute> = Record<
       string,
       AggregateAttribute
-    >
+    >,
   >(): Promise<InferredAggregateQueryResult<Q>[]> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return [] as any;
   }
 

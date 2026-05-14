@@ -2,9 +2,9 @@ import { makeStyles, mergeClasses, tokens } from '@fluentui/react-components';
 import { useMemo } from 'react';
 
 import { Dropdown, Option } from '../../components/fluent';
-import { Lookup } from './SelectControl';
+import type { Lookup } from './SelectControl';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 const useStyles = makeStyles({
   root: {

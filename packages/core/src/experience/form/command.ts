@@ -1,9 +1,9 @@
-import { InferredSchemaType, Schema, SchemaAttributes } from '../../schema';
-import { Data } from '../../transport';
-import { CommandContextBase } from '../command';
-import { CommandItemExperience } from '../command/CommandItemExperience';
-import { Form } from './Form';
-import { SaveMode } from './types';
+import type { InferredSchemaType, Schema, SchemaAttributes } from '../../schema';
+import type { Data } from '../../transport';
+import type { CommandContextBase } from '../command';
+import type { CommandItemExperience } from '../command/CommandItemExperience';
+import type { Form } from './Form';
+import type { SaveMode } from './types';
 
 export interface EntityFormCommandContext extends CommandContextBase {
   primaryControl: {

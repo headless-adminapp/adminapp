@@ -1,7 +1,7 @@
 import {
   Checkbox as CheckboxInternal,
-  CheckboxProps,
-  ForwardRefComponent,
+  type CheckboxProps,
+  type ForwardRefComponent,
   makeStyles,
 } from '@fluentui/react-components';
 import { forwardRef } from 'react';
@@ -28,5 +28,5 @@ export const Checkbox: ForwardRefComponent<ExtendedCheckboxProps> = forwardRef(
         }}
       />
     );
-  }
+  },
 );

@@ -1,4 +1,4 @@
-import { CardView } from '@headless-adminapp/core/experience/view';
+import type { CardView } from '@headless-adminapp/core/experience/view';
 
 import { createContext } from '../mutable/context';
 

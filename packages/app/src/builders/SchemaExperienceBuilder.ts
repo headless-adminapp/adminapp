@@ -1,18 +1,18 @@
-import {
+import type {
   AsyncForm,
   AsyncQuickCreateForm,
   Form,
   FormExperience,
   QuickCreateForm,
 } from '@headless-adminapp/core/experience/form';
-import { SchemaExperience } from '@headless-adminapp/core/experience/schema';
-import {
+import type { SchemaExperience } from '@headless-adminapp/core/experience/schema';
+import type {
   AsyncView,
   View,
   ViewExperience,
 } from '@headless-adminapp/core/experience/view';
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
-import { Localized } from '@headless-adminapp/core/types';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { Localized } from '@headless-adminapp/core/types';
 
 import { DefineFormExperience } from './DefineFormExperience';
 import { DefineViewExperience } from './DefineViewExperience';
@@ -101,12 +101,12 @@ interface SchemaExperienceBuilderOptions {
 }
 
 export class SchemaExperienceBuilder<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 > extends BaseSchemaExperienceBuilder<S> {
   constructor(
     private readonly schema: Schema<S>,
     private readonly defaults?: SchemaExperienceBuilderDefaults,
-    private readonly options?: SchemaExperienceBuilderOptions
+    private readonly options?: SchemaExperienceBuilderOptions,
   ) {
     super(schema.logicalName);
   }
@@ -118,7 +118,7 @@ export class SchemaExperienceBuilder<
     > & {
       grid?: DefineViewExperience.Experience<S>['grid'];
       card?: DefineViewExperience.Experience<S>['card'];
-    }
+    },
   ): ViewExperience<S> {
     const cardView = viewExperience.card ?? this.defineDefaultViewCard();
     const gridView = viewExperience.grid ?? this.defineDefaultViewGrid();
@@ -131,7 +131,7 @@ export class SchemaExperienceBuilder<
   }
 
   public defineFormExperience(
-    formExperience: DefineFormExperience.Experience<S>
+    formExperience: DefineFormExperience.Experience<S>,
   ): FormExperience<S> {
     return DefineFormExperience.resolveExperience(formExperience);
   }
@@ -227,12 +227,12 @@ export class SchemaExperienceBuilder<
 
     this.schema.localizedPluralLabels &&
       Object.keys(this.schema.localizedPluralLabels).forEach((key) =>
-        langugesSet.add(key)
+        langugesSet.add(key),
       );
 
     this.defaults?.localizedViewNames &&
       Object.keys(this.defaults.localizedViewNames).forEach((key) =>
-        langugesSet.add(key)
+        langugesSet.add(key),
       );
 
     const localizedLabels = Array.from(langugesSet).reduce((acc, key) => {
@@ -244,7 +244,7 @@ export class SchemaExperienceBuilder<
 
       const localeName = localizedPlaceholder.replace(
         '{label}',
-        localizedPluralName
+        localizedPluralName,
       );
 
       acc[key] = localeName;
@@ -256,7 +256,7 @@ export class SchemaExperienceBuilder<
 
   private resolveDefaultId<T extends { id: string }>(
     data: T[],
-    defaultId: string | undefined | null
+    defaultId: string | undefined | null,
   ): string {
     if (data.length === 0) {
       throw new Error('No items found');
@@ -302,7 +302,7 @@ export class SchemaExperienceBuilder<
       viewCommands?: SchemaExperience<S>['viewCommands'];
       subgridCommands?: SchemaExperience<S>['subgridCommands'];
       formCommands?: SchemaExperience<S>['formCommands'];
-    }
+    },
   ): SchemaExperience<S> {
     let lookups = experience.lookups;
     let views = experience.views;
@@ -353,19 +353,19 @@ export class SchemaExperienceBuilder<
 
     const defaultViewId = this.resolveDefaultId(
       views,
-      experience.defaultViewId
+      experience.defaultViewId,
     );
     const defaultFormId = this.resolveDefaultId(
       forms,
-      experience.defaultFormId
+      experience.defaultFormId,
     );
     const defaultLookupId = this.resolveDefaultId(
       lookups,
-      experience.defaultLookupId
+      experience.defaultLookupId,
     );
     const defaultAssociatedViewId = this.resolveDefaultId(
       associatedViews,
-      experience.defaultAssociatedViewId
+      experience.defaultAssociatedViewId,
     );
 
     let defaultQuickCreateFormId = null;
@@ -373,7 +373,7 @@ export class SchemaExperienceBuilder<
     if (experience.quickCreateForms?.length) {
       defaultQuickCreateFormId = this.resolveDefaultId(
         experience.quickCreateForms ?? [],
-        experience.defaultQuickCreateFormId
+        experience.defaultQuickCreateFormId,
       );
     }
 

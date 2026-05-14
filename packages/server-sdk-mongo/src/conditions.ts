@@ -1,6 +1,6 @@
-import { Attribute } from '@headless-adminapp/core/attributes';
-import { Schema } from '@headless-adminapp/core/schema';
-import {
+import type { Attribute } from '@headless-adminapp/core/attributes';
+import type { Schema } from '@headless-adminapp/core/schema';
+import type {
   Condition,
   Filter,
   OperatorKey,
@@ -9,10 +9,10 @@ import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import { FilterQuery, Types } from 'mongoose';
+import { type FilterQuery, Types } from 'mongoose';
 
-import { MongoSchemaStore } from './MongoSchemaStore';
-import { MongoRequiredSchemaAttributes } from './types';
+import type { MongoSchemaStore } from './MongoSchemaStore';
+import type { MongoRequiredSchemaAttributes } from './types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -65,6 +65,7 @@ type ConditionTransformer = (
   condtion: Condition,
   attribute: Attribute,
   options: ConditionTransformerOptions,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ) => { [key: string]: any } | null;
 
 function hasTimezoneInfo(dateString: string): boolean {
@@ -75,6 +76,7 @@ function hasTime(dateString: string): boolean {
   return /\d{1,2}:\d{2}(:\d{2})?/.test(dateString);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createDayjs(timezone: string, value?: any) {
   const d = dayjs(value);
 
@@ -736,6 +738,7 @@ export function transformCondition<
   condition: Condition,
   attribute: Attribute,
   options: ConditionTransformerOptionsWithSchemaStore<SA>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): { [key: string]: any } | null {
   const transformer = conditionTransformers[condition.operator];
 
@@ -781,6 +784,7 @@ export function transformFilter<SA extends MongoRequiredSchemaAttributes>(
   filter: Filter | null | undefined,
   schema: Schema<SA>,
   options: ConditionTransformerOptionsWithSchemaStore<SA>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): FilterQuery<any> | null {
   if (!filter) {
     return null;

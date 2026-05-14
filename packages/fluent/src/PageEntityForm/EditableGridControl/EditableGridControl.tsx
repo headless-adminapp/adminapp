@@ -13,7 +13,7 @@ import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useMetadata } from '@headless-adminapp/app/metadata';
 import { useDataService } from '@headless-adminapp/app/transport';
-import { SectionEditableGridControl } from '@headless-adminapp/core/experience/form';
+import type { SectionEditableGridControl } from '@headless-adminapp/core/experience/form';
 import { Icons } from '@headless-adminapp/icons';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
@@ -48,6 +48,7 @@ export function EditableGridControl({
 
   const parentFormInstance = useFormInstance();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const localFormInstance = useForm<any>({
     mode: 'all',
     defaultValues: {
@@ -128,7 +129,7 @@ export function EditableGridControl({
       EVENT_KEY_ON_FIELD_CHANGE,
       `${alias}.${fieldArray.fields.length}`,
       newItem,
-      null
+      null,
     );
   };
 
@@ -155,7 +156,7 @@ export function EditableGridControl({
       },
       (errors) => {
         console.error(errors);
-      }
+      },
     )();
   };
 
@@ -218,7 +219,7 @@ export function EditableGridControl({
                 EVENT_KEY_ON_FIELD_CHANGE,
                 `${alias}.${index}`,
                 null,
-                previousValue
+                previousValue,
               );
             }}
             rows={fieldArray.fields}
@@ -238,7 +239,7 @@ export function EditableGridControl({
                 EVENT_KEY_ON_FIELD_CHANGE,
                 `${alias}.${index}`,
                 null,
-                previousValue
+                previousValue,
               );
             }}
             rows={fieldArray.fields}

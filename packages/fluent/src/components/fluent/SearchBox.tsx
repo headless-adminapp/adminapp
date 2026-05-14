@@ -1,9 +1,9 @@
 import {
-  ForwardRefComponent,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   SearchBox as SearchBoxInternal,
-  SearchBoxProps,
+  type SearchBoxProps,
   tokens,
 } from '@fluentui/react-components';
 import { forwardRef } from 'react';
@@ -56,7 +56,7 @@ export const SearchBox: ForwardRefComponent<ExtendedSearchBoxProps> =
           styles.root,
           rest.readOnly && styles.readonly,
           rest.appearance === 'outline' && styles.outlined,
-          className
+          className,
         )}
         ref={ref}
       />

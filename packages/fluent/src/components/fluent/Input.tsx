@@ -1,7 +1,7 @@
 import {
-  ForwardRefComponent,
+  type ForwardRefComponent,
   Input as InputInternal,
-  InputProps,
+  type InputProps,
   makeStyles,
   mergeClasses,
   tokens,
@@ -58,10 +58,10 @@ export const Input: ForwardRefComponent<ExtendedInputProps> = forwardRef(
           rest.readOnly && styles.readonly,
           (rest.appearance === 'outline' || !rest.appearance) &&
             styles.outlined,
-          className
+          className,
         )}
         ref={ref}
       />
     );
-  }
+  },
 );

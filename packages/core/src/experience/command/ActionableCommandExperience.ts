@@ -1,5 +1,5 @@
-import { AllowArray } from '../../types';
-import { BooleanOrFunction } from './types';
+import type { AllowArray } from '../../types';
+import type { BooleanOrFunction } from './types';
 
 export interface ActionableCommandExperience<Context> {
   onClick?: (context: Context) => void | Promise<void>;

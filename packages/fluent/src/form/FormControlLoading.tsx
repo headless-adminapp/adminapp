@@ -1,5 +1,5 @@
 import { Skeleton } from '@fluentui/react-components';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 export const FormControlLoading: FC = () => {
   return (

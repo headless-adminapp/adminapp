@@ -1,12 +1,12 @@
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 
-import { SectionQuickViewControl } from './SectionControl';
-import { SectionEditableGridControl } from './SectionEditableGridControl';
+import type { SectionQuickViewControl } from './SectionControl';
+import type { SectionEditableGridControl } from './SectionEditableGridControl';
 
 export function defineSectionEditableGridControl<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >(
-  control: Omit<SectionEditableGridControl<S>, 'type'>
+  control: Omit<SectionEditableGridControl<S>, 'type'>,
 ): SectionEditableGridControl<SchemaAttributes> {
   return {
     ...control,
@@ -15,9 +15,9 @@ export function defineSectionEditableGridControl<
 }
 
 export function defineSectionQuickViewControl<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >(
-  control: Omit<SectionQuickViewControl<S>, 'type'>
+  control: Omit<SectionQuickViewControl<S>, 'type'>,
 ): SectionQuickViewControl<SchemaAttributes> {
   return {
     ...control,

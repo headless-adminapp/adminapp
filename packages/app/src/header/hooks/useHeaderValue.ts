@@ -1,5 +1,5 @@
 import { useContextSelector } from '../../mutable';
-import { HeaderContext, HeaderStoreState } from '../context';
+import { HeaderContext, type HeaderStoreState } from '../context';
 
 function getLastValue<T>(data: T[]): T | null {
   if (!data.length) return null;
@@ -10,7 +10,7 @@ function getLastValue<T>(data: T[]): T | null {
 export function useHeaderValue<T>(field: keyof HeaderStoreState): T | null {
   const value = useContextSelector(
     HeaderContext,
-    (state) => getLastValue(state[field])?.value ?? null
+    (state) => getLastValue(state[field])?.value ?? null,
   );
 
   return value as unknown as T;

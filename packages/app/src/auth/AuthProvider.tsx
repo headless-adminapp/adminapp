@@ -1,12 +1,18 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { FC, PropsWithChildren, useCallback, useEffect, useRef } from 'react';
+import {
+  type FC,
+  type PropsWithChildren,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react';
 
 import {
   useContextSelectorInternal,
   useCreateContextStore,
 } from '../mutable/context';
-import { AuthContext, AuthState } from './context';
-import { SessionResolver, UnauthorizeReason } from './types';
+import { AuthContext, type AuthState } from './context';
+import type { SessionResolver, UnauthorizeReason } from './types';
 
 export interface AuthProviderProps {
   onUnauthenticated?: (reason: UnauthorizeReason) => void;
@@ -35,7 +41,7 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({
         })
         .catch(console.error);
     },
-    [queryClient]
+    [queryClient],
   );
 
   const contextValue = useCreateContextStore<AuthState>({

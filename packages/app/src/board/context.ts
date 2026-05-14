@@ -5,10 +5,10 @@ import type {
 import type { RetriveRecordsResult } from '@headless-adminapp/core/transport';
 
 import { createContext } from '../mutable';
-import { BoardColumnConfig, BoardConfig } from './types';
+import type { BoardColumnConfig, BoardConfig } from './types';
 
 export interface BoardContextState<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 > {
   config: BoardConfig<S>;
 
@@ -18,7 +18,7 @@ export interface BoardContextState<
 }
 
 export interface BoardColumnContextState<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 > {
   config: BoardColumnConfig;
 

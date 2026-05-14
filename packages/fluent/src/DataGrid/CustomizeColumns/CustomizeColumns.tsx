@@ -1,7 +1,7 @@
 import { Drawer, DrawerBody, tokens } from '@fluentui/react-components';
 import {
   GridContext,
-  TransformedViewColumn,
+  type TransformedViewColumn,
 } from '@headless-adminapp/app/datagrid';
 import { useGridColumns } from '@headless-adminapp/app/datagrid/hooks';
 import { useContextSetValue } from '@headless-adminapp/app/mutable';
@@ -43,7 +43,7 @@ export function CustomizeColumns({ onClose, opened }: CustomizeColumnsProps) {
           [dragIndex, 1],
           [hoverIndex, 0, prevCards[dragIndex]],
         ],
-      })
+      }),
     );
   }, []);
 

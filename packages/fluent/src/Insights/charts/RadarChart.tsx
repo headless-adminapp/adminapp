@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Caption1, tokens } from '@fluentui/react-components';
 import { useLocale } from '@headless-adminapp/app/locale';
-import { RadarChartInfo } from '@headless-adminapp/core/experience/insights';
+import type { RadarChartInfo } from '@headless-adminapp/core/experience/insights';
 import {
   PolarAngleAxis,
   PolarGrid,
@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
-import {
+import type {
   NameType,
   Payload,
   ValueType,
@@ -20,7 +20,7 @@ import {
 import {
   createAxisFormatter,
   createLongAxisFormatter,
-  Formatter,
+  type Formatter,
 } from './formatters';
 
 export function RadarChart({

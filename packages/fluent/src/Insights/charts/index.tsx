@@ -1,4 +1,3 @@
-/* eslint-disable unused-imports/no-unused-vars */
 // TODO: Remove eslint disable condition after finishing the implementation
 
 export interface ItemInfo {
@@ -6,15 +5,15 @@ export interface ItemInfo {
   amount: number;
 }
 
-interface LineChartProps<T> {
-  data: T[];
-}
+// interface LineChartProps<T> {
+//   data: T[];
+// }
 
-interface Test2 {
-  attributeName: string;
-  label: string;
-  type: 'number' | 'date(timestamp)' | 'currency';
-}
+// interface Test2 {
+//   attributeName: string;
+//   label: string;
+//   type: 'number' | 'date(timestamp)' | 'currency';
+// }
 
 // number format - decimal or currency
 // number format - number of decimals

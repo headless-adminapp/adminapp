@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react';
 
-import { MutableValue } from './type';
+import type { MutableValue } from './type';
 import { createMutableValue, useMutableValueSelector } from './utils';
 
 export type ContextValue<T> = MutableValue<T>;
@@ -14,6 +14,7 @@ const createContextValue = createMutableValue;
 export const useContextSelectorInternal = useMutableValueSelector;
 
 export function createContext<T>() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const context = createReactContext<ContextValue<T>>(null as any);
   return context;
 }
@@ -35,7 +36,7 @@ export function useContextValue<T>(context: React.Context<ContextValue<T>>) {
 
 export function useContextSelector<T, R>(
   context: React.Context<ContextValue<T>>,
-  selector: (state: T) => R
+  selector: (state: T) => R,
 ) {
   const contextValue = useContext(context);
 
@@ -60,12 +61,12 @@ export function useContextSetValue<T>(context: React.Context<ContextValue<T>>) {
 }
 
 type Setter<T, U extends unknown[]> = (
-  setValue: ContextValue<T>['setValue']
+  setValue: ContextValue<T>['setValue'],
 ) => (...args: U) => void;
 
 export function useContextValueSetter<T, U extends unknown[]>(
   context: React.Context<ContextValue<T>>,
-  setter: Setter<T, U>
+  setter: Setter<T, U>,
 ) {
   const contextValue = useContext(context);
 
@@ -80,7 +81,7 @@ export function useContextValueSetter<T, U extends unknown[]>(
     (...args: U) => {
       return setterRef.current(contextValue.setValue)(...args);
     },
-    [contextValue.setValue]
+    [contextValue.setValue],
   );
 
   return setterWrapper;

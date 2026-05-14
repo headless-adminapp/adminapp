@@ -1,9 +1,9 @@
-import { SchemaAttributes } from '../../schema';
-import { SortOrder } from '../../transport';
-import { BaseSectionControl, SectionStatndardControl } from './SectionControl';
+import type { SchemaAttributes } from '../../schema';
+import type { SortOrder } from '../../transport';
+import type { BaseSectionControl, SectionStatndardControl } from './SectionControl';
 
 export interface SectionEditableGridControl<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 > extends BaseSectionControl {
   type: 'editablegrid';
   logicalName: string; // logical name of the entity

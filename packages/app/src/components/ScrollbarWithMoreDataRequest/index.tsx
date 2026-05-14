@@ -1,8 +1,9 @@
-import { FC, PropsWithChildren, useEffect, useRef } from 'react';
+import { type FC, type PropsWithChildren, useEffect, useRef } from 'react';
 
 import { ScrollView } from '../ScrollView';
 
 interface ScrollbarWithMoreDataRequest {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
   hasMore: boolean;
   onRequestMore: () => void;

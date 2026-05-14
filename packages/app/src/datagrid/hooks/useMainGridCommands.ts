@@ -1,11 +1,11 @@
 import { useAppContext } from '@headless-adminapp/app/app';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
-import { CommandItemExperience } from '@headless-adminapp/core/experience/command';
-import { EntityMainGridCommandContext } from '@headless-adminapp/core/experience/view';
+import type { CommandItemExperience } from '@headless-adminapp/core/experience/command';
+import type { EntityMainGridCommandContext } from '@headless-adminapp/core/experience/view';
 import { useMemo } from 'react';
 
 import { useBaseCommandHandlerContext, useCommands } from '../../command';
-import {
+import type {
   CommandItemState,
   MenuItemCommandState,
   UtilityContextState,
@@ -44,8 +44,10 @@ export function useUtility(): UtilityContextState {
     hideProgressIndicator,
     showProgressIndicator,
     openAlertDialog,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     openConfirmDialog: openConfirmDialog as any,
     openErrorDialog,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     openPromptDialog: openPromptDialog as any,
     showNotification: openToastNotification,
   };
@@ -74,7 +76,7 @@ export function useGridControlContext(): EntityMainGridCommandContext['primaryCo
 
   const selectedRecords = useMemo(() => {
     return (data?.records ?? []).filter(
-      (record) => selectedIdsObj[record[schema.idAttribute] as string]
+      (record) => selectedIdsObj[record[schema.idAttribute] as string],
     );
   }, [data, schema, selectedIdsObj]);
 
@@ -108,7 +110,7 @@ export function useGridControlContext(): EntityMainGridCommandContext['primaryCo
       selectedRecords,
       sorting,
       view,
-    ]
+    ],
   );
 }
 
@@ -122,7 +124,7 @@ export function useMainGridCommandHandlerContext(): EntityMainGridCommandContext
       ...baseHandlerContext,
       primaryControl,
     }),
-    [baseHandlerContext, primaryControl]
+    [baseHandlerContext, primaryControl],
   );
 }
 
@@ -152,6 +154,6 @@ export function useMainGridContextCommands(): MenuItemCommandState[][] {
   return useCommands<EntityMainGridCommandContext>(
     commands,
     handlerContext,
-    (command) => ('isContextMenu' in command && command.isContextMenu) ?? false
+    (command) => ('isContextMenu' in command && command.isContextMenu) ?? false,
   ) as MenuItemCommandState[][];
 }

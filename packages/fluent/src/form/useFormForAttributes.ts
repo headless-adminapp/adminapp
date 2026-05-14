@@ -1,22 +1,22 @@
 import { attributesFormValidator } from '@headless-adminapp/app/dataform';
 import { useFormValidationStrings } from '@headless-adminapp/app/form';
 import { useLocale } from '@headless-adminapp/app/locale';
-import {
+import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { Nullable } from '@headless-adminapp/core/types';
-import { DefaultValues, useForm } from 'react-hook-form';
+import type { Nullable } from '@headless-adminapp/core/types';
+import { type DefaultValues, useForm } from 'react-hook-form';
 
 interface UseFormForAttributesProps<
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 > {
   attributes: SA;
   defaultValues: Partial<Nullable<InferredSchemaType<SA>>>;
 }
 
 export function useFormForAttributes<
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 >(props: UseFormForAttributesProps<SA>) {
   const { language, region } = useLocale();
   const formValidationStrings = useFormValidationStrings();

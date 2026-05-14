@@ -6,8 +6,8 @@ import {
   mergeClasses,
   tokens,
 } from '@fluentui/react-components';
-import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
-import { Icon } from '@headless-adminapp/icons';
+import type { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
+import type { Icon } from '@headless-adminapp/icons';
 import { memo } from 'react';
 
 import {
@@ -100,7 +100,7 @@ export const MenuItem: React.FC<MenuItemProps> = memo(
         </MenuPopover>
       </Menu>
     );
-  }
+  },
 );
 
 MenuItem.displayName = 'MenuItem';

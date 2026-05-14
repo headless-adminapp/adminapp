@@ -2,7 +2,10 @@ import { useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { useContextSetValue } from '../../mutable/context';
-import { ToastNotificationContext, ToastNotificationItem } from '../context';
+import {
+  ToastNotificationContext,
+  type ToastNotificationItem,
+} from '../context';
 import { useCloseToastNotification } from './useCloseToastNotification';
 
 export function useOpenToastNotification() {
@@ -28,7 +31,7 @@ export function useOpenToastNotification() {
 
       return { id, close: () => closeDialog(id) };
     },
-    [setValue, closeDialog]
+    [setValue, closeDialog],
   );
 
   return openToastNotification;

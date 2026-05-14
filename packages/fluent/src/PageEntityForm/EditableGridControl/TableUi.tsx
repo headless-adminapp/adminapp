@@ -11,11 +11,11 @@ import {
 import { useEventManager } from '@headless-adminapp/app/dataform';
 import { EVENT_KEY_ON_FIELD_CHANGE } from '@headless-adminapp/app/dataform/constants';
 import { useCalculatedAttributeStore } from '@headless-adminapp/app/metadata/hooks/useCalculatedAttributeStore';
-import { SectionEditableGridControl } from '@headless-adminapp/core/experience/form';
-import { Schema } from '@headless-adminapp/core/schema';
+import type { SectionEditableGridControl } from '@headless-adminapp/core/experience/form';
+import type { Schema } from '@headless-adminapp/core/schema';
 import { Icons } from '@headless-adminapp/icons';
-import { FC } from 'react';
-import { Control, Controller } from 'react-hook-form';
+import type { FC } from 'react';
+import { type Control, Controller } from 'react-hook-form';
 
 import { Button } from '../../components/fluent';
 import { SectionControlWrapper } from '../../DataForm/SectionControl';
@@ -132,7 +132,7 @@ export const TableUi: FC<TableUiProps> = ({
               const calculatedAttribute =
                 calculatedAttributeStore?.getCalculatedAttributeInfo(
                   schema.logicalName,
-                  attributeName
+                  attributeName,
                 );
 
               const isControlReadonly =
@@ -168,7 +168,7 @@ export const TableUi: FC<TableUiProps> = ({
                                 EVENT_KEY_ON_FIELD_CHANGE,
                                 field.name,
                                 value,
-                                previousValue
+                                previousValue,
                               );
                             }}
                             onBlur={field.onBlur}

@@ -1,15 +1,22 @@
-import { InputProps } from '@fluentui/react-components';
+import type { InputProps } from '@fluentui/react-components';
 import { useDebouncedValue } from '@headless-adminapp/app/hooks';
 import { useMetadata } from '@headless-adminapp/app/metadata';
 import { useRetriveRecords } from '@headless-adminapp/app/transport/hooks/useRetriveRecords';
-import { SuggestionOptions } from '@headless-adminapp/core/attributes/StringAttribute';
+import type { SuggestionOptions } from '@headless-adminapp/core/attributes/StringAttribute';
 import { uniq } from 'lodash';
-import { FC, Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  type FC,
+  Fragment,
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useState,
+} from 'react';
 
 import { Combobox, Input } from '../../components/fluent';
 import { Option } from '../../components/fluent/Option';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 export function useSuggestions({
   searchText,
@@ -186,7 +193,7 @@ export const DynamicSuggestionLoader: FC<{
   searchText: string;
   disabled?: boolean;
   onData: (data: string[]) => void;
-}> = ({ entity, field, searchText, disabled, onData }) => {
+}> = ({ entity, field, searchText, disabled, ...props }) => {
   const { schemaStore } = useMetadata();
   const schema = schemaStore.getSchema(entity);
 
@@ -208,19 +215,18 @@ export const DynamicSuggestionLoader: FC<{
     },
   });
 
-  const onDataRef = useRef(onData);
-  onDataRef.current = onData;
+  const onData = useEffectEvent((data: string[]) => {
+    props.onData(data);
+  });
 
   useEffect(() => {
     if (!searchText) {
-      onDataRef.current([]);
+      onData([]);
       return;
     }
 
     if (data) {
-      onDataRef.current(
-        uniq(data.records.map((item) => item[field] as string))
-      );
+      onData(uniq(data.records.map((item) => item[field] as string)));
     }
   }, [searchText, data, field]);
 
@@ -232,21 +238,22 @@ export const StaticSuggestionLoader: FC<{
   searchText: string;
   disabled?: boolean;
   onData: (data: string[]) => void;
-}> = ({ values, searchText, disabled, onData }) => {
-  const onDataRef = useRef(onData);
-  onDataRef.current = onData;
+}> = ({ values, searchText, disabled, ...props }) => {
+  const onData = useEffectEvent((data: string[]) => {
+    props.onData(data);
+  });
 
   useEffect(() => {
     if (!searchText || disabled) {
-      onDataRef.current([]);
+      onData([]);
       return;
     }
 
     const filtered = values.filter((item) =>
-      item.toLowerCase().includes(searchText.toLowerCase())
+      item.toLowerCase().includes(searchText.toLowerCase()),
     );
     if (filtered.length) {
-      onDataRef.current(uniq(filtered));
+      onData(uniq(filtered));
     }
   }, [searchText, disabled, values]);
 

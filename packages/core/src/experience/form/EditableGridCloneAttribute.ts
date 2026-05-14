@@ -1,7 +1,7 @@
-import { SchemaAttributes } from '../../schema';
+import type { SchemaAttributes } from '../../schema';
 
 export interface EditableGridCloneAttribute<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 > {
   attributeName: string;
   attributes: (keyof S)[];

@@ -1,9 +1,9 @@
-import { TextareaOnChangeData } from '@fluentui/react-components';
+import type { TextareaOnChangeData } from '@fluentui/react-components';
 import { useEffect, useRef } from 'react';
 
 import { Textarea } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 const DEFAULT_MAX_HEIGHT = 260;
 
@@ -52,7 +52,7 @@ export function TextAreaControl({
 
   const handleInput = (
     e: React.ChangeEvent<HTMLTextAreaElement>,
-    data: TextareaOnChangeData
+    data: TextareaOnChangeData,
   ) => {
     let newValue = data.value;
 

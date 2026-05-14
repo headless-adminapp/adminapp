@@ -1,4 +1,4 @@
-import { IconSet } from './types';
+import type { IconSet } from './types';
 import { proxyIconSet } from './utils';
 
 export const iconSetStore: IconSet = proxyIconSet({});

@@ -1,9 +1,9 @@
 import {
-  ForwardRefComponent,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   PopoverSurface as PopoverSurfaceInternal,
-  PopoverSurfaceProps,
+  type PopoverSurfaceProps,
 } from '@fluentui/react-components';
 import { forwardRef } from 'react';
 

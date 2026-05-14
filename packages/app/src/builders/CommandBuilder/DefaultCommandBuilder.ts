@@ -1,10 +1,10 @@
-import { EntityMainFormCommandItemExperience } from '@headless-adminapp/core/experience/form';
-import {
+import type { EntityMainFormCommandItemExperience } from '@headless-adminapp/core/experience/form';
+import type {
   EntityMainGridCommandItemExperience,
   SubGridCommandItemExperience,
 } from '@headless-adminapp/core/experience/view';
-import { Localized } from '@headless-adminapp/core/types';
-import { Icon } from '@headless-adminapp/icons';
+import type { Localized } from '@headless-adminapp/core/types';
+import type { Icon } from '@headless-adminapp/icons';
 
 import { FormCommandBuilder } from './FormCommandBuilder';
 import { SubgridCommandBuilder } from './SubgridCommandBuilder';

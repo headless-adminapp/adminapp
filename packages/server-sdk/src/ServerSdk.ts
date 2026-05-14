@@ -1,39 +1,39 @@
-import {
+import type {
   LookupAttribute,
   LookupBehavior,
 } from '@headless-adminapp/core/attributes';
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { ISchemaStore } from '@headless-adminapp/core/store';
 import {
-  AggregateQuery,
+  type AggregateQuery,
   BadRequestError,
-  CreateRecordParams,
-  CreateRecordResult,
-  DeleteRecordParams,
-  DeleteRecordResult,
+  type CreateRecordParams,
+  type CreateRecordResult,
+  type DeleteRecordParams,
+  type DeleteRecordResult,
   ForbiddenError,
-  RetriveRecordParams,
-  RetriveRecordResult,
-  RetriveRecordsParams,
-  RetriveRecordsResult,
-  UpdateRecordParams,
-  UpdateRecordResult,
+  type RetriveRecordParams,
+  type RetriveRecordResult,
+  type RetriveRecordsParams,
+  type RetriveRecordsResult,
+  type UpdateRecordParams,
+  type UpdateRecordResult,
 } from '@headless-adminapp/core/transport';
 import dayjs from 'dayjs';
 
-import { ChangedValues } from './types/ChangedValues';
-import { DatabaseContext } from './types/DatabaseContext';
-import { IAutoNumberProvider } from './types/IAutoNumberProvider';
-import { IDataFilter } from './types/IDataFilter';
-import { IDefaultValueProvider } from './types/IDefaultValueProvider';
-import { IPluginStore } from './types/plugin/IPluginStore';
-import { ExecuteParams, ExecuteType, IServerSdk } from './types/sdk';
-import { ServerSdkContext } from './types/sdk/ServerSdkContext';
+import type { ChangedValues } from './types/ChangedValues';
+import type { DatabaseContext } from './types/DatabaseContext';
+import type { IAutoNumberProvider } from './types/IAutoNumberProvider';
+import type { IDataFilter } from './types/IDataFilter';
+import type { IDefaultValueProvider } from './types/IDefaultValueProvider';
+import type { IPluginStore } from './types/plugin/IPluginStore';
+import { type ExecuteParams, ExecuteType, type IServerSdk } from './types/sdk';
+import type { ServerSdkContext } from './types/sdk/ServerSdkContext';
 
 export interface ServerSdkOptions<
   SdkContext extends ServerSdkContext = ServerSdkContext,
   DbContext extends DatabaseContext = DatabaseContext,
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 > {
   context: SdkContext;
   schemaStore: ISchemaStore<SA>;
@@ -47,13 +47,9 @@ export abstract class ServerSdk<
   SdkContext extends ServerSdkContext = ServerSdkContext,
   DbContext extends DatabaseContext = DatabaseContext,
   SA extends SchemaAttributes = SchemaAttributes,
-  Options extends ServerSdkOptions<
-    SdkContext,
-    DbContext,
-    SA
-  > = ServerSdkOptions<SdkContext, DbContext, SA>
-> implements IServerSdk
-{
+  Options extends ServerSdkOptions<SdkContext, DbContext, SA> =
+    ServerSdkOptions<SdkContext, DbContext, SA>,
+> implements IServerSdk {
   protected timezone: string;
   protected readonly options: Options;
   constructor(options: Omit<Options, 'context'> & { context?: SdkContext }) {
@@ -106,12 +102,12 @@ export abstract class ServerSdk<
   protected async validate(params: ExecuteParams): Promise<void> {
     if (!this.options.schemaStore.hasSchema(params.payload.logicalName)) {
       throw new BadRequestError(
-        `Schema for ${params.payload.logicalName} not found`
+        `Schema for ${params.payload.logicalName} not found`,
       );
     }
 
     const schema = this.options.schemaStore.getSchema(
-      params.payload.logicalName
+      params.payload.logicalName,
     );
 
     switch (params.type) {
@@ -192,29 +188,30 @@ export abstract class ServerSdk<
   abstract endSession(): Promise<void>;
 
   protected abstract retriveRecord<T extends Record<string, unknown>>(
-    params: RetriveRecordParams
+    params: RetriveRecordParams,
   ): Promise<RetriveRecordResult<T>>;
 
   protected abstract retriveRecords<T extends Record<string, unknown>>(
-    params: RetriveRecordsParams
+    params: RetriveRecordsParams,
   ): Promise<RetriveRecordsResult<T>>;
 
   protected abstract deleteRecord(
-    params: DeleteRecordParams
+    params: DeleteRecordParams,
   ): Promise<DeleteRecordResult>;
   protected abstract createRecord(
-    params: CreateRecordParams
+    params: CreateRecordParams,
   ): Promise<CreateRecordResult>;
   protected abstract updateRecord(
-    params: UpdateRecordParams
+    params: UpdateRecordParams,
   ): Promise<UpdateRecordResult>;
   protected abstract retriveAggregate<T = unknown>(
-    params: AggregateQuery
+    params: AggregateQuery,
   ): Promise<T[]>;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected getChangedValues<T extends Record<string, any>>(
     previousData: T,
-    newData: T
+    newData: T,
   ): ChangedValues {
     const changes: ChangedValues = {};
 
@@ -231,37 +228,40 @@ export abstract class ServerSdk<
   }
 
   protected getSchemaDefaultValues<T extends SchemaAttributes>(
-    schema: Schema<T>
+    schema: Schema<T>,
   ): Record<string, unknown> {
-    return Object.entries(schema.attributes).reduce((acc, [key, attribute]) => {
-      if (
-        key === schema.idAttribute ||
-        key === schema.createdAtAttribute ||
-        key === schema.updatedAtAttribute
-      ) {
-        return acc;
-      }
-
-      if (!('default' in attribute)) {
-        return acc;
-      }
-
-      if (typeof attribute.default === 'function') {
-        acc[key] = attribute.default();
-      }
-
-      if (attribute.type === 'date' && attribute.default === '@now') {
-        if (attribute.format === 'date') {
-          acc[key] = dayjs().format('YYYY-MM-DD');
-        } else {
-          acc[key] = new Date().toISOString();
+    return Object.entries(schema.attributes).reduce(
+      (acc, [key, attribute]) => {
+        if (
+          key === schema.idAttribute ||
+          key === schema.createdAtAttribute ||
+          key === schema.updatedAtAttribute
+        ) {
+          return acc;
         }
-      }
 
-      acc[key] = attribute.default;
+        if (!('default' in attribute)) {
+          return acc;
+        }
 
-      return acc;
-    }, {} as Record<string, unknown>);
+        if (typeof attribute.default === 'function') {
+          acc[key] = attribute.default();
+        }
+
+        if (attribute.type === 'date' && attribute.default === '@now') {
+          if (attribute.format === 'date') {
+            acc[key] = dayjs().format('YYYY-MM-DD');
+          } else {
+            acc[key] = new Date().toISOString();
+          }
+        }
+
+        acc[key] = attribute.default;
+
+        return acc;
+      },
+      {} as Record<string, unknown>,
+    );
   }
 
   protected getDependedAttributes(schema: Schema<SA>) {
@@ -278,7 +278,7 @@ export abstract class ServerSdk<
         const lookupAttributes = allAttributes.filter(
           ([, attribute]) =>
             attribute.type === 'lookup' &&
-            attribute.entity === schema.logicalName
+            attribute.entity === schema.logicalName,
         ) as [string, LookupAttribute][];
 
         return lookupAttributes.map(([key, attribute]) => ({

@@ -1,21 +1,24 @@
 import { useRouter } from '@headless-adminapp/app/route';
-import { LocalizedDataLookup } from '@headless-adminapp/core/attributes';
-import { CommandItemExperience } from '@headless-adminapp/core/experience/command';
-import {
+import type { LocalizedDataLookup } from '@headless-adminapp/core/attributes';
+import type { CommandItemExperience } from '@headless-adminapp/core/experience/command';
+import type {
   EntityMainGridCommandContext,
   EntitySubGridCommandContext,
   View,
 } from '@headless-adminapp/core/experience/view';
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
-import { Filter } from '@headless-adminapp/core/transport';
-import { PropsWithChildren, useCallback, useEffect, useRef } from 'react';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { Filter } from '@headless-adminapp/core/transport';
+import { type PropsWithChildren, useCallback, useEffect, useRef } from 'react';
 import { useUpdateEffect } from 'react-use';
 
 import { useHistoryStateKey } from '../../historystate';
 import { useLocale } from '../../locale/useLocale';
 import { useMetadata } from '../../metadata/hooks/useMetadata';
-import { ContextValue, useCreateContextStore } from '../../mutable/context';
-import { GridContext, GridContextState } from '../context';
+import {
+  type ContextValue,
+  useCreateContextStore,
+} from '../../mutable/context';
+import { GridContext, type GridContextState } from '../context';
 import { DataResolver } from './DataResolver';
 import { transformViewColumns } from './transformViewColumns';
 import { useGridCellRangeResolver } from './useGridCellRangeResolver';
@@ -24,7 +27,7 @@ export interface DataGridProviderProps<
   S extends SchemaAttributes = SchemaAttributes,
   CommandContext extends
     | EntityMainGridCommandContext
-    | EntitySubGridCommandContext = EntityMainGridCommandContext
+    | EntitySubGridCommandContext = EntityMainGridCommandContext,
 > {
   schema: Schema<S>;
   views: LocalizedDataLookup[];
@@ -47,7 +50,7 @@ export interface DataGridProviderProps<
 
 function mergeInitialStateWithHistory<T>(
   initialValue: T,
-  historyState: Partial<T> | undefined
+  historyState: Partial<T> | undefined,
 ): T {
   return {
     ...initialValue,
@@ -59,7 +62,7 @@ export function DataGridProvider<
   S extends SchemaAttributes = SchemaAttributes,
   CommandContext extends
     | EntityMainGridCommandContext
-    | EntitySubGridCommandContext = EntityMainGridCommandContext
+    | EntitySubGridCommandContext = EntityMainGridCommandContext,
 >(props: PropsWithChildren<DataGridProviderProps<S, CommandContext>>) {
   const onChangeViewRef = useRef(props.onChangeView);
   onChangeViewRef.current = props.onChangeView;
@@ -96,7 +99,7 @@ export function DataGridProvider<
           props.view.logicalName,
           props.view.experience.grid.columns,
           schemaStore,
-          language
+          language,
         ),
         viewLookup: props.views,
         extraFilter: props.extraFilter,
@@ -114,19 +117,19 @@ export function DataGridProvider<
         disabled: props.disabled ?? false,
         cellSelectionRange: null,
       },
-      router.getState<Partial<GridContextState<S, CommandContext>>>(historyKey)
-    )
+      router.getState<Partial<GridContextState<S, CommandContext>>>(historyKey),
+    ),
   );
 
   useEffect(() => {
     function listener(
       state: GridContextState<S, CommandContext>,
       prevState: GridContextState<S, CommandContext>,
-      changes: Partial<GridContextState<S, CommandContext>>
+      changes: Partial<GridContextState<S, CommandContext>>,
     ) {
       if (
         ['searchText', 'columnFilters', 'sorting', 'columns'].some(
-          (key) => key in changes
+          (key) => key in changes,
         )
       ) {
         router.setState(historyKey, {
@@ -155,7 +158,7 @@ export function DataGridProvider<
         props.view.logicalName,
         props.view.experience.grid.columns,
         schemaStore,
-        language
+        language,
       ),
       maxRecords: props.maxRecords,
     });

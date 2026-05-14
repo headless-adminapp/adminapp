@@ -1,8 +1,8 @@
 import type { Icon } from '@headless-adminapp/icons';
 
-import { Localized } from '../../types';
-import { EntityMainFormCommandItemExperience } from '../form';
-import {
+import type { Localized } from '../../types';
+import type { EntityMainFormCommandItemExperience } from '../form';
+import type {
   EntityMainGridCommandItemExperience,
   SubGridCommandItemExperience,
 } from '../view';

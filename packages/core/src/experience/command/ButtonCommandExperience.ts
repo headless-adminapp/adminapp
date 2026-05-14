@@ -1,6 +1,6 @@
-import { Localized } from '../../types';
-import { ActionableCommandExperience } from './ActionableCommandExperience';
-import { BaseCommandExperience } from './BaseCommandExperience';
+import type { Localized } from '../../types';
+import type { ActionableCommandExperience } from './ActionableCommandExperience';
+import type { BaseCommandExperience } from './BaseCommandExperience';
 
 export interface ButtonCommandExperience<Context>
   extends BaseCommandExperience<Context>,

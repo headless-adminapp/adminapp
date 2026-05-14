@@ -1,4 +1,4 @@
-import { DataLookup, Id } from '@headless-adminapp/core/attributes';
+import type { DataLookup, Id } from '@headless-adminapp/core/attributes';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -20,14 +20,14 @@ export function useFormSave() {
   const schema = useDataFormSchema();
   const initialValues = useContextSelector(
     DataFormContext,
-    (state) => state.initialValues
+    (state) => state.initialValues,
   );
   const dataService = useDataService();
   const openToastNotification = useOpenToastNotification();
 
   const saveRecord = useContextSelector(
     DataFormContext,
-    (state) => state.saveRecordFn
+    (state) => state.saveRecordFn,
   );
 
   const client = useQueryClient();
@@ -65,7 +65,7 @@ export function useFormSave() {
           schema.idAttribute,
           schema.primaryAttribute,
           schema.avatarAttribute,
-        ].filter(Boolean) as string[]
+        ].filter(Boolean) as string[],
       );
 
       saveResult = {

@@ -1,5 +1,5 @@
-import { FileObject } from './AttachmentAttribute';
-import { AttributeBase } from './AttributeBase';
+import type { FileObject } from './AttachmentAttribute';
+import type { AttributeBase } from './AttributeBase';
 
 /**
  * Attachments attribute type

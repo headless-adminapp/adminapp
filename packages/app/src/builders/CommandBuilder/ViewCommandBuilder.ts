@@ -1,9 +1,9 @@
-import {
+import type {
   EntityMainGridCommandContext,
   EntityMainGridCommandItemExperience,
 } from '@headless-adminapp/core/experience/view';
-import { Localized } from '@headless-adminapp/core/types';
-import { Icon } from '@headless-adminapp/icons';
+import type { Localized } from '@headless-adminapp/core/types';
+import type { Icon } from '@headless-adminapp/icons';
 
 import { exportRecordsCSV, exportRecordsXLS, retriveRecords } from '../utils';
 import { createLocalizedSelector, plurialize } from './utils';
@@ -216,12 +216,12 @@ export namespace ViewCommandBuilder {
             return;
           }
 
-          const logicalName = (
-            context.primaryControl.selectedRecords[0] as any
-          )[
-            context.primaryControl.schema.virtual
-              ?.baseSchemaLogicalNameAttribute
-          ];
+          const logicalName =
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (context.primaryControl.selectedRecords[0] as any)[
+              context.primaryControl.schema.virtual
+                ?.baseSchemaLogicalNameAttribute
+            ];
 
           if (!logicalName) {
             return;
@@ -247,12 +247,12 @@ export namespace ViewCommandBuilder {
             return true;
           }
 
-          const logicalName = (
-            context.primaryControl.selectedRecords[0] as any
-          )[
-            context.primaryControl.schema.virtual
-              ?.baseSchemaLogicalNameAttribute
-          ];
+          const logicalName =
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (context.primaryControl.selectedRecords[0] as any)[
+              context.primaryControl.schema.virtual
+                ?.baseSchemaLogicalNameAttribute
+            ];
 
           if (!logicalName) {
             return true;

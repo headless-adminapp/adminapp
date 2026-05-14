@@ -1,5 +1,5 @@
 import { Field } from '@fluentui/react-components';
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
 interface SectionControlWrapperProps {
   label: string;

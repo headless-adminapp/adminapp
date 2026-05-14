@@ -1,11 +1,11 @@
-import { Form } from '@headless-adminapp/core/experience/form';
-import {
+import type { Form } from '@headless-adminapp/core/experience/form';
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
-import { Data, IDataService } from '@headless-adminapp/core/transport';
+import type { ISchemaStore } from '@headless-adminapp/core/store';
+import type { Data, IDataService } from '@headless-adminapp/core/transport';
 
 export type RetriveRecordFnOptions<SA extends SchemaAttributes> = {
   recordId: string;
@@ -17,5 +17,5 @@ export type RetriveRecordFnOptions<SA extends SchemaAttributes> = {
 };
 
 export type RetriveRecordFn<SA extends SchemaAttributes> = (
-  options: RetriveRecordFnOptions<SA>
+  options: RetriveRecordFnOptions<SA>,
 ) => Promise<Data<InferredSchemaType<SA>>>;

@@ -1,7 +1,7 @@
 import { getLocalizedOperatorOptions } from '@headless-adminapp/app/datagrid/column-filter';
 import { useDataService } from '@headless-adminapp/app/transport';
 import type { Attribute } from '@headless-adminapp/core/attributes';
-import { OperatorKey } from '@headless-adminapp/core/transport';
+import type { OperatorKey } from '@headless-adminapp/core/transport';
 import { useMemo } from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
@@ -30,7 +30,7 @@ export function OperatorSelect({
 
     if (supportedOperators) {
       operators = operators.filter((option) =>
-        supportedOperators[attribute.type].includes(option.value)
+        supportedOperators[attribute.type].includes(option.value),
       );
     }
 

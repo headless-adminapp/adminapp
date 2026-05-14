@@ -1,14 +1,14 @@
-import { NavPageItem } from '../app';
+import type { NavPageItem } from '../app';
 
 export type RouteResolver = (
   item: NavPageItem,
-  basePath: string | undefined
+  basePath: string | undefined,
 ) => string;
 
 export type IsRouteActive = (
   path: string,
   item: NavPageItem,
-  basePath: string | undefined
+  basePath: string | undefined,
 ) => boolean;
 
 export interface RouteInfo {

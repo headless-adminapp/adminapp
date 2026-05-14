@@ -1,7 +1,7 @@
 import { useRouter } from '@headless-adminapp/app/route';
 import { useEffect } from 'react';
 
-import { NavItemInfo, NavSubItemInfo } from './types';
+import type { NavItemInfo, NavSubItemInfo } from './types';
 
 export function usePrefetch(item: NavItemInfo | NavSubItemInfo) {
   const router = useRouter();

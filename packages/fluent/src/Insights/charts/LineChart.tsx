@@ -1,6 +1,6 @@
 import { tokens } from '@fluentui/react-components';
 import { useLocale } from '@headless-adminapp/app/locale';
-import { LineChartInfo } from '@headless-adminapp/core/experience/insights';
+import type { LineChartInfo } from '@headless-adminapp/core/experience/insights';
 import {
   LineChart as LineChartInternal,
   ResponsiveContainer,

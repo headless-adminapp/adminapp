@@ -1,23 +1,23 @@
 import {
-  AppExperience,
+  type AppExperience,
   PageType,
 } from '@headless-adminapp/core/experience/app';
 import {
-  ISchemaExperienceStore,
-  ISchemaStore,
+  type ISchemaExperienceStore,
+  type ISchemaStore,
   SchemaStore,
 } from '@headless-adminapp/core/store';
-import { ICalculatedAttributeStore } from '@headless-adminapp/core/store/ICalculatedAttributeStore';
+import type { ICalculatedAttributeStore } from '@headless-adminapp/core/store/ICalculatedAttributeStore';
 import { IconPlaceholder } from '@headless-adminapp/icons';
-import { FC, PropsWithChildren, useEffect } from 'react';
+import { type FC, type PropsWithChildren, useEffect } from 'react';
 
 import { useCreateContextStore } from '../mutable/context';
 import {
-  IRecentItemStore,
+  type IRecentItemStore,
   RecentItemStore,
   SchemaExperienceStore,
 } from '../store';
-import { MetadataContext, MetadataContextState } from './context';
+import { MetadataContext, type MetadataContextState } from './context';
 
 export interface MetadataProviderProps {
   schemaStore?: ISchemaStore;

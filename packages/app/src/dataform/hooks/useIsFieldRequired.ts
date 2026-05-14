@@ -7,12 +7,12 @@ import { useDataFormSchema } from './useFormSchema';
 export function useIsFieldRequired(attributeName: string): boolean {
   const requiredFields = useContextSelector(
     DataFormContext,
-    (state) => state.requiredFields
+    (state) => state.requiredFields,
   );
 
   const controls = useContextSelector(
     DataFormContext,
-    (state) => state.formInternal.controls.dict
+    (state) => state.formInternal.controls.dict,
   );
 
   const schema = useDataFormSchema();

@@ -1,4 +1,4 @@
-import {
+import type {
   Attribute,
   BooleanAttribute,
   ChoiceAttribute,
@@ -7,9 +7,9 @@ import {
   InferredAttributeType,
   NumberAttribute,
 } from '@headless-adminapp/core/attributes';
-import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
-import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
-import { Locale } from '@headless-adminapp/core/experience/locale/types';
+import type { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
+import type { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
+import type { Locale } from '@headless-adminapp/core/experience/locale/types';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';

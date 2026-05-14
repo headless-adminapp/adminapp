@@ -1,7 +1,7 @@
 import { tokens } from '@fluentui/react-components';
 import { useLocale } from '@headless-adminapp/app/locale';
-import { FunnelChartInfo } from '@headless-adminapp/core/experience/insights';
-import { useMemo, useRef } from 'react';
+import type { FunnelChartInfo } from '@headless-adminapp/core/experience/insights';
+import { useMemo } from 'react';
 import {
   Funnel,
   FunnelChart as FunnelChartInternal,
@@ -19,19 +19,22 @@ export function FunnelChart({
   dataset,
   chartInfo,
 }: Readonly<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataset: any[];
   chartInfo: FunnelChartInfo;
 }>) {
   const locale = useLocale();
   const item = chartInfo;
-  const nameFormatter = createLongAxisFormatter(locale, {
-    type: 'category',
-    options: item.nameTick?.options,
-  });
+  const nameFormatter = useMemo(
+    () =>
+      createLongAxisFormatter(locale, {
+        type: 'category',
+        options: item.nameTick?.options,
+      }),
+    [locale, item.nameTick?.options],
+  );
 
-  const nameFormatterRef = useRef(nameFormatter);
-  nameFormatterRef.current = nameFormatter;
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data = dataset[0] as any[];
 
   const valueFormatter = createLongAxisFormatter(locale, item.dataTick);
@@ -41,11 +44,11 @@ export function FunnelChart({
       return [];
     }
 
-    let total = data[0][item.dataKey] ?? 0;
+    const total = data[0][item.dataKey] ?? 0;
 
     return data.map((dataItem, index) => {
       const perc = total ? dataItem[item.dataKey] / total : 0;
-      const label = nameFormatterRef.current(dataItem[item.nameKey]);
+      const label = nameFormatter(dataItem[item.nameKey]);
 
       const labelWithPerc = `${label} (${(perc * 100).toFixed(0)}%)`;
       return {
@@ -62,7 +65,7 @@ export function FunnelChart({
         perc,
       };
     });
-  }, [data, item]);
+  }, [data, item, nameFormatter]);
 
   return (
     <ResponsiveContainer width="100%" height="100%">

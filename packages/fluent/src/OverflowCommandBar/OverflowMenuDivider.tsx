@@ -9,7 +9,7 @@ export const OverflowMenuDivider: React.FC<{
 }> = (props) => {
   const isGroupVisible = useIsOverflowGroupVisible(props.id);
   const isPreviousGroupVisible = useIsOverflowGroupVisible(
-    props.previousGroupId
+    props.previousGroupId,
   );
 
   if (isGroupVisible !== 'hidden' || isPreviousGroupVisible === 'visible') {

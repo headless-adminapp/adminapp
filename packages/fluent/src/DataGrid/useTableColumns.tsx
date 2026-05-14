@@ -8,7 +8,7 @@ import {
 } from '@fluentui/react-components';
 import {
   GridContext,
-  TransformedViewColumn,
+  type TransformedViewColumn,
 } from '@headless-adminapp/app/datagrid';
 import {
   useDataGridSchema,
@@ -28,7 +28,7 @@ import {
   useContextSetValue,
   useMutableState,
 } from '@headless-adminapp/app/mutable';
-import { InternalRouteResolver } from '@headless-adminapp/app/route/context';
+import type { InternalRouteResolver } from '@headless-adminapp/app/route/context';
 import {
   useRouter,
   useRouteResolver,
@@ -38,26 +38,26 @@ import {
   getAttributeFormattedValue,
 } from '@headless-adminapp/app/utils';
 import { parsePhoneNumber } from '@headless-adminapp/app/utils/phone';
-import {
+import type {
   Attribute,
   DataLookup,
   Id,
   LookupAttribute,
 } from '@headless-adminapp/core/attributes';
-import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
-import { RegardingAttribute } from '@headless-adminapp/core/attributes/LookupAttribute';
+import type { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
+import type { RegardingAttribute } from '@headless-adminapp/core/attributes/LookupAttribute';
 import { PageType } from '@headless-adminapp/core/experience/app';
-import { Locale } from '@headless-adminapp/core/experience/locale';
-import { ViewColumnProps } from '@headless-adminapp/core/experience/view/ViewColumn';
-import { RouterInstance } from '@headless-adminapp/core/navigation';
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
+import type { Locale } from '@headless-adminapp/core/experience/locale';
+import type { ViewColumnProps } from '@headless-adminapp/core/experience/view/ViewColumn';
+import type { RouterInstance } from '@headless-adminapp/core/navigation';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { ISchemaStore } from '@headless-adminapp/core/store';
 import {
-  CellContext,
+  type CellContext,
   createColumnHelper,
-  HeaderContext,
+  type HeaderContext,
 } from '@tanstack/react-table';
-import { FC, Fragment, useEffect, useMemo, useRef } from 'react';
+import { type FC, Fragment, useEffect, useMemo, useRef } from 'react';
 
 import { extendedTokens } from '../components/fluent';
 import { componentStore } from '../componentStore';
@@ -68,7 +68,7 @@ import { TableCellTextContent } from './TableCell';
 import { TableCellChoiceContent } from './TableCell/TableCellChoice';
 import { TableCellLinkContent } from './TableCell/TableCellLink';
 import { TableCellWrapper } from './TableCell/TableCellWrapper';
-import { UniqueRecord } from './types';
+import type { UniqueRecord } from './types';
 
 const columnHelper = createColumnHelper<UniqueRecord>();
 
@@ -96,7 +96,7 @@ export function useTableColumns({
   disableColumnResize?: boolean;
   disableColumnFilter?: boolean;
   disableColumnSort?: boolean;
-  tableWrapperRef: React.RefObject<HTMLDivElement>;
+  tableWrapperRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const styles = useStyles();
   const data = useGridData();
@@ -128,7 +128,7 @@ export function useTableColumns({
   const columnWidths = useMemo(() => {
     const availableWidth = Math.max(
       0,
-      (tableWrapperSize.width ?? 0) - 32 - 32 - 16
+      (tableWrapperSize.width ?? 0) - 32 - 32 - 16,
     );
 
     const { columns: calculatedColumns } = calculateColumnWidths({
@@ -185,7 +185,7 @@ export function useTableColumns({
       return false;
     }
 
-    if (selectedIds.length === dataRef.current?.records.length) {
+    if (selectedIds.length === data?.records.length) {
       return true;
     }
 
@@ -224,7 +224,7 @@ export function useTableColumns({
               setSelectedIdsRef.current([id]);
               setValue({ cellSelectionRange: null });
             }}
-            mutableState={mutableContextCommandState as any}
+            mutableState={mutableContextCommandState}
           />
         ),
         enableResizing: false,
@@ -246,7 +246,7 @@ export function useTableColumns({
     function getAllIds() {
       return (
         dataRef.current?.records.map(
-          (record) => record[schema.idAttribute] as string
+          (record) => record[schema.idAttribute] as string,
         ) ?? []
       );
     }
@@ -284,6 +284,7 @@ export function useTableColumns({
         header: () => (
           <TableSelectionCell
             checked={headingSelectionState}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             as={'th' as any}
             style={{
               position: 'sticky',
@@ -740,7 +741,7 @@ function renderPrimaryAttribute({
         onClick={() => {
           openRecord?.(
             info.row.original[idAttributeName] as string,
-            info.row.original.$entity
+            info.row.original.$entity,
           );
         }}
       >
@@ -872,13 +873,16 @@ function renderRegardingAttribute({
     return <TableCellTextContent />;
   }
 
-  const hasSchema = schemaStore.hasSchema((value as any).logicalName as string);
+  const hasSchema = schemaStore.hasSchema(
+    (value as unknown as { logicalName: string }).logicalName,
+  );
 
   if (!hasSchema) {
     return <TableCellTextContent />;
   }
 
-  const logicalName = (value as any).logicalName as string;
+  const logicalName = (value as unknown as { logicalName: string })
+    .logicalName as string;
 
   const lookupSchema = schemaStore.getSchema(logicalName);
 

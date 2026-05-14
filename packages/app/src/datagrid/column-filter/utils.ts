@@ -1,10 +1,10 @@
 import type { AttributeType } from '@headless-adminapp/core/attributes';
 
 import { operatorOptions } from './constants';
-import { OperatorOption, OperatorStrings } from './types';
+import type { OperatorOption, OperatorStrings } from './types';
 
 export const getLocalizedOperatorOptions = (
-  strings: OperatorStrings
+  strings: OperatorStrings,
 ): Record<AttributeType, OperatorOption[]> => {
   return Object.entries(operatorOptions).reduce(
     (acc, [key, value]) => ({
@@ -14,6 +14,6 @@ export const getLocalizedOperatorOptions = (
         label: strings[option.labelKey],
       })),
     }),
-    {} as Record<AttributeType, OperatorOption[]>
+    {} as Record<AttributeType, OperatorOption[]>,
   );
 };

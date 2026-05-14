@@ -5,7 +5,7 @@ import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { PageEntityViewProvider } from '@headless-adminapp/app/providers/PageEntityViewProvider';
 import { Icons } from '@headless-adminapp/icons';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { PageBroken } from '../components/PageBroken';
 import { PageLoading } from '../components/PageLoading';

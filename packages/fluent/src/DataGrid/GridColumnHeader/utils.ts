@@ -1,10 +1,10 @@
-import { OperatorOption } from '@headless-adminapp/app/datagrid';
+import type { OperatorOption } from '@headless-adminapp/app/datagrid';
 import type { AttributeType } from '@headless-adminapp/core/attributes';
-import { OperatorKey } from '@headless-adminapp/core/transport';
+import type { OperatorKey } from '@headless-adminapp/core/transport';
 
 export function getDefaultOperator(
   operator: OperatorKey | undefined,
-  attributeType: AttributeType
+  attributeType: AttributeType,
 ): OperatorKey {
   if (operator) {
     return operator;
@@ -27,8 +27,10 @@ export function getDefaultOperator(
 
 export function getDefaultValues(
   operator: OperatorOption,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any,
-  _attributeType: AttributeType
+  _attributeType: AttributeType,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any[] {
   if (!value) return [];
   return Array.isArray(value) ? value : [value];

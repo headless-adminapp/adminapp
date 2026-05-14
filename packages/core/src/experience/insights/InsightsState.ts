@@ -1,7 +1,7 @@
-import { IEventManager } from '@headless-adminapp/core/store';
+import type { IEventManager } from '@headless-adminapp/core/store';
 
-import { InferredSchemaType, SchemaAttributes } from '../../schema';
-import { InsightConfig } from './InsightConfig';
+import type { InferredSchemaType, SchemaAttributes } from '../../schema';
+import type { InsightConfig } from './InsightConfig';
 
 export interface InsightsState<S extends SchemaAttributes = SchemaAttributes> {
   config: InsightConfig<S>;

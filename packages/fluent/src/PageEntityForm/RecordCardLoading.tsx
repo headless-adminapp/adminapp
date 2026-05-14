@@ -5,11 +5,11 @@ import {
   SkeletonItem,
   tokens,
 } from '@fluentui/react-components';
-import { CardView } from '@headless-adminapp/core/experience/view';
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { CardView } from '@headless-adminapp/core/experience/view';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 
 interface RecordCardLoadingProps<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 > {
   cardView: CardView<S>;
 }
@@ -26,7 +26,7 @@ const useStyles = makeStyles({
 });
 
 export function RecordCardLoading<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >({ cardView }: Readonly<RecordCardLoadingProps<S>>) {
   const styles = useStyles();
 

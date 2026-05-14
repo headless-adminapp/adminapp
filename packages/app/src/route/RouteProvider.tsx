@@ -2,22 +2,28 @@ import {
   createIsRouteActive,
   createRouteResolver,
   defaultRouteInfo,
-  IsRouteActive,
-  RouteResolver,
+  type IsRouteActive,
+  type RouteResolver,
 } from '@headless-adminapp/core/experience/route';
-import { RouterInstance } from '@headless-adminapp/core/navigation';
-import { FC, PropsWithChildren, useCallback, useMemo, useRef } from 'react';
+import type { RouterInstance } from '@headless-adminapp/core/navigation';
+import {
+  type FC,
+  type PropsWithChildren,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 
 import {
-  InternalIsRouteActive,
-  InternalRouteResolver,
+  type InternalIsRouteActive,
+  type InternalRouteResolver,
   RouteHelperContext,
   RouterBasePathContext,
   RouterContext,
   RouterPathnameContext,
   RouterSearchParamsContext,
 } from './context';
-import { ReadonlyURLSearchParams } from './types';
+import type { ReadonlyURLSearchParams } from './types';
 
 const defaultRouteResolver = createRouteResolver(defaultRouteInfo);
 const defaultIsRouteActive = createIsRouteActive(defaultRouteInfo);
@@ -51,12 +57,12 @@ export const RouteProvider: FC<PropsWithChildren<RouteProviderProps>> = ({
 
   const internalRouteResolver: InternalRouteResolver = useCallback(
     (item) => routeResolverRef.current(item, basePathRef.current),
-    []
+    [],
   );
 
   const internalIsRouteActive: InternalIsRouteActive = useCallback(
     (path, item) => isRouteActiveRef.current(path, item, basePathRef.current),
-    []
+    [],
   );
 
   const routeHelperContextState = useMemo(() => {

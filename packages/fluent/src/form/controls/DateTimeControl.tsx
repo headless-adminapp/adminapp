@@ -14,7 +14,7 @@ import { useCalendarStyles } from './DateControl';
 import { SkeletonControl } from './SkeletonControl';
 import { useTimePickerStyles } from './TimeControl/TimeControl';
 import { resolveTimeValue } from './TimeControl/utils';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
@@ -231,7 +231,7 @@ export function DateTimeControl({
                 .toISOString(),
             );
           } else if (data.selectedTimeText) {
-            let resolvedTime = resolveTimeValue(
+            const resolvedTime = resolveTimeValue(
               data.selectedTimeText,
               timeFormat,
             );

@@ -1,5 +1,6 @@
 import { useBaseCommandHandlerContext } from '@headless-adminapp/app/command';
-import { ProcessFlowInfoContext } from '@headless-adminapp/core/experience/form/ProcessFlowInfo';
+import type { ProcessFlowInfoContext } from '@headless-adminapp/core/experience/form/ProcessFlowInfo';
+import { useWatch } from 'react-hook-form';
 
 import { useContextSelector } from '../../mutable/context';
 import { DataFormContext } from '../context';
@@ -19,7 +20,8 @@ function useFormControlContext(): ProcessFlowInfoContext['primaryControl'] {
   const formInstance = useFormInstance();
   const readonly = useFormIsReadonly() ?? false;
 
-  const data = formInstance.watch() as any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data = useWatch({ control: formInstance.control }) as any;
 
   return {
     data,

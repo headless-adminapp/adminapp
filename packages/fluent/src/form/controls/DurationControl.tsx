@@ -1,11 +1,11 @@
 import { makeStyles, mergeClasses, tokens } from '@fluentui/react-components';
 import { formatDuration } from '@headless-adminapp/app/utils';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { type FC, useEffect, useMemo, useState } from 'react';
 
 import { Combobox } from '../../components/fluent';
 import { Option } from '../../components/fluent/Option';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 const useStyles = makeStyles({
   root: {

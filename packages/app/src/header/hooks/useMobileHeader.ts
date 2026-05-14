@@ -6,17 +6,17 @@ export function useMobileHeader(
     title?: React.ReactNode;
     rightContent?: React.ReactNode;
     order?: number;
-  }
+  },
 ) {
   useMobileHeaderSetValue(
     showBackButton,
     options?.order ?? 0,
-    'showBackButton'
+    'showBackButton',
   );
   useMobileHeaderSetValue(options?.title, options?.order ?? 0, 'title');
   useMobileHeaderSetValue(
     options?.rightContent,
     options?.order ?? 0,
-    'rightComponent'
+    'rightComponent',
   );
 }

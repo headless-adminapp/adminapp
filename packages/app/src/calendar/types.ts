@@ -1,13 +1,13 @@
 import type { EventContentArg } from '@fullcalendar/core';
-import { AuthSession } from '@headless-adminapp/core/experience/auth';
-import { OpenFormOptions } from '@headless-adminapp/core/experience/command';
-import { RouterInstance } from '@headless-adminapp/core/navigation';
-import {
+import type { AuthSession } from '@headless-adminapp/core/experience/auth';
+import type { OpenFormOptions } from '@headless-adminapp/core/experience/command';
+import type { RouterInstance } from '@headless-adminapp/core/navigation';
+import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
 
-import { InternalRouteResolver } from '../route/context';
+import type { InternalRouteResolver } from '../route/context';
 
 export interface CalendarEvent {
   id: string;
@@ -20,11 +20,11 @@ export interface CalendarEvent {
 
 export type CalendarEventExtended<
   SA1 extends SchemaAttributes = SchemaAttributes,
-  SA2 extends SchemaAttributes = SchemaAttributes
+  SA2 extends SchemaAttributes = SchemaAttributes,
 > = CalendarEvent & InferredSchemaType<SA1> & InferredSchemaType<SA2>;
 
 export interface CalendarEventsResolverFnOptions<
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 > {
   start: Date;
   end: Date;
@@ -33,16 +33,16 @@ export interface CalendarEventsResolverFnOptions<
 }
 
 export type CalendarEventsResolverFn<
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 > = (options: CalendarEventsResolverFnOptions<SA>) => Promise<CalendarEvent[]>;
 
 export type CalendarEventResolverFn<T extends CalendarEvent = CalendarEvent> = (
-  id: string
+  id: string,
 ) => Promise<Partial<T>>;
 
 export type CalendarEventSaveData<
   SA1 extends SchemaAttributes = SchemaAttributes,
-  SA2 extends SchemaAttributes = SchemaAttributes
+  SA2 extends SchemaAttributes = SchemaAttributes,
 > = Omit<CalendarEvent, 'id'> & {
   id?: CalendarEvent['id'];
 } & InferredSchemaType<SA1> &
@@ -50,7 +50,7 @@ export type CalendarEventSaveData<
 
 export interface CalendarEventSaveFnOptions<
   SA1 extends SchemaAttributes = SchemaAttributes,
-  SA2 extends SchemaAttributes = SchemaAttributes
+  SA2 extends SchemaAttributes = SchemaAttributes,
 > {
   event: CalendarEventSaveData<SA1, SA2>;
   modifiedValues: Partial<CalendarEventSaveData<SA1, SA2>>;
@@ -58,7 +58,7 @@ export interface CalendarEventSaveFnOptions<
 
 export type CalendarEventSaveFn<
   SA1 extends SchemaAttributes = SchemaAttributes,
-  SA2 extends SchemaAttributes = SchemaAttributes
+  SA2 extends SchemaAttributes = SchemaAttributes,
 > = ({
   event,
   modifiedValues,
@@ -67,7 +67,7 @@ export type CalendarEventSaveFn<
 export interface CalendarConfig<
   SA1 extends SchemaAttributes = SchemaAttributes,
   SA2 extends SchemaAttributes = SchemaAttributes,
-  SA3 extends SchemaAttributes = SchemaAttributes
+  SA3 extends SchemaAttributes = SchemaAttributes,
 > {
   eventsResolver: CalendarEventsResolverFn<SA3>;
   eventResolver?: CalendarEventResolverFn;
@@ -100,7 +100,7 @@ export interface CalendarConfig<
             router: RouterInstance;
             routeResolver: InternalRouteResolver;
             openForm: (options: OpenFormOptions) => void;
-          }
+          },
         ) => void;
       };
   editOptions?:
@@ -115,7 +115,7 @@ export interface CalendarConfig<
             router: RouterInstance;
             routeResolver: InternalRouteResolver;
             openForm: (options: OpenFormOptions) => void;
-          }
+          },
         ) => void;
       };
 }

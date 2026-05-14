@@ -46,6 +46,7 @@ export function useUnsavedChangesRouteGuard() {
       const unsavedChangesInfo = getUnsavedChangesInfo();
       if (unsavedChangesInfo) {
         event.preventDefault();
+        // eslint-disable-next-line deprecation/deprecation
         event.returnValue = unsavedChangesInfo.message;
       }
     }

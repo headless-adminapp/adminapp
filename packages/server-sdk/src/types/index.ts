@@ -1,7 +1,7 @@
 export * from './plugin';
-export * from './sdk';
-export * from './IAutoNumberProvider';
-export * from './IDefaultValueProvider';
-export * from './DependentRecord';
-export * from './DatabaseContext';
-export * from './IDataFilter';
+export type * from './sdk';
+export type * from './IAutoNumberProvider';
+export type * from './IDefaultValueProvider';
+export type * from './DependentRecord';
+export type * from './DatabaseContext';
+export type * from './IDataFilter';

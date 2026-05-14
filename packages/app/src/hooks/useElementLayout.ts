@@ -1,4 +1,4 @@
-import { RefObject, useLayoutEffect, useState } from 'react';
+import { type RefObject, useLayoutEffect, useState } from 'react';
 
 interface ElementLayout {
   width: number;
@@ -10,8 +10,8 @@ interface ElementLayout {
 }
 
 export function useElementSize(
-  elementRef: RefObject<HTMLElement>,
-  interval?: number
+  elementRef: RefObject<HTMLElement | null>,
+  interval?: number,
 ) {
   const [size, setSize] = useState<ElementLayout>({
     width: 0,
@@ -53,7 +53,7 @@ export function useElementSize(
 
     updateSize();
 
-    let intervalId: NodeJS.Timeout;
+    let intervalId: ReturnType<typeof setInterval> | undefined;
 
     if (interval) {
       intervalId = setInterval(updateSize, interval);

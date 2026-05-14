@@ -5,7 +5,7 @@ import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 import { PageEntityFormProvider } from '@headless-adminapp/app/providers/PageEntityFormProvider';
 import { RecordSetProvider } from '@headless-adminapp/app/recordset';
 import { Icons } from '@headless-adminapp/icons';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { PageBroken } from '../components/PageBroken';
 import { PageLoading } from '../components/PageLoading';

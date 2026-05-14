@@ -1,6 +1,6 @@
-import { SchemaAttributes } from '../schema';
-import { CalculatedAttributeInfo } from '../schema/CalculatedAttributeInfo';
-import { ICalculatedAttributeStore } from './ICalculatedAttributeStore';
+import type { SchemaAttributes } from '../schema';
+import type { CalculatedAttributeInfo } from '../schema/CalculatedAttributeInfo';
+import type { ICalculatedAttributeStore } from './ICalculatedAttributeStore';
 
 export class CalculatedAttributeStore implements ICalculatedAttributeStore {
   private readonly allCalculatedAttributeInfos: Array<CalculatedAttributeInfo> =
@@ -25,7 +25,7 @@ export class CalculatedAttributeStore implements ICalculatedAttributeStore {
     R extends Record<string, SchemaAttributes> = Record<
       string,
       SchemaAttributes
-    >
+    >,
   >(info: CalculatedAttributeInfo<S, R>) {
     const logicalName = info.logicalName;
     const attributeName = info.attributeName as string;
@@ -40,12 +40,12 @@ export class CalculatedAttributeStore implements ICalculatedAttributeStore {
 
     if (this.calculatedAttributeInfoDicBySchema[logicalName][attributeName]) {
       throw new Error(
-        `Duplicate registration for ${logicalName}.${attributeName}`
+        `Duplicate registration for ${logicalName}.${attributeName}`,
       );
     }
 
     this.calculatedAttributeInfoListBySchema[logicalName].push(
-      info as CalculatedAttributeInfo
+      info as CalculatedAttributeInfo,
     );
     this.allCalculatedAttributeInfos.push(info as CalculatedAttributeInfo);
 
@@ -62,12 +62,12 @@ export class CalculatedAttributeStore implements ICalculatedAttributeStore {
       }
 
       this.calculatedAttributeInfoByDeps[logicalName][dep].push(
-        info as CalculatedAttributeInfo
+        info as CalculatedAttributeInfo,
       );
     }
 
     for (const [relatedLogicalName, relatedInfo] of Object.entries(
-      info.relatedDeps || {}
+      info.relatedDeps || {},
     )) {
       if (!this.calculatedAttributeInfoByDeps[relatedLogicalName]) {
         this.calculatedAttributeInfoByDeps[relatedLogicalName] = {};
@@ -79,21 +79,21 @@ export class CalculatedAttributeStore implements ICalculatedAttributeStore {
         }
 
         this.calculatedAttributeInfoByDeps[relatedLogicalName][column].push(
-          info as CalculatedAttributeInfo
+          info as CalculatedAttributeInfo,
         );
       }
     }
   }
 
   getCalculatedAttributeInfos(
-    logicalName: string
+    logicalName: string,
   ): Record<string, CalculatedAttributeInfo> | undefined {
     return this.calculatedAttributeInfoDicBySchema[logicalName];
   }
 
   getCalculatedAttributeInfo(
     logicalName: string,
-    attributeName: string
+    attributeName: string,
   ): CalculatedAttributeInfo | undefined {
     return this.calculatedAttributeInfoDicBySchema[logicalName]?.[
       attributeName
@@ -105,7 +105,7 @@ export class CalculatedAttributeStore implements ICalculatedAttributeStore {
     ...attributeNames: string[]
   ): CalculatedAttributeInfo[] {
     return attributeNames.flatMap(
-      (name) => this.calculatedAttributeInfoByDeps[logicalName]?.[name] || []
+      (name) => this.calculatedAttributeInfoByDeps[logicalName]?.[name] || [],
     );
   }
 }

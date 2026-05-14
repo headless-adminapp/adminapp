@@ -1,6 +1,6 @@
-import { SchemaAttributes } from '../../schema';
-import { Localized } from '../../types';
-import { Section } from './Section';
+import type { SchemaAttributes } from '../../schema';
+import type { Localized } from '../../types';
+import type { Section } from './Section';
 
 export interface Tab<S extends SchemaAttributes = SchemaAttributes> {
   name: string;

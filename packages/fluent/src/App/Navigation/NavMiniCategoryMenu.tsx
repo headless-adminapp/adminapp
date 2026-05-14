@@ -1,9 +1,9 @@
 import { Menu, MenuList, MenuTrigger } from '@fluentui/react-components';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { MenuItem, MenuPopover } from '../../components/fluent';
 import { NavItemComponent } from './NavItemComponent';
-import { NavCategoryInfo, NavSubItemInfo } from './types';
+import type { NavCategoryInfo, NavSubItemInfo } from './types';
 import { usePrefetch } from './usePrefetch';
 
 interface NavMiniCategoryMenuProps {

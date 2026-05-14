@@ -4,7 +4,7 @@ import {
   tokens,
 } from '@fluentui/react-components';
 import { Icons } from '@headless-adminapp/icons';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { QuickActionItem } from '../App/QuickActionItem';
 import { extendedTokens } from './fluent';

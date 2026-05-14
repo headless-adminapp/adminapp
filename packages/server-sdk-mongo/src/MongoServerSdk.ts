@@ -1,45 +1,45 @@
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { ISchemaStore } from '@headless-adminapp/core/store';
 import {
-  AggregateAttributeValue,
-  AggregateQuery,
-  CreateRecordParams,
-  CreateRecordResult,
-  Data,
-  DeleteRecordParams,
-  DeleteRecordResult,
-  Filter,
+  type AggregateAttributeValue,
+  type AggregateQuery,
+  type CreateRecordParams,
+  type CreateRecordResult,
+  type Data,
+  type DeleteRecordParams,
+  type DeleteRecordResult,
+  type Filter,
   ForbiddenError,
   NotFoundError,
-  RetriveRecordParams,
-  RetriveRecordResult,
-  RetriveRecordsParams,
-  RetriveRecordsResult,
-  UpdateRecordParams,
-  UpdateRecordResult,
+  type RetriveRecordParams,
+  type RetriveRecordResult,
+  type RetriveRecordsParams,
+  type RetriveRecordsResult,
+  type UpdateRecordParams,
+  type UpdateRecordResult,
 } from '@headless-adminapp/core/transport';
 import {
-  DependentRecord,
+  type DependentRecord,
   ExecutionStage,
-  IAutoNumberProvider,
+  type IAutoNumberProvider,
   MessageName,
-  ResovleAutoNumberParams,
+  type ResovleAutoNumberParams,
   ServerSdk,
-  ServerSdkContext,
-  ServerSdkOptions,
+  type ServerSdkContext,
+  type ServerSdkOptions,
 } from '@headless-adminapp/server-sdk';
 import mongoose, {
-  ClientSession,
-  FilterQuery,
-  PipelineStage,
+  type ClientSession,
+  type FilterQuery,
+  type PipelineStage,
   startSession,
   Types,
 } from 'mongoose';
 
 import { transformFilter } from './conditions';
 import { getDependentRecordsToDelete } from './getDependentRecordsToDelete';
-import { MongoSchemaStore } from './MongoSchemaStore';
-import { MongoRequiredSchemaAttributes } from './types';
+import type { MongoSchemaStore } from './MongoSchemaStore';
+import type { MongoRequiredSchemaAttributes } from './types';
 import { transformRecord } from './utils/transform';
 
 export interface MongoDatabaseContext {
@@ -141,7 +141,7 @@ export class MongoServerSdk<
         logicalName: params.logicalName,
         dbContext: {
           session: this.session,
-        } as any,
+        } as DbContext,
         sdkContext: this.options.context,
       }),
       schema,
@@ -162,7 +162,7 @@ export class MongoServerSdk<
         logicalName: params.logicalName,
         dbContext: {
           session: this.session,
-        } as any,
+        } as DbContext,
         sdkContext: this.options.context,
       }),
       schema,
@@ -321,6 +321,7 @@ export class MongoServerSdk<
         },
         {} as Record<
           string,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           number | string | any | Record<string, number | string>
         >,
       );
@@ -349,6 +350,7 @@ export class MongoServerSdk<
               [lookupSchema.idAttribute]: `$${cur}.${
                 lookupSchema.idAttribute as string
               }`,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } as Record<string, any>;
 
             const columns = params.expand?.[cur] ?? [];
@@ -369,6 +371,7 @@ export class MongoServerSdk<
 
             return acc;
           },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           {} as Record<string, any>,
         );
 
@@ -402,7 +405,7 @@ export class MongoServerSdk<
       logicalName,
       dbContext: {
         session: this.session,
-      } as any,
+      } as DbContext,
       sdkContext: this.options.context,
     });
 
@@ -421,7 +424,7 @@ export class MongoServerSdk<
       logicalName,
       dbContext: {
         session: this.session,
-      } as any,
+      } as DbContext,
       sdkContext: this.options.context,
     });
 
@@ -674,7 +677,7 @@ export class MongoServerSdk<
         logicalName: params.logicalName,
         dbContext: {
           session: this.session,
-        } as any,
+        } as DbContext,
         sdkContext: this.options.context,
       }),
       schema,
@@ -693,7 +696,7 @@ export class MongoServerSdk<
         logicalName: params.logicalName,
         dbContext: {
           session: this.session,
-        } as any,
+        } as DbContext,
         sdkContext: this.options.context,
       }),
       schema,
@@ -715,7 +718,7 @@ export class MongoServerSdk<
       throw new NotFoundError('Record not found');
     }
 
-    let dependedRecordToBeDeleted: DependentRecord[] =
+    const dependedRecordToBeDeleted: DependentRecord[] =
       await getDependentRecordsToDelete({
         schema,
         _id: record._id,
@@ -796,6 +799,7 @@ export class MongoServerSdk<
   }
 
   private transformToDbRecord(data: unknown, schema: Schema<SA>) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const dbRecord = Object.entries(data as Record<string, any>).reduce(
       (acc, [key, value]) => {
         if (value === undefined) {
@@ -848,6 +852,7 @@ export class MongoServerSdk<
 
         return acc;
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       {} as Record<string, any>,
     );
     return dbRecord;
@@ -1013,6 +1018,7 @@ export class MongoServerSdk<
   }
 
   private transformRecords<SA extends SchemaAttributes>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     records: any[],
     {
       schema,
@@ -1050,7 +1056,7 @@ export class MongoServerSdk<
         logicalName: query.logicalName,
         dbContext: {
           session: this.session,
-        } as any,
+        } as DbContext,
         sdkContext: this.options.context,
       }),
       schema,
@@ -1071,7 +1077,7 @@ export class MongoServerSdk<
         logicalName,
         dbContext: {
           session: this.session,
-        } as any,
+        } as DbContext,
         sdkContext: this.options.context,
       }),
       schema,

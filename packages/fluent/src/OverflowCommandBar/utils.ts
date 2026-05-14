@@ -1,11 +1,11 @@
-import { MenuItemCommandState } from '@headless-adminapp/app/command';
-import { ArrayWithAtLeastOne } from '@headless-adminapp/core/types';
+import type { MenuItemCommandState } from '@headless-adminapp/app/command';
+import type { ArrayWithAtLeastOne } from '@headless-adminapp/core/types';
 
-import { MenuItemProps } from '../CommandBar/MenuItem';
+import type { MenuItemProps } from '../CommandBar/MenuItem';
 
 function transformMenuItem(
   item: MenuItemCommandState,
-  language: string
+  language: string,
 ): MenuItemProps {
   return {
     Icon: item.Icon,
@@ -19,9 +19,9 @@ function transformMenuItem(
 
 export function transformMenuItems(
   items: ArrayWithAtLeastOne<MenuItemCommandState>,
-  language: string
+  language: string,
 ): ArrayWithAtLeastOne<MenuItemProps> {
   return items.map((x: MenuItemCommandState) =>
-    transformMenuItem(x, language)
+    transformMenuItem(x, language),
   ) as ArrayWithAtLeastOne<MenuItemProps>;
 }

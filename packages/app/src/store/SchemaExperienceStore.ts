@@ -1,32 +1,32 @@
-import { LocalizedDataLookup } from '@headless-adminapp/core/attributes';
-import {
+import type { LocalizedDataLookup } from '@headless-adminapp/core/attributes';
+import type {
   EntityMainFormCommandItemExperience,
   Form,
   QuickCreateForm,
 } from '@headless-adminapp/core/experience/form';
-import {
+import type {
   SchemaExperience,
   SchemaExperienceMetadata,
 } from '@headless-adminapp/core/experience/schema';
-import {
+import type {
   CardView,
   EntityMainGridCommandItemExperience,
   SubGridCommandItemExperience,
   View,
 } from '@headless-adminapp/core/experience/view';
-import {
+import type {
   Schema,
   SchemaAttributes,
   SchemaMetadata,
 } from '@headless-adminapp/core/schema';
-import {
+import type {
   ISchemaExperienceStore,
   ISchemaStore,
 } from '@headless-adminapp/core/store';
 import { stringWithDefault } from '@headless-adminapp/core/utils';
 
 export function getDefaultCardView<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >(schema: Schema<S>): CardView<S> {
   return {
     primaryColumn: schema.primaryAttribute,
@@ -43,7 +43,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
   public constructor(protected options: SchemaExperienceStoreOptions) {}
 
   register<S extends SchemaAttributes = SchemaAttributes>(
-    experience: SchemaExperience<S>
+    experience: SchemaExperience<S>,
   ): void {
     for (const view of Object.values(experience.views)) {
       if (!view.id) {
@@ -62,7 +62,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
   }
 
   public async getExperience<S extends SchemaAttributes = SchemaAttributes>(
-    logicalName: string
+    logicalName: string,
   ): Promise<SchemaExperience<S>> {
     const experience = this.experiences[logicalName];
 
@@ -75,7 +75,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
 
   public async getPublicViewLookup(
     logicalName: string,
-    viewIds?: string[]
+    viewIds?: string[],
   ): Promise<LocalizedDataLookup[]> {
     const experience = await this.getExperience(logicalName);
 
@@ -98,7 +98,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
 
   public async getAssociatedViewLookup(
     logicalName: string,
-    viewIds?: string[]
+    viewIds?: string[],
   ): Promise<LocalizedDataLookup[]> {
     const experience = await this.getExperience(logicalName);
 
@@ -106,13 +106,13 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
 
     if (viewIds?.length) {
       associatedViews = associatedViews.filter((view) =>
-        viewIds.includes(view.id)
+        viewIds.includes(view.id),
       );
     }
 
     if (!associatedViews.length) {
       associatedViews = experience.associatedViews.filter(
-        (x) => x.id === experience.defaultAssociatedViewId
+        (x) => x.id === experience.defaultAssociatedViewId,
       );
     }
 
@@ -126,13 +126,13 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
   async getPublicView<S extends SchemaAttributes = SchemaAttributes>(
     logicalName: string,
     viewId?: string,
-    viewIds?: string[]
+    viewIds?: string[],
   ): Promise<View<S>> {
     const experience = await this.getExperience(logicalName);
 
     const availableViewLookup = await this.getPublicViewLookup(
       logicalName,
-      viewIds
+      viewIds,
     );
 
     let validViewIds = availableViewLookup.map((x) => x.id);
@@ -147,7 +147,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
       viewId = validViewIds[0];
     }
 
-    let view = experience.views.find((v) => v.id === viewId);
+    const view = experience.views.find((v) => v.id === viewId);
 
     if (!view) {
       throw new Error(`View ${viewId} not found`);
@@ -161,7 +161,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
 
     if (!viewExperience.card) {
       viewExperience.card = getDefaultCardView(
-        this.options.schemaStore.getSchema(logicalName)
+        this.options.schemaStore.getSchema(logicalName),
       );
     }
 
@@ -177,13 +177,13 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
   async getAssociatedView<S extends SchemaAttributes = SchemaAttributes>(
     logicalName: string,
     viewId?: string,
-    viewIds?: string[]
+    viewIds?: string[],
   ): Promise<View<S>> {
     const experience = await this.getExperience(logicalName);
 
     const availableViewLookup = await this.getAssociatedViewLookup(
       logicalName,
-      viewIds
+      viewIds,
     );
 
     let validViewIds = availableViewLookup.map((x) => x.id);
@@ -198,7 +198,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
       viewId = validViewIds[0];
     }
 
-    let view = experience.associatedViews.find((v) => v.id === viewId);
+    const view = experience.associatedViews.find((v) => v.id === viewId);
 
     if (!view) {
       throw new Error(`View ${viewId} not found`);
@@ -212,7 +212,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
 
     if (!viewExperience.card) {
       viewExperience.card = getDefaultCardView(
-        this.options.schemaStore.getSchema(logicalName)
+        this.options.schemaStore.getSchema(logicalName),
       );
     }
 
@@ -227,7 +227,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
 
   async getViewLookupV2<S extends SchemaAttributes = SchemaAttributes>(
     logicalName: string,
-    viewId?: string
+    viewId?: string,
   ): Promise<View<S>> {
     const experience = await this.getExperience(logicalName);
 
@@ -272,7 +272,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
   }
 
   async getDefaultQuickCreateFormId(
-    logicalName: string
+    logicalName: string,
   ): Promise<string | null> {
     const experience = await this.getExperience(logicalName);
 
@@ -290,7 +290,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
 
   async getForm<S extends SchemaAttributes = SchemaAttributes>(
     logicalName: string,
-    formId?: string
+    formId?: string,
   ): Promise<Form<S>> {
     const experience = await this.getExperience(logicalName);
 
@@ -320,14 +320,14 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
 
   async getQuickCreateForm<S extends SchemaAttributes = SchemaAttributes>(
     logicalName: string,
-    formId?: string
+    formId?: string,
   ): Promise<QuickCreateForm<S>> {
     const experience = await this.getExperience(logicalName);
 
     if (!formId) {
       if (!experience.defaultQuickCreateFormId) {
         throw new Error(
-          `No quick create form ID provided and no default quick create form ID found for ${logicalName}`
+          `No quick create form ID provided and no default quick create form ID found for ${logicalName}`,
         );
       }
 
@@ -355,7 +355,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
   }
 
   async getViewCommands(
-    logicalName: string
+    logicalName: string,
   ): Promise<EntityMainGridCommandItemExperience[][] | undefined> {
     const experience = await this.getExperience(logicalName);
 
@@ -363,7 +363,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
   }
 
   async getFormCommands(
-    logicalName: string
+    logicalName: string,
   ): Promise<EntityMainFormCommandItemExperience[][] | undefined> {
     const experience = await this.getExperience(logicalName);
 
@@ -371,7 +371,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
   }
 
   async getSubgridCommands(
-    logicalName: string
+    logicalName: string,
   ): Promise<SubGridCommandItemExperience[][] | undefined> {
     const experience = await this.getExperience(logicalName);
 

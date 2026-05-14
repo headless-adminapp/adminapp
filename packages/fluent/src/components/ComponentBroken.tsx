@@ -1,5 +1,5 @@
 import { Body1, tokens } from '@fluentui/react-components';
-import { Icon } from '@headless-adminapp/icons';
+import type { Icon } from '@headless-adminapp/icons';
 
 interface ComponentBrokenProps {
   message?: string;

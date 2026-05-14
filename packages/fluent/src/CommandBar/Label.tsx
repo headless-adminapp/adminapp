@@ -1,11 +1,11 @@
 import {
-  ForwardRefComponent,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   tokens,
 } from '@fluentui/react-components';
-import { Icon } from '@headless-adminapp/icons';
-import { forwardRef, memo, MemoExoticComponent } from 'react';
+import type { Icon } from '@headless-adminapp/icons';
+import { forwardRef, memo } from 'react';
 
 import { ToolbarButton } from '../components/fluent';
 
@@ -27,9 +27,7 @@ export interface CommandLabelProps {
   text: string;
 }
 
-export const CommandLabel: MemoExoticComponent<
-  ForwardRefComponent<CommandLabelProps>
-> = memo(
+export const CommandLabel = memo(
   forwardRef(function CommandLabel({ Icon, text }, ref) {
     const styles = useStyles();
 
@@ -43,7 +41,7 @@ export const CommandLabel: MemoExoticComponent<
         {text}
       </ToolbarButton>
     );
-  })
-);
+  }),
+) as ForwardRefComponent<CommandLabelProps>;
 
 CommandLabel.displayName = 'CommandLabel';

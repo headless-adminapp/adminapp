@@ -1,12 +1,12 @@
 import { tokens } from '@fluentui/react-components';
-import {
+import type {
   AreaInfo,
   BarInfo,
   LineInfo,
   XAxis,
   YAxis,
 } from '@headless-adminapp/core/experience/insights';
-import { Locale } from '@headless-adminapp/core/experience/locale';
+import type { Locale } from '@headless-adminapp/core/experience/locale';
 import { Fragment } from 'react';
 import {
   Area,
@@ -14,7 +14,7 @@ import {
   CartesianGrid,
   Line,
   XAxis as XAxisInternal,
-  XAxisProps,
+  type XAxisProps,
   YAxis as YAxisInternal,
 } from 'recharts';
 
@@ -24,7 +24,7 @@ export function renderXAxis(
   locale: Locale,
   axis: XAxis,
   forceCategory = false,
-  padding: XAxisProps['padding'] = 'gap'
+  padding: XAxisProps['padding'] = 'gap',
 ) {
   const xAxisFormatter = createAxisFormatter(locale, axis.tick);
 
@@ -58,7 +58,7 @@ export function renderXAxis(
 export function renderYAxis(
   locale: Locale,
   axis: YAxis,
-  axisId: 'left' | 'right' = 'left'
+  axisId: 'left' | 'right' = 'left',
 ) {
   const yAxisFormatter = createAxisFormatter(locale, axis.tick);
 
@@ -98,7 +98,6 @@ export function renderGrid() {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function renderLine(line: LineInfo) {
   return (
     <Line
@@ -117,12 +116,10 @@ export function renderLine(line: LineInfo) {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function renderLines(lines: LineInfo[]) {
   return lines.map((line) => renderLine(line));
 }
 
-// eslint-disable-next-line unused-imports/no-unused-vars
 export function renderArea(area: AreaInfo, chartId: string) {
   return (
     <Fragment key={area.dataKey}>
@@ -156,13 +153,12 @@ export function renderArea(area: AreaInfo, chartId: string) {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function renderAreas(areas: AreaInfo[], chartId: string) {
   return areas.map((area) => renderArea(area, chartId));
 }
 
-// eslint-disable-next-line unused-imports/no-unused-vars
-export function renderBar(bar: BarInfo, dataset: any[]) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function renderBar(bar: BarInfo, _dataset: any[]) {
   return (
     <Bar
       key={bar.dataKey}

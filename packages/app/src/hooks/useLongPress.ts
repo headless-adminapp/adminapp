@@ -20,10 +20,10 @@ const preventDefault = (ev: Event) => {
 
 export const useLongPress = (
   callback: (e: TouchEvent | MouseEvent) => void,
-  { isPreventDefault = true, delay = 300 }: Options = {}
+  { isPreventDefault = true, delay = 300 }: Options = {},
 ) => {
-  const timeout = useRef<ReturnType<typeof setTimeout>>();
-  const target = useRef<EventTarget>();
+  const timeout = useRef<ReturnType<typeof setTimeout>>(null);
+  const target = useRef<EventTarget>(null);
 
   const start = useCallback(
     (event: TouchEvent | MouseEvent) => {
@@ -34,7 +34,7 @@ export const useLongPress = (
       }
       timeout.current = setTimeout(() => callback(event), delay);
     },
-    [callback, delay, isPreventDefault]
+    [callback, delay, isPreventDefault],
   );
 
   const clear = useCallback(() => {
@@ -55,7 +55,9 @@ export const useLongPress = (
   }, [clear]);
 
   return {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onMouseDown: (e: any) => start(e),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onTouchStart: (e: any) => start(e),
     onMouseUp: clear,
     onMouseLeave: clear,

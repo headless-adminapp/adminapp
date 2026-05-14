@@ -1,6 +1,6 @@
-import { Localized } from '../types';
-import { AttributeBase } from './AttributeBase';
-import { Id, IdTypes } from './IdAttribute';
+import type { Localized } from '../types';
+import type { AttributeBase } from './AttributeBase';
+import type { Id, IdTypes } from './IdAttribute';
 
 export type LookupBehavior = 'reference' | 'dependent';
 

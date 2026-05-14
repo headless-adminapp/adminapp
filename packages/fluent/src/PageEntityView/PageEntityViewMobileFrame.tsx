@@ -1,12 +1,12 @@
 import { tokens } from '@fluentui/react-components';
-import React, { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { extendedTokens } from '../components/fluent';
 import { MobileHeaderRightContainer } from '../DataGrid/MobileHeaderRightContainer';
 
 interface PageEntityViewMobileFrameProps {
-  header: React.ReactNode;
-  content: React.ReactNode;
+  header: ReactNode;
+  content: ReactNode;
 }
 
 export const PageEntityViewMobileFrame: FC<PageEntityViewMobileFrameProps> = ({

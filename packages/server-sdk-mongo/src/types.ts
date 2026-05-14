@@ -1,11 +1,11 @@
-import {
+import type {
   Attribute,
   DateAttribute,
   Id,
   IdAttribute,
 } from '@headless-adminapp/core/attributes';
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
-import { IsRequired, OptionalNullable } from '@headless-adminapp/core/types';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { IsRequired, OptionalNullable } from '@headless-adminapp/core/types';
 
 export type ObjectId = {
   toJSON: () => string;

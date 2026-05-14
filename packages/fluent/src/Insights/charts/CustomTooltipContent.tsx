@@ -47,7 +47,7 @@ export const CustomTooltipContent = ({
               value: unknown;
               dataKey: string;
             },
-            index: number
+            index: number,
           ) => (
             <div
               key={item.name + String(index)}
@@ -73,7 +73,7 @@ export const CustomTooltipContent = ({
                   : yAxisFormatter(item.value)}
               </Caption1>
             </div>
-          )
+          ),
         )}
       </div>
     </div>

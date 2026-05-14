@@ -1,6 +1,6 @@
-import { AppExperience } from '@headless-adminapp/core/experience/app';
+import type { AppExperience } from '@headless-adminapp/core/experience/app';
 import { IconPlaceholder } from '@headless-adminapp/icons';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 interface AppLogoProps {
   logo: AppExperience['logo'];

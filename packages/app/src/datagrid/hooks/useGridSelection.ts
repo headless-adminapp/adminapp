@@ -6,7 +6,7 @@ import { GridContext } from '../context';
 export function useGridSelection() {
   const selecteIds = useContextSelector(
     GridContext,
-    (state) => state.selectedIds
+    (state) => state.selectedIds,
   );
 
   const setValue = useContextSetValue(GridContext);
@@ -21,7 +21,7 @@ export function useGridSelection() {
         setValue({ selectedIds });
       }
     },
-    [setValue]
+    [setValue],
   );
 
   return [selecteIds, setSelectedIds] as const;

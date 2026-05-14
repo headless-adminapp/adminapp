@@ -1,9 +1,9 @@
-import { ViewColumn } from '@headless-adminapp/core/experience/view';
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
+import type { ViewColumn } from '@headless-adminapp/core/experience/view';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { ISchemaStore } from '@headless-adminapp/core/store';
 
 import { localizedLabel } from '../../locale/utils';
-import { TransformedViewColumn } from '../context';
+import type { TransformedViewColumn } from '../context';
 
 export function transformViewColumns<S extends SchemaAttributes>(
   logicalName: string,

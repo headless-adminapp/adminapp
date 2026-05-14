@@ -1,7 +1,7 @@
 import { NavSubItem, tokens } from '@fluentui/react-components';
-import { FC } from 'react';
+import type { FC } from 'react';
 
-import { NavSubItemInfo } from './types';
+import type { NavSubItemInfo } from './types';
 import { usePrefetch } from './usePrefetch';
 
 interface NavSubItemComponentProps {

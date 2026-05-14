@@ -1,5 +1,5 @@
 import { tokens } from '@fluentui/react-components';
-import { RelatedItemInfo } from '@headless-adminapp/app/dataform/context';
+import type { RelatedItemInfo } from '@headless-adminapp/app/dataform/context';
 import {
   useDataFormSchema,
   useRecordId,

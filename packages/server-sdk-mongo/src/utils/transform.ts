@@ -1,6 +1,7 @@
-import { Schema } from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
-import { RetriveRecordsParams } from '@headless-adminapp/core/transport';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Schema } from '@headless-adminapp/core/schema';
+import type { ISchemaStore } from '@headless-adminapp/core/store';
+import type { RetriveRecordsParams } from '@headless-adminapp/core/transport';
 import { urlToFileObject } from '@headless-adminapp/core/utils';
 import dayjs from 'dayjs';
 

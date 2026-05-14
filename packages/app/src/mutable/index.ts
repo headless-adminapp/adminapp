@@ -11,4 +11,4 @@ export {
   useMutableStateSelector,
   type MutableState,
 } from './state';
-export * from './type';
+export type * from './type';

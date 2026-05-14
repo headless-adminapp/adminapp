@@ -1,20 +1,20 @@
-import {
+import type {
   CardView,
   ColumnCondition,
 } from '@headless-adminapp/core/experience/view';
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
-import { Condition, Filter } from '@headless-adminapp/core/transport';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { ISchemaStore } from '@headless-adminapp/core/store';
+import type { Condition, Filter } from '@headless-adminapp/core/transport';
 import dayjs from 'dayjs';
 
-import { TransformedViewColumn } from '../context';
+import type { TransformedViewColumn } from '../context';
 
 export function transformColumnFilter<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >(
   filter: Partial<Record<string, ColumnCondition>>,
   schema: Schema<S>,
-  schemaStore: ISchemaStore
+  schemaStore: ISchemaStore,
 ) {
   const transformedResult = Object.entries(filter).reduce(
     (acc, [id, value]) => {
@@ -28,7 +28,7 @@ export function transformColumnFilter<
       if (extendedKey) {
         if (attribute.type !== 'lookup') {
           throw new Error(
-            `Invalid column filter key: ${id}. Key ${key} is not a lookup column.`
+            `Invalid column filter key: ${id}. Key ${key} is not a lookup column.`,
           );
         }
 
@@ -41,6 +41,7 @@ export function transformColumnFilter<
       }
 
       if (value) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let transformedValue: any = undefined;
 
         switch (value.operator) {
@@ -68,6 +69,7 @@ export function transformColumnFilter<
           case 'in':
           case 'not-in':
             if (attribute.type === 'lookup') {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               transformedValue = value.value[0].map((x: any) => x.id);
             } else {
               transformedValue = value.value[0];
@@ -87,7 +89,7 @@ export function transformColumnFilter<
 
       return acc;
     },
-    {} as Record<string, ColumnCondition>
+    {} as Record<string, ColumnCondition>,
   );
 
   if (Object.keys(transformedResult).length === 0) {
@@ -103,9 +105,9 @@ export function mergeConditions<S extends SchemaAttributes = SchemaAttributes>(
   extraFilter: Filter | null | undefined,
   quickFilterResults: Filter | null | undefined,
   columnFilters: Partial<Record<string, ColumnCondition>> | undefined,
-  schemaStore: ISchemaStore
+  schemaStore: ISchemaStore,
 ): Filter | null {
-  const filters: any[] = [];
+  const filters: Filter[] = [];
 
   if (filter) {
     filters.push(filter);
@@ -123,7 +125,7 @@ export function mergeConditions<S extends SchemaAttributes = SchemaAttributes>(
     const transformedColumnFilters = transformColumnFilter(
       columnFilters,
       schema,
-      schemaStore
+      schemaStore,
     );
 
     if (transformedColumnFilters) {
@@ -137,8 +139,8 @@ export function mergeConditions<S extends SchemaAttributes = SchemaAttributes>(
               value: condition.value,
               extendedKey: condition.extendedKey,
             };
-          }
-        ),
+          },
+        ) as Required<Filter>['conditions'],
       });
     }
   }
@@ -181,6 +183,7 @@ export function mergeFilters(
 }
 
 export function simplyfyFilter(filter: Filter): Filter | null {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const conditions: Condition<any>[] = filter.conditions ?? [];
   const filters: Filter[] = [];
 
@@ -213,28 +216,31 @@ export function simplyfyFilter(filter: Filter): Filter | null {
     type: filter.type,
     conditions: conditions,
     filters: filters,
-  } as Filter<any>;
+  } as Filter;
 }
 
 export function collectExpandedKeys(
-  columns: TransformedViewColumn<SchemaAttributes>[]
+  columns: TransformedViewColumn<SchemaAttributes>[],
 ) {
   return columns
     .filter((x) => x.expandedKey)
-    .reduce((acc, x) => {
-      if (!acc[x.name]) {
-        acc[x.name] = [];
-      }
+    .reduce(
+      (acc, x) => {
+        if (!acc[x.name]) {
+          acc[x.name] = [];
+        }
 
-      if (!acc[x.name].includes(x.expandedKey!)) {
-        acc[x.name].push(x.expandedKey!);
-      }
-      return acc;
-    }, {} as Record<string, string[]>);
+        if (!acc[x.name].includes(x.expandedKey!)) {
+          acc[x.name].push(x.expandedKey!);
+        }
+        return acc;
+      },
+      {} as Record<string, string[]>,
+    );
 }
 
 export function collectGridColumns<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >({
   gridColumns,
   schema,
@@ -255,7 +261,7 @@ export function collectGridColumns<
 }
 
 export function collectCardColumns<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >({
   cardView,
   schema,
@@ -283,19 +289,22 @@ export function collectCardColumns<
 }
 
 export function collectCardExpandedKeys<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >({ cardView }: { cardView: CardView<S> }) {
   return cardView.secondaryColumns
     ?.filter((x) => x.expandedKey)
-    .reduce((acc, x) => {
-      const name = x.name as string;
-      if (!acc[name]) {
-        acc[name] = [];
-      }
+    .reduce(
+      (acc, x) => {
+        const name = x.name as string;
+        if (!acc[name]) {
+          acc[name] = [];
+        }
 
-      if (!acc[name].includes(x.expandedKey!)) {
-        acc[name].push(x.expandedKey!);
-      }
-      return acc;
-    }, {} as Record<string, string[]>);
+        if (!acc[name].includes(x.expandedKey!)) {
+          acc[name].push(x.expandedKey!);
+        }
+        return acc;
+      },
+      {} as Record<string, string[]>,
+    );
 }

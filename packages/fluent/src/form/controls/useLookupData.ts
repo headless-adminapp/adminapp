@@ -2,20 +2,25 @@ import { mergeFilters } from '@headless-adminapp/app/datagrid/DataGridProvider/u
 import { useDebouncedValue } from '@headless-adminapp/app/hooks';
 import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
 import { useRecentItemStore } from '@headless-adminapp/app/metadata/hooks/useRecentItemStore';
-import { RecentItem } from '@headless-adminapp/app/store';
+import type { RecentItem } from '@headless-adminapp/app/store';
 import { useRetriveRecords } from '@headless-adminapp/app/transport/hooks/useRetriveRecords';
-import { Id } from '@headless-adminapp/core';
-import { ViewExperience } from '@headless-adminapp/core/experience/view';
-import {
+import type { Id } from '@headless-adminapp/core';
+import type { ViewExperience } from '@headless-adminapp/core/experience/view';
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import {
+import type {
   IDataService,
   RetriveRecordsResult,
 } from '@headless-adminapp/core/transport';
-import { keepPreviousData, useQueries, useQuery } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useQueries,
+  useQuery,
+  type UseQueryResult,
+} from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 
 interface UseLookupDataOptions<S extends SchemaAttributes = SchemaAttributes> {
@@ -28,7 +33,7 @@ interface UseLookupDataOptions<S extends SchemaAttributes = SchemaAttributes> {
 
 function extractColumns<S extends SchemaAttributes>(
   schema: Schema<S>,
-  view: ViewExperience | null | undefined
+  view: ViewExperience | null | undefined,
 ): string[] {
   if (!view?.card) {
     return [schema.primaryAttribute as string];
@@ -41,23 +46,26 @@ function extractColumns<S extends SchemaAttributes>(
       ...(view.card.secondaryColumns ?? [])
         .filter((x) => !x.expandedKey)
         .map((x) => x.name),
-    ])
+    ]),
   ).filter(Boolean) as string[];
 }
 
 function extractExpand(view: ViewExperience | null | undefined) {
   return (view?.card?.secondaryColumns || [])
     .filter((x) => x.expandedKey)
-    .reduce((acc, x) => {
-      if (!acc[x.name]) {
-        acc[x.name] = [];
-      }
+    .reduce(
+      (acc, x) => {
+        if (!acc[x.name]) {
+          acc[x.name] = [];
+        }
 
-      if (!acc[x.name].includes(x.expandedKey!)) {
-        acc[x.name].push(x.expandedKey!);
-      }
-      return acc;
-    }, {} as Record<string, string[]>);
+        if (!acc[x.name].includes(x.expandedKey!)) {
+          acc[x.name].push(x.expandedKey!);
+        }
+        return acc;
+      },
+      {} as Record<string, string[]>,
+    );
 }
 
 function getKey<S extends SchemaAttributes>({
@@ -92,7 +100,7 @@ export function useLookupData<S extends SchemaAttributes = SchemaAttributes>({
 }: UseLookupDataOptions<S>) {
   const [search] = useDebouncedValue(searchText, 500);
   const recentIds = useLookupRecentIds(
-    createLookupRecentKey(schema.logicalName)
+    createLookupRecentKey(schema.logicalName),
   );
 
   const columns = useMemo(() => {
@@ -110,7 +118,7 @@ export function useLookupData<S extends SchemaAttributes = SchemaAttributes>({
         search,
         view,
       }),
-    [columns, expand, schema, search, view]
+    [columns, expand, schema, search, view],
   );
 
   const { data, isFetching } = useQuery({
@@ -124,6 +132,7 @@ export function useLookupData<S extends SchemaAttributes = SchemaAttributes>({
         filter: view?.filter ?? null,
         skip: 0,
         limit: 5,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         sort: view?.defaultSorting as any,
       });
 
@@ -221,7 +230,7 @@ export function useLookupDatas<T = unknown>({
   searchText,
   enabled,
   items,
-}: UseLookupsDataOptions) {
+}: UseLookupsDataOptions): UseQueryResult[] {
   const [search] = useDebouncedValue(searchText, 500);
 
   const queries = useMemo(() => {
@@ -248,6 +257,7 @@ export function useLookupDatas<T = unknown>({
             filter: item.view?.filter ?? null,
             skip: 0,
             limit: 5,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             sort: item.view?.defaultSorting as any,
           });
 
@@ -287,7 +297,7 @@ export function useGetLookupView(logicalName: string, viewId?: string) {
 function useLookupRecentIds(cacheKey: string) {
   const store = useRecentItemStore();
   const [items, setItems] = useState<unknown[]>(
-    store.getItems(cacheKey, 5).map((x) => x.value)
+    store.getItems(cacheKey, 5).map((x) => x.value),
   );
 
   useEffect(() => {

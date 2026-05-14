@@ -1,7 +1,6 @@
-/* eslint-disable unused-imports/no-unused-vars */
 import { SpinButton } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 export interface IntegerControlProps extends ControlProps<number> {}
 
@@ -10,12 +9,8 @@ export function IntegerControl({
   onChange,
   id,
   name,
-  onBlur,
-  onFocus,
-  error,
   disabled,
   placeholder,
-  borderOnFocusOnly,
   readOnly,
   skeleton,
 }: IntegerControlProps) {

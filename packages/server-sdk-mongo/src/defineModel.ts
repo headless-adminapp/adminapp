@@ -1,17 +1,27 @@
-import {
+import type {
   ChoiceAttribute,
   Id,
   IdAttribute,
   LookupAttribute,
 } from '@headless-adminapp/core/attributes';
-import { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
-import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
-import { IdTypes } from '@headless-adminapp/core/attributes/IdAttribute';
-import { RegardingAttribute } from '@headless-adminapp/core/attributes/LookupAttribute';
-import { Schema } from '@headless-adminapp/core/schema';
-import { Model, model, models, Schema as MongoSchema } from 'mongoose';
+import type { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
+import type { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
+import type { IdTypes } from '@headless-adminapp/core/attributes/IdAttribute';
+import type { RegardingAttribute } from '@headless-adminapp/core/attributes/LookupAttribute';
+import type { Schema } from '@headless-adminapp/core/schema';
+import {
+  type Model,
+  model,
+  models,
+  Schema as MongoSchema,
+  type SchemaDefinition,
+  type SchemaTypeOptions,
+} from 'mongoose';
 
-import { InferredDbSchemaType, MongoRequiredSchemaAttributes } from './types';
+import type {
+  InferredDbSchemaType,
+  MongoRequiredSchemaAttributes,
+} from './types';
 
 function resolveChoiceAttribute(attribute: ChoiceAttribute<string | number>) {
   if ('string' in attribute && attribute.string) {
@@ -67,13 +77,19 @@ function resolveRegardingAttribute(attribute: RegardingAttribute) {
   };
 }
 
-function applyDefaultAttribute(attribute: AttributeBase, defination: any) {
+function applyDefaultAttribute(
+  attribute: AttributeBase,
+  defination: SchemaTypeOptions<unknown>,
+) {
   if (attribute.default && typeof attribute.default !== 'function') {
     defination.default = attribute.default;
   }
 }
 
-function applyRequiredAttribute(attribute: AttributeBase, _defination: any) {
+function applyRequiredAttribute(
+  attribute: AttributeBase,
+  _defination: SchemaTypeOptions<unknown>,
+) {
   if (attribute.required) {
     // acc[key].required = rest[key].required;
   }
@@ -87,66 +103,63 @@ export function defineModel<S extends MongoRequiredSchemaAttributes>(
   if (!models[name]) {
     const { _id, ...rest } = schema.attributes;
 
-    const defination = Object.keys(rest).reduce(
-      (acc, key) => {
-        const attribute = rest[key];
+    const defination = Object.keys(rest).reduce((acc, key) => {
+      const attribute = rest[key];
 
-        if (
-          schema.createdAtAttribute === key ||
-          schema.updatedAtAttribute === key
-        ) {
-          // Skip createdAt and updatedAt attributes
-          return acc;
-        }
-
-        switch (attribute.type) {
-          case 'id':
-            acc[key] = resolveIdAttribute(attribute);
-            break;
-          case 'attachment':
-          case 'string':
-            acc[key] = { type: MongoSchema.Types.String };
-            break;
-          case 'boolean':
-            acc[key] = { type: MongoSchema.Types.Boolean };
-            break;
-          case 'date':
-            acc[key] = { type: MongoSchema.Types.Date };
-            break;
-          case 'choice':
-            acc[key] = resolveChoiceAttribute(attribute);
-            break;
-          case 'choices':
-            acc[key] = resolveChoicesAttribute(attribute);
-            break;
-          case 'lookup':
-            acc[key] = resolveLookupAttribute(attribute, modelNameResolver);
-            break;
-          case 'regarding':
-            acc[key] = resolveRegardingAttribute(attribute);
-            break;
-          case 'mixed':
-            acc[key] = { type: MongoSchema.Types.Mixed };
-            break;
-          case 'money':
-          case 'number':
-            acc[key] = { type: MongoSchema.Types.Number };
-            break;
-          case 'daterange':
-          case 'lookups':
-            acc[key] = { type: MongoSchema.Types.Mixed };
-            break;
-          default:
-            return acc;
-        }
-
-        applyDefaultAttribute(attribute, acc[key]);
-        applyRequiredAttribute(attribute, acc[key]);
-
+      if (
+        schema.createdAtAttribute === key ||
+        schema.updatedAtAttribute === key
+      ) {
+        // Skip createdAt and updatedAt attributes
         return acc;
-      },
-      {} as Record<string, any>,
-    );
+      }
+
+      switch (attribute.type) {
+        case 'id':
+          acc[key] = resolveIdAttribute(attribute);
+          break;
+        case 'attachment':
+        case 'string':
+          acc[key] = { type: MongoSchema.Types.String };
+          break;
+        case 'boolean':
+          acc[key] = { type: MongoSchema.Types.Boolean };
+          break;
+        case 'date':
+          acc[key] = { type: MongoSchema.Types.Date };
+          break;
+        case 'choice':
+          acc[key] = resolveChoiceAttribute(attribute);
+          break;
+        case 'choices':
+          acc[key] = resolveChoicesAttribute(attribute);
+          break;
+        case 'lookup':
+          acc[key] = resolveLookupAttribute(attribute, modelNameResolver);
+          break;
+        case 'regarding':
+          acc[key] = resolveRegardingAttribute(attribute);
+          break;
+        case 'mixed':
+          acc[key] = { type: MongoSchema.Types.Mixed };
+          break;
+        case 'money':
+        case 'number':
+          acc[key] = { type: MongoSchema.Types.Number };
+          break;
+        case 'daterange':
+        case 'lookups':
+          acc[key] = { type: MongoSchema.Types.Mixed };
+          break;
+        default:
+          return acc;
+      }
+
+      applyDefaultAttribute(attribute, acc[key] as SchemaTypeOptions<unknown>);
+      applyRequiredAttribute(attribute, acc[key] as SchemaTypeOptions<unknown>);
+
+      return acc;
+    }, {} as SchemaDefinition);
 
     if (!('objectId' in _id)) {
       defination._id = resolveIdAttribute(_id);
@@ -167,5 +180,6 @@ export function defineModel<S extends MongoRequiredSchemaAttributes>(
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return models[name] as Model<InferredDbSchemaType<S>, {}, {}, {}, any>;
 }

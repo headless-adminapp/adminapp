@@ -1,11 +1,11 @@
-import { Filter } from '@headless-adminapp/core/transport';
+import type { Filter } from '@headless-adminapp/core/transport';
 
-import { DatabaseContext } from './DatabaseContext';
-import { ServerSdkContext } from './sdk/ServerSdkContext';
+import type { DatabaseContext } from './DatabaseContext';
+import type { ServerSdkContext } from './sdk/ServerSdkContext';
 
 export interface GetOrganizationFilterParams<
   SdkContext extends ServerSdkContext,
-  DbContext extends DatabaseContext
+  DbContext extends DatabaseContext,
 > {
   logicalName: string;
   sdkContext: SdkContext;
@@ -14,7 +14,7 @@ export interface GetOrganizationFilterParams<
 
 export interface GetPermissionFilterParams<
   SdkContext extends ServerSdkContext,
-  DbContext extends DatabaseContext
+  DbContext extends DatabaseContext,
 > {
   logicalName: string;
   sdkContext: SdkContext;
@@ -23,7 +23,7 @@ export interface GetPermissionFilterParams<
 
 export interface IDataFilter<
   SdkContext extends ServerSdkContext,
-  DbContext extends DatabaseContext
+  DbContext extends DatabaseContext,
 > {
   getOrganizationFilter(
     params: GetOrganizationFilterParams<SdkContext, DbContext>

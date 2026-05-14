@@ -1,6 +1,6 @@
 import { Body1, Divider, tokens } from '@fluentui/react-components';
 import { Icons } from '@headless-adminapp/icons';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { FormSubgridViewSelector } from '../DataGrid/FormSubgridViewSelector';
 import { usePageEntityViewStrings } from './PageEntityViewStringContext';

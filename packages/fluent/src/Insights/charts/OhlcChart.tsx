@@ -2,7 +2,7 @@ import { Caption1, Divider, tokens } from '@fluentui/react-components';
 import { useLocale } from '@headless-adminapp/app/locale';
 import {
   DateAxisTickInterval,
-  OhlcChartInfo,
+  type OhlcChartInfo,
 } from '@headless-adminapp/core/experience/insights';
 import { useMemo } from 'react';
 import {
@@ -62,14 +62,14 @@ export function OhlcChart({
       ...data.map((entry) => entry[bar.low.dataKey]),
       ...data.map((entry) => entry[bar.open.dataKey]),
       ...data.map((entry) => entry[bar.close.dataKey]),
-      ...data.map((entry) => entry[bar.high.dataKey])
+      ...data.map((entry) => entry[bar.high.dataKey]),
     );
 
     const dataMax = Math.max(
       ...data.map((entry) => entry[bar.low.dataKey]),
       ...data.map((entry) => entry[bar.open.dataKey]),
       ...data.map((entry) => entry[bar.close.dataKey]),
-      ...data.map((entry) => entry[bar.high.dataKey])
+      ...data.map((entry) => entry[bar.high.dataKey]),
     );
 
     return [dataMin, dataMax];
@@ -81,11 +81,11 @@ export function OhlcChart({
 
   const xAxisLongFormatter = createLongAxisFormatter(
     locale,
-    chartInfo.xAxis.tick
+    chartInfo.xAxis.tick,
   );
   const yAxisLongFormatter = createLongAxisFormatter(
     locale,
-    chartInfo.yAxis.tick
+    chartInfo.yAxis.tick,
   );
 
   return (
@@ -231,6 +231,7 @@ function OhclTooltipContent({
 }
 
 function renderShape(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props: any,
   {
     chartInfo,
@@ -238,7 +239,7 @@ function renderShape(
   }: {
     chartInfo: OhlcChartInfo;
     bar: OhlcChartInfo['bars'][0];
-  }
+  },
 ) {
   const { x, width, payload, yAxis, xAxis } = props;
 
@@ -250,8 +251,8 @@ function renderShape(
 
   const color =
     open < close
-      ? bar.colors?.[0] ?? tokens.colorPaletteGreenForeground1
-      : bar.colors?.[1] ?? tokens.colorPaletteRedForeground1;
+      ? (bar.colors?.[0] ?? tokens.colorPaletteGreenForeground1)
+      : (bar.colors?.[1] ?? tokens.colorPaletteRedForeground1);
 
   const xPosition = xAxis.scale(xValue);
 

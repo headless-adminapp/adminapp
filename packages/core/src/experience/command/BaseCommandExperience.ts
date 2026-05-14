@@ -1,7 +1,7 @@
 import type { Icon } from '@headless-adminapp/icons';
 
-import { AllowArray } from '../../types';
-import { BooleanOrFunction, IconPosition } from './types';
+import type { AllowArray } from '../../types';
+import type { BooleanOrFunction, IconPosition } from './types';
 
 export interface BaseCommandExperience<Context> {
   Icon: Icon;

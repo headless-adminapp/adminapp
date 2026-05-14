@@ -1,5 +1,5 @@
 import { useIsMobile } from '@headless-adminapp/app/hooks';
-import {
+import type {
   InsightConfig,
   WidgetInfo,
 } from '@headless-adminapp/core/experience/insights';

@@ -1,1 +1,1 @@
-export { TimeControl, TimeControlProps } from './TimeControl';
+export { TimeControl, type TimeControlProps } from './TimeControl';

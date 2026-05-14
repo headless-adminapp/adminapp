@@ -1,10 +1,10 @@
-import { LocalizedDataLookup } from '@headless-adminapp/core/attributes';
-import {
+import type { LocalizedDataLookup } from '@headless-adminapp/core/attributes';
+import type {
   EntityMainGridCommandItemExperience,
   View,
 } from '@headless-adminapp/core/experience/view';
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
-import { PropsWithChildren } from 'react';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { PropsWithChildren } from 'react';
 
 import { DataGridProvider } from '../../datagrid/DataGridProvider';
 

@@ -1,7 +1,7 @@
-import { FC, PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 
 import { useCreateContextStore } from '../mutable/context';
-import { DialogContext, DialogContextState } from './context';
+import { DialogContext, type DialogContextState } from './context';
 
 interface DialogProviderProps {}
 

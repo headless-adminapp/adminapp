@@ -1,7 +1,7 @@
-import { FileObject } from './AttachmentAttribute';
-import { Attribute } from './Attribute';
-import { DataLookup } from './DataLookup';
-import { IdTypes, InferredIdType } from './IdAttribute';
+import type { FileObject } from './AttachmentAttribute';
+import type { Attribute } from './Attribute';
+import type { DataLookup } from './DataLookup';
+import type { IdTypes, InferredIdType } from './IdAttribute';
 
 export type InferredAttributeType<A extends Attribute> = A extends {
   type: 'id';

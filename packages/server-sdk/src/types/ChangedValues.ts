@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type ChangedValues<T extends Record<string, any> = Record<string, any>> =
   Record<
     keyof T,

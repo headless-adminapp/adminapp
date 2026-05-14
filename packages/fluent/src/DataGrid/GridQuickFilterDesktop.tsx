@@ -1,6 +1,6 @@
 import { tokens } from '@fluentui/react-components';
 import { useQuickFilter } from '@headless-adminapp/app/datagrid/hooks/useQuickFilter';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { SectionControlWrapper } from '../DataForm/SectionControl';
 import { StandardControl } from '../PageEntityForm/StandardControl';

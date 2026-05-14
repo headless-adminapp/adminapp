@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import { FC, useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 
 import { Button, PopoverSurface } from '../components/fluent';
 import { ViewType } from './types';

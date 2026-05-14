@@ -1,9 +1,9 @@
-import { InferredSchemaType, SchemaAttributes } from '../../schema';
-import { AllowAsync, Localized } from '../../types';
-import { Metadata } from '../types';
-import { EditableGridCloneAttribute } from './EditableGridCloneAttribute';
-import { ProcessFlowInfo } from './ProcessFlowInfo';
-import { Tab } from './Tab';
+import type { InferredSchemaType, SchemaAttributes } from '../../schema';
+import type { AllowAsync, Localized } from '../../types';
+import type { Metadata } from '../types';
+import type { EditableGridCloneAttribute } from './EditableGridCloneAttribute';
+import type { ProcessFlowInfo } from './ProcessFlowInfo';
+import type { Tab } from './Tab';
 
 export interface Form<S extends SchemaAttributes = SchemaAttributes>
   extends Metadata {

@@ -1,11 +1,11 @@
 import {
   Calendar,
-  CalendarDayGridStyles,
+  type CalendarDayGridStyles,
   DayOfWeek,
 } from '@fluentui/react-calendar-compat';
 import { makeStyles, tokens } from '@fluentui/react-components';
 import dayjs from 'dayjs';
-import { FC, useCallback, useRef } from 'react';
+import { type FC, useCallback, useRef } from 'react';
 
 import { useAppStrings } from '../../../App/AppStringContext';
 import { applyRoundedStyles } from './utils';
@@ -64,7 +64,7 @@ export const CalendarItem: FC<CalendarItemProps> = ({
         daySelectedClassNames: classNames.daySelected + ' ' + styles.selected,
       });
     },
-    [styles.selected]
+    [styles.selected],
   );
 
   return (

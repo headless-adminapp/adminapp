@@ -122,6 +122,8 @@
     "dist",
     "packages/*/dist",
     "packages/*/vitest.config.ts",
-    "packages/*/coverage"
+    "packages/*/coverage",
+    "eslint.config.mjs",
+    "testing"
   ]
 }

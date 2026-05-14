@@ -24,7 +24,7 @@ import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { useBasePath, useRouter } from '@headless-adminapp/app/route';
 import { isColorDark } from '@headless-adminapp/app/utils/color';
 import { Icons } from '@headless-adminapp/icons';
-import { FC, ReactNode, useMemo, useState } from 'react';
+import { type FC, type ReactNode, useMemo, useState } from 'react';
 
 import { extendedTokens, MenuItem, PopoverSurface } from '../components/fluent';
 import { useExtendedThemeContext } from '../components/fluent/FluentProvider';

@@ -1,4 +1,4 @@
-import { CurrencyFormats, DateFormats, DateRangeFormat } from './types';
+import type { CurrencyFormats, DateFormats, DateRangeFormat } from './types';
 
 export const DEFAULT_DATE_FORMATS: DateFormats = {
   short: 'M/D/YYYY',

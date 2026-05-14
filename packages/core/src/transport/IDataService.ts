@@ -1,16 +1,16 @@
-import { AttributeType } from '../attributes';
-import { Id } from '../attributes/IdAttribute';
-import {
+import type { AttributeType } from '../attributes';
+import type { Id } from '../attributes/IdAttribute';
+import type {
   AggregateAttribute,
   AggregateQuery,
   InferredAggregateQueryResult,
 } from './aggregate';
-import { CreateRecordResult, Data, UpdateRecordResult } from './operations';
-import {
+import type { CreateRecordResult, Data, UpdateRecordResult } from './operations';
+import type {
   RetriveRecordsFnOptions,
   RetriveRecordsResult,
 } from './operations/RetriveRecords';
-import { OperatorKey } from './OperatorKey';
+import type { OperatorKey } from './OperatorKey';
 
 export interface IDataService {
   retriveRecord<T = unknown>(
@@ -42,7 +42,7 @@ export interface IDataService {
     Q extends Record<string, AggregateAttribute> = Record<
       string,
       AggregateAttribute
-    >
+    >,
   >(
     query: AggregateQuery<Q>
   ): Promise<InferredAggregateQueryResult<Q>[]>;

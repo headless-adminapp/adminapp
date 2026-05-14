@@ -12,7 +12,7 @@
 import { setUnsavedChangesInfo } from '@headless-adminapp/app/navigation/unsaved-changes';
 import { useRouter, useRouteResolver } from '@headless-adminapp/app/route';
 import { PageType } from '@headless-adminapp/core/experience/app';
-import { SaveMode } from '@headless-adminapp/core/experience/form';
+import type { SaveMode } from '@headless-adminapp/core/experience/form';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -35,7 +35,7 @@ export function useFormSave() {
   const schema = useDataFormSchema();
   const initialValues = useContextSelector(
     DataFormContext,
-    (state) => state.initialValues
+    (state) => state.initialValues,
   );
   const refresh = useContextSelector(DataFormContext, (state) => state.refresh);
   const dataService = useDataService();
@@ -45,7 +45,7 @@ export function useFormSave() {
   const routeResolver = useRouteResolver();
   const saveRecord = useContextSelector(
     DataFormContext,
-    (state) => state.saveRecordFn
+    (state) => state.saveRecordFn,
   );
 
   const client = useQueryClient();
@@ -113,7 +113,7 @@ export function useFormSave() {
                 type: PageType.EntityForm,
                 logicalName: schema.logicalName,
                 id: result.recordId,
-              })
+              }),
             );
           }
         } else {
@@ -155,7 +155,7 @@ export function useFormSave() {
 
   const save = useCallback(
     (mode?: SaveMode) => _saveRef.current(mode),
-    [_saveRef]
+    [_saveRef],
   );
 
   return save;

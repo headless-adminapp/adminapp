@@ -1,11 +1,16 @@
-import { Attribute } from '@headless-adminapp/core';
-import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form';
+import type { Attribute } from '@headless-adminapp/core';
+import {
+  type Control,
+  Controller,
+  type FieldPath,
+  type FieldValues,
+} from 'react-hook-form';
 
 import { SectionControlWrapper } from '../DataForm/SectionControl';
 import { StandardControl } from '../PageEntityForm/StandardControl';
 
 interface AttributeControllerProps<
-  TFieldValues extends FieldValues = FieldValues
+  TFieldValues extends FieldValues = FieldValues,
 > {
   attribute: Attribute;
   attributeName: FieldPath<TFieldValues>;
@@ -15,7 +20,7 @@ interface AttributeControllerProps<
 }
 
 export function AttributeController<
-  TFieldValues extends FieldValues = FieldValues
+  TFieldValues extends FieldValues = FieldValues,
 >({
   attribute,
   attributeName,

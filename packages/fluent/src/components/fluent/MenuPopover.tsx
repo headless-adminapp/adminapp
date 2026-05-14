@@ -1,8 +1,8 @@
 import {
-  ForwardRefComponent,
+  type ForwardRefComponent,
   makeStyles,
   MenuPopover as MenuPopoverInternal,
-  MenuPopoverProps,
+  type MenuPopoverProps,
   mergeClasses,
   tokens,
 } from '@fluentui/react-components';

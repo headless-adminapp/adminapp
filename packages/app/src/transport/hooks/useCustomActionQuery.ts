@@ -1,11 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
 import { useDataService } from './useDataService';
 
 export function useCustomActionQuery<T = unknown>(
   actionName: string,
-  payload: unknown
-) {
+  payload: unknown,
+): UseQueryResult<T, Error> {
   const dataService = useDataService();
 
   return useQuery<T>({

@@ -7,7 +7,7 @@ export function useProgressIndicator() {
 
   if (!context) {
     throw new Error(
-      'useProgressIndicator must be used within a ProgressIndicatorProvider'
+      'useProgressIndicator must be used within a ProgressIndicatorProvider',
     );
   }
 

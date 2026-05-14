@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { MutableValue } from './type';
+import type { MutableValue } from './type';
 import { createMutableValue, useMutableValueSelector } from './utils';
 
 export type MutableState<T> = MutableValue<T>;

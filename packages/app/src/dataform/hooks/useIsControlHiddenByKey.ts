@@ -6,12 +6,12 @@ import { getIsControlHidden } from '../DataFormProvider/utils';
 export function useIsControlHiddenByKey(key: string): boolean {
   const hiddenControls = useContextSelector(
     DataFormContext,
-    (state) => state.hiddenControls
+    (state) => state.hiddenControls,
   );
 
   const controls = useContextSelector(
     DataFormContext,
-    (state) => state.formInternal.controls.dict
+    (state) => state.formInternal.controls.dict,
   );
 
   if (!controls[key]) {

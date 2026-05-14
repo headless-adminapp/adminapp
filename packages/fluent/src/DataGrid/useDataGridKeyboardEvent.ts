@@ -2,11 +2,11 @@ import { GridContext } from '@headless-adminapp/app/datagrid';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useMetadata } from '@headless-adminapp/app/metadata';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
-import { LookupAttribute } from '@headless-adminapp/core/attributes';
-import { RefObject, useContext, useEffect } from 'react';
+import type { LookupAttribute } from '@headless-adminapp/core/attributes';
+import { type RefObject, useContext, useEffect } from 'react';
 
 export function useDataGridKeyboardEvent(
-  tableElementRef: RefObject<HTMLTableElement>
+  tableElementRef: RefObject<HTMLTableElement | null>,
 ) {
   const context = useContext(GridContext);
   const locale = useLocale();
@@ -74,7 +74,7 @@ export function useDataGridKeyboardEvent(
           const formattedValue = getAttributeFormattedValue(
             attribute,
             value,
-            locale
+            locale,
           );
 
           rowItems.push(formattedValue ?? '');

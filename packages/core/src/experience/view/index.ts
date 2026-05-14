@@ -13,4 +13,4 @@ export type {
   EntityMainGridCommandContext,
   EntitySubGridCommandContext,
 } from './command';
-export * from './types';
+export type * from './types';

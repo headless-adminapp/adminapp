@@ -1,6 +1,6 @@
-import { SchemaAttributes } from '../../schema';
-import { Localized } from '../../types';
-import { SectionControl } from './SectionControl';
+import type { SchemaAttributes } from '../../schema';
+import type { Localized } from '../../types';
+import type { SectionControl } from './SectionControl';
 
 export interface Section<S extends SchemaAttributes = SchemaAttributes> {
   name: string;

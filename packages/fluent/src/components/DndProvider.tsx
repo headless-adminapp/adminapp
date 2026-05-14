@@ -1,9 +1,9 @@
 import type { BackendFactory } from 'dnd-core';
 import {
   createContext,
-  FC,
+  type FC,
   lazy,
-  PropsWithChildren,
+  type PropsWithChildren,
   Suspense,
   useContext,
   useEffect,
@@ -12,7 +12,7 @@ import {
 import type * as ReactDndTypes from 'react-dnd';
 
 const DndProviderIntenral = lazy(() =>
-  import('react-dnd').then((mod) => ({ default: mod.DndProvider }))
+  import('react-dnd').then((mod) => ({ default: mod.DndProvider })),
 );
 
 let ReactDndPromise: Promise<typeof ReactDndTypes> | null = null;
@@ -25,6 +25,7 @@ interface DndContextState {
   useDrop: typeof ReactDndTypes.useDrop;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DndContext = createContext<DndContextState>(null as any);
 
 export const DndProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -32,7 +33,7 @@ export const DndProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     HTML5BackendPromise ??= import('react-dnd-html5-backend').then(
-      (mod) => mod.HTML5Backend
+      (mod) => mod.HTML5Backend,
     );
 
     ReactDndPromise ??= import('react-dnd');

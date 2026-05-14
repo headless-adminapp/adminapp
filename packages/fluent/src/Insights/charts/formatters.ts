@@ -1,10 +1,10 @@
-import {
+import type {
   AllAxisTick,
   CategoryAxisTick,
   DateAxisTick,
   DateAxisTickFormat,
 } from '@headless-adminapp/core/experience/insights';
-import { Locale } from '@headless-adminapp/core/experience/locale';
+import type { Locale } from '@headless-adminapp/core/experience/locale';
 import dayjs from 'dayjs';
 
 interface FormatNumberOptions {
@@ -40,7 +40,7 @@ function extractNumberInfo(value: number) {
 export const formatCurrencyWithSuffix = (
   locale: Locale,
   input: number | undefined | null,
-  digit: number | FormatNumberOptions = 2
+  digit: number | FormatNumberOptions = 2,
 ) => {
   const suffix = ['K', 'M', 'B', 'T'];
 
@@ -64,7 +64,7 @@ export const formatCurrencyWithSuffix = (
 
 export const formatDate = (
   input: Date | string | number | undefined | null,
-  format: string
+  format: string,
 ) => {
   if (!input) {
     return '';
@@ -76,7 +76,7 @@ export const formatDate = (
 export const formatCurrency = (
   locale: Locale,
   input: number | undefined | null,
-  digit: number | FormatNumberOptions = 2
+  digit: number | FormatNumberOptions = 2,
 ) => {
   if (input === null || input === undefined) {
     return '';
@@ -100,7 +100,7 @@ export const formatCurrency = (
 export const formatNumber = (
   locale: Locale,
   input: number | undefined | null,
-  digit: number | FormatNumberOptions = 2
+  digit: number | FormatNumberOptions = 2,
 ) => {
   if (input === null || input === undefined) {
     return '';
@@ -166,7 +166,7 @@ function createFullTimeAxisFormatter(format: DateAxisTick['format']) {
 
 function createNumberAxisFormatter(
   locale: Locale,
-  options: FormatNumberOptions
+  options: FormatNumberOptions,
 ) {
   return (value: number) => {
     const info = extractNumberInfo(value);
@@ -180,7 +180,7 @@ function createNumberAxisFormatter(
 
 function createLongNumberAxisFormatter(
   locale: Locale,
-  options: FormatNumberOptions
+  options: FormatNumberOptions,
 ) {
   return (value: number) => {
     return formatNumber(locale, value, options);
@@ -247,7 +247,7 @@ export type Formatter = (value: unknown) => string;
 
 export function createLongAxisFormatter(
   locale: Locale,
-  tick: AllAxisTick
+  tick: AllAxisTick,
 ): Formatter {
   switch (tick.type) {
     case 'time':

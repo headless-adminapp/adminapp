@@ -20,16 +20,16 @@ import {
   useRouter,
   useRouteResolver,
 } from '@headless-adminapp/app/route/hooks';
-import { Id } from '@headless-adminapp/core';
+import type { Id } from '@headless-adminapp/core';
 import { PageType } from '@headless-adminapp/core/experience/app';
-import {
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { Data, IDataService } from '@headless-adminapp/core/transport';
+import type { Data, IDataService } from '@headless-adminapp/core/transport';
 import { IconPlaceholder, Icons } from '@headless-adminapp/icons';
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
 import { Combobox, Tag, ToolbarButton } from '../../components/fluent';
@@ -37,7 +37,7 @@ import { Option } from '../../components/fluent/Option';
 import { RecordCard } from '../../PageEntityForm/RecordCard';
 import { getAvatarColor } from '../../utils/avatar';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 import {
   createLookupRecentKey,
   useGetLookupView,

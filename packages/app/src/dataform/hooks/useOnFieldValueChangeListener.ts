@@ -5,7 +5,8 @@ import { useEventManager } from './useEventManager';
 
 export function useOnFieldValueChangeListener(
   key: string,
-  callback: (value: any, previousValue: any) => any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  callback: (value: any, previousValue: any) => any,
 ) {
   const eventManager = useEventManager();
 

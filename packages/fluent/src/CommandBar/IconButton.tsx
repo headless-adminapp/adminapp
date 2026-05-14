@@ -1,11 +1,11 @@
 import {
-  ForwardRefComponent,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   tokens,
 } from '@fluentui/react-components';
-import { Icon } from '@headless-adminapp/icons';
-import { forwardRef, memo, MemoExoticComponent } from 'react';
+import type { Icon } from '@headless-adminapp/icons';
+import { forwardRef, memo } from 'react';
 
 import { ToolbarButton } from '../components/fluent';
 
@@ -42,12 +42,10 @@ export interface CommandIconButtonProps {
   appearance?: 'subtle' | 'colored';
 }
 
-export const CommandIconButton: MemoExoticComponent<
-  ForwardRefComponent<CommandIconButtonProps>
-> = memo(
+export const CommandIconButton = memo(
   forwardRef(function CommandIconButton(
     { Icon, disabled, onClick, danger },
-    ref
+    ref,
   ) {
     const styles = useStyles();
 
@@ -60,7 +58,7 @@ export const CommandIconButton: MemoExoticComponent<
         className={mergeClasses(styles.root, danger && styles.danger)}
       />
     );
-  })
-);
+  }),
+) as ForwardRefComponent<CommandIconButtonProps>;
 
 CommandIconButton.displayName = 'CommandIconButton';

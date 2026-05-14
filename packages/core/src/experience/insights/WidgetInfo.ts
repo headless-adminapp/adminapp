@@ -8,7 +8,9 @@ interface WidgetSpaceInfo extends WidgetInfoBase {
 
 export interface WidgetComponentInfo extends WidgetInfoBase {
   type: 'component';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Component: React.ComponentType<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props?: any;
 }
 

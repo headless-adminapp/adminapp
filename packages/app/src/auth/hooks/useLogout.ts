@@ -7,7 +7,7 @@ export function useLogout() {
   const setValue = useContextSetValue(AuthContext);
   const onUnauthenticated = useContextSelector(
     AuthContext,
-    (state) => state.onUnauthenticated
+    (state) => state.onUnauthenticated,
   );
 
   const logout = useCallback(() => {

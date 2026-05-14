@@ -10,7 +10,9 @@ import FormControl from '../../form/FormControl';
 interface ConditionValueControlProps {
   attribute: Attribute;
   type: AttributeType;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange?: (value: any) => void;
 }
 
@@ -98,8 +100,10 @@ export function ConditionValueControl({
               value: 'false',
             },
           ]}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           value={value?.map((x: any) => (x === true ? 'true' : 'false')) ?? []}
           onChange={(value) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onChange?.(value?.map((x: any) => x === 'true') ?? []);
           }}
         />
@@ -119,8 +123,10 @@ export function ConditionValueControl({
             label: x.label,
             value: isNumeric ? x.value?.toString() : (x.value as string),
           }))}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           value={value?.map((x: any) => (isNumeric ? x.toString() : x)) ?? []}
           onChange={(value) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onChange?.(value?.map((x: any) => (isNumeric ? +x : x)) ?? []);
           }}
         />

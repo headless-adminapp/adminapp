@@ -1,16 +1,16 @@
-import { LocalizedDataLookup } from '../attributes/DataLookup';
-import { Form, QuickCreateForm } from '../experience/form';
-import { EntityMainFormCommandItemExperience } from '../experience/form/command';
-import {
+import type { LocalizedDataLookup } from '../attributes/DataLookup';
+import type { Form, QuickCreateForm } from '../experience/form';
+import type { EntityMainFormCommandItemExperience } from '../experience/form/command';
+import type {
   SchemaExperience,
   SchemaExperienceMetadata,
 } from '../experience/schema';
-import { View } from '../experience/view';
-import {
+import type { View } from '../experience/view';
+import type {
   EntityMainGridCommandItemExperience,
   SubGridCommandItemExperience,
 } from '../experience/view/command';
-import { SchemaAttributes } from '../schema';
+import type { SchemaAttributes } from '../schema';
 
 export interface ISchemaExperienceStore {
   getExperience<S extends SchemaAttributes = SchemaAttributes>(

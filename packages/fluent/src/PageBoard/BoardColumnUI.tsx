@@ -11,14 +11,14 @@ import {
   useBoardColumnDataState,
   useBoardConfig,
 } from '@headless-adminapp/app/board/hooks';
-import { DragItem } from '@headless-adminapp/app/board/types';
+import type { DragItem } from '@headless-adminapp/app/board/types';
 import { useBaseCommandHandlerContext } from '@headless-adminapp/app/command/hooks';
 import { ScrollbarWithMoreDataRequest } from '@headless-adminapp/app/components/ScrollbarWithMoreDataRequest';
 import { useContextSelector } from '@headless-adminapp/app/mutable/context';
-import { Schema } from '@headless-adminapp/core/schema';
+import type { Schema } from '@headless-adminapp/core/schema';
 import { Icons } from '@headless-adminapp/icons';
 import type { Identifier } from 'dnd-core';
-import { FC, useMemo, useRef } from 'react';
+import { type FC, useCallback, useMemo } from 'react';
 
 import { useDndContext } from '../components/DndProvider';
 import { extendedTokens } from '../components/fluent';
@@ -30,7 +30,7 @@ export const BoardColumnUI: FC = () => {
   const dataState = useBoardColumnDataState();
   const fetchNextPage = useContextSelector(
     BoardColumnContext,
-    (state) => state.fetchNextPage
+    (state) => state.fetchNextPage,
   );
 
   const { columnId, acceptSourceIds, updateFn } = useBoardColumnConfig();
@@ -48,7 +48,6 @@ export const BoardColumnUI: FC = () => {
   const baseContext = useBaseCommandHandlerContext();
   const { useDrop } = useDndContext();
 
-  const ref = useRef<HTMLDivElement>(null);
   const [{ handlerId, over, canDrop }, drop] = useDrop<
     DragItem,
     void,
@@ -80,13 +79,20 @@ export const BoardColumnUI: FC = () => {
     return columnConfigs.some((config) => config.acceptSourceIds.length > 0);
   }, [columnConfigs]);
 
-  drop(ref);
+  const dropRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node) {
+        drop(node);
+      }
+    },
+    [drop],
+  );
 
   const isEmpty = !data?.records.length && !dataState.isFetching;
 
   return (
     <div
-      ref={ref}
+      ref={dropRef}
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -95,8 +101,8 @@ export const BoardColumnUI: FC = () => {
         outline: over
           ? `2px dashed ${tokens.colorBrandBackground}`
           : canDrop
-          ? `2px dashed ${tokens.colorNeutralStroke1}`
-          : 'none',
+            ? `2px dashed ${tokens.colorNeutralStroke1}`
+            : 'none',
         outlineOffset: -5,
         paddingTop: tokens.spacingVerticalS,
         minWidth: minColumnWidth ?? 240,

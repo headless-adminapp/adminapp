@@ -4,19 +4,19 @@ import {
   DialogTitle,
 } from '@fluentui/react-components';
 import {
-  BaseEventAttributes,
+  type BaseEventAttributes,
   baseEventAttributes,
 } from '@headless-adminapp/app/calendar/baseEventAttributes';
-import { CalendarConfig } from '@headless-adminapp/app/calendar/types';
+import type { CalendarConfig } from '@headless-adminapp/app/calendar/types';
 import { attributesFormValidator } from '@headless-adminapp/app/dataform';
 import { getModifiedValues } from '@headless-adminapp/app/dataform/utils/saveRecord';
 import { useFormValidationStrings } from '@headless-adminapp/app/form';
 import { useLocale } from '@headless-adminapp/app/locale';
-import {
+import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { Nullable } from '@headless-adminapp/core/types';
+import type { Nullable } from '@headless-adminapp/core/types';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -24,11 +24,11 @@ import { useForm } from 'react-hook-form';
 import { BodyLoading } from '../../components/BodyLoading';
 import { Button } from '../../components/fluent';
 import { EventFormContent } from './EventFormContent';
-import { BaseFieldValues } from './types';
+import type { BaseFieldValues } from './types';
 
 interface EventFormBodyProps<
   SA1 extends SchemaAttributes = SchemaAttributes,
-  SA2 extends SchemaAttributes = SchemaAttributes
+  SA2 extends SchemaAttributes = SchemaAttributes,
 > {
   values: Partial<
     Nullable<

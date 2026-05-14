@@ -8,14 +8,14 @@ import {
   mergeClasses,
   tokens,
 } from '@fluentui/react-components';
-import {
+import type {
   CommandItemState,
   MenuItemCommandState,
 } from '@headless-adminapp/app/command';
 import { MobileHeaderRightContent } from '@headless-adminapp/app/header/components/MobileHeaderRightContent';
-import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
-import { Icon, IconPlaceholder, Icons } from '@headless-adminapp/icons';
-import { FC, Fragment, useEffect, useMemo, useState } from 'react';
+import type { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
+import { type Icon, IconPlaceholder, Icons } from '@headless-adminapp/icons';
+import { type FC, Fragment, useEffect, useMemo, useState } from 'react';
 
 import { QuickActionItem } from '../App/QuickActionItem';
 import { Button, MenuItem } from '../components/fluent';

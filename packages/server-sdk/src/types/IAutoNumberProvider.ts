@@ -1,9 +1,9 @@
-import { DatabaseContext } from './DatabaseContext';
-import { ServerSdkContext } from './sdk/ServerSdkContext';
+import type { DatabaseContext } from './DatabaseContext';
+import type { ServerSdkContext } from './sdk/ServerSdkContext';
 
 export interface ResovleAutoNumberParams<
   SdkContext extends ServerSdkContext = ServerSdkContext,
-  DbContext extends DatabaseContext = DatabaseContext
+  DbContext extends DatabaseContext = DatabaseContext,
 > {
   logicalName: string;
   attributeName: string;

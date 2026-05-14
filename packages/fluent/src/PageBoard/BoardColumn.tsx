@@ -1,5 +1,5 @@
 import { BoardColumnProvider } from '@headless-adminapp/app/board/BoardColumnProvider';
-import { BoardColumnConfig } from '@headless-adminapp/app/board/types';
+import type { BoardColumnConfig } from '@headless-adminapp/app/board/types';
 
 import { BoardColumnUI } from './BoardColumnUI';
 

@@ -1,14 +1,14 @@
-import {
+import type {
   CommandItemExperience,
   MenuItemCommandExperience,
 } from '@headless-adminapp/core/experience/command';
 import { checkCommandCondition } from '@headless-adminapp/core/experience/command/utils';
-import {
+import type {
   ArrayGroupWithAtLeastOne,
   ArrayWithAtLeastOne,
 } from '@headless-adminapp/core/types';
 
-import {
+import type {
   CommandItemExperienceSelector,
   CommandItemState,
   MenuItemCommandState,
@@ -19,7 +19,7 @@ function transformedProperties<HandlerContext>(
     CommandItemExperience<HandlerContext>,
     'Icon' | 'disabled' | 'onClick' | 'hidden'
   >,
-  handlerContext: HandlerContext
+  handlerContext: HandlerContext,
 ) {
   const IconComponent = command.Icon;
 
@@ -43,7 +43,7 @@ function transformedProperties<HandlerContext>(
 
 function transformCommand<HandlerContext>(
   command: CommandItemExperience<HandlerContext>,
-  handlerContext: HandlerContext
+  handlerContext: HandlerContext,
 ): CommandItemState {
   const commandType = command.type;
 
@@ -78,7 +78,7 @@ function transformCommand<HandlerContext>(
         appearance: command.appearance,
         ...transformedProperties(command, handlerContext),
         items: command.items.map((item) =>
-          transformMenuItems(item, handlerContext)
+          transformMenuItems(item, handlerContext),
         ),
       } as CommandItemState;
     default:
@@ -88,16 +88,16 @@ function transformCommand<HandlerContext>(
 
 function transformMenuItems<HandlerContext>(
   items: ArrayWithAtLeastOne<MenuItemCommandExperience<HandlerContext>>,
-  handlerContext: HandlerContext
+  handlerContext: HandlerContext,
 ): ArrayWithAtLeastOne<MenuItemCommandState> {
   return items.map((item) =>
-    transformMenuItem(item, handlerContext)
+    transformMenuItem(item, handlerContext),
   ) as ArrayWithAtLeastOne<MenuItemCommandState>;
 }
 
 function transformMenuItem<HandlerContext>(
   item: MenuItemCommandExperience<HandlerContext>,
-  handlerContext: HandlerContext
+  handlerContext: HandlerContext,
 ): MenuItemCommandState {
   return {
     danger: item.danger,
@@ -105,7 +105,7 @@ function transformMenuItem<HandlerContext>(
     localizedTexts: item.localizedTexts,
     ...transformedProperties(item, handlerContext),
     items: item.items?.map((item) =>
-      transformMenuItems(item, handlerContext)
+      transformMenuItems(item, handlerContext),
     ) as ArrayGroupWithAtLeastOne<MenuItemCommandState>,
   };
 }
@@ -113,7 +113,7 @@ function transformMenuItem<HandlerContext>(
 function transformCommandGroup<HandlerContext>(
   group: CommandItemExperience<HandlerContext>[],
   handlerContext: HandlerContext,
-  selector?: CommandItemExperienceSelector<HandlerContext>
+  selector?: CommandItemExperienceSelector<HandlerContext>,
 ): CommandItemState[] {
   return group
     .map((command) => {
@@ -135,7 +135,7 @@ function transformCommandGroup<HandlerContext>(
 export function transformCommadnGroups<HandlerContext>(
   groups: CommandItemExperience<HandlerContext>[][],
   handlerContext: HandlerContext,
-  selector?: CommandItemExperienceSelector<HandlerContext>
+  selector?: CommandItemExperienceSelector<HandlerContext>,
 ): CommandItemState[][] {
   return groups
     .map((group) => {

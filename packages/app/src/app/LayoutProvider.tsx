@@ -1,23 +1,26 @@
-import { IDataService, IFileService } from '@headless-adminapp/core/transport';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { FC, PropsWithChildren } from 'react';
+import type {
+  IDataService,
+  IFileService,
+} from '@headless-adminapp/core/transport';
+import { type QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { FC, PropsWithChildren } from 'react';
 
 import {
   AuthProvider,
-  AuthProviderPlaceholderProps,
-  AuthProviderProps,
+  type AuthProviderPlaceholderProps,
+  type AuthProviderProps,
 } from '../auth';
 import { queryClient as defaultQueryClient } from '../defaults';
 import { DialogProvider } from '../dialog';
 import { HeaderProvider } from '../header';
-import { LocaleProvider, LocaleProviderProps } from '../locale';
+import { LocaleProvider, type LocaleProviderProps } from '../locale';
 import { MetadataProvider } from '../metadata';
-import { MetadataProviderProps } from '../metadata/MetadataProvider';
+import type { MetadataProviderProps } from '../metadata/MetadataProvider';
 import { UnsavedChangesRouteGuard } from '../navigation/unsaved-changes';
 import { ProgressIndicatorProvider } from '../progress-indicator';
 import { QuickCreateProvider } from '../quickcreate';
 import { RouteProvider } from '../route';
-import { RouteProviderProps } from '../route/RouteProvider';
+import type { RouteProviderProps } from '../route/RouteProvider';
 import { ToastNotificationProvider } from '../toast-notification';
 import { DataServiceContext } from '../transport';
 import { FileServiceContext } from '../transport/context';

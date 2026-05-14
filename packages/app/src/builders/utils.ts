@@ -1,19 +1,19 @@
-import { Attribute, LookupAttribute } from '@headless-adminapp/core/attributes';
-import { Locale } from '@headless-adminapp/core/experience/locale';
-import {
+import type { Attribute, LookupAttribute } from '@headless-adminapp/core/attributes';
+import type { Locale } from '@headless-adminapp/core/experience/locale';
+import type {
   ColumnCondition,
   SortingState,
   View,
 } from '@headless-adminapp/core/experience/view';
-import {
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
-import { Filter, IDataService } from '@headless-adminapp/core/transport';
+import type { ISchemaStore } from '@headless-adminapp/core/store';
+import type { Filter, IDataService } from '@headless-adminapp/core/transport';
 
-import { TransformedViewColumn } from '../datagrid';
+import type { TransformedViewColumn } from '../datagrid';
 import {
   collectExpandedKeys,
   mergeConditions,
@@ -37,7 +37,7 @@ export type ExportFn<S extends SchemaAttributes = SchemaAttributes> = (option: {
 const getHeaders = (
   attributes: SchemaAttributes,
   gridColumns: ExportColumn<SchemaAttributes>[],
-  schemaStore: ISchemaStore
+  schemaStore: ISchemaStore,
 ) => {
   const headers = gridColumns.map((column) => {
     if (column.name.indexOf('.') !== -1) {
@@ -85,6 +85,7 @@ function extractAttributeData({
   attributes: SchemaAttributes;
   column: ExportColumn<SchemaAttributes>;
   schemaStore: ISchemaStore;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   record: any;
 }) {
   const attribute = getAttribute({
@@ -119,6 +120,7 @@ export const exportRecordsCSV: ExportFn = async ({
 
   const headers = getHeaders(attributes, gridColumns, schemaStore);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cellData = records.map((record: any) => {
     return gridColumns.map((column) => {
       const { attribute, value } = extractAttributeData({
@@ -155,6 +157,7 @@ export const exportRecordsXLS: ExportFn = async ({
   const ExcelJS = await import('exceljs');
   const headers = getHeaders(attributes, gridColumns, schemaStore);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cellData = records.map((item: any) => {
     return gridColumns.map((column) => {
       const { attribute, value } = extractAttributeData({
@@ -201,7 +204,8 @@ export const exportRecordsXLS: ExportFn = async ({
 
     const sheetColumn = worksheet.getColumn(index + 1);
 
-    let formatFn = (value: any) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const formatFn = (value: any) =>
       getAttributeFormattedValue(attribute, value, locale) ?? '';
 
     if (attribute?.type === 'money') {
@@ -232,7 +236,7 @@ export const exportRecordsXLS: ExportFn = async ({
 };
 
 export async function retriveRecords<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >({
   gridColumns,
   dataService,
@@ -261,7 +265,7 @@ export async function retriveRecords<
   const expand = collectExpandedKeys(gridColumns);
 
   const columns = Array.from(
-    new Set([...gridColumns.filter((x) => !x.expandedKey).map((x) => x.name)])
+    new Set([...gridColumns.filter((x) => !x.expandedKey).map((x) => x.name)]),
   );
 
   const result = await dataService.retriveRecords<InferredSchemaType<S>>({
@@ -275,10 +279,11 @@ export async function retriveRecords<
       extraFilter,
       null, // quickFilterResults
       columnFilters,
-      schemaStore
+      schemaStore,
     ),
     skip,
     limit,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sort: sorting as any,
   });
 

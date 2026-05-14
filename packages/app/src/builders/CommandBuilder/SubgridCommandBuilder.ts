@@ -1,9 +1,9 @@
-import {
+import type {
   EntitySubGridCommandContext,
   SubGridCommandItemExperience,
 } from '@headless-adminapp/core/experience/view';
-import { Localized } from '@headless-adminapp/core/types';
-import { Icon } from '@headless-adminapp/icons';
+import type { Localized } from '@headless-adminapp/core/types';
+import type { Icon } from '@headless-adminapp/icons';
 
 import { exportRecordsCSV, exportRecordsXLS, retriveRecords } from '../utils';
 import { createLocalizedSelector } from './utils';

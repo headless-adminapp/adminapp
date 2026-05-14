@@ -1,8 +1,8 @@
-/* eslint-disable unused-imports/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 // import { RetriveAggregateFnOptions } from '@react-adminapp/core/data/IDataService';
-import { AggregateType } from '@headless-adminapp/core/transport';
-import { Data } from '@headless-adminapp/core/transport/operations';
+import type { AggregateType } from '@headless-adminapp/core/transport';
+import type { Data } from '@headless-adminapp/core/transport/operations';
 
 // export interface RetriveAggregateParams
 //   extends RetriveAggregateFnOptions<Record<string, unknown>> {

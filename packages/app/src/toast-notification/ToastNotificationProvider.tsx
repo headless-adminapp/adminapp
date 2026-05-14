@@ -1,9 +1,9 @@
-import { FC, PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 
 import { useCreateContextStore } from '../mutable/context';
 import {
   ToastNotificationContext,
-  ToastNotificationContextState,
+  type ToastNotificationContextState,
 } from './context';
 
 interface ToastNotificationProviderProps {}

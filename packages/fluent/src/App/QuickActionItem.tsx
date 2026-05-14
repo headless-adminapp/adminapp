@@ -1,12 +1,12 @@
 import {
   Badge,
-  BadgeProps,
+  type BadgeProps,
   makeStyles,
   tokens,
 } from '@fluentui/react-components';
 import { useBasePath, useRouter } from '@headless-adminapp/app/route';
-import { Icon } from '@headless-adminapp/icons';
-import { FC } from 'react';
+import type { Icon } from '@headless-adminapp/icons';
+import type { FC } from 'react';
 
 import { Button } from '../components/fluent';
 

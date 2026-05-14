@@ -1,10 +1,10 @@
 import {
-  CalendarStrings,
+  type CalendarStrings,
   defaultDatePickerStrings,
 } from '@fluentui/react-datepicker-compat';
 import {
   defaultOperatorStrings,
-  OperatorStrings,
+  type OperatorStrings,
 } from '@headless-adminapp/app/datagrid/column-filter';
 import { createContext, useContext } from 'react';
 

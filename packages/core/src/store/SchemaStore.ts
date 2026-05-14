@@ -1,6 +1,6 @@
-import { LookupAttribute } from '../attributes';
-import { Schema, SchemaAttributes } from '../schema';
-import { ISchemaStore } from './ISchemaStore';
+import type { LookupAttribute } from '../attributes';
+import type { Schema, SchemaAttributes } from '../schema';
+import type { ISchemaStore } from './ISchemaStore';
 
 export class SchemaStore<SA extends SchemaAttributes = SchemaAttributes>
   implements ISchemaStore<SA>
@@ -35,13 +35,13 @@ export class SchemaStore<SA extends SchemaAttributes = SchemaAttributes>
 
       if (!primaryAttribute) {
         throw new Error(
-          `Schema ${schema.logicalName} does not have primary attribute`
+          `Schema ${schema.logicalName} does not have primary attribute`,
         );
       }
 
       if (
         !['string', 'choice', 'number', 'lookup'].includes(
-          primaryAttribute.type
+          primaryAttribute.type,
         )
       ) {
         throw new Error(
@@ -49,7 +49,7 @@ export class SchemaStore<SA extends SchemaAttributes = SchemaAttributes>
             schema.logicalName
           } must be of type string, choice, number or lookup but got ${
             primaryAttribute.type
-          }`
+          }`,
         );
       }
 
@@ -58,7 +58,7 @@ export class SchemaStore<SA extends SchemaAttributes = SchemaAttributes>
 
         if (!avatarAttribute) {
           throw new Error(
-            `Schema ${schema.logicalName} does not have avatar attribute`
+            `Schema ${schema.logicalName} does not have avatar attribute`,
           );
         }
 
@@ -66,13 +66,13 @@ export class SchemaStore<SA extends SchemaAttributes = SchemaAttributes>
           throw new Error(
             `Avatar attribute ${schema.avatarAttribute as string} of schema ${
               schema.logicalName
-            } must be of type image attachment`
+            } must be of type image attachment`,
           );
         }
       }
 
       const lookupAttributes = Object.entries(schema.attributes).filter(
-        ([_, attr]) => attr.type === 'lookup'
+        ([_, attr]) => attr.type === 'lookup',
       ) as [string, LookupAttribute][];
 
       for (const [key, lookupAttribute] of lookupAttributes) {
@@ -80,7 +80,7 @@ export class SchemaStore<SA extends SchemaAttributes = SchemaAttributes>
 
         if (!lookupSchema) {
           throw new Error(
-            `Schema ${schema.logicalName} has lookup attribute ${key} with target ${lookupAttribute.entity} which does not exist`
+            `Schema ${schema.logicalName} has lookup attribute ${key} with target ${lookupAttribute.entity} which does not exist`,
           );
         }
       }

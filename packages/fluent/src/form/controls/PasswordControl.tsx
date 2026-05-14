@@ -1,9 +1,9 @@
-import { InputProps, tokens } from '@fluentui/react-components';
+import { type InputProps, tokens } from '@fluentui/react-components';
 import { Icons } from '@headless-adminapp/icons';
 import { useState } from 'react';
 
-import { ControlProps } from './types';
 import { Button, Input } from '../../components/fluent';
+import type { ControlProps } from './types';
 
 export interface PasswordControlProps extends ControlProps<string> {
   appearance?: InputProps['appearance'];

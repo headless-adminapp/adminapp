@@ -1,5 +1,5 @@
-import { PromptDialogOptions } from '@headless-adminapp/core/experience/dialog';
-import {
+import type { PromptDialogOptions } from '@headless-adminapp/core/experience/dialog';
+import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
@@ -15,7 +15,7 @@ export function useOpenPromptDialog() {
       options: Omit<
         PromptDialogOptions<SA>,
         'type' | 'onConfirm' | 'onClose' | 'onCancel'
-      >
+      >,
     ) => {
       return new Promise<InferredSchemaType<SA> | null>((resolve) => {
         const { close } = openDialog({
@@ -39,7 +39,7 @@ export function useOpenPromptDialog() {
         });
       });
     },
-    [openDialog]
+    [openDialog],
   );
 
   return openPromptDialog;

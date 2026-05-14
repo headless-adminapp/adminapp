@@ -9,4 +9,5 @@ export interface ProgressIndicatorContextState {
 }
 
 export const ProgressIndicatorContext =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   createContext<ProgressIndicatorContextState>(null as any);

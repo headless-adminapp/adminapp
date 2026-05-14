@@ -34,7 +34,7 @@ const avatarColors: AvatarNamedColor[] = [
 ];
 
 export function getAvatarColor(
-  name: string | null | undefined
+  name: string | null | undefined,
 ): AvatarNamedColor | undefined {
   if (!name) {
     return;

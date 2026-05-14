@@ -1,15 +1,15 @@
-import { CommandItemState } from '@headless-adminapp/app/command';
-import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
+import type { CommandItemState } from '@headless-adminapp/app/command';
+import type { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
 
 import CommandBar from '../CommandBar';
 import { CommandMenuButton } from '../CommandBar/MenuButton';
-import { MenuItemProps } from '../CommandBar/MenuItem';
+import type { MenuItemProps } from '../CommandBar/MenuItem';
 import { transformMenuItems } from './utils';
 
 export function renderCommandItem(
   key: string | number,
   item: CommandItemState,
-  language: string
+  language: string,
 ) {
   const commandType = item.type;
 
@@ -26,7 +26,7 @@ export function renderCommandItem(
           onClick={item.onClick}
           items={
             item.items?.map((x) =>
-              transformMenuItems(x, language)
+              transformMenuItems(x, language),
             ) as ArrayGroupWithAtLeastOne<MenuItemProps>
           }
         />

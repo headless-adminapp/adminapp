@@ -1,6 +1,6 @@
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import { SchemaStore } from '@headless-adminapp/core/store';
-import { Model, ModelStatic, Sequelize } from 'sequelize';
+import type { Model, ModelStatic, Sequelize } from 'sequelize';
 
 import { defineModel } from './defineModel';
 
@@ -11,8 +11,9 @@ interface SequelizeSchemaStoreOptions {
 }
 
 export class SequelizeSchemaStore<
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 > extends SchemaStore<SA> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private models: Record<string, ModelStatic<Model<any, any>>> = {};
 
   constructor(private readonly options: SequelizeSchemaStoreOptions) {
@@ -25,28 +26,31 @@ export class SequelizeSchemaStore<
     const model = defineModel(
       schema.collectionName ?? schema.logicalName,
       schema,
-      this.options.sequelize
+      this.options.sequelize,
     );
 
     this.models[schema.logicalName] = model as unknown as ModelStatic<
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       Model<any, any>
     >;
   }
 
   public getModel<_S extends SA>(
-    logicalName: string
+    logicalName: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): ModelStatic<Model<any, any>> {
     if (!this.models[logicalName]) {
       throw new Error(`Model for ${logicalName} not found`);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.models[logicalName] as unknown as ModelStatic<Model<any, any>>;
   }
 
   public getRelationAlias(
     collectionName: string,
     field: string,
-    targetCollectionName: string
+    targetCollectionName: string,
   ) {
     return `${RELATION_ALIAS_PREFIX}:${collectionName}:${field}:${targetCollectionName}`;
   }
@@ -69,7 +73,7 @@ export class SequelizeSchemaStore<
             as: this.getRelationAlias(
               schema.collectionName ?? schema.logicalName,
               key,
-              targetSchema.collectionName ?? targetSchema.logicalName
+              targetSchema.collectionName ?? targetSchema.logicalName,
             ),
             foreignKey: key,
             onDelete:
@@ -77,11 +81,11 @@ export class SequelizeSchemaStore<
           });
         } else if (attribute.type === 'regarding') {
           const targetSchemas = attribute.entities.map((entity) =>
-            this.getSchema(entity)
+            this.getSchema(entity),
           );
 
           const targetModels = targetSchemas.map((schema) =>
-            this.getModel(schema.logicalName)
+            this.getModel(schema.logicalName),
           );
 
           targetModels.forEach((targetModel) => {
@@ -89,7 +93,7 @@ export class SequelizeSchemaStore<
               as: this.getRelationAlias(
                 schema.collectionName ?? schema.logicalName,
                 key,
-                targetModel.tableName
+                targetModel.tableName,
               ),
               foreignKey: key,
             });

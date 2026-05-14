@@ -1,6 +1,6 @@
 import {
-  FC,
-  PropsWithChildren,
+  type FC,
+  type PropsWithChildren,
   useCallback,
   useMemo,
   useRef,
@@ -16,7 +16,9 @@ export const ProgressIndicatorProvider: FC<PropsWithChildren> = ({
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState<string | undefined>(undefined);
 
-  const showTimeoutRef = useRef<NodeJS.Timeout>();
+  const showTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
 
   const showProgressIndicator = useCallback(
     (message?: string, delay?: number) => {
@@ -37,7 +39,7 @@ export const ProgressIndicatorProvider: FC<PropsWithChildren> = ({
         setVisible(true);
       }
     },
-    []
+    [],
   );
 
   const hideProgressIndicator = useCallback(() => {
@@ -64,7 +66,7 @@ export const ProgressIndicatorProvider: FC<PropsWithChildren> = ({
       message,
       showProgressIndicator,
       hideProgressIndicator,
-    ]
+    ],
   );
 
   return (

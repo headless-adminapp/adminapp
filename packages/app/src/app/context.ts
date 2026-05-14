@@ -1,5 +1,5 @@
-import { AppExperience } from '@headless-adminapp/core/experience/app';
-import { SchemaExperienceMetadata } from '@headless-adminapp/core/experience/schema';
+import type { AppExperience } from '@headless-adminapp/core/experience/app';
+import type { SchemaExperienceMetadata } from '@headless-adminapp/core/experience/schema';
 import { createContext } from 'react';
 
 export interface AppContextState {

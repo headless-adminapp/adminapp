@@ -8,7 +8,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { extendedTokens } from '../../../components/fluent';
 import { SkeletonControl } from '../SkeletonControl';
-import { ControlProps } from '../types';
+import type { ControlProps } from '../types';
 import { resolveTimeValue } from './utils';
 
 dayjs.extend(customParseFormat);
@@ -132,7 +132,7 @@ export function TimeControl({
               dayjs(data.selectedTime).diff(dayjs().startOf('day'), 'minutes'),
             );
           } else if (data.selectedTimeText) {
-            let resolvedTime = resolveTimeValue(
+            const resolvedTime = resolveTimeValue(
               data.selectedTimeText,
               timeFormat,
             );

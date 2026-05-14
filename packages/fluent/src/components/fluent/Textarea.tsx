@@ -1,9 +1,9 @@
 import {
-  ForwardRefComponent,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   Textarea as TextareaInternal,
-  TextareaProps,
+  type TextareaProps,
   tokens,
 } from '@fluentui/react-components';
 import { forwardRef } from 'react';
@@ -41,10 +41,10 @@ export const Textarea: ForwardRefComponent<ExtendedTextareaProps> = forwardRef(
         className={mergeClasses(
           styles.root,
           rest.readOnly && styles.readonly,
-          className
+          className,
         )}
         ref={ref}
       />
     );
-  }
+  },
 );

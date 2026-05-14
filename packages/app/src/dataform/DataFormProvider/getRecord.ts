@@ -1,16 +1,19 @@
-import { SectionEditableGridControl } from '@headless-adminapp/core/experience/form';
-import {
+import type { SectionEditableGridControl } from '@headless-adminapp/core/experience/form';
+import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
-import { HttpError, IDataService } from '@headless-adminapp/core/transport';
+import type { ISchemaStore } from '@headless-adminapp/core/store';
+import {
+  HttpError,
+  type IDataService,
+} from '@headless-adminapp/core/transport';
 
-import { RetriveRecordFnOptions } from './types';
+import type { RetriveRecordFnOptions } from './types';
 import { getControls } from './utils';
 
 export async function getRecord<
-  SA extends SchemaAttributes = SchemaAttributes
+  SA extends SchemaAttributes = SchemaAttributes,
 >({
   recordId,
   dataService,
@@ -25,7 +28,7 @@ export async function getRecord<
     record = await dataService.retriveRecord(
       schema.logicalName,
       recordId,
-      columns
+      columns,
     );
   } catch (error) {
     if (error instanceof HttpError && error.status === 404) {
@@ -42,7 +45,7 @@ export async function getRecord<
   const controls = getControls(form);
 
   const editableGridControls = controls.filter(
-    (control) => control.type === 'editablegrid'
+    (control) => control.type === 'editablegrid',
   );
 
   for (const control of editableGridControls) {
@@ -57,6 +60,7 @@ export async function getRecord<
       recordId,
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (record as any)[control.alias] = records;
   }
 
@@ -102,7 +106,7 @@ export async function getEditableSubgridRecords({
       controlSchema.idAttribute,
       control.associatedAttribute,
       ...control.controls.map((x) =>
-        typeof x === 'string' ? x : x.attributeName
+        typeof x === 'string' ? x : x.attributeName,
       ),
     ],
   });

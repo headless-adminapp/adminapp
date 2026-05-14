@@ -1,17 +1,17 @@
-import { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
-import { Form, Section } from '@headless-adminapp/core/experience/form';
-import {
+import type { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
+import type { Form, Section } from '@headless-adminapp/core/experience/form';
+import type {
   SectionControl,
   SectionStatndardControl,
 } from '@headless-adminapp/core/experience/form/SectionControl';
-import { Tab } from '@headless-adminapp/core/experience/form/Tab';
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
-import { CalculatedAttributeInfo } from '@headless-adminapp/core/schema/CalculatedAttributeInfo';
+import type { Tab } from '@headless-adminapp/core/experience/form/Tab';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { CalculatedAttributeInfo } from '@headless-adminapp/core/schema/CalculatedAttributeInfo';
 
-import { DataFormContextState } from '../context';
+import type { DataFormContextState } from '../context';
 
 export function getControls<SA extends SchemaAttributes>(
-  form: Form<SA>
+  form: Form<SA>,
 ): SectionControl<SA>[] {
   const controls = form.experience.tabs
     .flatMap((tab) => tab.tabColumns)
@@ -23,7 +23,7 @@ export function getControls<SA extends SchemaAttributes>(
 
 export function getColumns<SA extends SchemaAttributes>(
   form: Form<SA>,
-  schema: Schema<SA>
+  schema: Schema<SA>,
 ) {
   const set = new Set([
     ...(form.experience.includeAttributes ?? []),
@@ -45,36 +45,45 @@ export function getColumns<SA extends SchemaAttributes>(
 }
 
 export function transformFormInternal<SA extends SchemaAttributes>(
-  form: Form<SA>
+  form: Form<SA>,
 ): DataFormContextState<SA>['formInternal'] {
   const controls = getControls(form);
 
-  const dict = controls.reduce((acc, control) => {
-    let key = control.key;
+  const dict = controls.reduce(
+    (acc, control) => {
+      let key = control.key;
 
-    if (!key && control.type === 'standard') {
-      key = control.attributeName as string;
-    }
+      if (!key && control.type === 'standard') {
+        key = control.attributeName as string;
+      }
 
-    if (key) {
-      acc[key] = control;
-    }
-    return acc;
-  }, {} as Record<string, SectionControl<SA>>);
+      if (key) {
+        acc[key] = control;
+      }
+      return acc;
+    },
+    {} as Record<string, SectionControl<SA>>,
+  );
 
   const sections = form.experience.tabs
     .flatMap((tab) => tab.tabColumns)
     .flatMap((tabColumn) => tabColumn.sections);
 
-  const dictBySectionKey = sections.reduce((acc, section) => {
-    acc[section.name] = section;
-    return acc;
-  }, {} as Record<string, Section<SA>>);
+  const dictBySectionKey = sections.reduce(
+    (acc, section) => {
+      acc[section.name] = section;
+      return acc;
+    },
+    {} as Record<string, Section<SA>>,
+  );
 
-  const tabsDict = form.experience.tabs.reduce((acc, tab) => {
-    acc[tab.name] = tab;
-    return acc;
-  }, {} as Record<string, Tab<SA>>);
+  const tabsDict = form.experience.tabs.reduce(
+    (acc, tab) => {
+      acc[tab.name] = tab;
+      return acc;
+    },
+    {} as Record<string, Tab<SA>>,
+  );
 
   return {
     controls: {
@@ -92,7 +101,7 @@ export function transformFormInternal<SA extends SchemaAttributes>(
 }
 
 export function getIsFieldDisabled<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >({
   attribute,
   isFormReadonly,
@@ -134,7 +143,7 @@ export function getIsFieldDisabled<
 }
 
 export function getIsControlHidden<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >({
   control,
   hiddenControls,
@@ -158,7 +167,7 @@ export function getIsControlHidden<
 }
 
 export function getIsFieldRequired<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >({
   attribute,
   control,

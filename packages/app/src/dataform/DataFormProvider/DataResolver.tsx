@@ -1,4 +1,4 @@
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 
@@ -7,7 +7,7 @@ import { useContextSetValue } from '../../mutable';
 import { useDataService } from '../../transport';
 import { DataFormContext } from '../context';
 import { useDataFormSchema, useRecordId, useSelectedForm } from '../hooks';
-import { RetriveRecordFn } from './types';
+import type { RetriveRecordFn } from './types';
 import { getColumns } from './utils';
 
 interface DataResolverProps<SA extends SchemaAttributes> {
@@ -31,9 +31,10 @@ export function DataResolver<SA extends SchemaAttributes>({
 
   const queryKey = useMemo(
     () => ['data', 'retriveRecord', schema.logicalName, recordId, columns],
-    [columns, recordId, schema.logicalName]
+    [columns, recordId, schema.logicalName],
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, refetch, isPending } = useQuery<any>({
     queryKey,
     queryFn: async () => {

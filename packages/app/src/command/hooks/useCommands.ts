@@ -1,7 +1,7 @@
-import { CommandItemExperience } from '@headless-adminapp/core/experience/command';
+import type { CommandItemExperience } from '@headless-adminapp/core/experience/command';
 import { useMemo, useRef } from 'react';
 
-import { CommandItemExperienceSelector, CommandItemState } from '../types';
+import type { CommandItemExperienceSelector, CommandItemState } from '../types';
 import { transformCommadnGroups } from '../utils';
 
 /***
@@ -11,7 +11,7 @@ import { transformCommadnGroups } from '../utils';
 export function useCommands<HandlerContext>(
   commands: CommandItemExperience<HandlerContext>[][] | undefined,
   handlerContext: HandlerContext,
-  selector?: CommandItemExperienceSelector<HandlerContext>
+  selector?: CommandItemExperienceSelector<HandlerContext>,
 ): CommandItemState[][] {
   const selectorRef = useRef(selector);
   selectorRef.current = selector;
@@ -20,7 +20,7 @@ export function useCommands<HandlerContext>(
     return transformCommadnGroups(
       commands ?? [],
       handlerContext,
-      selectorRef.current
+      selectorRef.current,
     );
   }, [commands, handlerContext]);
 }

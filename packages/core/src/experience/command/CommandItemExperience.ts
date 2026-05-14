@@ -1,6 +1,6 @@
-import { ButtonCommandExperience } from './ButtonCommandExperience';
-import { IconButtonCommandExperience } from './IconButtonCommandExperience';
-import { MenuComandExperience } from './MenuItemCommandExperience';
+import type { ButtonCommandExperience } from './ButtonCommandExperience';
+import type { IconButtonCommandExperience } from './IconButtonCommandExperience';
+import type { MenuComandExperience } from './MenuItemCommandExperience';
 
 export type CommandItemExperience<Context> =
   | IconButtonCommandExperience<Context>

@@ -1,12 +1,12 @@
 import { Divider, tokens } from '@fluentui/react-components';
-import React, { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { extendedTokens } from '../components/fluent';
 
 interface PageEntityViewDesktopFrameProps {
-  header: React.ReactNode;
-  content: React.ReactNode;
-  footer: React.ReactNode;
+  header: ReactNode;
+  content: ReactNode;
+  footer: ReactNode;
 }
 
 // Exprement component

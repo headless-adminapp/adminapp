@@ -1,12 +1,12 @@
-import { Schema } from '@headless-adminapp/core/schema';
+import type { Schema } from '@headless-adminapp/core/schema';
 import { SchemaStore } from '@headless-adminapp/core/store';
-import { Model } from 'mongoose';
+import type { Model } from 'mongoose';
 
 import { defineModel } from './defineModel';
-import { InferredDbSchemaType, MongoRequiredSchemaAttributes } from './types';
+import type { InferredDbSchemaType, MongoRequiredSchemaAttributes } from './types';
 
 export class MongoSchemaStore<
-  SA extends MongoRequiredSchemaAttributes = MongoRequiredSchemaAttributes
+  SA extends MongoRequiredSchemaAttributes = MongoRequiredSchemaAttributes,
 > extends SchemaStore<SA> {
   private models: Record<
     string,
@@ -23,7 +23,7 @@ export class MongoSchemaStore<
     const model = defineModel(
       `${this.key}:${schema.logicalName}`,
       schema,
-      (logicalName: string) => `${this.key}:${logicalName}`
+      (logicalName: string) => `${this.key}:${logicalName}`,
     );
 
     this.models[schema.logicalName] = model as unknown as Model<
@@ -32,7 +32,7 @@ export class MongoSchemaStore<
   }
 
   public getModel<S extends SA>(
-    logicalName: string
+    logicalName: string,
   ): Model<InferredDbSchemaType<S>> {
     if (!this.models[logicalName]) {
       throw new Error(`Model for ${logicalName} not found`);

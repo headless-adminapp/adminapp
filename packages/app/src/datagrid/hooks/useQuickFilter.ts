@@ -6,12 +6,12 @@ import { GridContext } from '../context';
 export function useQuickFilter() {
   const quickFilter = useContextSelector(
     GridContext,
-    (state) => state.view.experience.quickFilter
+    (state) => state.view.experience.quickFilter,
   );
 
   const values = useContextSelector(
     GridContext,
-    (state) => state.quickFilterValues
+    (state) => state.quickFilterValues,
   );
 
   const _setValue = useContextSetValue(GridContext);
@@ -25,7 +25,7 @@ export function useQuickFilter() {
         },
       }));
     },
-    [_setValue]
+    [_setValue],
   );
 
   return [quickFilter, values, setValue] as const;

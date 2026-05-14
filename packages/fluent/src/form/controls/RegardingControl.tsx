@@ -17,21 +17,21 @@ import {
   useRouteResolver,
 } from '@headless-adminapp/app/route/hooks';
 import { PageType } from '@headless-adminapp/core/experience/app';
-import { ViewExperience } from '@headless-adminapp/core/experience/view';
-import {
+import type { ViewExperience } from '@headless-adminapp/core/experience/view';
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
-import {
+import type { ISchemaStore } from '@headless-adminapp/core/store';
+import type {
   Data,
   IDataService,
   RetriveRecordsResult,
 } from '@headless-adminapp/core/transport';
 import { IconPlaceholder, Icons } from '@headless-adminapp/icons';
 import { useQuery } from '@tanstack/react-query';
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
 import { Combobox, Tag } from '../../components/fluent';
@@ -39,7 +39,7 @@ import { Option } from '../../components/fluent/Option';
 import { RecordCard } from '../../PageEntityForm/RecordCard';
 import { getAvatarColor } from '../../utils/avatar';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 import { useLookupDatas } from './useLookupData';
 
 export interface LookupOption {

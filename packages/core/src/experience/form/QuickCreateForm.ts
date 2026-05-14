@@ -1,21 +1,22 @@
-import { InferredSchemaType, SchemaAttributes } from '../../schema';
-import { AllowAsync } from '../../types';
-import { Metadata } from '../types';
-import { FormExperience } from './Form';
+import type { InferredSchemaType, SchemaAttributes } from '../../schema';
+import type { AllowAsync } from '../../types';
+import type { Metadata } from '../types';
+import type { FormExperience } from './Form';
 
-export interface QuickCreateForm<S extends SchemaAttributes = SchemaAttributes>
-  extends Metadata {
+export interface QuickCreateForm<
+  S extends SchemaAttributes = SchemaAttributes,
+> extends Metadata {
   experience: FormExperience<S>;
 }
 
 export interface AsyncQuickCreateForm<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 > extends Metadata {
   experience: AllowAsync<FormExperience<S>>;
 }
 
 export type QuickCreateFormExperience<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 > = {
   // id: string;
   // name: string;
@@ -36,6 +37,7 @@ export type QuickCreateSection<S extends SchemaAttributes = SchemaAttributes> =
       type: 'standard';
       attributeName: keyof S;
       label?: string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       visible?: boolean | ((props: { record: any; data: any }) => boolean);
     }[];
   };

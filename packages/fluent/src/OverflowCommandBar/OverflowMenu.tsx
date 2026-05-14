@@ -5,13 +5,13 @@ import {
   useIsOverflowItemVisible,
   useOverflowMenu,
 } from '@fluentui/react-components';
-import { CommandItemState } from '@headless-adminapp/app/command';
+import type { CommandItemState } from '@headless-adminapp/app/command';
 import { useLocale } from '@headless-adminapp/app/locale';
-import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
+import type { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
 import { Icons } from '@headless-adminapp/icons';
 import { Fragment } from 'react';
 
-import { MenuItem, MenuItemProps } from '../CommandBar/MenuItem';
+import { MenuItem, type MenuItemProps } from '../CommandBar/MenuItem';
 import { MenuPopover, ToolbarButton } from '../components/fluent';
 import { OverflowMenuDivider } from './OverflowMenuDivider';
 import { transformMenuItems } from './utils';
@@ -47,7 +47,7 @@ export const OverflowMenu: React.FC<{ items: CommandItemState[][] }> = ({
                 />
               )}
               {group.map((item, index) => {
-                const text = 'text' in item ? item.text ?? '' : '';
+                const text = 'text' in item ? (item.text ?? '') : '';
                 return (
                   <OverflowMenuItem
                     key={`${groupIndex}-${index}`}
@@ -60,7 +60,7 @@ export const OverflowMenu: React.FC<{ items: CommandItemState[][] }> = ({
                     items={
                       item.type === 'menu'
                         ? (item.items?.map((x) =>
-                            transformMenuItems(x, language)
+                            transformMenuItems(x, language),
                           ) as ArrayGroupWithAtLeastOne<MenuItemProps>)
                         : undefined
                     }

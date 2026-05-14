@@ -1,6 +1,6 @@
-import { InferredAttributeType } from '../attributes/inferred';
-import { IsRequired, OptionalNullable } from '../types';
-import { SchemaAttributes } from './SchemaAttributes';
+import type { InferredAttributeType } from '../attributes/inferred';
+import type { IsRequired, OptionalNullable } from '../types';
+import type { SchemaAttributes } from './SchemaAttributes';
 
 export type InferredSchemaType<S extends SchemaAttributes> = OptionalNullable<{
   [K in keyof S]: IsRequired<S[K]> extends true

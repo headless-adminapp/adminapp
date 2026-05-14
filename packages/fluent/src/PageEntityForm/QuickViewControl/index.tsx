@@ -6,8 +6,8 @@ import {
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { useMetadata } from '@headless-adminapp/app/metadata';
 import { useDataService } from '@headless-adminapp/app/transport';
-import { SectionQuickViewControl } from '@headless-adminapp/core/experience/form/SectionControl';
-import { Schema } from '@headless-adminapp/core/schema';
+import type { SectionQuickViewControl } from '@headless-adminapp/core/experience/form/SectionControl';
+import type { Schema } from '@headless-adminapp/core/schema';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { SectionControlWrapper } from '../../DataForm/SectionControl';
@@ -35,7 +35,7 @@ export function QuickViewControl({
 
   if (attribute.type !== 'lookup') {
     console.warn(
-      `Attribute ${control.attributeName} is not a lookup field, skipping QuickViewControl.`
+      `Attribute ${control.attributeName} is not a lookup field, skipping QuickViewControl.`,
     );
     return null;
   }
@@ -74,6 +74,7 @@ function QuickViewControlInternal({
   const isMobile = useIsMobile();
   const dataService = useDataService();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, isPending } = useQuery<any>({
     queryKey: [
       'data',
@@ -90,7 +91,7 @@ function QuickViewControlInternal({
       const record = await dataService.retriveRecord(
         targetSchema.logicalName,
         targetRecordId,
-        control.form.attributes
+        control.form.attributes,
       );
 
       return record;

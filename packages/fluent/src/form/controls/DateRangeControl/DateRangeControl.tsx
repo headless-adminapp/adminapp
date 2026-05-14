@@ -8,7 +8,7 @@ import { useMemo, useState } from 'react';
 
 import { Input, PopoverSurface } from '../../../components/fluent';
 import { SkeletonControl } from '../SkeletonControl';
-import { ControlProps } from '../types';
+import type { ControlProps } from '../types';
 import { PopoverContent } from './PopoverContent';
 import { formatDateRange } from './utils';
 

@@ -1,7 +1,7 @@
 import { useCalculatedAttributeStore } from '@headless-adminapp/app/metadata/hooks/useCalculatedAttributeStore';
-import { SectionEditableGridControl } from '@headless-adminapp/core/experience/form';
-import { CalculatedAttributeInfo } from '@headless-adminapp/core/schema/CalculatedAttributeInfo';
-import { FC, useEffect, useRef } from 'react';
+import type { SectionEditableGridControl } from '@headless-adminapp/core/experience/form';
+import type { CalculatedAttributeInfo } from '@headless-adminapp/core/schema/CalculatedAttributeInfo';
+import { type FC, useEffect, useRef } from 'react';
 
 import { EVENT_KEY_ON_FIELD_CHANGE } from '../constants';
 import {
@@ -25,7 +25,7 @@ export const CalculatedField: FC = () => {
 
   useEffect(() => {
     const editableGridControls = getControls(form).filter(
-      (x) => x.type === 'editablegrid'
+      (x) => x.type === 'editablegrid',
     ) as SectionEditableGridControl[];
 
     const formAttributeNames = getColumns(form, schema);
@@ -47,6 +47,7 @@ export const CalculatedField: FC = () => {
           record[dep] = values[dep];
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const relatedRecords: Record<string, any[]> = {};
 
         for (const relatedDep of Object.entries(item.relatedDeps || {})) {
@@ -57,7 +58,7 @@ export const CalculatedField: FC = () => {
             (x) =>
               x.alias !== false &&
               x.logicalName === logicalName &&
-              x.associatedAttribute === associatedColumn
+              x.associatedAttribute === associatedColumn,
           );
 
           if (!gridControl) {
@@ -82,7 +83,7 @@ export const CalculatedField: FC = () => {
         }
 
         const currentValue = formInstanceRef.current.getValues(
-          item.attributeName
+          item.attributeName,
         );
 
         const newValue = item.handler(record, relatedRecords);
@@ -93,7 +94,7 @@ export const CalculatedField: FC = () => {
             EVENT_KEY_ON_FIELD_CHANGE,
             item.attributeName,
             newValue,
-            currentValue
+            currentValue,
           );
         }
       }
@@ -101,7 +102,7 @@ export const CalculatedField: FC = () => {
       function recalculateSubGridField(
         item: CalculatedAttributeInfo,
         alias: string,
-        indexStr: string
+        indexStr: string,
       ) {
         const record: Record<string, unknown> = {};
         for (const dep of item.deps) {
@@ -109,7 +110,7 @@ export const CalculatedField: FC = () => {
         }
 
         const currentValue = formInstanceRef.current.getValues(
-          `${alias}.${indexStr}.${item.attributeName}`
+          `${alias}.${indexStr}.${item.attributeName}`,
         );
 
         const newValue = item.handler(record, {});
@@ -117,13 +118,13 @@ export const CalculatedField: FC = () => {
         if (currentValue !== newValue) {
           formInstanceRef.current.setValue(
             `${alias}.${indexStr}.${item.attributeName}`,
-            newValue
+            newValue,
           );
           eventManager.emit(
             EVENT_KEY_ON_FIELD_CHANGE,
             `${alias}.${indexStr}.${item.attributeName}`,
             newValue,
-            currentValue
+            currentValue,
           );
         }
       }
@@ -148,13 +149,13 @@ export const CalculatedField: FC = () => {
             calculatedAttributeStore.getCalculatedAttributeInfosByDeps(
               gridControl.logicalName,
               ...gridControl.controls.map((x) =>
-                typeof x === 'string' ? x : x.attributeName
-              )
+                typeof x === 'string' ? x : x.attributeName,
+              ),
             );
 
           // Filter out row level calculated fields
           items = items.filter(
-            (x) => x.logicalName !== gridControl.logicalName
+            (x) => x.logicalName !== gridControl.logicalName,
           );
 
           for (const item of items) {
@@ -164,7 +165,7 @@ export const CalculatedField: FC = () => {
           const items =
             calculatedAttributeStore.getCalculatedAttributeInfosByDeps(
               gridControl.logicalName,
-              field
+              field,
             );
 
           for (const item of items) {
@@ -188,7 +189,7 @@ export const CalculatedField: FC = () => {
         const items =
           calculatedAttributeStore.getCalculatedAttributeInfosByDeps(
             schema.logicalName,
-            key
+            key,
           );
 
         for (const item of items) {

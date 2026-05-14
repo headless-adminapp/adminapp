@@ -1,12 +1,12 @@
 import { Divider, tokens } from '@fluentui/react-components';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { FC, useMemo, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
 import { useAppStrings } from '../../../App/AppStringContext';
 import { Button } from '../../../components/fluent';
 import GroupedSelectControl, {
-  GroupedSelectControlProps,
+  type GroupedSelectControlProps,
 } from '../GroupedSelectControl';
 import { CalendarItem } from './CalendarItem';
 import { selectMaxDate } from './utils';
@@ -151,12 +151,12 @@ export const PopoverContent: FC<PopoverContentProps> = ({
   >([value ? dayjs(value[0]) : null, value ? dayjs(value[1]) : null]);
 
   const [navigationDate1, setNavigationDate1] = useState<dayjs.Dayjs>(
-    value ? dayjs(value[0]) : dayjs()
+    value ? dayjs(value[0]) : dayjs(),
   );
   const [navigationDate2, setNavigationDate2] = useState<dayjs.Dayjs>(
     value
       ? selectMaxDate(dayjs(internalValue[0]).add(1, 'month'), internalValue[1])
-      : dayjs().add(1, 'month')
+      : dayjs().add(1, 'month'),
   );
 
   const [date1, date2] = internalValue;
@@ -208,7 +208,7 @@ export const PopoverContent: FC<PopoverContentProps> = ({
         }}
       >
         Clear
-      </Button>
+      </Button>,
     );
   }
 
@@ -231,7 +231,7 @@ export const PopoverContent: FC<PopoverContentProps> = ({
         }}
       >
         Apply
-      </Button>
+      </Button>,
     );
   }
 

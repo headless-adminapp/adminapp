@@ -8,7 +8,7 @@ import {
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { Icons } from '@headless-adminapp/icons';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { Button, MenuItem, MenuPopover } from '../components/fluent';
 
@@ -19,7 +19,7 @@ export const FormSubgridViewSelector: FC = () => {
   const { language } = useLocale();
   const allowViewSelection = useContextSelector(
     GridContext,
-    (state) => state.allowViewSelection
+    (state) => state.allowViewSelection,
   );
 
   return (

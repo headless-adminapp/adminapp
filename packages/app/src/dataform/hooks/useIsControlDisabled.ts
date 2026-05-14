@@ -8,12 +8,12 @@ import { useDataFormSchema } from './useFormSchema';
 export function useIsControlDisabled(attributeName: string): boolean {
   const disabledFields = useContextSelector(
     DataFormContext,
-    (state) => state.disabledControls
+    (state) => state.disabledControls,
   );
 
   const controls = useContextSelector(
     DataFormContext,
-    (state) => state.formInternal.controls.dict
+    (state) => state.formInternal.controls.dict,
   );
 
   const isFormReadonly = useFormIsReadonly();

@@ -1,19 +1,18 @@
-/* eslint-disable unused-imports/no-unused-vars */
 import { DataFormContext } from '@headless-adminapp/app/dataform';
 import { useElementSize } from '@headless-adminapp/app/hooks';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
-import { FC, PropsWithChildren, useRef } from 'react';
+import { type FC, type PropsWithChildren, useRef } from 'react';
 
 import { FormTabColumn } from './FormTabColumn';
 
-function determineItemCount(
-  availableWidth: number,
-  itemWidth: number,
-  gap: number,
-  padding: number
-) {
-  return Math.floor((availableWidth + gap - 2 * padding) / (itemWidth + gap));
-}
+// function determineItemCount(
+//   availableWidth: number,
+//   itemWidth: number,
+//   gap: number,
+//   padding: number,
+// ) {
+//   return Math.floor((availableWidth + gap - 2 * padding) / (itemWidth + gap));
+// }
 
 interface FormTabProps {
   value: string;
@@ -26,13 +25,13 @@ interface FormTabProps {
 export const FormTab: FC<PropsWithChildren<FormTabProps>> & {
   Column: typeof FormTabColumn;
 } = (props) => {
-  const divRef = useRef<HTMLDivElement>(null);
+  // const divRef = useRef<HTMLDivElement>(null);
   const activeTab = useContextSelector(
     DataFormContext,
-    (state) => state.activeTab
+    (state) => state.activeTab,
   );
 
-  const divSize = useElementSize(divRef);
+  // const divSize = useElementSize(divRef);
 
   if (activeTab !== props.value) {
     return null;
@@ -48,8 +47,8 @@ export const FormTab: FC<PropsWithChildren<FormTabProps>> & {
 /** @todo: unfinished component */
 const FormTabInternal: FC<PropsWithChildren<FormTabProps>> = ({
   children,
-  value,
-  fullHeight,
+  // value,
+  // fullHeight,
   columnCount,
   columnWidths,
 }) => {
@@ -57,7 +56,7 @@ const FormTabInternal: FC<PropsWithChildren<FormTabProps>> = ({
 
   const divSize = useElementSize(divRef, 100);
 
-  const padding = 0;
+  // const padding = 0;
   // const columnCount = 2;
   const minSectionWidth = 392;
   const gap = 12;

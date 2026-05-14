@@ -15,7 +15,7 @@ import { useLocale } from '@headless-adminapp/app/locale';
 import { useMetadata } from '@headless-adminapp/app/metadata';
 import { Icons } from '@headless-adminapp/icons';
 import { useQuery } from '@tanstack/react-query';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { Button, MenuItem, MenuPopover } from '../components/fluent';
 

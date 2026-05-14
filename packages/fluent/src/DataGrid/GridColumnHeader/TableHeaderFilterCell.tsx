@@ -11,19 +11,19 @@ import {
   TableHeaderCell,
   tokens,
 } from '@fluentui/react-components';
-import { TransformedViewColumn } from '@headless-adminapp/app/datagrid';
+import type { TransformedViewColumn } from '@headless-adminapp/app/datagrid';
 import {
   useDataGridSchema,
   useGridColumnFilter,
 } from '@headless-adminapp/app/datagrid/hooks';
 import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
-import { Attribute } from '@headless-adminapp/core';
-import { ColumnCondition } from '@headless-adminapp/core/experience/view';
+import type { Attribute } from '@headless-adminapp/core';
+import type { ColumnCondition } from '@headless-adminapp/core/experience/view';
 import { Icons } from '@headless-adminapp/icons';
 import {
-  FC,
+  type FC,
   Fragment,
-  PropsWithChildren,
+  type PropsWithChildren,
   useMemo,
   useRef,
   useState,
@@ -113,7 +113,7 @@ export const TableHeaderFilterCell: FC<
 
     if (!_attribute) {
       throw new Error(
-        `Attribute not found: ${column.name} in ${schema.logicalName}`
+        `Attribute not found: ${column.name} in ${schema.logicalName}`,
       );
     }
 
@@ -127,7 +127,13 @@ export const TableHeaderFilterCell: FC<
 
     const lookupSchema = schemaStore.getSchema(_attribute.entity);
     return lookupSchema.attributes[column.expandedKey];
-  }, [column.expandedKey, column.name, schemaStore, schema.attributes]);
+  }, [
+    schema.attributes,
+    schema.logicalName,
+    column.name,
+    column.expandedKey,
+    schemaStore,
+  ]);
 
   const align = useMemo(() => {
     if (column.name === schema.primaryAttribute) {

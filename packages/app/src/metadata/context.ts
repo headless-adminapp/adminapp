@@ -3,10 +3,10 @@ import type {
   ISchemaExperienceStore,
   ISchemaStore,
 } from '@headless-adminapp/core/store';
-import { ICalculatedAttributeStore } from '@headless-adminapp/core/store/ICalculatedAttributeStore';
+import type { ICalculatedAttributeStore } from '@headless-adminapp/core/store/ICalculatedAttributeStore';
 
 import { createContext } from '../mutable/context';
-import { IRecentItemStore } from '../store';
+import type { IRecentItemStore } from '../store';
 
 export interface MetadataContextState {
   schemaStore: ISchemaStore;

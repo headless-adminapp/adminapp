@@ -5,11 +5,11 @@ import {
   TableCell,
   tokens,
 } from '@fluentui/react-components';
-import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
+import type { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
 import { Icons } from '@headless-adminapp/icons';
-import { FC } from 'react';
+import type { FC } from 'react';
 
-import { MenuItemProps } from '../../CommandBar/MenuItem';
+import type { MenuItemProps } from '../../CommandBar/MenuItem';
 import { MenuList } from '../../CommandBar/MenuList';
 import { Button, MenuPopover } from '../../components/fluent';
 

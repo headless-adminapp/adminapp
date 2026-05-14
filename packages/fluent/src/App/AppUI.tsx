@@ -1,6 +1,12 @@
-import { DrawerProps, tokens } from '@fluentui/react-components';
+import { type DrawerProps, tokens } from '@fluentui/react-components';
 import { useIsMobile, useIsTablet } from '@headless-adminapp/app/hooks';
-import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import {
+  type FC,
+  type PropsWithChildren,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import { AppHeaderContainer } from './AppHeaderContianer';
 import { NavigationContainer } from './Navigation';
@@ -21,7 +27,7 @@ export const AppUI: FC<PropsWithChildren<AppUIProps>> = ({
   const [isNavOpen, setIsNavOpen] = useState(!isMobile);
   const navType = useMemo<DrawerType>(
     () => (isMobile ? 'overlay' : 'inline'),
-    [isMobile]
+    [isMobile],
   );
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { Spinner, tokens } from '@fluentui/react-components';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 interface BodyLoadingProps {
   loading?: boolean;

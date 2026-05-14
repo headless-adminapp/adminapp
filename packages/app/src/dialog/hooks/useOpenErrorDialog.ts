@@ -1,4 +1,4 @@
-import { AlertDialogOptions } from '@headless-adminapp/core/experience/dialog';
+import type { AlertDialogOptions } from '@headless-adminapp/core/experience/dialog';
 import { useCallback } from 'react';
 
 import { useOpenDialog } from './useOpenDialog';
@@ -19,7 +19,7 @@ export function useOpenErrorDialog() {
         },
       });
     },
-    [openDialog]
+    [openDialog],
   );
 
   return openErrorDialog;

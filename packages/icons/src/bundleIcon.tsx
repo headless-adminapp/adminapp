@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { Icon, IconProps } from './types';
+import type { Icon, IconProps } from './types';
 
 export function bundleIcon(RegularIcon: Icon, FilledIcon: Icon) {
   return function BundledIcon({ className, filled, ...rest }: IconProps) {

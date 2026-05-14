@@ -6,9 +6,9 @@ import {
 } from '@fluentui/react-components';
 import { getLocalizedOperatorOptions } from '@headless-adminapp/app/datagrid/column-filter';
 import type { Attribute } from '@headless-adminapp/core/attributes';
-import { ColumnCondition } from '@headless-adminapp/core/experience/view';
-import { OperatorKey } from '@headless-adminapp/core/transport';
-import { FC, Fragment, useMemo, useState } from 'react';
+import type { ColumnCondition } from '@headless-adminapp/core/experience/view';
+import type { OperatorKey } from '@headless-adminapp/core/transport';
+import { type FC, Fragment, useMemo, useState } from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
 import { Button } from '../../components/fluent';
@@ -31,7 +31,7 @@ export const FilterForm: FC<FilterFormProps> = ({
   onCancel,
 }) => {
   const [operator, setOperator] = useState<OperatorKey>(
-    getDefaultOperator(defaultValue?.operator, attribute.type)
+    getDefaultOperator(defaultValue?.operator, attribute.type),
   );
   const strings = usePageEntityViewStrings();
   const { operatorStrings } = useAppStrings();
@@ -42,12 +42,12 @@ export const FilterForm: FC<FilterFormProps> = ({
 
   const selectedOption = useMemo(() => {
     return operatorOptions[attribute.type].find(
-      (option) => option.value === operator
+      (option) => option.value === operator,
     )!;
   }, [operator, attribute.type, operatorOptions]);
 
   const [values, setValues] = useState(
-    getDefaultValues(selectedOption, defaultValue?.value, attribute.type)
+    getDefaultValues(selectedOption, defaultValue?.value, attribute.type),
   );
 
   const handleChangeOperator = (operator: OperatorKey) => {
@@ -55,6 +55,7 @@ export const FilterForm: FC<FilterFormProps> = ({
     setValues([]);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChangeValue = (value: any, index: number) => {
     setValues((prev) => {
       const next = [...prev];

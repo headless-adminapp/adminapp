@@ -1,21 +1,21 @@
-import { JSX } from 'react';
+import type { JSX } from 'react';
 
 // import { AttachmentControlProps } from './controls/AttachmentControl';
-import { CurrencyControlProps } from './controls/CurrencyControl';
-import { DateControlProps } from './controls/DateControl';
-import { DateTimeControlProps } from './controls/DateTimeControl';
-import { DecimalControlProps } from './controls/DecimalControl';
-import { EmailControlProps } from './controls/EmailControl';
-import { LookupControlProps } from './controls/LookupControl';
-import { MultiSelectControlProps } from './controls/MultiSelectControl';
-import { MultiSelectLookupControlProps } from './controls/MultiSelectLookupControl';
-import { PasswordControlProps } from './controls/PasswordControl';
-import { SelectControlProps } from './controls/SelectControl';
-import { SwitchControlProps } from './controls/SwitchControl';
-import { TelephoneControlProps } from './controls/TelephoneControl';
-import { TextAreaControlProps } from './controls/TextAreaControl';
-import { TextControlProps } from './controls/TextControl';
-import { ControlProps } from './controls/types';
+import type { CurrencyControlProps } from './controls/CurrencyControl';
+import type { DateControlProps } from './controls/DateControl';
+import type { DateTimeControlProps } from './controls/DateTimeControl';
+import type { DecimalControlProps } from './controls/DecimalControl';
+import type { EmailControlProps } from './controls/EmailControl';
+import type { LookupControlProps } from './controls/LookupControl';
+import type { MultiSelectControlProps } from './controls/MultiSelectControl';
+import type { MultiSelectLookupControlProps } from './controls/MultiSelectLookupControl';
+import type { PasswordControlProps } from './controls/PasswordControl';
+import type { SelectControlProps } from './controls/SelectControl';
+import type { SwitchControlProps } from './controls/SwitchControl';
+import type { TelephoneControlProps } from './controls/TelephoneControl';
+import type { TextAreaControlProps } from './controls/TextAreaControl';
+import type { TextControlProps } from './controls/TextControl';
+import type { ControlProps } from './controls/types';
 
 export interface BaseFormControlProps {
   error?: boolean;

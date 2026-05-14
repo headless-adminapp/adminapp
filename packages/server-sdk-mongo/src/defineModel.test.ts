@@ -104,7 +104,7 @@ describe('defineModel', () => {
     const model = defineModel(
       'TestModel',
       schema,
-      (logicalName) => logicalName
+      (logicalName) => logicalName,
     );
 
     expect(model).toBeDefined();

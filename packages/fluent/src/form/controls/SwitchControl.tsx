@@ -1,7 +1,7 @@
 import { Switch } from '@fluentui/react-components';
 
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 export interface SwitchControlProps extends ControlProps<boolean> {}
 

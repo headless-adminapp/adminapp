@@ -9,17 +9,17 @@ import {
 } from '@fluentui/react-components';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
-import { ChoiceAttribute } from '@headless-adminapp/core/attributes';
-import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
-import { Locale } from '@headless-adminapp/core/experience/locale';
-import { CardView } from '@headless-adminapp/core/experience/view';
-import { CardViewSecondaryColumn } from '@headless-adminapp/core/experience/view/View';
-import {
+import type { ChoiceAttribute } from '@headless-adminapp/core/attributes';
+import type { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
+import type { Locale } from '@headless-adminapp/core/experience/locale';
+import type { CardView } from '@headless-adminapp/core/experience/view';
+import type { CardViewSecondaryColumn } from '@headless-adminapp/core/experience/view/View';
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { FC, useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 
 import { ChoiceBadge } from '../components/ChoiceBadge';
 
@@ -68,6 +68,7 @@ export function RecordCard<S extends SchemaAttributes = SchemaAttributes>({
   const styles = useStyles();
   const locale = useLocale();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const _record = record as any;
 
   const recordTitle = useMemo(() => {
@@ -205,6 +206,7 @@ function SecondaryColumnContent<S extends SchemaAttributes = SchemaAttributes>({
   schema,
   locale,
 }: Readonly<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   record: any;
   column: CardViewSecondaryColumn<S>;
   schema: Schema<S>;

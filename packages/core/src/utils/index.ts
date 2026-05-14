@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
-import { FileObject } from '../attributes/AttachmentAttribute';
-import { ItemWithKey } from '../types';
+import type { FileObject } from '../attributes/AttachmentAttribute';
+import type { ItemWithKey } from '../types';
 
 export function typeSafeFn<T>() {
   return function <U extends T>(a: U): U {
@@ -73,7 +73,7 @@ export function createItemsWithKey<T>(value: T[]): ItemWithKey<T>[] {
 
 export function stringWithDefault(
   value: string | undefined | null,
-  defaultValue: string
+  defaultValue: string,
 ): string {
   return value || defaultValue;
 }

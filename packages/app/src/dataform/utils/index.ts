@@ -6,27 +6,27 @@ import type {
   IdAttribute,
   StringAttribute,
 } from '@headless-adminapp/core/attributes';
-import { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
-import {
+import type { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
+import type {
   Form,
   SectionEditableGridControl,
 } from '@headless-adminapp/core/experience/form';
-import { SectionStatndardControl } from '@headless-adminapp/core/experience/form/SectionControl';
-import {
+import type { SectionStatndardControl } from '@headless-adminapp/core/experience/form/SectionControl';
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
-import { Nullable } from '@headless-adminapp/core/types';
+import type { ISchemaStore } from '@headless-adminapp/core/store';
+import type { Nullable } from '@headless-adminapp/core/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { type CountryCode } from 'libphonenumber-js';
-import { memoize, MemoizedFunction } from 'lodash';
-import { ResolverResult } from 'react-hook-form';
+import { memoize, type MemoizedFunction } from 'lodash';
+import type { ResolverResult } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { getColumns, getControls } from '../../dataform/DataFormProvider/utils';
-import { FormValidationStringSet } from '../../form/FormValidationStringContext';
+import type { FormValidationStringSet } from '../../form/FormValidationStringContext';
 import { localizedLabel } from '../../locale/utils';
 
 export { saveRecord } from './saveRecord';
@@ -49,11 +49,12 @@ export function getInitialValues({
   record: InferredSchemaType<SchemaAttributes> | undefined;
   recordId: string | undefined;
   schema: Schema<SchemaAttributes>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   defaultParameters: Record<string, any>;
 }) {
   const formColumns = getColumns(form, schema);
   const editableGridControls = getControls(form).filter(
-    (control) => control.type === 'editablegrid' && control.alias !== false
+    (control) => control.type === 'editablegrid' && control.alias !== false,
   ) as SectionEditableGridControl[];
 
   const allColumns = [
@@ -74,60 +75,69 @@ export function getInitialValues({
 
         return acc;
       },
-      {} as Record<string, any>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      {} as Record<string, any>,
     );
 
-    return allColumns.reduce((acc, column) => {
-      const cloneAttributeInfo = cloneAttributesObj[column] as string;
-      // | EditableGridCloneAttribute; // TODO:
+    return allColumns.reduce(
+      (acc, column) => {
+        const cloneAttributeInfo = cloneAttributesObj[column] as string;
+        // | EditableGridCloneAttribute; // TODO:
 
-      let value: unknown = null;
+        let value: unknown = null;
 
-      if (cloneAttributeInfo) {
-        if (typeof cloneAttributeInfo === 'string') {
-          value = cloneRecord[cloneAttributeInfo];
+        if (cloneAttributeInfo) {
+          if (typeof cloneAttributeInfo === 'string') {
+            value = cloneRecord[cloneAttributeInfo];
+          }
+          // else {
+          //   const rows = cloneRecord[cloneAttributeInfo.attributeName] as any[];
+
+          //   if (!rows?.length) {
+          //     value = [];
+          //   } else {
+          //     value = rows.map((row) => {
+          //       return Object.keys(row).reduce((p, c) => {
+          //         if (c === '_id') {
+          //           return p;
+          //         }
+
+          //         if (cloneAttributeInfo.attributes.includes(c)) {
+          //           p[c] = row[c];
+          //         } else {
+          //           p[c] = null;
+          //         }
+
+          //         return p;
+          //       }, {} as Record<string, any>);
+          //     });
+          //   }
+          // }
+        } else {
+          value = defaultParameters[column] ?? null;
         }
-        // else {
-        //   const rows = cloneRecord[cloneAttributeInfo.attributeName] as any[];
 
-        //   if (!rows?.length) {
-        //     value = [];
-        //   } else {
-        //     value = rows.map((row) => {
-        //       return Object.keys(row).reduce((p, c) => {
-        //         if (c === '_id') {
-        //           return p;
-        //         }
+        return {
+          ...acc,
+          [column]: value,
+        };
+      },
+      {} as Nullable<InferredSchemaType<SchemaAttributes>>,
+    );
+  }
 
-        //         if (cloneAttributeInfo.attributes.includes(c)) {
-        //           p[c] = row[c];
-        //         } else {
-        //           p[c] = null;
-        //         }
-
-        //         return p;
-        //       }, {} as Record<string, any>);
-        //     });
-        //   }
-        // }
-      } else {
-        value = defaultParameters[column] ?? null;
-      }
-
+  return allColumns.reduce(
+    (acc, column) => {
+      const value = record
+        ? record[column]
+        : (defaultParameters[column] ?? null);
       return {
         ...acc,
         [column]: value,
       };
-    }, {} as Nullable<InferredSchemaType<SchemaAttributes>>);
-  }
-
-  return allColumns.reduce((acc, column) => {
-    const value = record ? record[column] : defaultParameters[column] ?? null;
-    return {
-      ...acc,
-      [column]: value,
-    };
-  }, {} as Nullable<InferredSchemaType<SchemaAttributes>>);
+    },
+    {} as Nullable<InferredSchemaType<SchemaAttributes>>,
+  );
 }
 
 interface FormValidatorOptions<A extends SchemaAttributes = SchemaAttributes> {
@@ -142,11 +152,14 @@ interface FormValidatorOptions<A extends SchemaAttributes = SchemaAttributes> {
 }
 
 type FormValidator = (<A extends SchemaAttributes = SchemaAttributes>(
-  options: FormValidatorOptions<A>
+  options: FormValidatorOptions<A>,
 ) => (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values: Record<string, any>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   context: any,
-  options: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  options: any,
 ) => Promise<ResolverResult<{}>>) &
   MemoizedFunction;
 
@@ -161,6 +174,7 @@ export const formValidator: FormValidator = memoize(
     strings,
     region,
   }: FormValidatorOptions<A>) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return async (values: Record<string, any>, context: any, options: any) => {
       let validator = yup.object().shape({});
 
@@ -183,7 +197,7 @@ export const formValidator: FormValidator = memoize(
 
         const editableGridControls = activeControls.filter(
           (control) =>
-            control.type === 'editablegrid' && control.alias !== false
+            control.type === 'editablegrid' && control.alias !== false,
         );
 
         const columns = Array.from(
@@ -192,7 +206,7 @@ export const formValidator: FormValidator = memoize(
             ...activeControls
               .filter((control) => control.type === 'standard')
               .map((control) => control.attributeName),
-          ])
+          ]),
         );
 
         validator = generateValidationSchema({
@@ -205,7 +219,7 @@ export const formValidator: FormValidator = memoize(
 
             return {
               columns: control.controls.map((x) =>
-                typeof x === 'string' ? x : x.attributeName
+                typeof x === 'string' ? x : x.attributeName,
               ),
               schema: schema,
               attributeName: control.alias,
@@ -236,11 +250,11 @@ export const formValidator: FormValidator = memoize(
       strings,
       readonlyAttributes,
       formReadOnly,
-    })
+    }),
 );
 
 interface EditableSubgridFormValidatorOptions<
-  A extends SchemaAttributes = SchemaAttributes
+  A extends SchemaAttributes = SchemaAttributes,
 > {
   schema: Schema<A>;
   control: SectionEditableGridControl<A>;
@@ -254,13 +268,16 @@ interface EditableSubgridFormValidatorOptions<
 }
 
 type EditableSubgridFormValidator = (<
-  A extends SchemaAttributes = SchemaAttributes
+  A extends SchemaAttributes = SchemaAttributes,
 >(
-  options: EditableSubgridFormValidatorOptions<A>
+  options: EditableSubgridFormValidatorOptions<A>,
 ) => (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values: Record<string, any>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   context: any,
-  options: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  options: any,
 ) => Promise<ResolverResult<{}>>) &
   MemoizedFunction;
 
@@ -278,9 +295,12 @@ export const editableSubgridFormValidator: EditableSubgridFormValidator =
       alias,
     }: EditableSubgridFormValidatorOptions<A>) {
       return async (
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         values: Record<string, any>,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         context: any,
-        options: any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        options: any,
       ) => {
         let validator = yup.object().shape({});
 
@@ -295,7 +315,7 @@ export const editableSubgridFormValidator: EditableSubgridFormValidator =
                 columns: control.controls.map((x) =>
                   typeof x === 'string'
                     ? x
-                    : (x as SectionStatndardControl).attributeName
+                    : (x as SectionStatndardControl).attributeName,
                 ),
                 schema: controlSchema,
                 attributeName: alias,
@@ -335,12 +355,12 @@ export const editableSubgridFormValidator: EditableSubgridFormValidator =
         formReadOnly,
         alias,
         control,
-      })
+      }),
   );
 
 export const generateValidationSchema = memoize(
   function generateValidationSchema<
-    A extends SchemaAttributes = SchemaAttributes
+    A extends SchemaAttributes = SchemaAttributes,
   >({
     columns,
     editableGrids,
@@ -364,59 +384,72 @@ export const generateValidationSchema = memoize(
     region: string;
   }) {
     return yup.object().shape({
-      ...(columns.reduce((acc, column) => {
-        if (readonlyAttributes?.includes(column)) {
+      ...(columns.reduce(
+        (acc, column) => {
+          if (readonlyAttributes?.includes(column)) {
+            return acc;
+          }
+
+          const attribute = schema.attributes[column];
+
+          const validationSchema = generateAttributeValidationSchema(
+            attribute,
+            language,
+            strings,
+            region,
+          );
+
+          return {
+            ...acc,
+            [column]: validationSchema,
+          };
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        {} as Record<string, yup.Schema<any>>,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ) as any),
+      ...editableGrids?.reduce(
+        (acc, grid) => {
+          let validationSchema = yup
+            .array()
+            .of(
+              yup.object().shape({
+                ...grid.columns.reduce(
+                  (acc, column) => {
+                    const attribute = grid.schema.attributes[column];
+
+                    const validationSchema = generateAttributeValidationSchema(
+                      attribute,
+                      language,
+                      strings,
+                      region,
+                    );
+
+                    return {
+                      ...acc,
+                      [column]: validationSchema,
+                    };
+                  },
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  {} as Record<string, yup.Schema<any>>,
+                ),
+              }),
+            )
+            .nullable();
+
+          if (grid.required) {
+            validationSchema = validationSchema
+              .required(strings.atLeastOneRowRequired)
+              .min(1, strings.atLeastOneRowRequired);
+          }
+
+          acc[grid.attributeName] = validationSchema;
+
           return acc;
-        }
-
-        const attribute = schema.attributes[column];
-
-        const validationSchema = generateAttributeValidationSchema(
-          attribute,
-          language,
-          strings,
-          region
-        );
-
-        return {
-          ...acc,
-          [column]: validationSchema,
-        };
-      }, {} as Record<string, yup.Schema<any>>) as any),
-      ...editableGrids?.reduce((acc, grid) => {
-        let validationSchema = yup
-          .array()
-          .of(
-            yup.object().shape({
-              ...grid.columns.reduce((acc, column) => {
-                const attribute = grid.schema.attributes[column];
-
-                const validationSchema = generateAttributeValidationSchema(
-                  attribute,
-                  language,
-                  strings,
-                  region
-                );
-
-                return {
-                  ...acc,
-                  [column]: validationSchema,
-                };
-              }, {} as Record<string, yup.Schema<any>>),
-            })
-          )
-          .nullable();
-
-        if (grid.required) {
-          validationSchema = validationSchema
-            .required(strings.atLeastOneRowRequired)
-            .min(1, strings.atLeastOneRowRequired);
-        }
-
-        acc[grid.attributeName] = validationSchema;
-
-        return acc;
-      }, {} as Record<string, yup.Schema<any>>),
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        {} as Record<string, yup.Schema<any>>,
+      ),
     });
   },
   ({
@@ -436,7 +469,7 @@ export const generateValidationSchema = memoize(
       strings,
       readonlyAttributes,
       region,
-    })
+    }),
 );
 
 function createAttributeValidationSchema(attribute: Attribute): yup.Schema {
@@ -482,7 +515,7 @@ function extendAttributeRequiredValidationSchema({
 }): yup.Schema {
   if (attribute.required) {
     validationSchema = validationSchema.required(
-      `${label}: ${strings.required}`
+      `${label}: ${strings.required}`,
     );
   }
 
@@ -516,6 +549,7 @@ function extendAttributeValidationSchema({
     case 'attachments':
       validationSchema = extendAttributeAttachmentsValidationSchema({
         attribute,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         validationSchema: validationSchema as yup.ArraySchema<any, any>,
         label,
         strings,
@@ -553,7 +587,7 @@ function extendAttributeStringValidationSchema({
     // extend the validation schema with the max length
     validationSchema = validationSchema.max(
       attribute.maxLength,
-      `${label}: ${strings.maxLength}`
+      `${label}: ${strings.maxLength}`,
     );
   }
 
@@ -561,7 +595,7 @@ function extendAttributeStringValidationSchema({
     // extend the validation schema with the min length
     validationSchema = validationSchema.min(
       attribute.minLength,
-      `${label}: ${strings.minLength}`
+      `${label}: ${strings.minLength}`,
     );
   }
 
@@ -569,14 +603,14 @@ function extendAttributeStringValidationSchema({
     // extend the validation schema with the pattern
     validationSchema = validationSchema.matches(
       new RegExp(attribute.pattern),
-      `${label}: ${strings.invalidFormat}`
+      `${label}: ${strings.invalidFormat}`,
     );
   }
 
   if (attribute.format === 'email') {
     // extend the validation schema with the email format
     validationSchema = validationSchema.email(
-      `${label}: ${strings.invalidEmail}`
+      `${label}: ${strings.invalidEmail}`,
     );
   } else if (attribute.format === 'phone') {
     // extend the validation schema with the phone format
@@ -603,6 +637,7 @@ function extendAttributeAttachmentsValidationSchema({
   strings,
 }: {
   attribute: AttachmentsAttribute;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   validationSchema: yup.ArraySchema<any, any>;
   strings: FormValidationStringSet;
   label: string;
@@ -623,9 +658,10 @@ function extendAttributeAttachmentsValidationSchema({
         }
 
         return value.every(
-          (file: any) => file?.size && file.size <= attribute.maxSize!
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (file: any) => file?.size && file.size <= attribute.maxSize!,
         );
-      }
+      },
     );
   }
 
@@ -646,12 +682,12 @@ function extendAttributeIdValidationSchema({
   if ('guid' in attribute && attribute.guid) {
     validationSchema = validationSchema.matches(
       guidRegex,
-      `${label}: ${strings.invalidIdFormat}`
+      `${label}: ${strings.invalidIdFormat}`,
     );
   } else if ('objectId' in attribute && attribute.objectId) {
     validationSchema = validationSchema.matches(
       objectIdRegex,
-      `${label}: ${strings.invalidIdFormat}`
+      `${label}: ${strings.invalidIdFormat}`,
     );
   }
 
@@ -663,7 +699,7 @@ export const generateAttributeValidationSchema = memoize(
     attribute: Attribute,
     language: string,
     strings: FormValidationStringSet,
-    region: string
+    region: string,
   ) {
     let validationSchema = createAttributeValidationSchema(attribute);
 
@@ -693,12 +729,12 @@ export const generateAttributeValidationSchema = memoize(
     });
 
     return validationSchema;
-  }
+  },
 );
 
 export const generateAttributesValidationSchema = memoize(
   function generateAttributesValidationSchema<
-    A extends SchemaAttributes = SchemaAttributes
+    A extends SchemaAttributes = SchemaAttributes,
   >({
     attributes,
     language,
@@ -712,24 +748,29 @@ export const generateAttributesValidationSchema = memoize(
   }) {
     const columns = Object.keys(attributes);
     return yup.object().shape({
-      ...(columns.reduce((acc, column) => {
-        const attribute = attributes[column];
+      ...(columns.reduce(
+        (acc, column) => {
+          const attribute = attributes[column];
 
-        const validationSchema = generateAttributeValidationSchema(
-          attribute,
-          language,
-          strings,
-          region
-        );
+          const validationSchema = generateAttributeValidationSchema(
+            attribute,
+            language,
+            strings,
+            region,
+          );
 
-        return {
-          ...acc,
-          [column]: validationSchema,
-        };
-      }, {} as Record<string, yup.Schema<any>>) as any),
+          return {
+            ...acc,
+            [column]: validationSchema,
+          };
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        {} as Record<string, yup.Schema<any>>,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ) as any),
     });
   },
-  (options) => JSON.stringify(options)
+  (options) => JSON.stringify(options),
 );
 
 export const attributesFormValidator = memoize(
@@ -744,6 +785,7 @@ export const attributesFormValidator = memoize(
     strings: FormValidationStringSet;
     region: string;
   }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return async (values: Record<string, any>, context: any, options: any) => {
       const validator = generateAttributesValidationSchema({
         attributes,
@@ -759,5 +801,5 @@ export const attributesFormValidator = memoize(
       return result;
     };
   },
-  (options) => JSON.stringify(options)
+  (options) => JSON.stringify(options),
 );

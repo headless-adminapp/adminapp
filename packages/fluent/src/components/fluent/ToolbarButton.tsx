@@ -1,11 +1,11 @@
 import {
-  ButtonProps,
-  ForwardRefComponent,
+  type ButtonProps,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   tokens,
   ToolbarButton as ToolbarButtonInternal,
-  ToolbarButtonProps,
+  type ToolbarButtonProps,
 } from '@fluentui/react-components';
 import { forwardRef } from 'react';
 

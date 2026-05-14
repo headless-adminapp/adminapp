@@ -1,6 +1,6 @@
 import { Caption1, Divider, tokens } from '@fluentui/react-components';
 import { useLocale } from '@headless-adminapp/app/locale';
-import { ScatterChartInfo } from '@headless-adminapp/core/experience/insights';
+import type { ScatterChartInfo } from '@headless-adminapp/core/experience/insights';
 import { useMemo } from 'react';
 import {
   ResponsiveContainer,

@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/static-components */
 import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
 import {
   useDataService,
   useFileService,
 } from '@headless-adminapp/app/transport';
 import type { StandardControlProps } from '@headless-adminapp/core/experience/form/SectionControl';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { componentStore } from '../componentStore';
 import { AttachmentControl } from '../form/controls/AttachmentControl';
@@ -64,7 +65,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
   const isDisabled = readOnly;
   const placeholder = hidePlaceholder
     ? undefined
-    : _placeholder ?? _label ?? attribute.label;
+    : (_placeholder ?? _label ?? attribute.label);
 
   const dataService = useDataService();
   const fileService = useFileService();
@@ -105,7 +106,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         case 'text': {
           const Control =
             componentStore.getComponent<typeof TextControl>(
-              'Form.TextControl'
+              'Form.TextControl',
             ) ?? TextControl;
           return (
             <Control
@@ -118,14 +119,14 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         case 'email': {
           const Control =
             componentStore.getComponent<typeof EmailControl>(
-              'Form.EmailControl'
+              'Form.EmailControl',
             ) ?? EmailControl;
           return <Control {...controlProps} />;
         }
         case 'phone': {
           const Control =
             componentStore.getComponent<typeof TelephoneControl>(
-              'Form.TelephoneControl'
+              'Form.TelephoneControl',
             ) ?? TelephoneControl;
           return <Control {...controlProps} />;
         }
@@ -138,7 +139,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         case 'textarea': {
           const Control =
             componentStore.getComponent<typeof TextAreaControl>(
-              'Form.TextAreaControl'
+              'Form.TextAreaControl',
             ) ?? TextAreaControl;
           return (
             <Control
@@ -151,7 +152,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         case 'richtext': {
           const Control =
             componentStore.getComponent<typeof TextAreaControl>(
-              'Form.RichTextControl'
+              'Form.RichTextControl',
             ) ?? RichTextControl;
           return <Control {...controlProps} />;
         }
@@ -164,7 +165,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         case 'decimal': {
           const Control =
             componentStore.getComponent<typeof DecimalControl>(
-              'Form.DecimalControl'
+              'Form.DecimalControl',
             ) ?? DecimalControl;
 
           return (
@@ -185,7 +186,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         case 'integer': {
           const Control =
             componentStore.getComponent<typeof IntegerControl>(
-              'Form.IntegerControl'
+              'Form.IntegerControl',
             ) ?? IntegerControl;
 
           return (
@@ -205,7 +206,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         case 'duration': {
           const Control =
             componentStore.getComponent<typeof DurationControl>(
-              'Form.DurationControl'
+              'Form.DurationControl',
             ) ?? DurationControl;
 
           return (
@@ -225,7 +226,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         case 'time': {
           const Control =
             componentStore.getComponent<typeof TimeControl>(
-              'Form.TimeControl'
+              'Form.TimeControl',
             ) ?? TimeControl;
 
           return (
@@ -264,7 +265,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
       if (attribute.format === 'datetime') {
         const Control =
           componentStore.getComponent<typeof DateTimeControl>(
-            'Form.DateTimeControl'
+            'Form.DateTimeControl',
           ) ?? DateTimeControl;
         return <Control {...controlProps} />;
       } else {
@@ -290,7 +291,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
 
       const Control =
         componentStore.getComponent<typeof DateRangeControl>(
-          'Form.DateRangeControl'
+          'Form.DateRangeControl',
         ) ?? DateRangeControl;
 
       return <Control {...controlProps} />;
@@ -298,7 +299,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     case 'money': {
       const Control =
         componentStore.getComponent<typeof CurrencyControl>(
-          'Form.CurrencyControl'
+          'Form.CurrencyControl',
         ) ?? CurrencyControl;
       return (
         <Control
@@ -318,7 +319,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     case 'lookup': {
       const Control =
         componentStore.getComponent<typeof LookupControl>(
-          'Form.LookupControl'
+          'Form.LookupControl',
         ) ?? LookupControl;
       return (
         <Control
@@ -339,7 +340,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     case 'lookups': {
       const Control =
         componentStore.getComponent<typeof MultiSelectLookupControl>(
-          'Form.MultiSelectLookupControl'
+          'Form.MultiSelectLookupControl',
         ) ?? MultiSelectLookupControl;
 
       return (
@@ -361,7 +362,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     case 'regarding': {
       const Control =
         componentStore.getComponent<typeof RegardingControl>(
-          'Form.RegardingControl'
+          'Form.RegardingControl',
         ) ?? RegardingControl;
       return (
         <Control
@@ -383,7 +384,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     case 'boolean': {
       const Control =
         componentStore.getComponent<typeof SwitchControl>(
-          'Form.SwitchControl'
+          'Form.SwitchControl',
         ) ?? SwitchControl;
 
       return (
@@ -403,7 +404,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     case 'choice': {
       const Control =
         componentStore.getComponent<typeof SelectControl>(
-          'Form.SelectControl'
+          'Form.SelectControl',
         ) ?? SelectControl;
 
       return (
@@ -427,7 +428,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     case 'choices': {
       const Control =
         componentStore.getComponent<typeof MultiSelectControl>(
-          'Form.MultiSelectControl'
+          'Form.MultiSelectControl',
         ) ?? MultiSelectControl;
 
       return (
@@ -450,7 +451,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     case 'attachment': {
       const Control =
         componentStore.getComponent<typeof AttachmentControl>(
-          'Form.AttachmentControl'
+          'Form.AttachmentControl',
         ) ?? AttachmentControl;
 
       return (
@@ -476,7 +477,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
     case 'attachments': {
       const Control =
         componentStore.getComponent<typeof AttachmentsControl>(
-          'Form.AttachmentsControl'
+          'Form.AttachmentsControl',
         ) ?? AttachmentsControl;
 
       return (
@@ -497,7 +498,7 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
   }
 
   const FallBackControl = componentStore.getComponent<FC<StandardControlProps>>(
-    'StandardControl.FallBack'
+    'StandardControl.FallBack',
   );
 
   if (FallBackControl) {

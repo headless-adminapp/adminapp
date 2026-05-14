@@ -1,22 +1,25 @@
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
 import { useCreateContextStore } from '../mutable';
 import { DataResolver } from './BoardColumnDataResolver';
-import { BoardColumnContext, BoardColumnContextState } from './context';
+import { BoardColumnContext, type BoardColumnContextState } from './context';
 import { useBoardConfig } from './hooks/useBoardConfig';
-import { BoardColumnConfig } from './types';
+import type { BoardColumnConfig } from './types';
 
 export function invertValueMapping(
-  value: Record<string, string[]>
+  value: Record<string, string[]>,
 ): Record<string, string[]> {
-  return Object.keys(value).reduce((acc, key) => {
-    const toKeys = value[key];
-    toKeys.forEach((toKey) => {
-      acc[toKey] = [...(acc[toKey] || []), key];
-    });
+  return Object.keys(value).reduce(
+    (acc, key) => {
+      const toKeys = value[key];
+      toKeys.forEach((toKey) => {
+        acc[toKey] = [...(acc[toKey] || []), key];
+      });
 
-    return acc;
-  }, {} as Record<string, string[]>);
+      return acc;
+    },
+    {} as Record<string, string[]>,
+  );
 }
 
 export interface BoardColumnProviderProps {
@@ -24,7 +27,7 @@ export interface BoardColumnProviderProps {
 }
 
 export function BoardColumnProvider(
-  props: PropsWithChildren<BoardColumnProviderProps>
+  props: PropsWithChildren<BoardColumnProviderProps>,
 ) {
   const { schema } = useBoardConfig();
 

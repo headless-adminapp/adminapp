@@ -6,7 +6,7 @@ import { RecordSetContext } from '../context';
 export function useRecordSetVisibility() {
   const visibleNavigator = useContextSelector(
     RecordSetContext,
-    (state) => state.visibleNavigator
+    (state) => state.visibleNavigator,
   );
 
   const setValue = useContextSetValue(RecordSetContext);
@@ -17,7 +17,7 @@ export function useRecordSetVisibility() {
         visibleNavigator: visible,
       });
     },
-    [setValue]
+    [setValue],
   );
 
   return [visibleNavigator, setVisibility] as const;

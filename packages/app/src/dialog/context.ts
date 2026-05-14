@@ -1,4 +1,4 @@
-import {
+import type {
   BasicDialogProps,
   DialogOptions,
 } from '@headless-adminapp/core/experience/dialog';

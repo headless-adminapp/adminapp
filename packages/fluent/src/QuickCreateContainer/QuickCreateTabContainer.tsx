@@ -1,5 +1,5 @@
 import { useSelectedForm } from '@headless-adminapp/app/dataform';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { TabContainer } from '../PageEntityForm/TabContainer';
 

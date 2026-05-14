@@ -1,10 +1,10 @@
 import { tokens } from '@fluentui/react-components';
 import { getLocalizedOperatorOptions } from '@headless-adminapp/app/datagrid';
-import { Attribute } from '@headless-adminapp/core/attributes';
-import { ColumnCondition } from '@headless-adminapp/core/experience/view';
-import { OperatorKey } from '@headless-adminapp/core/transport';
+import type { Attribute } from '@headless-adminapp/core/attributes';
+import type { ColumnCondition } from '@headless-adminapp/core/experience/view';
+import type { OperatorKey } from '@headless-adminapp/core/transport';
 import { Icons } from '@headless-adminapp/icons';
-import { FC, useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
 import { extendedTokens } from '../../components/fluent';
@@ -34,7 +34,7 @@ export const ColumnFilterItem: FC<ColumnFilterItemProps> = ({
 
   const selectedOption = useMemo(() => {
     return operatorOptions[attribute.type].find(
-      (option) => option.value === condition.operator
+      (option) => option.value === condition.operator,
     )!;
   }, [condition.operator, attribute.type, operatorOptions]);
 
@@ -46,6 +46,7 @@ export const ColumnFilterItem: FC<ColumnFilterItemProps> = ({
     });
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChangeValue = (value: any, index: number) => {
     const next = [...condition.value];
     next[index] = value;

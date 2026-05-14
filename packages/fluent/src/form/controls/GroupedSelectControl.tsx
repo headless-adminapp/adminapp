@@ -1,10 +1,14 @@
-import { DropdownProps, OptionGroup, tokens } from '@fluentui/react-components';
+import {
+  type DropdownProps,
+  OptionGroup,
+  tokens,
+} from '@fluentui/react-components';
 import { useMemo } from 'react';
 
 import { Dropdown } from '../../components/fluent';
 import { Option } from '../../components/fluent/Option';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 export interface Lookup<T = string> {
   label: string;
@@ -47,7 +51,7 @@ export default function GroupedSelectControl<T extends string | number>({
       optionGroups
         .flatMap((group) => group.options)
         .find((x) => x.value === value),
-    [optionGroups, value]
+    [optionGroups, value],
   );
 
   if (skeleton) {

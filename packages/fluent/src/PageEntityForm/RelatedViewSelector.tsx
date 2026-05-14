@@ -4,7 +4,7 @@ import {
   MenuTrigger,
   tokens,
 } from '@fluentui/react-components';
-import { RelatedItemInfo } from '@headless-adminapp/app/dataform/context';
+import type { RelatedItemInfo } from '@headless-adminapp/app/dataform/context';
 import {
   useDataFormSchema,
   useRecordId,
@@ -13,8 +13,8 @@ import {
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useMetadata } from '@headless-adminapp/app/metadata/hooks';
 import { isLookupAttribute } from '@headless-adminapp/core/attributes/utils';
-import { FormRelatedItemInfo } from '@headless-adminapp/core/experience/form/Form';
-import { Schema } from '@headless-adminapp/core/schema';
+import type { FormRelatedItemInfo } from '@headless-adminapp/core/experience/form/Form';
+import type { Schema } from '@headless-adminapp/core/schema';
 import { Icons } from '@headless-adminapp/icons';
 import { useMemo } from 'react';
 
@@ -24,7 +24,7 @@ import { usePageEntityFormStrings } from './PageEntityFormStringContext';
 function getRelatedItems(
   currentSchema: Schema,
   schemas: Record<string, Schema>,
-  relatedItems?: FormRelatedItemInfo[] | null
+  relatedItems?: FormRelatedItemInfo[] | null,
 ): RelatedItemInfo[] {
   if (relatedItems === null) {
     return [];
@@ -39,7 +39,7 @@ function getRelatedItems(
 
       if (!schema.attributes[item.attributeName]) {
         throw new Error(
-          `Attribute not found: ${item.logicalName}.${item.attributeName}`
+          `Attribute not found: ${item.logicalName}.${item.attributeName}`,
         );
       }
 
@@ -47,13 +47,13 @@ function getRelatedItems(
 
       if (!isLookupAttribute(attribute)) {
         throw new Error(
-          `Attribute is not a lookup: ${item.logicalName}.${item.attributeName}`
+          `Attribute is not a lookup: ${item.logicalName}.${item.attributeName}`,
         );
       }
 
       if (attribute.entity !== currentSchema.logicalName) {
         throw new Error(
-          `Attribute entity does not match: ${item.logicalName}.${item.attributeName}`
+          `Attribute entity does not match: ${item.logicalName}.${item.attributeName}`,
         );
       }
 
@@ -118,7 +118,7 @@ export function RelatedViewSelector(props: Readonly<RelatedViewSelectorProps>) {
 
   const data = useMemo(
     () => getRelatedItems(schema, schemas, formConfig.experience.relatedItems),
-    [formConfig.experience.relatedItems, schema, schemas]
+    [formConfig.experience.relatedItems, schema, schemas],
   );
 
   if (!data.length || !recordId) {

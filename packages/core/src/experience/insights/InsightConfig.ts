@@ -1,5 +1,5 @@
-import { InferredSchemaType, SchemaAttributes } from '../../schema';
-import { WidgetInfo } from './WidgetInfo';
+import type { InferredSchemaType, SchemaAttributes } from '../../schema';
+import type { WidgetInfo } from './WidgetInfo';
 
 // export type Spacing = 'compact' | 'normal' | 'loose';
 // export type Shadow = 'none' | 'normal' | 'deep';

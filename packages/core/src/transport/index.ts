@@ -4,6 +4,6 @@ export type { Filter } from './Filter';
 export type { Condition } from './Condition';
 export type { IDataService } from './IDataService';
 export type { IFileService } from './IFileService';
-export * from './operations';
+export type * from './operations';
 export * from './aggregate';
 export * from './errors';

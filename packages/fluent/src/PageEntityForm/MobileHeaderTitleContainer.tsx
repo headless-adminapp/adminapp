@@ -7,7 +7,7 @@ import { useFormDataState } from '@headless-adminapp/app/dataform/hooks/useFormD
 import { MobileHeaderTitle } from '@headless-adminapp/app/header/components/MobileHeaderTitle';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { localizedLabel } from '@headless-adminapp/app/locale/utils';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 export const MobileHeaderTitleContainer: FC = () => {
   const [recordTitle] = useRecordTitle();

@@ -1,5 +1,5 @@
 import { makeStyles, mergeClasses, tokens } from '@fluentui/react-components';
-import { FC, Fragment } from 'react';
+import { type FC, Fragment } from 'react';
 
 import { Button } from '../components/fluent';
 import { ViewType } from './types';
@@ -66,7 +66,7 @@ export const ViewSelector: FC<ViewSelectorProps> = ({ viewType, onChange }) => {
           <Button
             className={mergeClasses(
               styles.button,
-              item.value === viewType && styles.active
+              item.value === viewType && styles.active,
             )}
             key={item.value}
             appearance={item.value === viewType ? 'primary' : 'secondary'}

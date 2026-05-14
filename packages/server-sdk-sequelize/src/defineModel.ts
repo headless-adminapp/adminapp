@@ -1,4 +1,4 @@
-import {
+import type {
   ChoiceAttribute,
   DateAttribute,
   IdAttribute,
@@ -6,13 +6,18 @@ import {
   NumberAttribute,
   StringAttribute,
 } from '@headless-adminapp/core/attributes';
-import { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
-import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
-import { Schema } from '@headless-adminapp/core/schema';
-import { DataTypes, ModelAttributeColumnOptions, Sequelize } from 'sequelize';
+import type { AttributeBase } from '@headless-adminapp/core/attributes/AttributeBase';
+import type { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
+import type { Schema } from '@headless-adminapp/core/schema';
+import {
+  DataTypes,
+  type ModelAttributeColumnOptions,
+  type ModelAttributes,
+  type Sequelize,
+} from 'sequelize';
 import { v4 as uuid } from 'uuid';
 
-import { SequelizeRequiredSchemaAttributes } from './types';
+import type { SequelizeRequiredSchemaAttributes } from './types';
 
 function resolveDateAttribute(attribute: DateAttribute) {
   if (attribute.format === 'datetime') {
@@ -40,11 +45,13 @@ function resolveChoiceAttribute(attribute: ChoiceAttribute<string | number>) {
   throw new Error('Invalid choice type');
 }
 
-function resolveChoicesAttribute(attribute: ChoicesAttribute<string | number>) {
+function resolveChoicesAttribute(
+  attribute: ChoicesAttribute<string | number>,
+): ModelAttributeColumnOptions {
   if ('string' in attribute && attribute.string) {
-    return { type: [DataTypes.STRING] };
+    return { type: DataTypes.ARRAY(DataTypes.STRING) };
   } else if ('number' in attribute && attribute.number) {
-    return { type: [DataTypes.INTEGER] };
+    return { type: DataTypes.ARRAY(DataTypes.INTEGER) };
   }
 
   throw new Error('Invalid choice type');
@@ -52,7 +59,7 @@ function resolveChoicesAttribute(attribute: ChoicesAttribute<string | number>) {
 
 function resolveIdAttribute(
   attribute: IdAttribute<string | number>,
-  isSchemaIdAttribute: boolean
+  isSchemaIdAttribute: boolean,
 ): ModelAttributeColumnOptions {
   const modelAttribute = {
     primaryKey: isSchemaIdAttribute,
@@ -82,7 +89,7 @@ function resolveIdAttribute(
 
 function resolveLookupAttribute(
   attribute: LookupAttribute,
-  isSchemaIdAttribute: boolean
+  isSchemaIdAttribute: boolean,
 ) {
   const modelAttribute = {} as ModelAttributeColumnOptions;
 
@@ -115,7 +122,7 @@ function resolveStringAttribute(attribute: StringAttribute) {
 
 function shouldSkipAttribute<S extends SequelizeRequiredSchemaAttributes>(
   key: string,
-  schema: Schema<S>
+  schema: Schema<S>,
 ) {
   if (schema.createdAtAttribute === key || schema.updatedAtAttribute === key) {
     // Skip createdAt and updatedAt attributes
@@ -125,13 +132,19 @@ function shouldSkipAttribute<S extends SequelizeRequiredSchemaAttributes>(
   return false;
 }
 
-function applyDefaultAttribute(attribute: AttributeBase, defination: any) {
+function applyDefaultAttribute(
+  attribute: AttributeBase,
+  defination: ModelAttributeColumnOptions,
+) {
   if (attribute.default && typeof attribute.default !== 'function') {
-    defination.default = attribute.default;
+    defination.defaultValue = attribute.default;
   }
 }
 
-function applyRequiredAttribute(attribute: AttributeBase, defination: any) {
+function applyRequiredAttribute(
+  attribute: AttributeBase,
+  defination: ModelAttributeColumnOptions,
+) {
   if (attribute.required) {
     // acc[key].required = rest[key].required;
   }
@@ -142,7 +155,7 @@ function applyRequiredAttribute(attribute: AttributeBase, defination: any) {
 function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
   name: string,
   schema: Schema<S>,
-  sequelize: Sequelize
+  sequelize: Sequelize,
 ) {
   const attributes = schema.attributes;
 
@@ -185,7 +198,7 @@ function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
       case 'lookup':
         acc[key] = resolveLookupAttribute(
           attribute,
-          schema.idAttribute === key
+          schema.idAttribute === key,
         );
         break;
       case 'mixed':
@@ -199,7 +212,7 @@ function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
     applyRequiredAttribute(attribute, acc[key]);
 
     return acc;
-  }, {} as Record<string, any>);
+  }, {} as ModelAttributes);
 
   const defination = sequelize.define(name, sequelizeSchema, {
     createdAt: schema.createdAtAttribute
@@ -216,6 +229,7 @@ function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
     // Do not sync
     defination.sync = (() => {
       return Promise.resolve();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as any;
     defination.drop = () => {
       return Promise.resolve();
@@ -228,7 +242,7 @@ function _defineModel<S extends SequelizeRequiredSchemaAttributes>(
 export function defineModel<S extends SequelizeRequiredSchemaAttributes>(
   name: string,
   schema: Schema<S>,
-  sequelize: Sequelize
+  sequelize: Sequelize,
 ) {
   if (!sequelize.models[name]) {
     sequelize.models[name] = _defineModel(name, schema, sequelize);

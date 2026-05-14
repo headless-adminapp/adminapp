@@ -1,8 +1,8 @@
 import { DrawerBody } from '@fluentui/react-components';
 import { DataFormProvider } from '@headless-adminapp/app/dataform';
-import { DataLookup, Id } from '@headless-adminapp/core/attributes';
+import type { DataLookup, Id } from '@headless-adminapp/core/attributes';
 import { Icons } from '@headless-adminapp/icons';
-import { FC, Fragment } from 'react';
+import { type FC, Fragment } from 'react';
 
 import { BodyLoading } from '../components/BodyLoading';
 import { DrawerHeader } from '../components/DrawerHeader';

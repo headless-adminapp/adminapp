@@ -3,9 +3,9 @@ import {
   OverflowDivider,
   OverflowItem,
 } from '@fluentui/react-components';
-import { CommandItemState } from '@headless-adminapp/app/command';
+import type { CommandItemState } from '@headless-adminapp/app/command';
 import { useLocale } from '@headless-adminapp/app/locale';
-import { FC, Fragment } from 'react';
+import { type FC, Fragment } from 'react';
 
 import CommandBar from '../CommandBar';
 import { OverflowMenu } from './OverflowMenu';
@@ -54,7 +54,7 @@ export const OverflowCommandBar: FC<OverflowCommandBarProps> = ({
                       {renderCommandItem(
                         `${groupIndex}-${index}`,
                         item,
-                        language
+                        language,
                       )}
                     </OverflowItem>
                   );

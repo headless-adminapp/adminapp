@@ -1,7 +1,7 @@
 import {
   DialogSurface as DialogSurfaceInternal,
-  DialogSurfaceProps,
-  ForwardRefComponent,
+  type DialogSurfaceProps,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
 } from '@fluentui/react-components';

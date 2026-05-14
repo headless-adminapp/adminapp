@@ -1,6 +1,6 @@
 import { Body1Strong, Divider, tokens } from '@fluentui/react-components';
 import { useElementSize } from '@headless-adminapp/app/hooks';
-import { FC, Fragment, PropsWithChildren, useRef } from 'react';
+import { type FC, Fragment, type PropsWithChildren, useRef } from 'react';
 
 import { extendedTokens } from '../../../components/fluent';
 import { FormSectionColumn } from './FormSectionColumn';
@@ -10,7 +10,7 @@ function determineItemCount(
   availableWidth: number,
   itemWidth: number,
   gap: number,
-  padding: number
+  padding: number,
 ) {
   return Math.floor((availableWidth + gap - 2 * padding) / (itemWidth + gap));
 }
@@ -49,7 +49,7 @@ export const FormSection: FC<PropsWithChildren<FormSectionProps>> & {
     divSize.width,
     minControlWidth,
     gap,
-    padding
+    padding,
   );
 
   if (!columnCount) {

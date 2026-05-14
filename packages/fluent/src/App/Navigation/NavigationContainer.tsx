@@ -20,15 +20,15 @@ import {
   useRouteResolver,
 } from '@headless-adminapp/app/route/hooks';
 import { PageType } from '@headless-adminapp/core/experience/app';
-import { FC, Fragment, useMemo } from 'react';
+import { type FC, Fragment, useMemo } from 'react';
 
+import { AccountAvatar } from '../AppHeaderContianer';
 import { NavCategoryItemComponent } from './NavCategoryItemComponent';
 import { NavItemComponent } from './NavItemComponent';
 import { NavMiniCategoryMenu } from './NavMiniCategoryMenu';
 import { NavSubItemComponent } from './NavSubItemComponent';
-import { DrawerType, NavItemInfo, NavSubItemInfo } from './types';
+import type { DrawerType, NavItemInfo, NavSubItemInfo } from './types';
 import { transformNavSections } from './utils';
-import { AccountAvatar } from '../AppHeaderContianer';
 
 const useStyles = makeStyles({
   root: {

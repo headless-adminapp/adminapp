@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Caption1, tokens } from '@fluentui/react-components';
 import { useLocale } from '@headless-adminapp/app/locale';
-import { PieChartInfo } from '@headless-adminapp/core/experience/insights';
+import type { PieChartInfo } from '@headless-adminapp/core/experience/insights';
 import {
   Cell,
   Legend,
@@ -10,14 +10,14 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
-import {
+import type {
   NameType,
   Payload,
   ValueType,
 } from 'recharts/types/component/DefaultTooltipContent';
 
 import { defaultColors } from './constants';
-import { createLongAxisFormatter, Formatter } from './formatters';
+import { createLongAxisFormatter, type Formatter } from './formatters';
 
 export function PieChart({
   dataset,
@@ -90,7 +90,7 @@ export function PieChart({
                       ]
                 }
               />
-            )
+            ),
           )}
         </Pie>
         {chartInfo.showLegend && (

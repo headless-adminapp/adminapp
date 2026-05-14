@@ -1,5 +1,5 @@
-import { InferredSchemaType } from './inferred';
-import { SchemaAttributes } from './SchemaAttributes';
+import type { InferredSchemaType } from './inferred';
+import type { SchemaAttributes } from './SchemaAttributes';
 
 // TODO: Improvement required
 
@@ -8,7 +8,7 @@ type CalculationMode = 'client' | 'server' | 'both'; // One more for server side
 
 export interface CalculatedAttributeInfo<
   S extends SchemaAttributes = SchemaAttributes,
-  R extends Record<string, SchemaAttributes> = Record<string, SchemaAttributes>
+  R extends Record<string, SchemaAttributes> = Record<string, SchemaAttributes>,
 > {
   logicalName: string;
   attributeName: keyof S;
@@ -25,7 +25,7 @@ export interface CalculatedAttributeInfo<
     record: InferredSchemaType<S>,
     related: {
       [K in keyof R]: InferredSchemaType<R[K]>[];
-    }
+    },
   ) => unknown;
 }
 

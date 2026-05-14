@@ -1,4 +1,4 @@
-import { Schema, SchemaAttributes } from '../schema';
+import type { Schema, SchemaAttributes } from '../schema';
 
 export interface ISchemaStore<SA extends SchemaAttributes = SchemaAttributes> {
   getAllSchema(): Record<string, Schema<SA>>;

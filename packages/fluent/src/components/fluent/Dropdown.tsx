@@ -1,7 +1,7 @@
 import {
   Dropdown as DropdownInternal,
-  DropdownProps,
-  ForwardRefComponent,
+  type DropdownProps,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   tokens,
@@ -65,7 +65,7 @@ export const Dropdown: ForwardRefComponent<ExtendedDropdownProps> = forwardRef(
           sizeStyles[rest.size || 'medium'],
           (rest.appearance === 'outline' || !rest.appearance) &&
             styles.outlined,
-          className
+          className,
         )}
         ref={ref}
         listbox={{
@@ -73,5 +73,5 @@ export const Dropdown: ForwardRefComponent<ExtendedDropdownProps> = forwardRef(
         }}
       />
     );
-  }
+  },
 );

@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { Button, Input } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 export interface TelephoneControlProps extends ControlProps<string> {
   autoComplete?: string;

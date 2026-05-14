@@ -51,7 +51,7 @@ export function LoginForm(props: Readonly<LoginFormProps>) {
     try {
       await props.onLogin(
         values.username?.toLowerCase().trim(),
-        values.password
+        values.password,
       );
     } catch (error) {
       form.setError('root', {

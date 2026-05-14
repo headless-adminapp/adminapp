@@ -1,9 +1,9 @@
 import { useRouter } from '@headless-adminapp/app/route';
-import { EntityFormCommandContext } from '@headless-adminapp/core/experience/form';
+import type { EntityFormCommandContext } from '@headless-adminapp/core/experience/form';
 import { useCallback } from 'react';
 
 import {
-  CommandItemState,
+  type CommandItemState,
   useBaseCommandHandlerContext,
   useCommands,
 } from '../../command';
@@ -28,11 +28,12 @@ export function useFormControlContext(): EntityFormCommandContext['primaryContro
   const formInstance = useFormInstance();
   const readonly = useFormIsReadonly() ?? false;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data = formInstance.watch() as any;
   const router = useRouter();
 
   const close = useCallback(() => {
-    router.back();
+    void router.back();
   }, [router]);
 
   return {
@@ -64,7 +65,7 @@ export function useMainFormCommandHandlerContext(): EntityFormCommandContext {
 export function useMainFormCommands(): CommandItemState[][] {
   const commands = useContextSelector(
     DataFormContext,
-    (state) => state.commands
+    (state) => state.commands,
   );
 
   const handlerContext = useMainFormCommandHandlerContext();

@@ -1,4 +1,4 @@
-import {
+import type {
   ConfirmDialogOptions,
   ConfirmResult,
 } from '@headless-adminapp/core/experience/dialog';
@@ -17,7 +17,7 @@ export function useOpenConfirmDialog() {
       options: Omit<
         ConfirmDialogOptions,
         'type' | 'onConfirm' | 'onDismiss' | 'onCancel'
-      >
+      >,
     ) => {
       return new Promise<ConfirmResult | null>((resolve) => {
         const { close } = openDialog({
@@ -41,7 +41,7 @@ export function useOpenConfirmDialog() {
         });
       });
     },
-    [openDialog]
+    [openDialog],
   );
 
   return openConfirmDialog;

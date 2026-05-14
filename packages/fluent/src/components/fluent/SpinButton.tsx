@@ -1,9 +1,9 @@
 import {
-  ForwardRefComponent,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   SpinButton as SpinButtonInternal,
-  SpinButtonProps,
+  type SpinButtonProps,
   tokens,
 } from '@fluentui/react-components';
 import { forwardRef } from 'react';

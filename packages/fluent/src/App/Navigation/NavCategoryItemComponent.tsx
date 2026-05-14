@@ -4,10 +4,10 @@ import {
   tokens,
 } from '@fluentui/react-components';
 import { IconPlaceholder } from '@headless-adminapp/icons';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { extendedTokens } from '../../components/fluent';
-import { NavCategoryInfo } from './types';
+import type { NavCategoryInfo } from './types';
 
 const useStyles = makeStyles({
   activeNavCategoryItem: {

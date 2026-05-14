@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { GridHeaderMobile } from '../DataGrid/GridHeaderMobile';
 import { GridListContainer } from '../DataGrid/GridListContainer';

@@ -1,4 +1,4 @@
-import { IComponentStore } from '@headless-adminapp/core/store';
+import type { IComponentStore } from '@headless-adminapp/core/store';
 
 export class ComponentStore implements IComponentStore {
   private components: Record<string, unknown> = {};

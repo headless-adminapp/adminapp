@@ -14,9 +14,9 @@ import {
   useDataService,
   useFileService,
 } from '@headless-adminapp/app/transport';
-import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
+import type { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
 import { IconPlaceholder, Icons } from '@headless-adminapp/icons';
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 
 import { getAvatarColor } from '../utils/avatar';
 import { UploadImageDialog } from './UploadImageDialog';

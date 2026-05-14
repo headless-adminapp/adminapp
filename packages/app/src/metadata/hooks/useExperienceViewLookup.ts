@@ -6,7 +6,7 @@ import { useExperienceStore } from './useExperienceStore';
 export function useExperienceViewLookup(
   logicalName: string,
   associated?: boolean,
-  viewIds?: string[]
+  viewIds?: string[],
 ) {
   const experienceStore = useExperienceStore();
 

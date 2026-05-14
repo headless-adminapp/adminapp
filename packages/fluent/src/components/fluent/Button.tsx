@@ -1,7 +1,7 @@
 import {
   Button as ButtonInternal,
-  ButtonProps,
-  ForwardRefComponent,
+  type ButtonProps,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   tokens,
@@ -49,11 +49,11 @@ export const Button: ForwardRefComponent<ExtendedButtonProps> = forwardRef(
         className={mergeClasses(
           styles.root,
           styles[rest.size || 'medium'],
-          className
+          className,
         )}
         data-icon-only={!rest.children && !!rest.icon ? 'true' : undefined}
         ref={ref}
       />
     );
-  }
+  },
 );

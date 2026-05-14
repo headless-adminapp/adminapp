@@ -1,14 +1,14 @@
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
-import { PropsWithChildren, useEffect } from 'react';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
+import { type PropsWithChildren, useEffect } from 'react';
 
-import { ContextValue, useCreateContextStore } from '../mutable';
-import { CalendarContext, CalendarContextState } from './context';
-import { CalendarConfig } from './types';
+import { type ContextValue, useCreateContextStore } from '../mutable';
+import { CalendarContext, type CalendarContextState } from './context';
+import type { CalendarConfig } from './types';
 
 interface CalendarProviderProps<
   SA1 extends SchemaAttributes = SchemaAttributes,
   SA2 extends SchemaAttributes = SchemaAttributes,
-  SA3 extends SchemaAttributes = SchemaAttributes
+  SA3 extends SchemaAttributes = SchemaAttributes,
 > {
   config: CalendarConfig<SA1, SA2, SA3>;
 }
@@ -16,7 +16,7 @@ interface CalendarProviderProps<
 export function CalendarProvider<
   SA1 extends SchemaAttributes = SchemaAttributes,
   SA2 extends SchemaAttributes = SchemaAttributes,
-  SA3 extends SchemaAttributes = SchemaAttributes
+  SA3 extends SchemaAttributes = SchemaAttributes,
 >(props: Readonly<PropsWithChildren<CalendarProviderProps<SA1, SA2, SA3>>>) {
   const contextValue = useCreateContextStore<CalendarContextState<SA1>>({
     config: props.config,

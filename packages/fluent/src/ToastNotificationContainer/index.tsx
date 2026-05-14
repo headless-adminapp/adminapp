@@ -9,7 +9,7 @@ import {
   useToastController,
 } from '@fluentui/react-components';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
-import { ToastNotificationItem } from '@headless-adminapp/app/toast-notification';
+import type { ToastNotificationItem } from '@headless-adminapp/app/toast-notification';
 import {
   useCloseToastNotification,
   useToastNotificationItems,
@@ -80,7 +80,7 @@ const Item = ({
             closeToastNotification(item.id);
           }
         },
-      }
+      },
     );
   }, [dispatchToast, closeToastNotification, item, dismissToast, isMobile]);
 

@@ -4,7 +4,7 @@ import {
   useSubGridCommands,
 } from '@headless-adminapp/app/datagrid/hooks';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { OverflowCommandBar } from '../OverflowCommandBar';
 

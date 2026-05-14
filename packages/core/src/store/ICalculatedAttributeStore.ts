@@ -1,4 +1,4 @@
-import { CalculatedAttributeInfo } from '../schema/CalculatedAttributeInfo';
+import type { CalculatedAttributeInfo } from '../schema/CalculatedAttributeInfo';
 
 export interface ICalculatedAttributeStore {
   getCalculatedAttributeInfos(

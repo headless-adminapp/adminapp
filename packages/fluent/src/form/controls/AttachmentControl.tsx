@@ -11,15 +11,15 @@ import {
   useOpenConfirmDialog,
   useOpenErrorDialog,
 } from '@headless-adminapp/app/dialog/hooks';
-import {
+import type {
   AttachmentAttribute,
   FileObject,
 } from '@headless-adminapp/core/attributes/AttachmentAttribute';
-import { IFileService } from '@headless-adminapp/core/transport';
+import type { IFileService } from '@headless-adminapp/core/transport';
 import { fileToObject, urlToFileObject } from '@headless-adminapp/core/utils';
 import { Icons } from '@headless-adminapp/icons';
 import { useMutation } from '@tanstack/react-query';
-import { FC, useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 
 import {
   Button,
@@ -28,7 +28,7 @@ import {
   MenuPopover,
 } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 interface UseAttachmentSelectorOptions {
   fileService: IFileService | null; // required for remote location

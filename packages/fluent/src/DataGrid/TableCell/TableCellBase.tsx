@@ -1,5 +1,5 @@
 import { TableCell as TableCellInternal } from '@fluentui/react-components';
-import { CSSProperties, FC, MouseEventHandler, ReactNode } from 'react';
+import type { CSSProperties, FC, MouseEventHandler, ReactNode } from 'react';
 
 export type CellDisplayType = 'flex' | 'table-cell';
 

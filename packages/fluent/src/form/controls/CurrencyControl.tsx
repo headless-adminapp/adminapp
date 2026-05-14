@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { Input } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 export interface CurrencyControlProps extends ControlProps<number> {}
 
@@ -25,7 +25,7 @@ export function CurrencyControl({
   const isReadOnly = readOnly || disabled;
   const symbol = useCurrencySymbol();
   const [internalValue, setInternalValue] = useState<string>(
-    value ? value.toString() : ''
+    value ? value.toString() : '',
   );
 
   const internalValueRef = useRef(internalValue);

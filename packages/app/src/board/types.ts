@@ -1,11 +1,11 @@
-import { CommandContextBase } from '@headless-adminapp/core/experience/command';
-import { SortingState, View } from '@headless-adminapp/core/experience/view';
-import { QuickFilter } from '@headless-adminapp/core/experience/view/QuickFilter';
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
-import { Filter } from '@headless-adminapp/core/transport';
-import { FC } from 'react';
+import type { CommandContextBase } from '@headless-adminapp/core/experience/command';
+import type { SortingState, View } from '@headless-adminapp/core/experience/view';
+import type { QuickFilter } from '@headless-adminapp/core/experience/view/QuickFilter';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { Filter } from '@headless-adminapp/core/transport';
+import type { FC } from 'react';
 
-import { UtilityContextState } from '../command';
+import type { UtilityContextState } from '../command';
 
 export interface ItemUpdateContext extends CommandContextBase {
   primaryControl: {
@@ -23,11 +23,13 @@ export interface Column {
   update?: (context: ItemUpdateContext) => Promise<void>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type BoardColumnCardPreviewFC = FC<{ record: any }>;
 
 export interface DragItem {
   id: string;
   columnId: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   record: any;
 }
 

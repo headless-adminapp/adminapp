@@ -1,9 +1,9 @@
-import { DateRangeFormat } from '@headless-adminapp/core/experience/locale/types';
+import type { DateRangeFormat } from '@headless-adminapp/core/experience/locale/types';
 import dayjs from 'dayjs';
 
 export function formatDateRange(
   value: [string, string] | null,
-  dateRangeFormat: DateRangeFormat
+  dateRangeFormat: DateRangeFormat,
 ) {
   if (!value || value.length !== 2) {
     return '';
@@ -150,7 +150,7 @@ export function applyRoundedStyles({
 
 export function selectMaxDate(
   date1: dayjs.Dayjs,
-  date2: dayjs.Dayjs | null
+  date2: dayjs.Dayjs | null,
 ): dayjs.Dayjs {
   if (!date2) {
     return date1;
@@ -161,7 +161,7 @@ export function selectMaxDate(
 
 export function selectMinDate(
   date1: dayjs.Dayjs,
-  date2: dayjs.Dayjs | null
+  date2: dayjs.Dayjs | null,
 ): dayjs.Dayjs {
   if (!date2) {
     return date1;

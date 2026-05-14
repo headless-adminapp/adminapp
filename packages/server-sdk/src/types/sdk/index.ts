@@ -1,4 +1,4 @@
-export * from './ExecuteParams';
+export type * from './ExecuteParams';
 export * from './ExecuteType';
-export * from './IServerSdk';
-export * from './ServerSdkContext';
+export type * from './IServerSdk';
+export type * from './ServerSdkContext';

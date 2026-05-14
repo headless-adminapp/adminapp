@@ -1,12 +1,13 @@
-import { CommandItemState } from '@headless-adminapp/app/command';
-import { ChartInfo } from '@headless-adminapp/core/experience/insights';
+/* eslint-disable react-hooks/static-components */
+import type { CommandItemState } from '@headless-adminapp/app/command';
+import type { ChartInfo } from '@headless-adminapp/core/experience/insights';
 import {
-  FC,
-  JSX,
+  type FC,
+  type JSX,
   lazy,
-  LazyExoticComponent,
-  PropsWithChildren,
-  ReactNode,
+  type LazyExoticComponent,
+  type PropsWithChildren,
+  type ReactNode,
   Suspense,
 } from 'react';
 
@@ -27,12 +28,14 @@ const RadarChart = lazy(() => import('./charts/RadarChart'));
 const ScatterChart = lazy(() => import('./charts/ScatterChart'));
 
 export type ChartComponentProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataset: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   chartInfo: any;
 };
 
 function getChartComponent(
-  chart: ChartInfo
+  chart: ChartInfo,
 ): LazyExoticComponent<(props: ChartComponentProps) => JSX.Element> {
   const type = chart.type;
   switch (type) {
@@ -65,6 +68,7 @@ interface WidgetChartContainerProps {
   title: string;
   subtitle?: string;
   commands?: CommandItemState[][];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataset: any[];
   chartInfo: ChartInfo;
   isPending?: boolean;
@@ -95,6 +99,7 @@ interface Props {
   isFetching?: boolean;
   isPending?: boolean;
   chartInfo: ChartInfo;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataset: any[];
 }
 

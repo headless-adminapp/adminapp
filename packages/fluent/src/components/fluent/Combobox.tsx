@@ -1,7 +1,7 @@
 import {
   Combobox as ComboboxInternal,
-  ComboboxProps,
-  ForwardRefComponent,
+  type ComboboxProps,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   tokens,

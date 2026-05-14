@@ -4,7 +4,7 @@ import {
   mergeClasses,
   tokens,
 } from '@fluentui/react-components';
-import { CommandItemState } from '@headless-adminapp/app/command';
+import type { CommandItemState } from '@headless-adminapp/app/command';
 import { ScrollbarWithMoreDataRequest } from '@headless-adminapp/app/components/ScrollbarWithMoreDataRequest';
 import { GridContext } from '@headless-adminapp/app/datagrid';
 import {
@@ -20,17 +20,17 @@ import { useLongPress } from '@headless-adminapp/app/hooks';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { useOpenForm } from '@headless-adminapp/app/navigation';
-import { CardView } from '@headless-adminapp/core/experience/view';
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { CardView } from '@headless-adminapp/core/experience/view';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { FC, useCallback, useMemo, useRef, useState } from 'react';
+import { type FC, useCallback, useMemo, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { extendedTokens } from '../components/fluent';
 import { BottomDrawerMenu } from '../Header/MobileHeaderCommandContainer';
 import { RecordCard } from '../PageEntityForm/RecordCard';
 import { RecordCardLoading } from '../PageEntityForm/RecordCardLoading';
-import { UniqueRecord } from './types';
+import type { UniqueRecord } from './types';
 
 const useStyles = makeStyles({
   root: {
@@ -81,6 +81,7 @@ export const GridListContainer: FC<GridListContainerProps> = () => {
 
   const rows = uniqueRecords;
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () =>

@@ -1,21 +1,21 @@
-import {
+import type {
   EntityMainFormCommandItemExperience,
   Form,
   Section,
 } from '@headless-adminapp/core/experience/form';
-import { SectionControl } from '@headless-adminapp/core/experience/form/SectionControl';
-import { Tab } from '@headless-adminapp/core/experience/form/Tab';
-import {
+import type { SectionControl } from '@headless-adminapp/core/experience/form/SectionControl';
+import type { Tab } from '@headless-adminapp/core/experience/form/Tab';
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { IEventManager } from '@headless-adminapp/core/store';
-import { Data } from '@headless-adminapp/core/transport';
-import { Localized, Nullable } from '@headless-adminapp/core/types';
+import type { IEventManager } from '@headless-adminapp/core/store';
+import type { Data } from '@headless-adminapp/core/transport';
+import type { Localized, Nullable } from '@headless-adminapp/core/types';
 
 import { createContext } from '../mutable';
-import { SaveRecordFn } from './utils/saveRecord';
+import type { SaveRecordFn } from './utils/saveRecord';
 
 export interface RelatedItemInfo {
   key: string;

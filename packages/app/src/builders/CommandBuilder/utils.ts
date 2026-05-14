@@ -1,9 +1,9 @@
-import { Localized } from '@headless-adminapp/core/types';
+import type { Localized } from '@headless-adminapp/core/types';
 
 export function createLocalizedSelector<T>(
   stringSet: T,
   localizedStringSet: Localized<T> | undefined,
-  language: string
+  language: string,
 ) {
   return function selectLocalized<U>(selector: (stringSet: T) => U): U {
     if (localizedStringSet && localizedStringSet[language]) {
@@ -17,7 +17,7 @@ export function createLocalizedSelector<T>(
 export function plurialize(
   count: number,
   singular: string | [string, string],
-  plural?: string
+  plural?: string,
 ): string {
   if (Array.isArray(singular)) {
     plural = singular[1];

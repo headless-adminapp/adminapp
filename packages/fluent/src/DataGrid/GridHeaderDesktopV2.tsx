@@ -22,7 +22,7 @@ import {
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useOpenForm } from '@headless-adminapp/app/navigation';
 import { Icons } from '@headless-adminapp/icons';
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 
 import { useAppStrings } from '../App/AppStringContext';
 import { Button, MenuItem, MenuPopover, SearchBox } from '../components/fluent';

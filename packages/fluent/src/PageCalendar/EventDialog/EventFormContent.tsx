@@ -1,15 +1,15 @@
 import { DialogContent, tokens } from '@fluentui/react-components';
 import { baseEventAttributes } from '@headless-adminapp/app/calendar/baseEventAttributes';
-import { CalendarConfig } from '@headless-adminapp/app/calendar/types';
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
-import { Path, UseFormReturn } from 'react-hook-form';
+import type { CalendarConfig } from '@headless-adminapp/app/calendar/types';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { Path, UseFormReturn } from 'react-hook-form';
 
 import { AttributeController } from '../../form/AttributeController';
-import { BaseFieldValues } from './types';
+import type { BaseFieldValues } from './types';
 
 interface EventFormContentProps<
   SA1 extends SchemaAttributes = SchemaAttributes,
-  SA2 extends SchemaAttributes = SchemaAttributes
+  SA2 extends SchemaAttributes = SchemaAttributes,
 > {
   form: UseFormReturn<BaseFieldValues>;
   beforeDescriptionAttributes?: SA1;
@@ -20,7 +20,7 @@ interface EventFormContentProps<
 
 export function EventFormContent<
   SA1 extends SchemaAttributes = SchemaAttributes,
-  SA2 extends SchemaAttributes = SchemaAttributes
+  SA2 extends SchemaAttributes = SchemaAttributes,
 >({
   form,
   afterDescriptionAttributes,
@@ -84,7 +84,7 @@ export function EventFormContent<
                 readOnly={readOnly}
               />
             );
-          }
+          },
         )}
         <AttributeController
           control={form.control}
@@ -103,7 +103,7 @@ export function EventFormContent<
                 readOnly={readOnly}
               />
             );
-          }
+          },
         )}
       </div>
     </DialogContent>

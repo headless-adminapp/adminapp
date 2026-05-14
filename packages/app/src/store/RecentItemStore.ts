@@ -1,4 +1,5 @@
-import { Id } from '@headless-adminapp/core';
+import type { Id } from '@headless-adminapp/core';
+
 import { safeLocalStorage } from '../utils/localStorage';
 
 export interface IRecentItemStore {
@@ -7,15 +8,15 @@ export interface IRecentItemStore {
     cacheKey: string,
     id: Id,
     value: T,
-    limit?: number
+    limit?: number,
   ) => void;
   addListener: (
     cacheKey: string,
-    listener: (items: RecentItem<unknown>[]) => void
+    listener: (items: RecentItem<unknown>[]) => void,
   ) => void;
   removeListener: (
     cacheKey: string,
-    listener: (items: RecentItem<unknown>[]) => void
+    listener: (items: RecentItem<unknown>[]) => void,
   ) => void;
 }
 
@@ -69,7 +70,7 @@ export class RecentItemStore implements IRecentItemStore {
     cacheKey: string,
     id: Id,
     value: T,
-    limit?: number
+    limit?: number,
   ): void {
     if (!this.data[cacheKey]) {
       this.data[cacheKey] = [];
@@ -80,7 +81,7 @@ export class RecentItemStore implements IRecentItemStore {
     if (this.data[cacheKey].some((item) => item.id === id)) {
       // Remove existing item with the same ID
       this.data[cacheKey] = this.data[cacheKey].filter(
-        (item) => item.id !== id
+        (item) => item.id !== id,
       );
     }
 
@@ -96,7 +97,7 @@ export class RecentItemStore implements IRecentItemStore {
 
   addListener(
     cacheKey: string,
-    listener: (items: RecentItem<unknown>[]) => void
+    listener: (items: RecentItem<unknown>[]) => void,
   ) {
     if (!this.listeners[cacheKey]) {
       this.listeners[cacheKey] = [];
@@ -107,14 +108,14 @@ export class RecentItemStore implements IRecentItemStore {
 
   removeListener(
     cacheKey: string,
-    listener: (items: RecentItem<unknown>[]) => void
+    listener: (items: RecentItem<unknown>[]) => void,
   ) {
     if (!this.listeners[cacheKey]) {
       return;
     }
 
     this.listeners[cacheKey] = this.listeners[cacheKey].filter(
-      (l) => l !== listener
+      (l) => l !== listener,
     );
   }
 }

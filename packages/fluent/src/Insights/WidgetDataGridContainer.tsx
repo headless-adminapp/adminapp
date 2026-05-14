@@ -9,9 +9,9 @@ import {
   useExperienceViewCommands,
   useSchema,
 } from '@headless-adminapp/app/metadata/hooks';
-import { View } from '@headless-adminapp/core/experience/view';
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
-import { Filter } from '@headless-adminapp/core/transport';
+import type { View } from '@headless-adminapp/core/experience/view';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { Filter } from '@headless-adminapp/core/transport';
 
 import { BodyLoading } from '../components/BodyLoading';
 import { GridTableContainer } from '../DataGrid';
@@ -24,6 +24,7 @@ interface WidgetDataGridContainerProps {
   logicalName: string;
   maxRecords?: number;
   filter?: Filter;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   commands?: any[][];
   view?: View<SchemaAttributes>;
   viewId?: string;

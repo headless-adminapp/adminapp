@@ -1,7 +1,7 @@
 import { Badge, tokens } from '@fluentui/react-components';
 import { isColorDark } from '@headless-adminapp/app/utils/color';
-import { ChoiceAttribute } from '@headless-adminapp/core/attributes';
-import { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
+import type { ChoiceAttribute } from '@headless-adminapp/core/attributes';
+import type { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
 import { useMemo } from 'react';
 
 interface ChoiceBadgeProps {

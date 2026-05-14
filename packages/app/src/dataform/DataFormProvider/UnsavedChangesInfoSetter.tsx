@@ -1,5 +1,5 @@
 import { setUnsavedChangesInfo } from '@headless-adminapp/app/navigation/unsaved-changes';
-import { FC, useEffect } from 'react';
+import { type FC, useEffect } from 'react';
 
 import { useFormIsDirty } from '../hooks';
 

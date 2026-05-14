@@ -1,4 +1,4 @@
-import { SchemaAttributes } from '../../schema';
+import type { SchemaAttributes } from '../../schema';
 
 export type QuickViewForm<S extends SchemaAttributes = SchemaAttributes> = {
   attributes: (keyof S)[];

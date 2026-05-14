@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useEffect } from 'react';
+import { type FC, type PropsWithChildren, useEffect } from 'react';
 
 import { useMetadata } from '../metadata/hooks/useMetadata';
 import {
@@ -7,7 +7,7 @@ import {
   useCreateContextStore,
 } from '../mutable/context';
 import { useRouter } from '../route';
-import { RecordSetContext, RecordSetContextState } from './context';
+import { RecordSetContext, type RecordSetContextState } from './context';
 
 export const RecordSetProvider: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
@@ -21,8 +21,8 @@ export const RecordSetProvider: FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     function listener(
       state: RecordSetContextState,
-      prevState: RecordSetContextState,
-      changes: Partial<RecordSetContextState>
+      _prevState: RecordSetContextState,
+      changes: Partial<RecordSetContextState>,
     ) {
       if (
         ['ids', 'logicalName', 'visibleNavigator'].some((key) => key in changes)
@@ -55,7 +55,7 @@ const CardViewSetter: FC = () => {
   const setValue = useContextSetValue(RecordSetContext);
   const logicalName = useContextSelector(
     RecordSetContext,
-    (state) => state.logicalName
+    (state) => state.logicalName,
   );
 
   useEffect(() => {

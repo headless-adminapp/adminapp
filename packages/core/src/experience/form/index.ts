@@ -7,4 +7,4 @@ export type {
   EntityFormCommandContext,
   EntityMainFormCommandItemExperience,
 } from './command';
-export * from './types';
+export type * from './types';

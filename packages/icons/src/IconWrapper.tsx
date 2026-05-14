@@ -1,4 +1,4 @@
-import React, { JSX, Suspense } from 'react';
+import { type JSX, Suspense } from 'react';
 
 import { IconPlaceholder } from './IconPlaceholder';
 import type { IconProps } from './types';

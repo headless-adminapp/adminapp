@@ -8,14 +8,14 @@ import {
   TableRow,
   tokens,
 } from '@fluentui/react-components';
-import { CommandItemState } from '@headless-adminapp/app/command';
+import type { CommandItemState } from '@headless-adminapp/app/command';
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useMetadata } from '@headless-adminapp/app/metadata';
 import { useRouter, useRouteResolver } from '@headless-adminapp/app/route';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
-import { Attribute } from '@headless-adminapp/core';
-import { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
-import { FC } from 'react';
+import type { Attribute } from '@headless-adminapp/core';
+import type { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
+import type { FC } from 'react';
 
 import { BodyLoading } from '../components/BodyLoading';
 import { TableCellText } from '../DataGrid/TableCell';
@@ -62,6 +62,7 @@ interface WidgetTableContainerProps {
   isFetching?: boolean;
   commands?: CommandItemState[][];
   headerRightContent?: React.ReactNode;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
 }
 
@@ -95,6 +96,7 @@ export const WidgetTableContainer: FC<WidgetTableContainerProps> = ({
 interface WidgetTableProps {
   columns: string[];
   attributes: Record<string, Attribute>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
 }
 

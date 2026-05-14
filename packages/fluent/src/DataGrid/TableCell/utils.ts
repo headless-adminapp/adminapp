@@ -1,5 +1,5 @@
 import { tokens } from '@fluentui/react-components';
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 
 export interface SelectionInfo {
   selected?: boolean;

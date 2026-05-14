@@ -1,17 +1,17 @@
-import { CommandItemExperience } from '@headless-adminapp/core/experience/command';
-import {
+import type { CommandItemExperience } from '@headless-adminapp/core/experience/command';
+import type {
   ConfirmDialogOptions,
   PromptDialogOptions,
 } from '@headless-adminapp/core/experience/dialog';
-import {
+import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import {
+import type {
   ArrayGroupWithAtLeastOne,
   Localized,
 } from '@headless-adminapp/core/types';
-import { Icon } from '@headless-adminapp/icons';
+import type { Icon } from '@headless-adminapp/icons';
 
 interface ConfirmResult {
   confirmed: boolean;
@@ -28,7 +28,7 @@ export interface UtilityContextState {
     options: Omit<
       ConfirmDialogOptions,
       'type' | 'onConfirm' | 'onDismiss' | 'onCancel'
-    >
+    >,
   ): Promise<ConfirmResult | null>;
   openErrorDialog(options: {
     text: string;
@@ -39,7 +39,7 @@ export interface UtilityContextState {
     options: Omit<
       PromptDialogOptions<SA>,
       'type' | 'onConfirm' | 'onClose' | 'onCancel'
-    >
+    >,
   ) => Promise<InferredSchemaType<SA> | null>;
   showNotification: (options: {
     text: string;
@@ -64,15 +64,13 @@ interface ActionableCommandState {
 }
 
 export interface IconButtonCommandState
-  extends BaseCommandState,
-    ActionableCommandState {
+  extends BaseCommandState, ActionableCommandState {
   type: 'icon';
   isQuickAction?: boolean;
 }
 
 export interface ButtonCommandState
-  extends BaseCommandState,
-    ActionableCommandState {
+  extends BaseCommandState, ActionableCommandState {
   type: 'button';
   text: string;
   isQuickAction?: boolean;
@@ -87,16 +85,14 @@ export interface LabelCommandState extends BaseCommandState {
 }
 
 export interface MenuItemCommandState
-  extends BaseCommandState,
-    ActionableCommandState {
+  extends BaseCommandState, ActionableCommandState {
   text: string;
   localizedTexts?: Localized<string>;
   items?: ArrayGroupWithAtLeastOne<MenuItemCommandState>;
 }
 
 export interface MenuComandState
-  extends BaseCommandState,
-    ActionableCommandState {
+  extends BaseCommandState, ActionableCommandState {
   type: 'menu';
   text: string;
   localizedTexts?: Localized<string>;

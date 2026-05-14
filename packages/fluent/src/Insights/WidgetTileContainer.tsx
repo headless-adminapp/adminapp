@@ -1,5 +1,5 @@
 import { Title2, tokens } from '@fluentui/react-components';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { extendedTokens } from '../components/fluent';
 

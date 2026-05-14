@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { MutableValue } from './type';
+import type { MutableValue } from './type';
 
 export function createMutableValue<T>(
   initialValue: T | (() => T),
-  isArray?: boolean
+  isArray?: boolean,
 ): MutableValue<T> {
-  let storeValue = {
+  const storeValue = {
     current:
       typeof initialValue === 'function'
         ? (initialValue as () => T)()
@@ -33,7 +33,7 @@ export function createMutableValue<T>(
       }
 
       listeners.forEach((listener) =>
-        listener(storeValue.current, prevState, value)
+        listener(storeValue.current, prevState, value),
       );
     },
     listeners,
@@ -44,7 +44,7 @@ export function createMutableValue<T>(
 
 export function useMutableValueSelector<T, R>(
   mutableValue: MutableValue<T>,
-  selector: (state: T) => R
+  selector: (state: T) => R,
 ) {
   const selectorRef = useRef(selector);
   selectorRef.current = selector;

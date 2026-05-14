@@ -10,7 +10,7 @@ import utc from 'dayjs/plugin/utc';
 import { useAppStrings } from '../../App/AppStringContext';
 import { extendedTokens } from '../../components/fluent';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

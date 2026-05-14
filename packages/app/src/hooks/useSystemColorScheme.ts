@@ -13,7 +13,7 @@ const isSystemDarkMode = () => {
 
 export function useSystemColorScheme() {
   const [systemColorScheme, setSystemColorScheme] = useState<'dark' | 'light'>(
-    isSystemDarkMode() ? 'dark' : 'light'
+    isSystemDarkMode() ? 'dark' : 'light',
   );
 
   useEffect(() => {

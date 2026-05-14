@@ -34,7 +34,7 @@ export function calculateColumnWidths(params: CalculateColumnWidthParams) {
 function extendValues(
   values: number[],
   maxValues: Array<number | undefined>,
-  available: number
+  available: number,
 ): number[] {
   do {
     const consumed = values.reduce((acc, value) => acc + value, 0);

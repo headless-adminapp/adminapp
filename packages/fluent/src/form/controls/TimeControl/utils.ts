@@ -4,7 +4,7 @@ const STANDARD_TIME_REGEX = /^(\d{1,2}):?(\d{2})?([ap]m)?$/i;
 
 export function resolveTimeValue(
   value: string,
-  timeFormat: string
+  timeFormat: string,
 ): Date | undefined {
   if (!value) {
     return;

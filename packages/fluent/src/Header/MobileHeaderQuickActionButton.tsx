@@ -1,6 +1,6 @@
 import { makeStyles, tokens } from '@fluentui/react-components';
-import { Icon } from '@headless-adminapp/icons';
-import { FC } from 'react';
+import type { Icon } from '@headless-adminapp/icons';
+import type { FC } from 'react';
 
 import { Button } from '../components/fluent';
 

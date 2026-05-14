@@ -1,4 +1,4 @@
-import { ColumnCondition } from '@headless-adminapp/core/experience/view';
+import type { ColumnCondition } from '@headless-adminapp/core/experience/view';
 import { useCallback } from 'react';
 
 import { useContextSelector, useContextSetValue } from '../../mutable/context';
@@ -7,7 +7,7 @@ import { GridContext } from '../context';
 export function useGridColumnFilter() {
   const columnFilters = useContextSelector(
     GridContext,
-    (state) => state.columnFilters
+    (state) => state.columnFilters,
   );
 
   const setValue = useContextSetValue(GridContext);
@@ -21,7 +21,7 @@ export function useGridColumnFilter() {
         },
       }));
     },
-    [setValue]
+    [setValue],
   );
 
   const replaceColumnFilters = useCallback(
@@ -30,7 +30,7 @@ export function useGridColumnFilter() {
         columnFilters,
       });
     },
-    [setValue]
+    [setValue],
   );
 
   return [columnFilters, setColumnFilter, replaceColumnFilters] as const;

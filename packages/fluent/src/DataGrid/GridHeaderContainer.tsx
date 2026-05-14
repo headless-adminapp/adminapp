@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { GridHeaderDesktop } from './GridHeaderDesktop';
 import { GridHeaderDesktopV2 } from './GridHeaderDesktopV2';

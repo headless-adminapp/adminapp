@@ -1,13 +1,13 @@
 import {
-  AggregateAttribute,
-  AggregateQuery,
-  CreateRecordResult,
-  Data,
+  type AggregateAttribute,
+  type AggregateQuery,
+  type CreateRecordResult,
+  type Data,
   HttpError,
-  IDataService,
-  InferredAggregateQueryResult,
+  type IDataService,
+  type InferredAggregateQueryResult,
 } from '@headless-adminapp/core/transport';
-import {
+import type {
   RetriveRecordsFnOptions,
   RetriveRecordsResult,
 } from '@headless-adminapp/core/transport/operations';

@@ -6,9 +6,9 @@ import {
 } from '@fluentui/react-components';
 import { InsightsContext } from '@headless-adminapp/app/insights';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
-import { InsightConfig } from '@headless-adminapp/core/experience/insights';
+import type { InsightConfig } from '@headless-adminapp/core/experience/insights';
 import { Icons } from '@headless-adminapp/icons';
-import { FC, Fragment } from 'react';
+import { type FC, Fragment } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { Button, extendedTokens } from '../components/fluent';
@@ -21,12 +21,12 @@ interface HeaderProps {
 export const Header: FC<HeaderProps> = () => {
   const config = useContextSelector(
     InsightsContext,
-    (state) => state.config as unknown as InsightConfig
+    (state) => state.config as unknown as InsightConfig,
   );
 
   const eventManager = useContextSelector(
     InsightsContext,
-    (state) => state.eventManager
+    (state) => state.eventManager,
   );
 
   const filterForm = useFormContext();
@@ -122,7 +122,7 @@ export const Header: FC<HeaderProps> = () => {
                     }}
                   />
                 );
-              }
+              },
             )}
           </div>
         </Fragment>

@@ -1,6 +1,6 @@
 import { tokens } from '@fluentui/react-components';
 import { useLocale } from '@headless-adminapp/app/locale';
-import { ComposedChartInfo } from '@headless-adminapp/core/experience/insights';
+import type { ComposedChartInfo } from '@headless-adminapp/core/experience/insights';
 import { useCallback, useId, useMemo } from 'react';
 import {
   ComposedChart as ComposedChartInternal,
@@ -37,7 +37,7 @@ export function ComposedChart({
   const yAxisFullFormatter = createLongAxisFormatter(locale, yAxis.tick);
   const rightYAxisFullFormatter = createLongAxisFormatter(
     locale,
-    rightYAxis?.tick ?? yAxis.tick
+    rightYAxis?.tick ?? yAxis.tick,
   );
 
   const yAxisIdMapping = useMemo(() => {
@@ -58,7 +58,7 @@ export function ComposedChart({
     (dataKey: string) => {
       return yAxisIdMapping[dataKey] ?? 'left';
     },
-    [yAxisIdMapping]
+    [yAxisIdMapping],
   );
 
   return (

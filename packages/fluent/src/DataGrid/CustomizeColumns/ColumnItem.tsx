@@ -5,10 +5,10 @@ import {
   MenuTrigger,
   tokens,
 } from '@fluentui/react-components';
-import { TransformedViewColumn } from '@headless-adminapp/app/datagrid';
+import type { TransformedViewColumn } from '@headless-adminapp/app/datagrid';
 import { Icons } from '@headless-adminapp/icons';
 import type { Identifier, XYCoord } from 'dnd-core';
-import { FC, useRef } from 'react';
+import { type FC, useRef } from 'react';
 
 import { useDndContext } from '../../components/DndProvider';
 import {
@@ -29,6 +29,7 @@ interface CardProps {
   isFirst: boolean;
   isLast: boolean;
   onRemove: () => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   stringSet?: any; // CustomizeColumnStrings;
 }
 
@@ -116,6 +117,7 @@ export const ColumnItem: FC<CardProps> = ({
     item: () => {
       return { id: item.id, index };
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),

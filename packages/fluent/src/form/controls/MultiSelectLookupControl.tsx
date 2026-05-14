@@ -14,23 +14,30 @@ import {
   useRouter,
   useRouteResolver,
 } from '@headless-adminapp/app/route/hooks';
-import { Id } from '@headless-adminapp/core';
+import type { Id } from '@headless-adminapp/core';
 import { PageType } from '@headless-adminapp/core/experience/app';
-import {
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { Data, IDataService } from '@headless-adminapp/core/transport';
+import type { Data, IDataService } from '@headless-adminapp/core/transport';
 import { Icons } from '@headless-adminapp/icons';
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  type FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
 import { Combobox, Tag, ToolbarButton } from '../../components/fluent';
 import { Option } from '../../components/fluent/Option';
 import { RecordCard } from '../../PageEntityForm/RecordCard';
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 import {
   createLookupRecentKey,
   useGetLookupView,
@@ -388,7 +395,7 @@ function TagItem({
         return;
       }
 
-      router.push(path);
+      void router.push(path);
     },
     [path, router],
   );

@@ -1,41 +1,47 @@
-import { Id } from '@headless-adminapp/core';
-import {
+import type { Id } from '@headless-adminapp/core';
+import type {
   Form,
   SectionEditableGridControl,
 } from '@headless-adminapp/core/experience/form';
-import {
+import type {
   InferredSchemaType,
   Schema,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
-import { ISchemaStore } from '@headless-adminapp/core/store';
-import { IDataService } from '@headless-adminapp/core/transport';
-import { Nullable } from '@headless-adminapp/core/types';
+import type { ISchemaStore } from '@headless-adminapp/core/store';
+import type { IDataService } from '@headless-adminapp/core/transport';
+import type { Nullable } from '@headless-adminapp/core/types';
 
 import { getControls } from '../DataFormProvider/utils';
 
 export function getModifiedValues(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialValues: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values: any,
-  exclude?: string[]
+  exclude?: string[],
 ) {
   const keys = Object.keys(values);
 
-  return keys.reduce((p, c) => {
-    if (c === '_id') {
+  return keys.reduce(
+    (p, c) => {
+      if (c === '_id') {
+        return p;
+      }
+
+      if (exclude?.includes(c)) {
+        return p;
+      }
+
+      if (JSON.stringify(values[c]) !== JSON.stringify(initialValues[c])) {
+        p[c] = values[c];
+      }
+
       return p;
-    }
-
-    if (exclude?.includes(c)) {
-      return p;
-    }
-
-    if (JSON.stringify(values[c]) !== JSON.stringify(initialValues[c])) {
-      p[c] = values[c];
-    }
-
-    return p;
-  }, {} as Record<string, any>);
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    {} as Record<string, any>,
+  );
 }
 
 export type SaveRecordResult =
@@ -53,13 +59,14 @@ export type SaveRecordResult =
 interface Operation {
   type: 'create' | 'update' | 'delete';
   logicalName: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any;
   id?: string;
 }
 
 async function executeOperation(
   operation: Operation,
-  dataService: IDataService
+  dataService: IDataService,
 ) {
   switch (operation.type) {
     case 'create':
@@ -69,7 +76,7 @@ async function executeOperation(
       await dataService.updateRecord(
         operation.logicalName,
         operation.id!,
-        operation.data
+        operation.data,
       );
       break;
     case 'delete':
@@ -88,6 +95,7 @@ function generateSubgridUpdateOperation({
   recordId: string;
   control: SectionEditableGridControl;
   schemaStore: ISchemaStore;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values: any;
   initialValues: Nullable<InferredSchemaType<SchemaAttributes>>;
   alias: string;
@@ -95,7 +103,9 @@ function generateSubgridUpdateOperation({
   const operations: Operation[] = [];
 
   const gridSchema = schemaStore.getSchema(control.logicalName);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const gridRows = values[alias] as any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const initialGridRows = (initialValues as any)[alias] as any[];
 
   const newRows = gridRows.filter((x) => !x[gridSchema.idAttribute]);
@@ -120,7 +130,7 @@ function generateSubgridUpdateOperation({
 
   for (const row of updatedRows) {
     const initialRow = initialGridRows.find(
-      (x) => x[gridSchema.idAttribute] === row[gridSchema.idAttribute]
+      (x) => x[gridSchema.idAttribute] === row[gridSchema.idAttribute],
     );
 
     if (!initialRow) {
@@ -158,6 +168,7 @@ async function createRecord({
   schema,
   dataService,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values: any;
   form: Form<SchemaAttributes>;
   schema: Schema<SchemaAttributes>;
@@ -166,7 +177,7 @@ async function createRecord({
   const controls = getControls(form);
 
   const editableGridControls = controls.filter(
-    (control) => control.type === 'editablegrid' && control.alias
+    (control) => control.type === 'editablegrid' && control.alias,
   ) as SectionEditableGridControl<SchemaAttributes>[];
 
   const result = await dataService.createRecord(schema.logicalName, values);
@@ -174,6 +185,7 @@ async function createRecord({
   const recordId = result.id;
 
   for (const control of editableGridControls) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const gridRows = values[control.alias as string] as any[];
 
     for (const row of gridRows) {
@@ -199,6 +211,7 @@ async function updateRecord({
   schemaStore,
 }: {
   recordId: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values: any;
   form: Form<SchemaAttributes>;
   initialValues: Nullable<InferredSchemaType<SchemaAttributes>>;
@@ -209,13 +222,13 @@ async function updateRecord({
   const controls = getControls(form);
 
   const editableGridControls = controls.filter(
-    (control) => control.type === 'editablegrid' && control.alias
+    (control) => control.type === 'editablegrid' && control.alias,
   ) as SectionEditableGridControl<SchemaAttributes>[];
 
   const modifiedValues = getModifiedValues(
     initialValues,
     values,
-    editableGridControls.map((x) => x.alias as string)
+    editableGridControls.map((x) => x.alias as string),
   );
 
   const operations: Operation[] = [];
@@ -238,7 +251,7 @@ async function updateRecord({
         initialValues,
         values,
         alias: control.alias as string,
-      })
+      }),
     );
   }
 
@@ -262,8 +275,9 @@ async function updateRecord({
 }
 
 export interface SaveRecordFnOptions<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 > {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values: any;
   form: Form<S>;
   record: InferredSchemaType<S> | undefined;
@@ -274,7 +288,7 @@ export interface SaveRecordFnOptions<
 }
 
 export type SaveRecordFn = (
-  options: SaveRecordFnOptions
+  options: SaveRecordFnOptions,
 ) => Promise<SaveRecordResult>;
 
 export async function saveRecord({
@@ -320,7 +334,9 @@ interface SaveEditableGridControlOptions {
   recordId: string;
   control: SectionEditableGridControl;
   schemaStore: ISchemaStore;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialValues: any;
   dataService: IDataService;
   alias: string;

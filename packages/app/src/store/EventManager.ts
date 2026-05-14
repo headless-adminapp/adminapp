@@ -1,5 +1,6 @@
-import { IEventManager } from '@headless-adminapp/core/store';
+import type { IEventManager } from '@headless-adminapp/core/store';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type EventHandler = (...args: any[]) => any;
 
 export class EventManager implements IEventManager {
@@ -25,6 +26,7 @@ export class EventManager implements IEventManager {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public emit(key: string, ...args: any[]): any[] {
     const handlers = (this.handlers[key] ?? []) as EventHandler[];
 

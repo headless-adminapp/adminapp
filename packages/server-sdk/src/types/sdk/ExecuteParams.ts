@@ -1,5 +1,5 @@
-import { AggregateQuery } from '@headless-adminapp/core/transport';
-import {
+import type { AggregateQuery } from '@headless-adminapp/core/transport';
+import type {
   CreateRecordParams,
   DeleteRecordParams,
   RetriveRecordParams,
@@ -7,7 +7,7 @@ import {
   UpdateRecordParams,
 } from '@headless-adminapp/core/transport/operations';
 
-import { ExecuteType } from './ExecuteType';
+import type { ExecuteType } from './ExecuteType';
 
 type RetriveRecordExecuteParams = {
   type: ExecuteType.retriveRecord;

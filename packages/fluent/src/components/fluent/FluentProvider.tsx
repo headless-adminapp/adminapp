@@ -1,7 +1,7 @@
 import {
   FluentProvider as FluentProviderInternal,
-  FluentProviderProps,
-  ForwardRefComponent,
+  type FluentProviderProps,
+  type ForwardRefComponent,
 } from '@fluentui/react-components';
 import { createContext, forwardRef, useContext, useMemo } from 'react';
 
@@ -31,13 +31,13 @@ export const FluentProvider: ForwardRefComponent<ExtendedFluentProviderProps> =
       theme,
       ...rest
     },
-    ref
+    ref,
   ) {
     corners ??= defaultCorners;
     density ??= defaultDensity;
     const contextValue = useMemo(
       () => ({ corners, density }),
-      [corners, density]
+      [corners, density],
     );
 
     const extendedTheme = useMemo(() => {

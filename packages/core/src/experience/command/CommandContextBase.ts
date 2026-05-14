@@ -1,16 +1,16 @@
-import { RouterInstance } from '@headless-adminapp/core/navigation';
+import type { RouterInstance } from '@headless-adminapp/core/navigation';
 import type { QueryClient } from '@tanstack/react-query';
 
 import type { InferredSchemaType, SchemaAttributes } from '../../schema';
 import type { ISchemaExperienceStore, ISchemaStore } from '../../store';
 import type { IDataService } from '../../transport';
-import { AuthSession } from '../auth';
-import {
+import type { AuthSession } from '../auth';
+import type {
   ConfirmDialogOptions,
   ConfirmResult,
   PromptDialogOptions,
 } from '../dialog';
-import { Locale } from '../locale';
+import type { Locale } from '../locale';
 
 export interface OpenFormOptions {
   logicalName: string;
@@ -50,7 +50,7 @@ interface Utiltity {
     options: Omit<
       PromptDialogOptions<SA>,
       'type' | 'onConfirm' | 'onClose' | 'onCancel'
-    >
+    >,
   ) => Promise<InferredSchemaType<SA> | null>;
   showNotification: (options: {
     text: string;

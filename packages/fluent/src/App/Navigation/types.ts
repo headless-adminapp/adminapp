@@ -1,6 +1,6 @@
-import { DrawerProps } from '@fluentui/react-components';
-import { NavPageSection } from '@headless-adminapp/core/experience/app';
-import { Icon } from '@headless-adminapp/icons';
+import type { DrawerProps } from '@fluentui/react-components';
+import type { NavPageSection } from '@headless-adminapp/core/experience/app';
+import type { Icon } from '@headless-adminapp/icons';
 
 export type DrawerType = Required<DrawerProps>['type'];
 

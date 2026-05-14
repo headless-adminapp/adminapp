@@ -1,9 +1,9 @@
 import {
-  ForwardRefComponent,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   Tag as TagInternal,
-  TagProps,
+  type TagProps,
 } from '@fluentui/react-components';
 import { forwardRef } from 'react';
 
@@ -27,5 +27,5 @@ export const Tag: ForwardRefComponent<ExtendedTagProps> = forwardRef(
         ref={ref}
       />
     );
-  }
+  },
 );

@@ -1,28 +1,28 @@
 import { Dialog } from '@fluentui/react-components';
 import {
-  BaseEventAttributes,
+  type BaseEventAttributes,
   baseEventAttributes,
 } from '@headless-adminapp/app/calendar/baseEventAttributes';
-import {
+import type {
   CalendarConfig,
   CalendarEventResolverFn,
 } from '@headless-adminapp/app/calendar/types';
-import {
+import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
 import { defineSchemaAttributes } from '@headless-adminapp/core/schema/utils';
-import { Nullable } from '@headless-adminapp/core/types';
+import type { Nullable } from '@headless-adminapp/core/types';
 
 import { DialogSurface } from '../../components/fluent';
 import { EventFormBody } from './EventFormBody';
 
 export function defineEventAttributes<
   SA1 extends SchemaAttributes = SchemaAttributes,
-  SA2 extends SchemaAttributes = SchemaAttributes
+  SA2 extends SchemaAttributes = SchemaAttributes,
 >(
   beforeDescriptionAttributes?: SA1,
-  afterDescriptionAttributes?: SA2
+  afterDescriptionAttributes?: SA2,
 ): BaseEventAttributes & SA1 & SA2 {
   return defineSchemaAttributes({
     ...baseEventAttributes,
@@ -33,7 +33,7 @@ export function defineEventAttributes<
 
 interface EventDialogProps<
   SA1 extends SchemaAttributes = SchemaAttributes,
-  SA2 extends SchemaAttributes = SchemaAttributes
+  SA2 extends SchemaAttributes = SchemaAttributes,
 > {
   isOpen: boolean;
   title?: string;
@@ -52,7 +52,7 @@ interface EventDialogProps<
 
 export function EventDialog<
   SA1 extends SchemaAttributes = SchemaAttributes,
-  SA2 extends SchemaAttributes = SchemaAttributes
+  SA2 extends SchemaAttributes = SchemaAttributes,
 >(props: Readonly<EventDialogProps<SA1, SA2>>) {
   return (
     <Dialog

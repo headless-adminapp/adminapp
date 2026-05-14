@@ -1,5 +1,5 @@
-export * from './ISchemaStore';
-export * from './IClientExperienceStore';
-export * from './IComponentStore';
+export type * from './ISchemaStore';
+export type * from './IClientExperienceStore';
+export type * from './IComponentStore';
 export * from './SchemaStore';
-export * from './IEventManager';
+export type * from './IEventManager';

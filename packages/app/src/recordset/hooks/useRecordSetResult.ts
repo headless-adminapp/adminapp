@@ -1,5 +1,5 @@
-import { Id } from '@headless-adminapp/core';
-import {
+import type { Id } from '@headless-adminapp/core';
+import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';

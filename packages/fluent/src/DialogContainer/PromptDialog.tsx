@@ -10,8 +10,8 @@ import {
 import { attributesFormValidator } from '@headless-adminapp/app/dataform/utils';
 import { useFormValidationStrings } from '@headless-adminapp/app/form';
 import { useLocale } from '@headless-adminapp/app/locale';
-import { PromptDialogOptions } from '@headless-adminapp/core/experience/dialog';
-import { SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { PromptDialogOptions } from '@headless-adminapp/core/experience/dialog';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Button, DialogSurface } from '../components/fluent';

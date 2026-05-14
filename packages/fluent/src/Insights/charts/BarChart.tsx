@@ -1,6 +1,6 @@
 import { tokens } from '@fluentui/react-components';
 import { useLocale } from '@headless-adminapp/app/locale';
-import { BarChartInfo } from '@headless-adminapp/core/experience/insights';
+import type { BarChartInfo } from '@headless-adminapp/core/experience/insights';
 import {
   BarChart as BarChartInternal,
   ResponsiveContainer,

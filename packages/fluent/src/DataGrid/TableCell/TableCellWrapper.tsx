@@ -1,18 +1,18 @@
 import { TableCell } from '@fluentui/react-components';
 import { GridContext } from '@headless-adminapp/app/datagrid';
-import { CellSelectionRange } from '@headless-adminapp/app/datagrid/context';
+import type { CellSelectionRange } from '@headless-adminapp/app/datagrid/context';
 import {
   useContextSelector,
   useContextSetValue,
 } from '@headless-adminapp/app/mutable';
-import { FC, PropsWithChildren, useMemo } from 'react';
+import { type FC, type PropsWithChildren, useMemo } from 'react';
 
-import { getSelectedCellStyle, SelectionInfo } from './utils';
+import { getSelectedCellStyle, type SelectionInfo } from './utils';
 
 function isCellSelected(
   rowIndex: number,
   columnIndex: number,
-  range: CellSelectionRange
+  range: CellSelectionRange,
 ) {
   if (rowIndex < 0 || columnIndex < 0) {
     return false;
@@ -47,7 +47,7 @@ export const TableCellWrapper: FC<PropsWithChildren<TableCellWrapperProps>> = ({
 }) => {
   const range = useContextSelector(
     GridContext,
-    (state) => state.cellSelectionRange
+    (state) => state.cellSelectionRange,
   );
   const setValue = useContextSetValue(GridContext);
 
@@ -63,19 +63,19 @@ export const TableCellWrapper: FC<PropsWithChildren<TableCellWrapperProps>> = ({
     const isRightCellSelected = isCellSelected(
       rowIndex,
       columnIndex + 1,
-      range
+      range,
     );
 
     const isAboveCellSelected = isCellSelected(
       rowIndex - 1,
       columnIndex,
-      range
+      range,
     );
 
     const isBelowCellSelected = isCellSelected(
       rowIndex + 1,
       columnIndex,
-      range
+      range,
     );
 
     return {
@@ -124,7 +124,7 @@ export const TableCellWrapper: FC<PropsWithChildren<TableCellWrapperProps>> = ({
           });
         }
       }}
-      onMouseEnter={(e) => {
+      onMouseEnter={() => {
         if (range?.active) {
           setValue({
             cellSelectionRange: {

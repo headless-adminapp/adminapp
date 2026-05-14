@@ -1,9 +1,9 @@
 import { useAppContext } from '@headless-adminapp/app/app';
-import {
+import type {
   EntityMainFormCommandItemExperience,
   Form,
 } from '@headless-adminapp/core/experience/form';
-import { Schema } from '@headless-adminapp/core/schema';
+import type { Schema } from '@headless-adminapp/core/schema';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { useExperienceStore, useSchema } from '../../metadata/hooks';
@@ -28,7 +28,7 @@ type UseLoadMainFormPageResult =
 
 export function useLoadFormGridPage(
   logicalName: string,
-  formId: string | undefined
+  formId: string | undefined,
 ): UseLoadMainFormPageResult {
   const schema = useSchema(logicalName);
   const experienceStore = useExperienceStore();

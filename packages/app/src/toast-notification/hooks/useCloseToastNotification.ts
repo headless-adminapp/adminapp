@@ -1,11 +1,14 @@
 import { useCallback } from 'react';
 
 import { useContextSetValue } from '../../mutable/context';
-import { ToastNotificationContext, ToastNotificationItem } from '../context';
+import {
+  ToastNotificationContext,
+  type ToastNotificationItem,
+} from '../context';
 
 function markToastNotificationAsClosed(
   items: ToastNotificationItem[],
-  id: string
+  id: string,
 ) {
   return items.map((item) => {
     if (item.id === id) {
@@ -18,7 +21,7 @@ function markToastNotificationAsClosed(
 
 function excludeToastNotificationItemById(
   items: ToastNotificationItem[],
-  id: string
+  id: string,
 ) {
   return items.filter((item) => item.id !== id);
 }
@@ -39,7 +42,7 @@ export function useCloseToastNotification() {
         }));
       }, 1000);
     },
-    [setValue]
+    [setValue],
   );
 
   return closeDialog;

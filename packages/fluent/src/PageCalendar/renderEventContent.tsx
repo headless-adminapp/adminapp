@@ -15,7 +15,7 @@ import { Icons } from '@headless-adminapp/icons';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 
 import { Button, extendedTokens, PopoverSurface } from '../components/fluent';
 import { EventDialog } from './EventDialog/EventDialog';

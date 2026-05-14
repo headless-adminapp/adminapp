@@ -1,7 +1,7 @@
 import { Drawer } from '@fluentui/react-components';
 import { useQuickCreateItems } from '@headless-adminapp/app/quickcreate/hooks';
-import { DataLookup, Id } from '@headless-adminapp/core/attributes';
-import { FC } from 'react';
+import type { DataLookup, Id } from '@headless-adminapp/core/attributes';
+import type { FC } from 'react';
 
 import { QuickCreateItemContent } from './QuickCreateItemContent';
 

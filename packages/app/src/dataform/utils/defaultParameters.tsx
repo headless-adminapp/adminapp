@@ -1,17 +1,18 @@
-import { FormExperience } from '@headless-adminapp/core/experience/form';
-import { RouterInstance } from '@headless-adminapp/core/navigation';
-import { Schema } from '@headless-adminapp/core/schema';
+import type { FormExperience } from '@headless-adminapp/core/experience/form';
+import type { RouterInstance } from '@headless-adminapp/core/navigation';
+import type { Schema } from '@headless-adminapp/core/schema';
 import dayjs from 'dayjs';
 
 interface DefaultParameters {
   logicalName: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values: Record<string, any>;
 }
 
 export function getFormDefaultParameters(
   schema: Schema,
   formExperience: FormExperience,
-  router: RouterInstance
+  router: RouterInstance,
 ) {
   const _values =
     router.getState<DefaultParameters>('defaultParameters')?.values;
@@ -43,9 +44,11 @@ export function getFormDefaultParameters(
         [key]: defaultValue,
       };
     },
-    {} as Record<string, any>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    {} as Record<string, any>,
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let formDefaultValues: Record<string, any> = {};
 
   if (typeof formExperience.defaultValues === 'function') {

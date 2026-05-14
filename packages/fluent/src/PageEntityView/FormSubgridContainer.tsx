@@ -2,7 +2,7 @@ import { Divider } from '@fluentui/react-components';
 import { useSearchText } from '@headless-adminapp/app/datagrid/hooks';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 import { Icons } from '@headless-adminapp/icons';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { useAppStrings } from '../App/AppStringContext';
 import { Input } from '../components/fluent';

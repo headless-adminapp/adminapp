@@ -1,21 +1,22 @@
 import { HistoryStateKeyProvider } from '@headless-adminapp/app/historystate';
 import { InsightsContext } from '@headless-adminapp/app/insights';
 import {
-  ContextValue,
+  type ContextValue,
   useCreateContextStore,
 } from '@headless-adminapp/app/mutable';
 import { useRouter } from '@headless-adminapp/app/route';
 import { EventManager } from '@headless-adminapp/app/store';
-import {
+import type {
   InsightConfig,
   InsightsState,
 } from '@headless-adminapp/core/experience/insights';
-import {
+import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
 import { useEffect, useMemo } from 'react';
-import { DefaultValues, FormProvider, useForm } from 'react-hook-form';
+import type { DefaultValues } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { InsightsContainer } from '../Insights/InsightsContainer';
 
@@ -27,7 +28,7 @@ const historyKey = 'page-insight';
 
 function mergeInitialStateWithHistory<T>(
   initialValue: T,
-  historyState: Partial<T> | undefined
+  historyState: Partial<T> | undefined,
 ): T {
   return {
     ...initialValue,
@@ -44,12 +45,14 @@ export function PageInsight<S extends SchemaAttributes = SchemaAttributes>({
     defaultValues: mergeInitialStateWithHistory(
       config.defaultFilter,
       router.getState<{ filter: Partial<InferredSchemaType<S>> }>(historyKey)
-        ?.filter
+        ?.filter,
     ) as DefaultValues<InferredSchemaType<S>>,
     shouldUnregister: false,
   });
 
-  const filterValues = filterForm.watch();
+  const filterValues = useWatch({
+    control: filterForm.control,
+  }) as InferredSchemaType<S>;
   const eventManager = useMemo(() => new EventManager(), []);
 
   const insightsValues = useCreateContextStore<InsightsState<S>>({

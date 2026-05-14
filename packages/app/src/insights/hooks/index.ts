@@ -1,8 +1,8 @@
-import {
+import type {
   InsightConfig,
   InsightsState,
 } from '@headless-adminapp/core/experience/insights';
-import {
+import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
@@ -12,36 +12,37 @@ import { useContextSelector } from '../../mutable';
 import { InsightsContext } from '../context';
 
 export function useInsightsState<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >(): InsightsState<S> {
   return useContextSelector(
     InsightsContext,
-    (state) => state as InsightsState<S>
+    (state) => state as InsightsState<S>,
   );
 }
 
 export function useInsightConfig<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >(): InsightConfig<S> {
   return useContextSelector(
     InsightsContext,
-    (state) => state.config as InsightConfig<S>
+    (state) => state.config as InsightConfig<S>,
   );
 }
 
 export function useInsightFilterValues<
-  S extends SchemaAttributes = SchemaAttributes
+  S extends SchemaAttributes = SchemaAttributes,
 >(): InferredSchemaType<S> {
   return useContextSelector(
     InsightsContext,
-    (state) => state.filterValues as InferredSchemaType<S>
+    (state) => state.filterValues as InferredSchemaType<S>,
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useRefreshEventListener(callback: () => any) {
   const eventManager = useContextSelector(
     InsightsContext,
-    (state) => state.eventManager
+    (state) => state.eventManager,
   );
 
   const callbackRef = useRef(callback);

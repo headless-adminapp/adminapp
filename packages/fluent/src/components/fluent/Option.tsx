@@ -1,9 +1,9 @@
 import {
-  ForwardRefComponent,
+  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   Option as OptionInternal,
-  OptionProps,
+  type OptionProps,
   tokens,
 } from '@fluentui/react-components';
 import { forwardRef } from 'react';
@@ -29,5 +29,5 @@ export const Option: ForwardRefComponent<ExtendedOptionProps> = forwardRef(
         ref={ref}
       />
     );
-  }
+  },
 );

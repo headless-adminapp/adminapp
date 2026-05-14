@@ -1,9 +1,9 @@
-import { LocalizedDataLookup } from '@headless-adminapp/core/attributes';
-import {
+import type { LocalizedDataLookup } from '@headless-adminapp/core/attributes';
+import type {
   EntityMainGridCommandItemExperience,
   View,
 } from '@headless-adminapp/core/experience/view';
-import { Schema } from '@headless-adminapp/core/schema';
+import type { Schema } from '@headless-adminapp/core/schema';
 
 import { useExperienceView } from '../../metadata/hooks/useExperienceView';
 import { useExperienceViewCommands } from '../../metadata/hooks/useExperienceViewCommands';
@@ -31,7 +31,7 @@ type UseLoadMainGridPageResult =
 
 export function useLoadMainGridPage(
   logicalName: string,
-  viewId: string | undefined
+  viewId: string | undefined,
 ): UseLoadMainGridPageResult {
   const schema = useSchema(logicalName);
 

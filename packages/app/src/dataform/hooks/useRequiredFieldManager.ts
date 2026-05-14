@@ -27,7 +27,7 @@ export function useRequiredFieldManager() {
         requiredFields: dataFormContextValue.current.requiredFields,
       });
     },
-    [dataFormContextValue]
+    [dataFormContextValue],
   );
 
   const _setFieldRequired = useCallback(
@@ -41,7 +41,7 @@ export function useRequiredFieldManager() {
         };
       });
     },
-    [setValue]
+    [setValue],
   );
 
   const _resetFieldRequired = useCallback(
@@ -54,7 +54,7 @@ export function useRequiredFieldManager() {
         };
       });
     },
-    [setValue]
+    [setValue],
   );
 
   return {

@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useDebouncedValue<T = any>(
   value: T,
   wait: number,
-  options = { leading: false }
+  options = { leading: false },
 ) {
   const [internalValue, setInternalValue] = useState(value);
   const mountedRef = useRef(false);
-  const timeoutRef = useRef<number>();
+  const timeoutRef = useRef<number>(null);
   const cooldownRef = useRef(false);
 
-  const cancel = () => window.clearTimeout(timeoutRef.current);
+  const cancel = () => {
+    timeoutRef.current && window.clearTimeout(timeoutRef.current);
+  };
 
   useEffect(() => {
     if (mountedRef.current) {

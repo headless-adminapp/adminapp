@@ -1,4 +1,4 @@
-import { AttributeBase } from './AttributeBase';
+import type { AttributeBase } from './AttributeBase';
 
 export type { Attribute } from './Attribute';
 

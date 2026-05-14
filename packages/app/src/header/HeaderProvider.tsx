@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 
 import { useCreateContextStore } from '../mutable/context';
 import {
@@ -9,7 +9,7 @@ import {
 
 export const HeaderProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
   const contextValue = useCreateContextStore<HeaderStoreState>(
-    defaultHeaderStoreState
+    defaultHeaderStoreState,
   );
 
   return (

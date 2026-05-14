@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   defineSchema,
   defineSchemaAttributes,
 } from '@headless-adminapp/core/schema/utils';
-import {
+import type {
   Condition,
   Filter,
   OperatorKey,

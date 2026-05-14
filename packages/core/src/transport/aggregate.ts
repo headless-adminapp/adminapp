@@ -1,6 +1,6 @@
-import { Condition } from './Condition';
-import { Filter } from './Filter';
-import { SortOrder } from './SortOrder';
+import type { Condition } from './Condition';
+import type { Filter } from './Filter';
+import type { SortOrder } from './SortOrder';
 
 export enum AggregateType {
   Sum = 'sum',
@@ -51,7 +51,7 @@ export interface AggregateQuery<
   A extends Record<string, AggregateAttribute> = Record<
     string,
     AggregateAttribute
-  >
+  >,
 > {
   logicalName: string;
   attributes: A;
@@ -62,7 +62,7 @@ export interface AggregateQuery<
 }
 
 export function defineAggregateQuery<
-  A extends Record<string, AggregateAttribute>
+  A extends Record<string, AggregateAttribute>,
 >(query: AggregateQuery<A>): AggregateQuery<A> {
   return query;
 }
@@ -77,7 +77,7 @@ export type InferredAggregateAttributeType<A extends AggregateAttribute> =
     : never;
 
 export type InferredTransformedAggregateAttributeType<
-  A extends AggregateAttribute
+  A extends AggregateAttribute,
 > = A extends { type: 'string' }
   ? string
   : A extends { type: 'number' }
@@ -87,13 +87,13 @@ export type InferredTransformedAggregateAttributeType<
   : never;
 
 export type InferredAggregateQueryResult<
-  A extends Record<string, AggregateAttribute>
+  A extends Record<string, AggregateAttribute>,
 > = {
   [K in keyof A]: InferredAggregateAttributeType<A[K]>;
 };
 
 export type InferredTransformedAggregateQueryResult<
-  A extends Record<string, AggregateAttribute>
+  A extends Record<string, AggregateAttribute>,
 > = {
   [K in keyof A]: InferredTransformedAggregateAttributeType<A[K]>;
 };

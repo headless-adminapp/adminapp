@@ -1,5 +1,6 @@
 import { useOpenForm } from '@headless-adminapp/app/navigation';
-import { CommandContextBase } from '@headless-adminapp/core/experience/command';
+import { useRouter } from '@headless-adminapp/app/route';
+import type { CommandContextBase } from '@headless-adminapp/core/experience/command';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
@@ -15,8 +16,7 @@ import { useMetadata } from '../../metadata/hooks';
 import { useProgressIndicator } from '../../progress-indicator/hooks';
 import { useOpenToastNotification } from '../../toast-notification/hooks/useOpenToastNotification';
 import { useDataService } from '../../transport';
-import { UtilityContextState } from '../types';
-import { useRouter, useRouteResolver } from '@headless-adminapp/app/route';
+import type { UtilityContextState } from '../types';
 
 export function useUtility(): UtilityContextState {
   const { hideProgressIndicator, showProgressIndicator } =
@@ -45,7 +45,7 @@ export function useUtility(): UtilityContextState {
       openPromptDialog,
       openToastNotification,
       showProgressIndicator,
-    ]
+    ],
   );
 }
 
@@ -58,7 +58,7 @@ function useNavigation() {
       openForm,
       router,
     }),
-    [openForm, router]
+    [openForm, router],
   );
 }
 
@@ -81,6 +81,14 @@ export function useBaseCommandHandlerContext(): CommandContextBase {
       navigation,
       authSession,
     }),
-    [dataService, queryClient, stores, utility, locale, navigation, authSession]
+    [
+      dataService,
+      queryClient,
+      stores,
+      utility,
+      locale,
+      navigation,
+      authSession,
+    ],
   );
 }

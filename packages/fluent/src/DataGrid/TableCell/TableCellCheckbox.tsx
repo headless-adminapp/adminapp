@@ -1,5 +1,5 @@
 import { TableCell } from '@fluentui/react-components';
-import { FC, memo } from 'react';
+import { type FC, memo } from 'react';
 
 import { Checkbox } from '../../components/fluent/Checkbox';
 
@@ -26,7 +26,7 @@ export const TableCellCheckbox: FC<TableCellCheckboxProps> = memo(
         />
       </TableCell>
     );
-  }
+  },
 );
 
 TableCellCheckbox.displayName = 'TableCellCheckbox';

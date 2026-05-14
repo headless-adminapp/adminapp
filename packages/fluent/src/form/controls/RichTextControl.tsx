@@ -1,7 +1,7 @@
-import { FC, lazy, Suspense } from 'react';
+import { type FC, lazy, Suspense } from 'react';
 
 import { SkeletonControl } from './SkeletonControl';
-import { ControlProps } from './types';
+import type { ControlProps } from './types';
 
 const ReactQuill = lazy(() => import('react-quill'));
 

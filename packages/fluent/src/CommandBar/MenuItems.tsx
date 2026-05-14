@@ -1,8 +1,8 @@
 import { MenuDivider } from '@fluentui/react-components';
-import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
+import type { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
 import { Fragment, memo } from 'react';
 
-import { MenuItem, MenuItemProps } from './MenuItem';
+import { MenuItem, type MenuItemProps } from './MenuItem';
 
 export interface MenuItemsProps {
   items?: ArrayGroupWithAtLeastOne<MenuItemProps>;

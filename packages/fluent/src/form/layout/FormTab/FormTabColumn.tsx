@@ -1,5 +1,5 @@
 import { tokens } from '@fluentui/react-components';
-import { FC, PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 
 interface FormTabColumnProps {
   span?: number;

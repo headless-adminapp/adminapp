@@ -1,13 +1,13 @@
-import { MenuItemCommandState } from '@headless-adminapp/app/command';
+import type { MenuItemCommandState } from '@headless-adminapp/app/command';
 import { useLocale } from '@headless-adminapp/app/locale';
 import {
-  MutableState,
+  type MutableState,
   useMutableStateSelector,
 } from '@headless-adminapp/app/mutable';
-import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
+import type { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
 import { memo } from 'react';
 
-import { MenuItemProps } from '../CommandBar/MenuItem';
+import type { MenuItemProps } from '../CommandBar/MenuItem';
 import { transformMenuItems } from '../OverflowCommandBar';
 import { TableCellAction } from './TableCell';
 
@@ -22,7 +22,7 @@ export const ActionCell = memo(function ActionCell({
 }: ActionCellProps) {
   const transformedCommands = useMutableStateSelector(
     mutableState,
-    (state) => state
+    (state) => state,
   ) as ArrayGroupWithAtLeastOne<MenuItemCommandState>;
   const { language } = useLocale();
 
@@ -31,7 +31,7 @@ export const ActionCell = memo(function ActionCell({
       onOpen={onOpen}
       items={
         transformedCommands.map((item) =>
-          transformMenuItems(item, language)
+          transformMenuItems(item, language),
         ) as ArrayGroupWithAtLeastOne<MenuItemProps>
       }
     />

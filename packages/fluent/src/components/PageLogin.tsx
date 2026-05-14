@@ -2,7 +2,7 @@ import { tokens } from '@fluentui/react-components';
 import { useIsMobile } from '@headless-adminapp/app/hooks';
 
 import { extendedTokens } from './fluent';
-import { LoginForm, LoginFormData } from './LoginForm';
+import { LoginForm, type LoginFormData } from './LoginForm';
 
 interface LoginPageProps {
   logoImageUrl?: string;

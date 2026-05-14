@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { FC, PropsWithChildren, useState } from 'react';
+import { type FC, type PropsWithChildren, useState } from 'react';
 import { type ScrollbarProps, Scrollbars } from 'react-custom-scrollbars-2';
 
 interface ScrollViewProps {

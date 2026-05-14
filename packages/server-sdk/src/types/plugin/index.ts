@@ -1,6 +1,6 @@
-export * from './ExecutePluginParams';
+export type * from './ExecutePluginParams';
 export * from './ExecutionStage';
 export * from './MessageName';
-export * from './PluginActionContext';
-export * from './PluginStep';
-export * from './IPluginStore';
+export type * from './PluginActionContext';
+export type * from './PluginStep';
+export type * from './IPluginStore';

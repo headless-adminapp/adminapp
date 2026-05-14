@@ -5,14 +5,14 @@ import {
   tokens,
 } from '@fluentui/react-components';
 import { useConfig } from '@headless-adminapp/app/calendar/hooks/useConfig';
-import {
+import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
 import { Icons } from '@headless-adminapp/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { Fragment } from 'react';
-import { Controller, Path, UseFormReturn } from 'react-hook-form';
+import { Controller, type Path, type UseFormReturn } from 'react-hook-form';
 
 import { extendedTokens } from '../components/fluent';
 import { Button } from '../components/fluent/Button';
@@ -117,7 +117,7 @@ export function Header<SA extends SchemaAttributes = SchemaAttributes>({
                       }}
                     />
                   );
-                }
+                },
               )}
             </div>
           </Fragment>

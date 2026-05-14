@@ -1,6 +1,6 @@
 import { type FluentIcon } from '@fluentui/react-icons';
 import { IconWrapper } from '@headless-adminapp/icons/IconWrapper';
-import { CreateIconFn, IconProps } from '@headless-adminapp/icons/types';
+import type { CreateIconFn, IconProps } from '@headless-adminapp/icons/types';
 
 export const createIcon: CreateIconFn<FluentIcon> = (Icon, isLazy) => {
   return function HocIcon(props: IconProps) {

@@ -1,48 +1,50 @@
-import { LookupAttribute } from '@headless-adminapp/core/attributes';
-import { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
+import type { LookupAttribute } from '@headless-adminapp/core/attributes';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import {
-  AggregateAttributeValue,
-  AggregateQuery,
+  type AggregateAttributeValue,
+  type AggregateQuery,
   AggregateType,
   ConflictError,
-  CreateRecordParams,
-  CreateRecordResult,
-  Data,
-  DeleteRecordParams,
-  DeleteRecordResult,
-  Filter,
+  type CreateRecordParams,
+  type CreateRecordResult,
+  type Data,
+  type DeleteRecordParams,
+  type DeleteRecordResult,
+  type Filter,
   ForbiddenError,
   NotFoundError,
-  RetriveRecordParams,
-  RetriveRecordResult,
-  RetriveRecordsParams,
-  RetriveRecordsResult,
-  UpdateRecordParams,
-  UpdateRecordResult,
+  type RetriveRecordParams,
+  type RetriveRecordResult,
+  type RetriveRecordsParams,
+  type RetriveRecordsResult,
+  type UpdateRecordParams,
+  type UpdateRecordResult,
 } from '@headless-adminapp/core/transport';
 import {
-  DependentRecord,
+  type DependentRecord,
   ExecutionStage,
   MessageName,
   ServerSdk,
-  ServerSdkContext,
-  ServerSdkOptions,
+  type ServerSdkContext,
+  type ServerSdkOptions,
 } from '@headless-adminapp/server-sdk';
 import {
-  GroupOption,
-  Model,
+  type GroupOption,
+  type Includeable,
+  type Model,
   Op,
-  Order,
-  OrderItem,
-  ProjectionAlias,
+  type Order,
+  type OrderItem,
+  type ProjectionAlias,
   Sequelize,
-  Transaction,
+  type Transaction,
+  type WhereOptions,
 } from 'sequelize';
 import type { Col, Fn, Literal } from 'sequelize/types/utils';
 
 import { getLikeOperator, transformFilter } from './conditions';
-import { SequelizeSchemaStore } from './SequelizeSchemaStore';
-import { Id } from './types';
+import type { SequelizeSchemaStore } from './SequelizeSchemaStore';
+import type { Id } from './types';
 import { transformRecord } from './utils/transform';
 
 export interface SequelizeDatabaseContext {
@@ -95,16 +97,16 @@ export class SequelizeServerSdk<
     logicalName: string;
     filter?: Filter | null;
     search: string | null | undefined;
-  }): any[] {
+  }): WhereOptions[] {
     const schema = this.options.schemaStore.getSchema(logicalName);
-    const whereClause: any[] = [];
+    const whereClause: WhereOptions[] = [];
 
     const orgFilter = transformFilter(
       this.options.dataFilter?.getOrganizationFilter({
         logicalName: schema.logicalName,
         dbContext: {
           session: this.session,
-        } as any,
+        } as DbContext,
         sdkContext: this.options.context,
       }),
       schema,
@@ -124,7 +126,7 @@ export class SequelizeServerSdk<
         logicalName: schema.logicalName,
         dbContext: {
           session: this.session,
-        } as any,
+        } as DbContext,
         sdkContext: this.options.context,
       }),
       schema,
@@ -197,7 +199,7 @@ export class SequelizeServerSdk<
 
           return null;
         })
-        .filter(Boolean);
+        .filter(Boolean) as WhereOptions[];
 
       if (searchFilter.length) {
         whereClause.push({
@@ -223,9 +225,9 @@ export class SequelizeServerSdk<
     expand?: RetriveRecordsParams['expand'];
     search?: string | null;
     sort?: RetriveRecordsParams['sort'];
-  }): any[] {
+  }): Includeable[] {
     const schema = this.options.schemaStore.getSchema(logicalName);
-    const includes: any[] = [];
+    const includes: Includeable[] = [];
 
     Object.entries(schema.attributes).forEach(([key, attribute]) => {
       if (attribute.type === 'lookup') {
@@ -242,7 +244,7 @@ export class SequelizeServerSdk<
             attribute.entity,
           );
 
-          const nestedIncludes: any[] = [];
+          const nestedIncludes: Includeable[] = [];
 
           if (expand?.[key]) {
             const expandedAttributes = expand[key]
@@ -264,8 +266,8 @@ export class SequelizeServerSdk<
                   nestedSchema.collectionName ?? nestedSchema.logicalName,
                 ),
                 attributes: [
-                  nestedSchema.idAttribute,
-                  nestedSchema.primaryAttribute,
+                  nestedSchema.idAttribute as string,
+                  nestedSchema.primaryAttribute as string,
                 ],
               });
             }
@@ -278,7 +280,7 @@ export class SequelizeServerSdk<
               key,
               lookupSchema.collectionName ?? lookupSchema.logicalName,
             ),
-            includes: nestedIncludes,
+            include: nestedIncludes,
           });
         }
       } else if (attribute.type === 'regarding') {
@@ -358,7 +360,7 @@ export class SequelizeServerSdk<
     const model = this.options.schemaStore.getModel(logicalName);
     const schema = this.options.schemaStore.getSchema(logicalName);
 
-    const whereClause: any[] = this.prepareWhereClause({
+    const whereClause = this.prepareWhereClause({
       filter: {
         type: 'and',
         conditions: [
@@ -496,7 +498,7 @@ export class SequelizeServerSdk<
         },
         logicalName: params.logicalName,
         search: null,
-      }),
+      }) as WhereOptions,
       attributes: {
         exclude: [],
       },
@@ -508,7 +510,7 @@ export class SequelizeServerSdk<
 
     const record = existingRecords[0].toJSON();
 
-    let dependedRecordToBeDeleted: DependentRecord[] =
+    const dependedRecordToBeDeleted: DependentRecord[] =
       await this.getDependentRecordsToDelete(
         schema.logicalName,
         record[schema.idAttribute],
@@ -651,6 +653,7 @@ export class SequelizeServerSdk<
 
         return acc;
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       {} as Record<string, any>,
     );
 
@@ -786,6 +789,7 @@ export class SequelizeServerSdk<
 
         return acc;
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       {} as Record<string, any>,
     );
 
@@ -803,7 +807,7 @@ export class SequelizeServerSdk<
         },
         logicalName: params.logicalName,
         search: null,
-      }),
+      }) as WhereOptions,
       attributes: {
         exclude: [],
       },
@@ -871,6 +875,7 @@ export class SequelizeServerSdk<
   }
 
   private transformRecords<SA extends SchemaAttributes>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     records: Model<any, any>[],
     {
       schema,
@@ -934,7 +939,7 @@ export class SequelizeServerSdk<
           },
           logicalName: schemaLogicalName,
           search: null,
-        }),
+        }) as WhereOptions,
         attributes: [schema.idAttribute as string],
         transaction: this.session,
       });
@@ -997,6 +1002,7 @@ export class SequelizeServerSdk<
       includes,
       schema,
     }: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       includes: Record<string, any>;
       schema: Schema<SA>;
     },
@@ -1091,6 +1097,7 @@ export class SequelizeServerSdk<
 
     const attributes: ProjectionAlias[] = [];
     const groupBy: GroupOption = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const includes: Record<string, any> = {};
 
     Object.entries(query.attributes).forEach(([key, value]) => {

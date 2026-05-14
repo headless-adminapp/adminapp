@@ -1,7 +1,7 @@
 import { tokens } from '@fluentui/react-components';
-import { BoardColumnCardPreviewFC } from '@headless-adminapp/app/board/types';
-import { Schema } from '@headless-adminapp/core/schema';
-import { useRef } from 'react';
+import type { BoardColumnCardPreviewFC } from '@headless-adminapp/app/board/types';
+import type { Schema } from '@headless-adminapp/core/schema';
+import { useCallback } from 'react';
 
 import { useDndContext } from '../components/DndProvider';
 import { extendedTokens } from '../components/fluent';
@@ -22,7 +22,6 @@ export function BoardColumnCard({
   PreviewComponent,
   schema,
 }: Readonly<BoardColumnCardProps>) {
-  const ref = useRef<HTMLDivElement>(null);
   const { useDrag } = useDndContext();
   const [{ isDragging }, drag] = useDrag({
     type: columnId,
@@ -30,16 +29,24 @@ export function BoardColumnCard({
     item: () => {
       return { id: record[schema.idAttribute] as string, columnId, record };
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
   });
 
-  drag(ref);
+  const dragRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node) {
+        drag(node);
+      }
+    },
+    [drag],
+  );
 
   return (
     <div
-      ref={ref}
+      ref={dragRef}
       style={{
         display: 'flex',
         background: tokens.colorNeutralBackground1,

@@ -1,6 +1,6 @@
 import { tokens } from '@fluentui/react-components';
 import { useLocale } from '@headless-adminapp/app/locale';
-import { AreaChartInfo } from '@headless-adminapp/core/experience/insights';
+import type { AreaChartInfo } from '@headless-adminapp/core/experience/insights';
 import { useId } from 'react';
 import {
   AreaChart as AreaChartInternal,

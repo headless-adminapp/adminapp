@@ -2,11 +2,11 @@ import {
   MenuList as InternalMenuList,
   tokens,
 } from '@fluentui/react-components';
-import { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
+import type { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
 import { memo } from 'react';
 
 import { MenuItem } from '../components/fluent';
-import { MenuItemProps } from './MenuItem';
+import type { MenuItemProps } from './MenuItem';
 import { MenuItems } from './MenuItems';
 
 export interface MenuItemsProps {
