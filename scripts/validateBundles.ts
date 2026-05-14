@@ -3,7 +3,7 @@ import { exec } from 'node:child_process';
 import fs from 'fs';
 import path from 'path';
 
-const bundleTestingDirectories = ['next/13', 'next/14'];
+const bundleTestingDirectories = ['next/16'];
 
 async function executeCommand(
   command: string,

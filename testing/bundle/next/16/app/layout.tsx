@@ -1,7 +1,6 @@
 import dynamic from 'next/dynamic';
-const AppLayout = dynamic(() => import('./AppLayout'), {
-  ssr: false,
-});
+import { Suspense } from 'react';
+const AppLayout = dynamic(() => import('./AppLayout'));
 
 export default function RootLayout({
   children,
@@ -11,10 +10,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>Cashflow</title>
+        <title>Admin App</title>
       </head>
       <body>
-        <AppLayout>{children}</AppLayout>
+        <Suspense>
+          <AppLayout>{children}</AppLayout>
+        </Suspense>
       </body>
     </html>
   );
