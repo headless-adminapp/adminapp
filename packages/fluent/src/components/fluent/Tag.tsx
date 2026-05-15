@@ -1,11 +1,10 @@
 import {
-  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   Tag as TagInternal,
   type TagProps,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -15,17 +14,21 @@ const useStyles = makeStyles({
   },
 });
 
-type ExtendedTagProps = TagProps;
+type ExtendedTagProps = TagProps & {
+  ref?: Ref<HTMLDivElement>;
+};
 
-export const Tag: ForwardRefComponent<ExtendedTagProps> = forwardRef(
-  function Tag({ className, ...rest }, ref) {
-    const styles = useStyles();
-    return (
-      <TagInternal
-        {...rest}
-        className={mergeClasses(styles.root, className)}
-        ref={ref}
-      />
-    );
-  },
-);
+export const Tag: FC<ExtendedTagProps> = function Tag({
+  className,
+  ref,
+  ...rest
+}) {
+  const styles = useStyles();
+  return (
+    <TagInternal
+      {...rest}
+      className={mergeClasses(styles.root, className)}
+      ref={ref}
+    />
+  );
+};

@@ -1,12 +1,11 @@
 import {
   Dropdown as DropdownInternal,
   type DropdownProps,
-  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   tokens,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -51,27 +50,30 @@ const useStyles = makeStyles({
   },
 });
 
-type ExtendedDropdownProps = DropdownProps;
+type ExtendedDropdownProps = DropdownProps & {
+  ref?: Ref<HTMLButtonElement>;
+};
 
-export const Dropdown: ForwardRefComponent<ExtendedDropdownProps> = forwardRef(
-  function Dropdown({ className, ...rest }, ref) {
-    const styles = useStyles();
-    const sizeStyles = useSizeStyles();
-    return (
-      <DropdownInternal
-        {...rest}
-        className={mergeClasses(
-          styles.root,
-          sizeStyles[rest.size || 'medium'],
-          (rest.appearance === 'outline' || !rest.appearance) &&
-            styles.outlined,
-          className,
-        )}
-        ref={ref}
-        listbox={{
-          className: styles.listbox,
-        }}
-      />
-    );
-  },
-);
+export const Dropdown: FC<ExtendedDropdownProps> = function Dropdown({
+  className,
+  ref,
+  ...rest
+}) {
+  const styles = useStyles();
+  const sizeStyles = useSizeStyles();
+  return (
+    <DropdownInternal
+      {...rest}
+      className={mergeClasses(
+        styles.root,
+        sizeStyles[rest.size || 'medium'],
+        (rest.appearance === 'outline' || !rest.appearance) && styles.outlined,
+        className,
+      )}
+      ref={ref}
+      listbox={{
+        className: styles.listbox,
+      }}
+    />
+  );
+};

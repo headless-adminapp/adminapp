@@ -1,11 +1,10 @@
 import {
-  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   PopoverSurface as PopoverSurfaceInternal,
   type PopoverSurfaceProps,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -15,10 +14,12 @@ const useStyles = makeStyles({
   },
 });
 
-type ExtendedPopoverSurfaceProps = PopoverSurfaceProps;
+type ExtendedPopoverSurfaceProps = PopoverSurfaceProps & {
+  ref?: Ref<HTMLDivElement>;
+};
 
-export const PopoverSurface: ForwardRefComponent<ExtendedPopoverSurfaceProps> =
-  forwardRef(function PopoverSurface({ className, ...rest }, ref) {
+export const PopoverSurface: FC<ExtendedPopoverSurfaceProps> =
+  function PopoverSurface({ className, ref, ...rest }) {
     const styles = useStyles();
     return (
       <PopoverSurfaceInternal
@@ -27,4 +28,4 @@ export const PopoverSurface: ForwardRefComponent<ExtendedPopoverSurfaceProps> =
         ref={ref}
       />
     );
-  });
+  };

@@ -1,5 +1,4 @@
 import {
-  type ForwardRefComponent,
   makeStyles,
   Menu,
   MenuButton,
@@ -11,7 +10,7 @@ import {
 } from '@fluentui/react-components';
 import type { ArrayGroupWithAtLeastOne } from '@headless-adminapp/core/types';
 import type { Icon } from '@headless-adminapp/icons';
-import { forwardRef, memo } from 'react';
+import { type FC, memo, type Ref } from 'react';
 
 import { extendedTokens } from '../components/fluent';
 import { MenuPopover } from '../components/fluent/MenuPopover';
@@ -89,13 +88,19 @@ export interface CommandMenuButtonProps {
   onClick?: () => void;
   appearance?: 'subtle' | 'colored';
   items: ArrayGroupWithAtLeastOne<MenuItemProps>;
+  ref?: Ref<HTMLButtonElement>;
 }
 
-export const CommandMenuButton = memo(
-  forwardRef(function CommandMenuButton(
-    { Icon, items, text, danger, disabled, onClick },
+export const CommandMenuButton: FC<CommandMenuButtonProps> = memo(
+  function CommandMenuButton({
+    Icon,
+    items,
+    text,
+    danger,
+    disabled,
+    onClick,
     ref,
-  ) {
+  }) {
     const styles = useStyles();
 
     return (
@@ -139,7 +144,7 @@ export const CommandMenuButton = memo(
         </MenuPopover>
       </Menu>
     );
-  }),
-) as ForwardRefComponent<CommandMenuButtonProps>;
+  },
+);
 
 CommandMenuButton.displayName = 'CommandMenuButton';

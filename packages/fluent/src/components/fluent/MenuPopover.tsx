@@ -1,12 +1,11 @@
 import {
-  type ForwardRefComponent,
   makeStyles,
   MenuPopover as MenuPopoverInternal,
   type MenuPopoverProps,
   mergeClasses,
   tokens,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -17,16 +16,21 @@ const useStyles = makeStyles({
   },
 });
 
-type ExtendedMenuPopoverProps = MenuPopoverProps;
+type ExtendedMenuPopoverProps = MenuPopoverProps & {
+  ref?: Ref<HTMLDivElement>;
+};
 
-export const MenuPopover: ForwardRefComponent<ExtendedMenuPopoverProps> =
-  forwardRef(function MenuPopover({ className, ...rest }, ref) {
-    const styles = useStyles();
-    return (
-      <MenuPopoverInternal
-        {...rest}
-        className={mergeClasses(styles.root, className)}
-        ref={ref}
-      />
-    );
-  });
+export const MenuPopover: FC<ExtendedMenuPopoverProps> = function MenuPopover({
+  className,
+  ref,
+  ...rest
+}) {
+  const styles = useStyles();
+  return (
+    <MenuPopoverInternal
+      {...rest}
+      className={mergeClasses(styles.root, className)}
+      ref={ref}
+    />
+  );
+};

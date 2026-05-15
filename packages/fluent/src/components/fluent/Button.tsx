@@ -1,12 +1,11 @@
 import {
   Button as ButtonInternal,
   type ButtonProps,
-  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   tokens,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -38,22 +37,26 @@ const useStyles = makeStyles({
   },
 });
 
-type ExtendedButtonProps = ButtonProps;
+type ExtendedButtonProps = ButtonProps & {
+  ref?: Ref<HTMLButtonElement>;
+};
 
-export const Button: ForwardRefComponent<ExtendedButtonProps> = forwardRef(
-  function Button({ className, ...rest }, ref) {
-    const styles = useStyles();
-    return (
-      <ButtonInternal
-        {...rest}
-        className={mergeClasses(
-          styles.root,
-          styles[rest.size || 'medium'],
-          className,
-        )}
-        data-icon-only={!rest.children && !!rest.icon ? 'true' : undefined}
-        ref={ref}
-      />
-    );
-  },
-);
+export const Button: FC<ExtendedButtonProps> = function Button({
+  className,
+  ref,
+  ...rest
+}) {
+  const styles = useStyles();
+  return (
+    <ButtonInternal
+      {...rest}
+      className={mergeClasses(
+        styles.root,
+        styles[rest.size || 'medium'],
+        className,
+      )}
+      data-icon-only={!rest.children && !!rest.icon ? 'true' : undefined}
+      ref={ref}
+    />
+  );
+};

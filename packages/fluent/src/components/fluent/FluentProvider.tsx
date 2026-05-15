@@ -1,9 +1,8 @@
 import {
   FluentProvider as FluentProviderInternal,
   type FluentProviderProps,
-  type ForwardRefComponent,
 } from '@fluentui/react-components';
-import { createContext, forwardRef, useContext, useMemo } from 'react';
+import { createContext, type FC, type Ref, useContext, useMemo } from 'react';
 
 export interface ExtendedThemeProps {
   corners:
@@ -17,22 +16,22 @@ export interface ExtendedThemeProps {
 }
 
 export type ExtendedFluentProviderProps = FluentProviderProps &
-  Partial<ExtendedThemeProps>;
+  Partial<ExtendedThemeProps> & {
+    ref?: Ref<HTMLDivElement>;
+  };
 
 const defaultCorners = 'rounded';
 const defaultDensity = 'compact';
 
-export const FluentProvider: ForwardRefComponent<ExtendedFluentProviderProps> =
-  forwardRef(function FluentProvider(
-    {
-      corners = defaultCorners,
-      density = defaultDensity,
-      children,
-      theme,
-      ...rest
-    },
+export const FluentProvider: FC<ExtendedFluentProviderProps> =
+  function FluentProvider({
+    corners = defaultCorners,
+    density = defaultDensity,
+    children,
+    theme,
     ref,
-  ) {
+    ...rest
+  }) {
     corners ??= defaultCorners;
     density ??= defaultDensity;
     const contextValue = useMemo(
@@ -122,6 +121,8 @@ export const FluentProvider: ForwardRefComponent<ExtendedFluentProviderProps> =
         calendarPickerItemButtonSize = '54px';
         calendarGoTodayButtonHeight = '36px';
       }
+
+      const fontFamilyMonospace = `ui-monospace, SFMono-Regular, SF Mono, Menlo, "Liberation Mono", Consolas, 'Courier New', Courier, monospace`;
 
       let fontSizeBase100 = '10px';
       let fontSizeBase200 = '12px';
@@ -214,6 +215,8 @@ export const FluentProvider: ForwardRefComponent<ExtendedFluentProviderProps> =
         lineHeightHero800,
         lineHeightHero900,
         lineHeightHero1000,
+
+        fontFamilyMonospace,
       };
     }, [corners, density, theme]);
 
@@ -224,7 +227,7 @@ export const FluentProvider: ForwardRefComponent<ExtendedFluentProviderProps> =
         </ExtendedThemeContext.Provider>
       </FluentProviderInternal>
     );
-  });
+  };
 
 export const ExtendedThemeContext = createContext<
   ExtendedThemeProps | undefined

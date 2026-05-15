@@ -53,6 +53,11 @@ export type StringTextRichTextAttributeOptions = {
   format: 'richtext';
 };
 
+export type StringTextMarkdownAttributeOptions = {
+  // markdown editor
+  format: 'markdown';
+};
+
 export type StringAttributeOptions = {
   minLength?: number;
   maxLength?: number;
@@ -64,6 +69,7 @@ export type StringAttributeOptions = {
   | StringTextPhoneAttributeOptions
   | StringTextUrlAttributeOptions
   | StringTextRichTextAttributeOptions
+  | StringTextMarkdownAttributeOptions
 );
 
 /**

@@ -214,7 +214,7 @@ export const TableHeaderFilterCell: FC<
 
   const headerCell = (
     <TableHeaderCell
-      as="th"
+      as="div"
       className={mergeClasses(styles.root, align === 'right' && styles.right)}
       style={{
         textAlign: align,

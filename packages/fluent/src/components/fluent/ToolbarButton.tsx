@@ -1,13 +1,12 @@
 import {
   type ButtonProps,
-  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   tokens,
   ToolbarButton as ToolbarButtonInternal,
   type ToolbarButtonProps,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -25,10 +24,11 @@ const useStyles = makeStyles({
 
 type ExtendedToolbarButtonProps = ToolbarButtonProps & {
   iconPosition?: ButtonProps['iconPosition'];
+  ref?: Ref<HTMLButtonElement | HTMLAnchorElement>;
 };
 
-export const ToolbarButton: ForwardRefComponent<ExtendedToolbarButtonProps> =
-  forwardRef(function ToolbarButton({ className, ...rest }, ref) {
+export const ToolbarButton: FC<ExtendedToolbarButtonProps> =
+  function ToolbarButton({ className, ref, ...rest }) {
     const styles = useStyles();
     return (
       <ToolbarButtonInternal
@@ -38,4 +38,4 @@ export const ToolbarButton: ForwardRefComponent<ExtendedToolbarButtonProps> =
         ref={ref}
       />
     );
-  });
+  };

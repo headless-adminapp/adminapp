@@ -1,6 +1,7 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint, { parser } from 'typescript-eslint';
 import pluginReact from 'eslint-plugin-react';
+import reactX from 'eslint-plugin-react-x';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
 import unusedImports from 'eslint-plugin-unused-imports';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
@@ -31,6 +32,7 @@ const eslintConfig = defineConfig(
       'simple-import-sort': fixupPluginRules(simpleImportSortPlugin),
       deprecation: fixupPluginRules(deprecation),
       '@typescript-eslint': tseslint.plugin,
+      'react-x': fixupPluginRules(reactX),
       '@stylistic/ts': stylistic,
     },
     settings: {
@@ -69,6 +71,7 @@ const eslintConfig = defineConfig(
           additionalHooks: '(useUpdateEffect)',
         },
       ],
+      'react-x/no-forward-ref': 'error',
     },
   },
 );

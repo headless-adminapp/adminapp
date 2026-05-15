@@ -1,12 +1,11 @@
 import {
-  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   Textarea as TextareaInternal,
   type TextareaProps,
   tokens,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -30,21 +29,25 @@ const useStyles = makeStyles({
   },
 });
 
-type ExtendedTextareaProps = TextareaProps;
+type ExtendedTextareaProps = TextareaProps & {
+  ref?: Ref<HTMLTextAreaElement>;
+};
 
-export const Textarea: ForwardRefComponent<ExtendedTextareaProps> = forwardRef(
-  function Textarea({ className, ...rest }, ref) {
-    const styles = useStyles();
-    return (
-      <TextareaInternal
-        {...rest}
-        className={mergeClasses(
-          styles.root,
-          rest.readOnly && styles.readonly,
-          className,
-        )}
-        ref={ref}
-      />
-    );
-  },
-);
+export const Textarea: FC<ExtendedTextareaProps> = function Textarea({
+  className,
+  ref,
+  ...rest
+}) {
+  const styles = useStyles();
+  return (
+    <TextareaInternal
+      {...rest}
+      className={mergeClasses(
+        styles.root,
+        rest.readOnly && styles.readonly,
+        className,
+      )}
+      ref={ref}
+    />
+  );
+};

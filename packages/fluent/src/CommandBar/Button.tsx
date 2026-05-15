@@ -1,11 +1,6 @@
-import {
-  type ForwardRefComponent,
-  makeStyles,
-  mergeClasses,
-  tokens,
-} from '@fluentui/react-components';
+import { makeStyles, mergeClasses, tokens } from '@fluentui/react-components';
 import type { Icon } from '@headless-adminapp/icons';
-import { forwardRef, memo } from 'react';
+import { type FC, memo, type Ref } from 'react';
 
 import { ToolbarButton } from '../components/fluent';
 
@@ -66,21 +61,20 @@ export interface CommandButtonProps {
   onClick?: () => void;
   disabled?: boolean;
   appearance?: 'subtle' | 'colored';
+  ref?: Ref<HTMLButtonElement | HTMLAnchorElement>;
 }
 
-export const CommandButton = memo(
-  forwardRef(function CommandButton(
-    {
-      Icon,
-      text,
-      danger,
-      onClick,
-      disabled,
-      iconPosition = 'before',
-      appearance,
-    },
+export const CommandButton: FC<CommandButtonProps> = memo(
+  function CommandButton({
+    Icon,
+    text,
+    danger,
+    onClick,
+    disabled,
+    iconPosition = 'before',
+    appearance,
     ref,
-  ) {
+  }) {
     const styles = useStyles();
 
     return (
@@ -101,7 +95,7 @@ export const CommandButton = memo(
         {text}
       </ToolbarButton>
     );
-  }),
-) as ForwardRefComponent<CommandButtonProps>;
+  },
+);
 
 CommandButton.displayName = 'CommandButton';

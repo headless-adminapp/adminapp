@@ -1,11 +1,10 @@
 import {
   DialogSurface as DialogSurfaceInternal,
   type DialogSurfaceProps,
-  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -15,10 +14,12 @@ const useStyles = makeStyles({
   },
 });
 
-type ExtendedDialogSurfaceProps = DialogSurfaceProps;
+type ExtendedDialogSurfaceProps = DialogSurfaceProps & {
+  ref?: Ref<HTMLDivElement>;
+};
 
-export const DialogSurface: ForwardRefComponent<ExtendedDialogSurfaceProps> =
-  forwardRef(function DialogSurface({ className, ...rest }, ref) {
+export const DialogSurface: FC<ExtendedDialogSurfaceProps> =
+  function DialogSurface({ className, ref, ...rest }) {
     const styles = useStyles();
     return (
       <DialogSurfaceInternal
@@ -27,4 +28,4 @@ export const DialogSurface: ForwardRefComponent<ExtendedDialogSurfaceProps> =
         ref={ref}
       />
     );
-  });
+  };

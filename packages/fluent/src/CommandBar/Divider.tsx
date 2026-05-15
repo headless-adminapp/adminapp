@@ -1,19 +1,19 @@
-import {
-  type ForwardRefComponent,
-  tokens,
-  ToolbarDivider,
-} from '@fluentui/react-components';
-import { forwardRef, memo, type RefObject } from 'react';
+import { tokens, ToolbarDivider } from '@fluentui/react-components';
+import { type FC, memo, type Ref } from 'react';
 
-export const CommandDivider = memo(
-  forwardRef(function CommandDivider(_, ref) {
+interface CommandDividerProps {
+  ref?: Ref<HTMLDivElement>;
+}
+
+export const CommandDivider: FC<CommandDividerProps> = memo(
+  function CommandDivider({ ref }) {
     return (
       <ToolbarDivider
-        ref={ref as RefObject<HTMLDivElement | null>}
+        ref={ref}
         style={{ paddingInline: tokens.spacingHorizontalXS }}
       />
     );
-  }),
-) as ForwardRefComponent<{}>;
+  },
+);
 
 CommandDivider.displayName = 'CommandDivider';

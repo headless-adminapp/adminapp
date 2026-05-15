@@ -1,12 +1,11 @@
 import {
-  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   Option as OptionInternal,
   type OptionProps,
   tokens,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -17,17 +16,21 @@ const useStyles = makeStyles({
   },
 });
 
-type ExtendedOptionProps = OptionProps;
+type ExtendedOptionProps = OptionProps & {
+  ref?: Ref<HTMLDivElement>;
+};
 
-export const Option: ForwardRefComponent<ExtendedOptionProps> = forwardRef(
-  function Option({ className, ...rest }, ref) {
-    const styles = useStyles();
-    return (
-      <OptionInternal
-        {...rest}
-        className={mergeClasses(styles.root, className)}
-        ref={ref}
-      />
-    );
-  },
-);
+export const Option: FC<ExtendedOptionProps> = function Option({
+  className,
+  ref,
+  ...rest
+}) {
+  const styles = useStyles();
+  return (
+    <OptionInternal
+      {...rest}
+      className={mergeClasses(styles.root, className)}
+      ref={ref}
+    />
+  );
+};

@@ -1,10 +1,9 @@
 import {
   Checkbox as CheckboxInternal,
   type CheckboxProps,
-  type ForwardRefComponent,
   makeStyles,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -14,19 +13,22 @@ const useStyles = makeStyles({
   },
 });
 
-type ExtendedCheckboxProps = CheckboxProps;
+type ExtendedCheckboxProps = CheckboxProps & {
+  ref?: Ref<HTMLInputElement>;
+};
 
-export const Checkbox: ForwardRefComponent<ExtendedCheckboxProps> = forwardRef(
-  function Checkbox({ ...rest }, ref) {
-    const styles = useStyles();
-    return (
-      <CheckboxInternal
-        {...rest}
-        ref={ref}
-        indicator={{
-          className: styles.indicator,
-        }}
-      />
-    );
-  },
-);
+export const Checkbox: FC<ExtendedCheckboxProps> = function Checkbox({
+  ref,
+  ...rest
+}) {
+  const styles = useStyles();
+  return (
+    <CheckboxInternal
+      {...rest}
+      ref={ref}
+      indicator={{
+        className: styles.indicator,
+      }}
+    />
+  );
+};

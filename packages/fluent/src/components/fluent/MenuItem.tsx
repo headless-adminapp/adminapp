@@ -1,11 +1,10 @@
 import {
-  type ForwardRefComponent,
   makeStyles,
   MenuItem as MenuItemInternal,
   type MenuItemProps,
   mergeClasses,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -16,17 +15,21 @@ const useStyles = makeStyles({
   },
 });
 
-type ExtendedMenuItemProps = MenuItemProps;
+type ExtendedMenuItemProps = MenuItemProps & {
+  ref?: Ref<HTMLDivElement>;
+};
 
-export const MenuItem: ForwardRefComponent<ExtendedMenuItemProps> = forwardRef(
-  function MenuItem({ className, ...rest }, ref) {
-    const styles = useStyles();
-    return (
-      <MenuItemInternal
-        {...rest}
-        className={mergeClasses(styles.root, className)}
-        ref={ref}
-      />
-    );
-  },
-);
+export const MenuItem: FC<ExtendedMenuItemProps> = function MenuItem({
+  className,
+  ref,
+  ...rest
+}) {
+  const styles = useStyles();
+  return (
+    <MenuItemInternal
+      {...rest}
+      className={mergeClasses(styles.root, className)}
+      ref={ref}
+    />
+  );
+};

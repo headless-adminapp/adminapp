@@ -1,12 +1,11 @@
 import {
-  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   SearchBox as SearchBoxInternal,
   type SearchBoxProps,
   tokens,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -44,21 +43,26 @@ const useStyles = makeStyles({
   },
 });
 
-type ExtendedSearchBoxProps = SearchBoxProps;
+type ExtendedSearchBoxProps = SearchBoxProps & {
+  ref?: Ref<HTMLInputElement>;
+};
 
-export const SearchBox: ForwardRefComponent<ExtendedSearchBoxProps> =
-  forwardRef(function SearchBox({ className, ...rest }, ref) {
-    const styles = useStyles();
-    return (
-      <SearchBoxInternal
-        {...rest}
-        className={mergeClasses(
-          styles.root,
-          rest.readOnly && styles.readonly,
-          rest.appearance === 'outline' && styles.outlined,
-          className,
-        )}
-        ref={ref}
-      />
-    );
-  });
+export const SearchBox: FC<ExtendedSearchBoxProps> = function SearchBox({
+  className,
+  ref,
+  ...rest
+}) {
+  const styles = useStyles();
+  return (
+    <SearchBoxInternal
+      {...rest}
+      className={mergeClasses(
+        styles.root,
+        rest.readOnly && styles.readonly,
+        rest.appearance === 'outline' && styles.outlined,
+        className,
+      )}
+      ref={ref}
+    />
+  );
+};

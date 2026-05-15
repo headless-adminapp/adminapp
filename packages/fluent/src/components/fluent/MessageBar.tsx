@@ -1,12 +1,11 @@
 import {
-  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   MessageBar as MessageBarInternal,
   type MessageBarProps,
   tokens,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -17,16 +16,21 @@ const useStyles = makeStyles({
   },
 });
 
-type ExtendedMessageBarProps = MessageBarProps;
+type ExtendedMessageBarProps = MessageBarProps & {
+  ref?: Ref<HTMLDivElement>;
+};
 
-export const MessageBar: ForwardRefComponent<ExtendedMessageBarProps> =
-  forwardRef(function MessageBar({ className, ...rest }, ref) {
-    const styles = useStyles();
-    return (
-      <MessageBarInternal
-        {...rest}
-        className={mergeClasses(styles.root, className)}
-        ref={ref}
-      />
-    );
-  });
+export const MessageBar: FC<ExtendedMessageBarProps> = function MessageBar({
+  className,
+  ref,
+  ...rest
+}) {
+  const styles = useStyles();
+  return (
+    <MessageBarInternal
+      {...rest}
+      className={mergeClasses(styles.root, className)}
+      ref={ref}
+    />
+  );
+};

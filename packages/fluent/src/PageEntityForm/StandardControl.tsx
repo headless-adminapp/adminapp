@@ -20,6 +20,7 @@ import { EmailControl } from '../form/controls/EmailControl';
 import { IdControl } from '../form/controls/IdControl';
 import { IntegerControl } from '../form/controls/IntegerControl';
 import { LookupControl } from '../form/controls/LookupControl';
+import { MarkdownControl } from '../form/controls/MarkdownControl';
 import MultiSelectControl from '../form/controls/MultiSelectControl';
 import { MultiSelectLookupControl } from '../form/controls/MultiSelectLookupControl';
 import { RegardingControl } from '../form/controls/RegardingControl';
@@ -151,9 +152,16 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
         }
         case 'richtext': {
           const Control =
-            componentStore.getComponent<typeof TextAreaControl>(
+            componentStore.getComponent<typeof RichTextControl>(
               'Form.RichTextControl',
             ) ?? RichTextControl;
+          return <Control {...controlProps} />;
+        }
+        case 'markdown': {
+          const Control =
+            componentStore.getComponent<typeof MarkdownControl>(
+              'Form.MarkdownControl',
+            ) ?? MarkdownControl;
           return <Control {...controlProps} />;
         }
         default:

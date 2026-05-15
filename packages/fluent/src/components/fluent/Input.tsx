@@ -1,12 +1,11 @@
 import {
-  type ForwardRefComponent,
   Input as InputInternal,
   type InputProps,
   makeStyles,
   mergeClasses,
   tokens,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -45,23 +44,26 @@ const useStyles = makeStyles({
   },
 });
 
-type ExtendedInputProps = InputProps;
+type ExtendedInputProps = InputProps & {
+  ref?: Ref<HTMLInputElement>;
+};
 
-export const Input: ForwardRefComponent<ExtendedInputProps> = forwardRef(
-  function Input({ className, ...rest }, ref) {
-    const styles = useStyles();
-    return (
-      <InputInternal
-        {...rest}
-        className={mergeClasses(
-          styles.root,
-          rest.readOnly && styles.readonly,
-          (rest.appearance === 'outline' || !rest.appearance) &&
-            styles.outlined,
-          className,
-        )}
-        ref={ref}
-      />
-    );
-  },
-);
+export const Input: FC<ExtendedInputProps> = function Input({
+  className,
+  ref,
+  ...rest
+}) {
+  const styles = useStyles();
+  return (
+    <InputInternal
+      {...rest}
+      className={mergeClasses(
+        styles.root,
+        rest.readOnly && styles.readonly,
+        (rest.appearance === 'outline' || !rest.appearance) && styles.outlined,
+        className,
+      )}
+      ref={ref}
+    />
+  );
+};

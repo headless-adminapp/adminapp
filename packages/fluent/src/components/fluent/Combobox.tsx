@@ -1,12 +1,11 @@
 import {
   Combobox as ComboboxInternal,
   type ComboboxProps,
-  type ForwardRefComponent,
   makeStyles,
   mergeClasses,
   tokens,
 } from '@fluentui/react-components';
-import { forwardRef } from 'react';
+import type { FC, Ref } from 'react';
 
 import { extendedTokens } from './tokens';
 
@@ -28,24 +27,28 @@ const useStyles = makeStyles({
   },
 });
 
-type ExtendedComboboxProps = ComboboxProps;
+type ExtendedComboboxProps = ComboboxProps & {
+  ref?: Ref<HTMLInputElement>;
+};
 
-export const Combobox: ForwardRefComponent<ExtendedComboboxProps> = forwardRef(
-  function Combobox({ className, ...rest }, ref) {
-    const styles = useStyles();
-    return (
-      <ComboboxInternal
-        {...rest}
-        className={mergeClasses(
-          styles.root,
-          rest.readOnly && styles.readonly,
-          className,
-        )}
-        ref={ref}
-        listbox={{
-          className: styles.listbox,
-        }}
-      />
-    );
-  },
-);
+export const Combobox: FC<ExtendedComboboxProps> = function Combobox({
+  className,
+  ref,
+  ...rest
+}) {
+  const styles = useStyles();
+  return (
+    <ComboboxInternal
+      {...rest}
+      className={mergeClasses(
+        styles.root,
+        rest.readOnly && styles.readonly,
+        className,
+      )}
+      ref={ref}
+      listbox={{
+        className: styles.listbox,
+      }}
+    />
+  );
+};
