@@ -1,7 +1,7 @@
 import { tokens, ToolbarDivider } from '@fluentui/react-components';
 import { type FC, memo, type Ref } from 'react';
 
-interface CommandDividerProps {
+export interface CommandDividerProps {
   ref?: Ref<HTMLDivElement>;
 }
 
