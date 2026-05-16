@@ -168,7 +168,7 @@ export namespace ViewCommandBuilder {
         }
 
         context.navigation.openForm({
-          logicalName: data.type,
+          logicalName: data.type.value,
         });
       },
       hidden: (context) => {

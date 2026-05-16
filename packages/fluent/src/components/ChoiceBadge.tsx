@@ -41,8 +41,14 @@ export function ChoiceBadge(props: Readonly<ChoiceBadgeProps>) {
       return null;
     }
 
+    let _value = props.value as string | number;
+
+    if (typeof props.value === 'object' && 'value' in props.value) {
+      _value = props.value.value as string | number;
+    }
+
     const choice = props.attribute.options.find(
-      (option) => option.value === props.value,
+      (option) => option.value === _value,
     );
 
     if (!choice) {

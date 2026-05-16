@@ -352,6 +352,61 @@ export class SequelizeServerSdk<
     return Array.from(new Set(attributes));
   }
 
+  private transformToDbRecord(data: unknown, schema: Schema<SA>) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return Object.entries(data as Record<string, any>).reduce(
+      (acc, [key, value]) => {
+        const attribute = schema.attributes[key];
+
+        if (!attribute) {
+          return acc;
+        }
+
+        if (attribute.systemDefined) {
+          return acc;
+        }
+
+        if (value === undefined) {
+          return acc;
+        }
+
+        if (value === null) {
+          acc[key] = null;
+          return acc;
+        }
+
+        if (schema.attributes[key]?.type === 'lookup') {
+          if (typeof value === 'object') {
+            value = value.id;
+          }
+
+          acc[key] = value;
+        } else if (attribute.type === 'regarding') {
+          acc[key] = value.id;
+          acc[attribute.entityTypeAttribute] = value.logicalName;
+        } else if (schema.attributes[key]?.type === 'attachment') {
+          if (typeof value === 'object') {
+            acc[key] = value.url;
+          } else if (typeof value === 'string') {
+            acc[key] = value;
+          }
+        } else if (schema.attributes[key]?.type === 'choice') {
+          if (typeof value === 'object' && 'value' in value) {
+            acc[key] = value.value;
+          } else {
+            acc[key] = value;
+          }
+        } else {
+          acc[key] = value;
+        }
+
+        return acc;
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      {} as Record<string, any>,
+    );
+  }
+
   protected async retriveRecord<T extends Record<string, unknown>>(
     params: RetriveRecordParams,
   ): Promise<RetriveRecordResult<T>> {
@@ -607,55 +662,7 @@ export class SequelizeServerSdk<
 
     let data = params.data;
 
-    data = Object.entries(data).reduce(
-      (acc, [key, value]) => {
-        const attribute = schema.attributes[key];
-
-        if (!attribute) {
-          return acc;
-        }
-
-        if (attribute.systemDefined) {
-          return acc;
-        }
-
-        if (value === undefined) {
-          return acc;
-        }
-
-        if (value === null) {
-          acc[key] = null;
-          return acc;
-        }
-
-        if (schema.attributes[key]?.type === 'lookup') {
-          if (typeof value === 'object') {
-            value = value.id;
-          }
-
-          acc[key] = value;
-        } else {
-          acc[key] = value;
-        }
-
-        if (attribute.type === 'regarding') {
-          acc[key] = value.id;
-          acc[attribute.entityTypeAttribute] = value.logicalName;
-        }
-
-        if (schema.attributes[key]?.type === 'attachment') {
-          if (typeof value === 'object') {
-            acc[key] = value.url;
-          } else if (typeof value === 'string') {
-            acc[key] = value;
-          }
-        }
-
-        return acc;
-      },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      {} as Record<string, any>,
-    );
+    data = this.transformToDbRecord(data, schema);
 
     const schemaDefaultValues = this.getSchemaDefaultValues(schema);
 
@@ -745,53 +752,10 @@ export class SequelizeServerSdk<
       throw new ForbiddenError('Updating is disabled for this entity');
     }
 
-    const data = Object.entries(params.data).reduce(
-      (acc, [key, value]) => {
-        if (key === schema.idAttribute) {
-          return acc;
-        }
+    const data = this.transformToDbRecord(params.data, schema);
 
-        const attribute = schema.attributes[key];
-
-        if (!attribute) {
-          return acc;
-        }
-
-        if (value === undefined) {
-          return acc;
-        }
-
-        if (value === null) {
-          acc[key] = null;
-          return acc;
-        }
-
-        if (attribute.type === 'lookup') {
-          value = value.id;
-
-          acc[key] = value;
-        } else {
-          acc[key] = value;
-        }
-
-        if (attribute.type === 'regarding') {
-          acc[key] = value.id;
-          acc[attribute.entityTypeAttribute] = value.logicalName;
-        }
-
-        if (schema.attributes[key]?.type === 'attachment') {
-          if (typeof value === 'object') {
-            acc[key] = value.url;
-          } else if (typeof value === 'string') {
-            acc[key] = value;
-          }
-        }
-
-        return acc;
-      },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      {} as Record<string, any>,
-    );
+    // Remove id from data to prevent updating primary key
+    delete data[schema.idAttribute as string];
 
     const existingRecords = await model.findAll({
       where: this.prepareWhereClause({

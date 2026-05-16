@@ -13,3 +13,8 @@ export interface LocalizedDataLookup {
   name: string;
   localizedNames?: Localized<string>;
 }
+
+export interface OptionLookup<T extends string | number> {
+  value: T;
+  label: string;
+}

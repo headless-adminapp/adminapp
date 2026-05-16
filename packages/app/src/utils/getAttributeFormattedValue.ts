@@ -141,12 +141,34 @@ export function getAttributeBooleanFormattedValue(
 export function getAttributeChoiceFormattedValue(
   attribute: ChoiceAttribute<string | number>,
   value: unknown,
-) {
-  return (
+): string {
+  if (!value) {
+    return '';
+  }
+
+  if (typeof value === 'string' || typeof value === 'number') {
     attribute.options.find((option) => option.value === value) ?? {
       label: '',
-    }
-  ).label;
+    };
+  }
+
+  if (typeof value !== 'object') {
+    return '';
+  }
+
+  if ('label' in value) {
+    return value.label as string;
+  }
+
+  if ('value' in value) {
+    return (
+      attribute.options.find((option) => option.value === value.value) ?? {
+        label: '',
+      }
+    ).label;
+  }
+
+  return '';
 }
 
 export function getAttributeChoicesFormattedValue(

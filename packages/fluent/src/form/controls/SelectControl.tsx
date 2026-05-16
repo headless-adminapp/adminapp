@@ -38,7 +38,9 @@ export type SelectControlProps<T> = ControlProps<T> & {
   size?: DropdownProps['size'];
 };
 
-export default function SelectControl<T extends string | number>({
+export default function SelectControl<
+  T extends string | number | Lookup<string | number>,
+>({
   value,
   onChange,
   options,
@@ -69,10 +71,19 @@ export default function SelectControl<T extends string | number>({
     }
   };
 
-  const selectedOption = useMemo(
-    () => options.find((x) => x.value === value),
-    [options, value],
-  );
+  const selectedOption = useMemo(() => {
+    if (!value) {
+      return null;
+    }
+
+    let _value = value as string | number;
+
+    if (typeof value === 'object' && 'value' in value) {
+      _value = value.value;
+    }
+
+    return options.find((x) => x.value === _value);
+  }, [options, value]);
 
   if (skeleton) {
     return <SkeletonControl />;

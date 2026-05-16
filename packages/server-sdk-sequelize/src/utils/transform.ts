@@ -99,6 +99,18 @@ function transformColumns({
       } else {
         transformedRecord[column] = null;
       }
+    } else if (attribute.type === 'choice') {
+      if (recordJson[column]) {
+        const value = recordJson[column];
+        transformedRecord[column] = {
+          value: value,
+          label:
+            attribute.options?.find((option) => option.value === value)
+              ?.label || value,
+        };
+      } else {
+        transformedRecord[column] = null;
+      }
     } else {
       transformedRecord[column] = recordJson[column];
     }

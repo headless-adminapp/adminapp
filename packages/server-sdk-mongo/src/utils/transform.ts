@@ -79,6 +79,18 @@ function transformColumns({
       } else {
         transformedRecord[column] = null;
       }
+    } else if (attribute.type === 'choice') {
+      if (record[column]) {
+        const value = record[column];
+        transformedRecord[column] = {
+          value: value,
+          label:
+            attribute.options?.find((option) => option.value === value)
+              ?.label || value,
+        };
+      } else {
+        transformedRecord[column] = null;
+      }
     } else {
       transformedRecord[column] = record[column];
     }

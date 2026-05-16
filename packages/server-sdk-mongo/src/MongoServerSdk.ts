@@ -846,6 +846,12 @@ export class MongoServerSdk<
           } else if (typeof value === 'string') {
             acc[key] = value;
           }
+        } else if (schema.attributes[key]?.type === 'choice') {
+          if (typeof value === 'object' && 'value' in value) {
+            acc[key] = value.value;
+          } else {
+            acc[key] = value;
+          }
         } else {
           acc[key] = value;
         }
