@@ -1,5 +1,6 @@
 import { Caption1, Divider, tokens } from '@fluentui/react-components';
 import { useLocale } from '@headless-adminapp/app/locale';
+import type { TooltipPayload } from 'recharts';
 
 import { formatNumber } from './formatters';
 
@@ -9,8 +10,7 @@ export const FunnelCustomTooltipContent = ({
   valueFormatter,
 }: Readonly<{
   active?: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload?: any[];
+  payload?: TooltipPayload;
   valueFormatter: (value: unknown) => string;
 }>) => {
   const locale = useLocale();
@@ -34,7 +34,7 @@ export const FunnelCustomTooltipContent = ({
       }}
     >
       <Caption1 style={{ color: tokens.colorNeutralForeground4 }}>
-        {firstPayload.label}
+        {firstPayload.payload.label}
       </Caption1>
       <Divider style={{ opacity: 0.2 }} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>

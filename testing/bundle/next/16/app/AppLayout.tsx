@@ -2,7 +2,7 @@
 
 import '@headless-adminapp/app/index.css';
 import '@headless-adminapp/fluent/styles.css';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 import { LayoutProvider } from '@headless-adminapp/fluent/App/LayoutProvider';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { App } from '@headless-adminapp/fluent/App';

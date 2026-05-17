@@ -7,6 +7,7 @@ import {
   Scatter,
   ScatterChart as ScatterChartInternal,
   Tooltip,
+  type TooltipPayload,
   ZAxis,
 } from 'recharts';
 
@@ -70,8 +71,7 @@ export function ScatterChart({
 
 const ScatterTooltipContent = (props: {
   active: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload: any[];
+  payload: TooltipPayload;
   chartInfo: ScatterChartInfo;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataset: any[];

@@ -10,12 +10,8 @@ import {
   RadarChart as RadarChartInternal,
   ResponsiveContainer,
   Tooltip,
+  type TooltipPayload,
 } from 'recharts';
-import type {
-  NameType,
-  Payload,
-  ValueType,
-} from 'recharts/types/component/DefaultTooltipContent';
 
 import {
   createAxisFormatter,
@@ -82,7 +78,7 @@ function renderTooltipContent({
   valueFormatter,
   radar,
 }: {
-  payload: Payload<ValueType, NameType>[] | undefined;
+  payload: TooltipPayload | undefined;
   nameFormatter: Formatter;
   valueFormatter: Formatter;
   radar: RadarChartInfo['radar'][0];

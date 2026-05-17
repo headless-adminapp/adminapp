@@ -30,11 +30,11 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "@fluentui/react-calendar-compat": "^0.3.7",
-    "@fluentui/react-components": "^9.68.3",
-    "@fluentui/react-datepicker-compat": "^0.6.12",
-    "@fluentui/react-timepicker-compat": "^0.4.13",
-    "@tanstack/react-query": "^5.84.2"
+    "@fluentui/react-calendar-compat": "^0.4.1",
+    "@fluentui/react-components": "^9.73.8",
+    "@fluentui/react-datepicker-compat": "^0.6.31",
+    "@fluentui/react-timepicker-compat": "^0.4.34",
+    "@tanstack/react-query": "^5.100.10"
   },
   "dependencies": {
     "@fullcalendar/core": "6.1.15",
@@ -49,7 +49,7 @@
     "@headless-adminapp/icons-fluent": "workspace:*",
     "@hookform/resolvers": "^3.9.0",
     "@tanstack/react-table": "^8.20.1",
-    "@tanstack/react-virtual": "^3.8.6",
+    "@tanstack/react-virtual": "^3.13.24",
     "dayjs": "^1.11.13",
     "dnd-core": "^16.0.1",
     "immutability-helper": "^3.1.1",
@@ -58,8 +58,8 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-hook-form": "7.52.2",
-    "react-quill": "^2.0.0",
-    "recharts": "^2.13.3",
+    "react-quill-new": "^3.8.3",
+    "recharts": "^3.8.1",
     "sass": "1.81.0",
     "uuid": "11.0.3",
     "yup": "^1.4.0"

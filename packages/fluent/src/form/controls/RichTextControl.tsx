@@ -3,7 +3,7 @@ import { type FC, lazy, Suspense } from 'react';
 import { SkeletonControl } from './SkeletonControl';
 import type { ControlProps } from './types';
 
-const ReactQuill = lazy(() => import('react-quill'));
+const ReactQuill = lazy(() => import('react-quill-new'));
 
 export interface RichTextControlProps extends ControlProps<string> {}
 

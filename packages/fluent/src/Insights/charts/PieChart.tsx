@@ -2,19 +2,16 @@
 import { Caption1, tokens } from '@fluentui/react-components';
 import { useLocale } from '@headless-adminapp/app/locale';
 import type { PieChartInfo } from '@headless-adminapp/core/experience/insights';
+import { useMemo } from 'react';
 import {
-  Cell,
   Legend,
   Pie,
   PieChart as PieChartInternal,
   ResponsiveContainer,
+  Sector,
   Tooltip,
+  type TooltipPayload,
 } from 'recharts';
-import type {
-  NameType,
-  Payload,
-  ValueType,
-} from 'recharts/types/component/DefaultTooltipContent';
 
 import { defaultColors } from './constants';
 import { createLongAxisFormatter, type Formatter } from './formatters';
@@ -63,11 +60,28 @@ export function PieChart({
   const nameFormatter = createLongAxisFormatter(locale, item.nameTick);
   const valueFormatter = createLongAxisFormatter(locale, item.dataTick);
 
+  const data = useMemo(
+    () =>
+      dataset[item.dataIndex ?? 0].map((entry: any, index: number) => {
+        const color =
+          item.colorKey && entry[item.colorKey]
+            ? entry[item.colorKey]
+            : (item.colors ?? defaultColors)[
+                index % (item.colors ?? defaultColors).length
+              ];
+        return {
+          ...entry,
+          fill: color,
+        };
+      }),
+    [dataset, item.dataIndex, item.colorKey, item.colors],
+  );
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <PieChartInternal>
         <Pie
-          data={dataset[item.dataIndex ?? 0]}
+          data={data}
           cx="50%"
           cy="50%"
           labelLine={false}
@@ -75,24 +89,9 @@ export function PieChart({
           outerRadius={80}
           dataKey={item.dataKey}
           nameKey={item.nameKey}
-          blendStroke
           legendType="circle"
-        >
-          {dataset[item.dataIndex ?? 0].map(
-            (entry: Record<string, string>, index: number) => (
-              <Cell
-                key={'cell-' + String(index)}
-                fill={
-                  item.colorKey && entry[item.colorKey]
-                    ? entry[item.colorKey]
-                    : (item.colors ?? defaultColors)[
-                        index % (item.colors ?? defaultColors).length
-                      ]
-                }
-              />
-            ),
-          )}
-        </Pie>
+          shape={(props) => <Sector {...props} />}
+        />
         {chartInfo.showLegend && (
           <Legend
             align="right"
@@ -131,7 +130,7 @@ function renderTooltipContent({
   nameFormatter,
   valueFormatter,
 }: {
-  payload: Payload<ValueType, NameType>[] | undefined;
+  payload: TooltipPayload | undefined;
   nameFormatter: Formatter;
   valueFormatter: Formatter;
 }) {

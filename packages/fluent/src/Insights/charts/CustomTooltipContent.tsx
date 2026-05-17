@@ -1,4 +1,5 @@
 import { Caption1, Divider, tokens } from '@fluentui/react-components';
+import type { TooltipPayload } from 'recharts';
 
 export const CustomTooltipContent = ({
   active,
@@ -10,9 +11,8 @@ export const CustomTooltipContent = ({
   yAxisIdResolver,
 }: Readonly<{
   active?: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload?: any[];
-  label: string;
+  payload?: TooltipPayload;
+  label?: string | number;
   xAxisFormatter: (value: unknown) => string;
   yAxisFormatter: (value: unknown) => string;
   rightYAxisFormatter?: (value: unknown) => string;
@@ -39,42 +39,32 @@ export const CustomTooltipContent = ({
       </Caption1>
       <Divider style={{ opacity: 0.2 }} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-        {payload.map(
-          (
-            item: {
-              color: string;
-              name: string;
-              value: unknown;
-              dataKey: string;
-            },
-            index: number,
-          ) => (
+        {payload.map((item, index: number) => (
+          <div
+            key={item.name + String(index)}
+            style={{ display: 'flex', alignItems: 'center' }}
+          >
             <div
-              key={item.name + String(index)}
-              style={{ display: 'flex', alignItems: 'center' }}
+              style={{
+                width: 8,
+                height: 8,
+                background: item.color,
+                borderRadius: 4,
+              }}
+            />
+            <Caption1
+              style={{ color: tokens.colorNeutralForeground4, marginLeft: 8 }}
             >
-              <div
-                style={{
-                  width: 8,
-                  height: 8,
-                  background: item.color,
-                  borderRadius: 4,
-                }}
-              />
-              <Caption1
-                style={{ color: tokens.colorNeutralForeground4, marginLeft: 8 }}
-              >
-                {item.name}
-              </Caption1>
-              <div style={{ flex: 1, minWidth: 50 }} />
-              <Caption1 style={{ color: tokens.colorNeutralForeground4 }}>
-                {yAxisIdResolver?.(item.dataKey) === 'right'
-                  ? (rightYAxisFormatter ?? yAxisFormatter)(item.value)
-                  : yAxisFormatter(item.value)}
-              </Caption1>
-            </div>
-          ),
-        )}
+              {item.name}
+            </Caption1>
+            <div style={{ flex: 1, minWidth: 50 }} />
+            <Caption1 style={{ color: tokens.colorNeutralForeground4 }}>
+              {yAxisIdResolver?.(item.dataKey as string) === 'right'
+                ? (rightYAxisFormatter ?? yAxisFormatter)(item.value)
+                : yAxisFormatter(item.value)}
+            </Caption1>
+          </div>
+        ))}
       </div>
     </div>
   );

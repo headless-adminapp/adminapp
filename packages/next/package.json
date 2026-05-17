@@ -32,6 +32,6 @@
     "@headless-adminapp/core": "workspace:*"
   },
   "peerDependencies": {
-    "next": "14.1.4"
+    "next": "^16.2.6"
   }
 }
