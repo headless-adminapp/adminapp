@@ -159,6 +159,8 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
     return <SkeletonControl />;
   }
 
+  const isReadOnly = readOnly || disabled;
+
   return (
     <TagPicker
       appearance="filled-darker"
@@ -178,22 +180,22 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
 
         handleAdd(_item);
       }}
-      open={open && !readOnly && !disabled}
+      open={open && !isReadOnly}
       onOpenChange={(e, data) => {
         setOpen(data.open);
       }}
-      disabled={readOnly || disabled}
     >
       <TagPickerControl
         expandIcon={
           <div style={{ marginRight: -4 }}>
-            {readOnly || disabled ? null : isLoading ? (
+            {isReadOnly ? null : isLoading ? (
               <Spinner size="extra-tiny" />
             ) : (
               <Icons.Search size={18} />
             )}
           </div>
         }
+        style={{ width: '100%', minWidth: '100%' }}
       >
         <TagPickerGroup>
           {value?.map((item, index) => (
@@ -207,14 +209,16 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
             />
           ))}
         </TagPickerGroup>
-        <TagPickerInput
-          name={name}
-          placeholder={placeholder}
-          onBlur={onBlur}
-          onFocus={onFocus}
-          id={id}
-          autoFocus={autoFocus}
-        />
+        {!isReadOnly && (
+          <TagPickerInput
+            name={name}
+            placeholder={placeholder}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            id={id}
+            autoFocus={autoFocus}
+          />
+        )}
       </TagPickerControl>
       <TagPickerList>
         {data?.records.map((item) => (
