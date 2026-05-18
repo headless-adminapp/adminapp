@@ -5,7 +5,12 @@ import {
   makeStyles,
   mergeClasses,
   Spinner,
-  TagGroup,
+  TagPicker,
+  TagPickerControl,
+  TagPickerGroup,
+  TagPickerInput,
+  TagPickerList,
+  TagPickerOption,
   tokens,
 } from '@fluentui/react-components';
 import { useDebouncedValue } from '@headless-adminapp/app/hooks';
@@ -23,18 +28,10 @@ import type {
 } from '@headless-adminapp/core/schema';
 import type { Data, IDataService } from '@headless-adminapp/core/transport';
 import { Icons } from '@headless-adminapp/icons';
-import {
-  type FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useAppStrings } from '../../App/AppStringContext';
-import { Combobox, Tag, ToolbarButton } from '../../components/fluent';
-import { Option } from '../../components/fluent/Option';
+import { Tag, ToolbarButton } from '../../components/fluent';
 import { RecordCard } from '../../PageEntityForm/RecordCard';
 import { SkeletonControl } from './SkeletonControl';
 import type { ControlProps } from './types';
@@ -73,19 +70,6 @@ export function MultiSelectLookupControl(props: MultiSelectLookupControlProps) {
 const useStyles = makeStyles({
   option: {
     padding: 0,
-
-    '& .fui-Option__checkIcon': {
-      display: 'none',
-    },
-
-    '&[data-activedescendant-focusvisible]': {
-      background: tokens.colorNeutralBackground1Hover,
-
-      '&:after': {
-        border: 'none !important',
-        // background: tokens.colorNeutralBackground1Hover,
-      },
-    },
   },
 });
 
@@ -134,52 +118,6 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
     enabled: lookupEnabled && !isViewLoading && !readOnly && !disabled,
   });
 
-  const tagGroupContainerRef = useRef<HTMLDivElement>(null);
-
-  const [inputLeft, setInputLeft] = useState(0);
-  const [containerHeight, setContainerHeight] = useState(32);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (!tagGroupContainerRef.current) {
-        return;
-      }
-
-      const lastElementChild =
-        tagGroupContainerRef.current?.lastElementChild?.querySelector(
-          '.fui-Tag:last-of-type',
-        );
-
-      if (!lastElementChild) {
-        setContainerHeight(32);
-        setInputLeft(0);
-        return;
-      }
-
-      const containerBoundingRect =
-        tagGroupContainerRef.current.getBoundingClientRect();
-      const lastElementBoundingRect = lastElementChild?.getBoundingClientRect();
-
-      const remainingWidth =
-        containerBoundingRect.right - (lastElementBoundingRect?.right ?? 0);
-
-      let newHeight = containerBoundingRect.height + 8;
-
-      if (remainingWidth > 100) {
-        setInputLeft(containerBoundingRect.width - remainingWidth);
-      } else {
-        setInputLeft(0);
-        newHeight = containerBoundingRect.height + 32 + 4;
-      }
-
-      setContainerHeight(newHeight);
-    }, 500);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
-
   const handleAdd = (
     selectedValue: Data<InferredSchemaType<SchemaAttributes>>,
   ) => {
@@ -222,14 +160,33 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
   }
 
   return (
-    <div
-      style={{ position: 'relative', width: '100%', height: containerHeight }}
+    <TagPicker
+      appearance="filled-darker"
+      selectedOptions={value?.map((item) => item.id) ?? []}
+      onOptionSelect={(e, item) => {
+        const _item = data?.records.find(
+          (x) => String(x[schema.idAttribute]) === String(item.value),
+        );
+
+        if (!_item) return;
+
+        recentItemStore.addItem(
+          createLookupRecentKey(schema.logicalName),
+          _item[schema.idAttribute] as Id,
+          _item[schema.idAttribute] as string,
+        );
+
+        handleAdd(_item);
+      }}
+      open={open && !readOnly && !disabled}
+      onOpenChange={(e, data) => {
+        setOpen(data.open);
+      }}
+      disabled={readOnly || disabled}
     >
-      <Combobox
-        name={name}
-        appearance="filled-darker"
+      <TagPickerControl
         expandIcon={
-          <div style={{ position: 'absolute', right: 4, bottom: 8 }}>
+          <div style={{ marginRight: -4 }}>
             {readOnly || disabled ? null : isLoading ? (
               <Spinner size="extra-tiny" />
             ) : (
@@ -237,56 +194,31 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
             )}
           </div>
         }
-        input={{
-          style: {
-            position: 'absolute',
-            bottom: 0,
-            right: 0,
-            left: inputLeft,
-            height: 30,
-          },
-        }}
-        placeholder={placeholder}
-        inputMode="search"
-        style={{
-          width: '100%',
-          height: '100%',
-          minWidth: 'unset',
-          paddingRight: tokens.spacingHorizontalXS,
-        }}
-        autoComplete="off"
-        readOnly={readOnly || disabled}
-        open={open && !readOnly && !disabled}
-        value={searchText}
-        onOpenChange={(e, data) => {
-          setOpen(data.open);
-        }}
-        onChange={(e) => {
-          setSearchText(e.target.value);
-        }}
-        onOptionSelect={(e, item) => {
-          const _item = data?.records.find(
-            (x) => String(x[schema.idAttribute]) === String(item.optionValue),
-          );
-
-          if (!_item) return;
-
-          recentItemStore.addItem(
-            createLookupRecentKey(schema.logicalName),
-            _item[schema.idAttribute] as Id,
-            _item[schema.idAttribute] as string,
-          );
-
-          handleAdd(_item);
-        }}
-        disableAutoFocus
-        onBlur={onBlur}
-        onFocus={onFocus}
-        id={id}
-        autoFocus={autoFocus}
       >
+        <TagPickerGroup>
+          {value?.map((item, index) => (
+            <TagItem
+              key={`${item.id}-${index}`}
+              disabled={disabled}
+              readOnly={readOnly}
+              value={item}
+              onRemove={handleRemove}
+              allowNavigation={allowNavigation}
+            />
+          ))}
+        </TagPickerGroup>
+        <TagPickerInput
+          name={name}
+          placeholder={placeholder}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          id={id}
+          autoFocus={autoFocus}
+        />
+      </TagPickerControl>
+      <TagPickerList>
         {data?.records.map((item) => (
-          <Option
+          <TagPickerOption
             key={item[schema.idAttribute] as string}
             value={item[schema.idAttribute] as string}
             className={mergeClasses(styles.option)}
@@ -301,7 +233,7 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
                 schema={schema}
               />
             )}
-          </Option>
+          </TagPickerOption>
         ))}
         {!isLoading && !data?.records.length && (
           <div
@@ -323,34 +255,8 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
             </div>
           </>
         )}
-      </Combobox>
-      <div
-        ref={tagGroupContainerRef}
-        style={{
-          position: 'absolute',
-          top: 4,
-          left: 0,
-          right: 0,
-          alignItems: 'center',
-          paddingInline: 4,
-          display: 'flex',
-          pointerEvents: 'none',
-        }}
-      >
-        <TagGroup as="div" style={{ flexWrap: 'wrap', rowGap: 8 }}>
-          {value?.map((item, index) => (
-            <TagItem
-              key={`${item.id}-${index}`}
-              disabled={disabled}
-              readOnly={readOnly}
-              value={item}
-              onRemove={handleRemove}
-              allowNavigation={allowNavigation}
-            />
-          ))}
-        </TagGroup>
-      </div>
-    </div>
+      </TagPickerList>
+    </TagPicker>
   );
 };
 

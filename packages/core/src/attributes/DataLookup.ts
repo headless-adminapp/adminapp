@@ -16,5 +16,5 @@ export interface LocalizedDataLookup {
 
 export interface OptionLookup<T extends string | number> {
   value: T;
-  label: string;
+  label?: string;
 }
