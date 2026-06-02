@@ -13,6 +13,7 @@ import type {
   EntityMainGridCommandItemExperience,
   SubGridCommandItemExperience,
   View,
+  ViewExperience,
 } from '@headless-adminapp/core/experience/view';
 import type {
   Schema,
@@ -170,7 +171,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
       name: view.name,
       logicalName: view.logicalName,
       localizedNames: view.localizedNames,
-      experience: viewExperience,
+      experience: viewExperience as ViewExperience<S>,
     };
   }
 
@@ -221,7 +222,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
       name: view.name,
       logicalName: view.logicalName,
       localizedNames: view.localizedNames,
-      experience: viewExperience,
+      experience: viewExperience as ViewExperience<S>,
     };
   }
 
@@ -249,7 +250,7 @@ export class SchemaExperienceStore implements ISchemaExperienceStore {
       id: view.id,
       name: view.name,
       logicalName: view.logicalName,
-      experience: viewExperience,
+      experience: viewExperience as ViewExperience<S>,
     };
   }
 

@@ -26,8 +26,8 @@ import { useGridCellRangeResolver } from './useGridCellRangeResolver';
 export interface DataGridProviderProps<
   S extends SchemaAttributes = SchemaAttributes,
   CommandContext extends
-    | EntityMainGridCommandContext
-    | EntitySubGridCommandContext = EntityMainGridCommandContext,
+    | EntityMainGridCommandContext<S>
+    | EntitySubGridCommandContext = EntityMainGridCommandContext<S>,
 > {
   schema: Schema<S>;
   views: LocalizedDataLookup[];
@@ -61,8 +61,8 @@ function mergeInitialStateWithHistory<T>(
 export function DataGridProvider<
   S extends SchemaAttributes = SchemaAttributes,
   CommandContext extends
-    | EntityMainGridCommandContext
-    | EntitySubGridCommandContext = EntityMainGridCommandContext,
+    | EntityMainGridCommandContext<S>
+    | EntitySubGridCommandContext = EntityMainGridCommandContext<S>,
 >(props: PropsWithChildren<DataGridProviderProps<S, CommandContext>>) {
   const onChangeViewRef = useRef(props.onChangeView);
   onChangeViewRef.current = props.onChangeView;

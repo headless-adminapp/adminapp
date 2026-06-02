@@ -303,9 +303,19 @@ export async function saveRecord({
   let recordId: Id;
 
   if (record) {
-    recordId = record[schema.idAttribute] as string;
+    const idAttributeValue = record[schema.idAttribute];
+
+    if (
+      typeof idAttributeValue === 'object' &&
+      idAttributeValue !== null &&
+      'id' in idAttributeValue
+    ) {
+      recordId = idAttributeValue.id as Id;
+    } else {
+      recordId = idAttributeValue as Id;
+    }
     const updateResult = await updateRecord({
-      recordId,
+      recordId: recordId as string,
       values,
       form,
       schema,

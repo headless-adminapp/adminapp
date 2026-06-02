@@ -1,12 +1,13 @@
 import type { ChoiceAttribute } from '@headless-adminapp/core/attributes';
+import type { OptionLookup } from '@headless-adminapp/core/attributes/DataLookup';
 import type { FC } from 'react';
 
 import { ChoiceBadge } from '../../components/ChoiceBadge';
 import { type CellDisplayType, TableCellBase } from './TableCellBase';
 
 interface TableCellChoiceProps {
-  value: unknown;
-  attribute: ChoiceAttribute<string | number>;
+  value: OptionLookup;
+  attribute: ChoiceAttribute;
   formattedValue: string;
   width?: number;
   display?: CellDisplayType;
@@ -35,9 +36,9 @@ export function TableCellChoice(props: Readonly<TableCellChoiceProps>) {
 }
 
 interface TableCellChoiceContentProps {
-  attribute: ChoiceAttribute<string | number>;
+  attribute: ChoiceAttribute;
   formattedValue: string;
-  value: unknown;
+  value: OptionLookup;
 }
 
 export const TableCellChoiceContent: FC<TableCellChoiceContentProps> = (

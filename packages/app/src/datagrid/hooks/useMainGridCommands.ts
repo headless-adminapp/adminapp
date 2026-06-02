@@ -2,6 +2,7 @@ import { useAppContext } from '@headless-adminapp/app/app';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import type { CommandItemExperience } from '@headless-adminapp/core/experience/command';
 import type { EntityMainGridCommandContext } from '@headless-adminapp/core/experience/view';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 import { useMemo } from 'react';
 
 import { useBaseCommandHandlerContext, useCommands } from '../../command';
@@ -53,7 +54,9 @@ export function useUtility(): UtilityContextState {
   };
 }
 
-export function useGridControlContext(): EntityMainGridCommandContext['primaryControl'] {
+export function useGridControlContext<
+  S extends SchemaAttributes = SchemaAttributes,
+>(): EntityMainGridCommandContext<S>['primaryControl'] {
   const data = useGridData();
   const schema = useDataGridSchema();
   const view = useSelectedView();
@@ -64,7 +67,7 @@ export function useGridControlContext(): EntityMainGridCommandContext['primaryCo
   const refresh = useGridRefresh();
   const openRecord = useOpenRecord();
   const gridColumns = useGridColumns();
-  const [sorting] = useGridSorting();
+  const [sorting] = useGridSorting<S>();
 
   const selectedIdsObj = useMemo(() => {
     const obj: Record<string, boolean> = {};
@@ -81,22 +84,23 @@ export function useGridControlContext(): EntityMainGridCommandContext['primaryCo
   }, [data, schema, selectedIdsObj]);
 
   return useMemo(
-    () => ({
-      data,
-      logicalName: schema.logicalName,
-      schema,
-      refresh,
-      searchText,
-      selectedIds,
-      selectedRecords,
-      view,
-      viewId: view.id,
-      columnFilter,
-      extraFilter,
-      openRecord,
-      gridColumns,
-      sorting,
-    }),
+    () =>
+      ({
+        data,
+        logicalName: schema.logicalName,
+        schema,
+        refresh,
+        searchText,
+        selectedIds,
+        selectedRecords,
+        view,
+        viewId: view.id,
+        columnFilter,
+        extraFilter,
+        openRecord,
+        gridColumns,
+        sorting,
+      }) as EntityMainGridCommandContext<S>['primaryControl'],
     [
       columnFilter,
       data,
@@ -114,16 +118,19 @@ export function useGridControlContext(): EntityMainGridCommandContext['primaryCo
   );
 }
 
-export function useMainGridCommandHandlerContext(): EntityMainGridCommandContext {
+export function useMainGridCommandHandlerContext<
+  S extends SchemaAttributes = SchemaAttributes,
+>(): EntityMainGridCommandContext<S> {
   const baseHandlerContext = useBaseCommandHandlerContext();
 
   const primaryControl = useGridControlContext();
 
   return useMemo(
-    () => ({
-      ...baseHandlerContext,
-      primaryControl,
-    }),
+    () =>
+      ({
+        ...baseHandlerContext,
+        primaryControl,
+      }) as EntityMainGridCommandContext<S>,
     [baseHandlerContext, primaryControl],
   );
 }

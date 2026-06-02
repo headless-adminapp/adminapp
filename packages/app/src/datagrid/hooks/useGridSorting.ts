@@ -8,14 +8,16 @@ import { GridContext } from '../context';
 export function useGridSorting<
   S extends SchemaAttributes = SchemaAttributes,
 >() {
-  const sorting = useContextSelector(GridContext, (state) => state.sorting);
+  const sorting = useContextSelector(
+    GridContext,
+    (state) => state.sorting,
+  ) as SortingState<Extract<keyof S, string>>;
 
   const setValue = useContextSetValue(GridContext);
 
   const setSorting = useCallback(
-    (value: SortingState<S>) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setValue({ sorting: value as any });
+    (value: SortingState<Extract<keyof S, string>>) => {
+      setValue({ sorting: value });
     },
     [setValue],
   );

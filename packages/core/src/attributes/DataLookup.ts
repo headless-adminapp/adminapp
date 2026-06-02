@@ -14,7 +14,7 @@ export interface LocalizedDataLookup {
   localizedNames?: Localized<string>;
 }
 
-export interface OptionLookup<T extends string | number> {
+export interface OptionLookup<T extends string | number = string | number> {
   value: T;
   label?: string;
 }

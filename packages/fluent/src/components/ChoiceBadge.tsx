@@ -2,27 +2,33 @@ import { Badge, tokens } from '@fluentui/react-components';
 import { isColorDark } from '@headless-adminapp/app/utils/color';
 import type { ChoiceAttribute } from '@headless-adminapp/core/attributes';
 import type { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
+import type { OptionLookup } from '@headless-adminapp/core/attributes/DataLookup';
 import { useMemo } from 'react';
 
 interface ChoiceBadgeProps {
-  value: unknown;
-  attribute:
-    | ChoiceAttribute<string | number>
-    | ChoicesAttribute<string | number>;
+  value: OptionLookup;
+  attribute: ChoiceAttribute | ChoicesAttribute;
   formattedValue?: string | null;
   size?: 'small' | 'medium' | 'large' | 'extra-large';
 }
 
 export function ChoiceBadge(props: Readonly<ChoiceBadgeProps>) {
+  let _value: string | number | undefined;
+
+  if (typeof props.value === 'string') {
+    _value = props.value;
+  } else if (props.value) {
+    _value = props.value.value;
+  }
+
   const bgColor = useMemo(() => {
-    if (!props.value || !props.attribute.options) {
+    if (!_value || !props.attribute.options) {
       return;
     }
 
-    return props.attribute.options.find(
-      (option) => option.value === props.value,
-    )?.color;
-  }, [props.attribute.options, props.value]);
+    return props.attribute.options.find((option) => option.value === _value)
+      ?.color;
+  }, [props.attribute.options, _value]);
 
   const color = useMemo(() => {
     if (!bgColor) {
@@ -37,14 +43,8 @@ export function ChoiceBadge(props: Readonly<ChoiceBadgeProps>) {
       return props.formattedValue;
     }
 
-    if (!props.value) {
+    if (!_value) {
       return null;
-    }
-
-    let _value = props.value as string | number;
-
-    if (typeof props.value === 'object' && 'value' in props.value) {
-      _value = props.value.value as string | number;
     }
 
     const choice = props.attribute.options.find(
@@ -56,7 +56,7 @@ export function ChoiceBadge(props: Readonly<ChoiceBadgeProps>) {
     }
 
     return choice.label;
-  }, [props.attribute.options, props.formattedValue, props.value]);
+  }, [props.attribute.options, props.formattedValue, _value]);
 
   if (!formattedValue) {
     return null;

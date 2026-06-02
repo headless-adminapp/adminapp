@@ -1,15 +1,14 @@
-import type { Attribute, LookupAttribute } from '@headless-adminapp/core/attributes';
+import type {
+  Attribute,
+  LookupAttribute,
+} from '@headless-adminapp/core/attributes';
 import type { Locale } from '@headless-adminapp/core/experience/locale';
 import type {
   ColumnCondition,
   SortingState,
   View,
 } from '@headless-adminapp/core/experience/view';
-import type {
-  InferredSchemaType,
-  Schema,
-  SchemaAttributes,
-} from '@headless-adminapp/core/schema';
+import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import type { ISchemaStore } from '@headless-adminapp/core/store';
 import type { Filter, IDataService } from '@headless-adminapp/core/transport';
 
@@ -258,7 +257,7 @@ export async function retriveRecords<
   extraFilter?: Filter;
   columnFilters?: Partial<Record<string, ColumnCondition>>;
   schemaStore: ISchemaStore;
-  sorting: SortingState<S>;
+  sorting: SortingState<Extract<keyof S, string>>;
   skip: number;
   limit: number;
 }) {
@@ -268,10 +267,10 @@ export async function retriveRecords<
     new Set([...gridColumns.filter((x) => !x.expandedKey).map((x) => x.name)]),
   );
 
-  const result = await dataService.retriveRecords<InferredSchemaType<S>>({
+  const result = await dataService.retriveRecords<S>({
     logicalName: schema.logicalName,
     search,
-    columns: columns as unknown as Array<keyof InferredSchemaType<S>>,
+    columns: columns as Array<keyof S>,
     expand,
     filter: mergeConditions(
       schema,
@@ -283,8 +282,7 @@ export async function retriveRecords<
     ),
     skip,
     limit,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    sort: sorting as any,
+    sort: sorting,
   });
 
   return result;

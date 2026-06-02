@@ -1,4 +1,8 @@
-import type { InferredSchemaType, Schema, SchemaAttributes } from '../../schema';
+import type {
+  InferredSchemaType,
+  Schema,
+  SchemaAttributes,
+} from '../../schema';
 import type { Data, Filter, RetriveRecordsResult } from '../../transport';
 import type { CommandContextBase } from '../command';
 import type { CommandItemExperience } from '../command/CommandItemExperience';
@@ -8,7 +12,9 @@ import type { ColumnCondition, SortingState } from './types';
 import type { View } from './View';
 import type { TransformedViewColumn } from './ViewColumn';
 
-export interface EntityMainGridCommandContext extends CommandContextBase {
+export interface EntityMainGridCommandContext<
+  S extends SchemaAttributes = SchemaAttributes,
+> extends CommandContextBase {
   primaryControl: {
     logicalName: string;
     schema: Schema;
@@ -17,7 +23,7 @@ export interface EntityMainGridCommandContext extends CommandContextBase {
     columnFilter?: Partial<Record<string, ColumnCondition>>;
     extraFilter?: Filter;
     gridColumns: TransformedViewColumn<SchemaAttributes>[];
-    sorting: SortingState<SchemaAttributes>;
+    sorting: SortingState<Extract<keyof S, string>>;
     refresh: () => void;
     searchText: string;
     view: View;
@@ -51,7 +57,7 @@ export interface EntitySubGridCommandContext extends CommandContextBase {
     columnFilter?: Partial<Record<string, ColumnCondition>>;
     extraFilter?: Filter;
     gridColumns: TransformedViewColumn<SchemaAttributes>[];
-    sorting: SortingState<SchemaAttributes>;
+    sorting: SortingState<string>;
     refresh: () => void;
     searchText: string;
     view: View;

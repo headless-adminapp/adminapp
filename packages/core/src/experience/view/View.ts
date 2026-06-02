@@ -1,17 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Schema, SchemaAttributes } from '../../schema';
-import type { Filter, SortOrder } from '../../transport';
+import type { Filter } from '../../transport';
 import type { AllowAsync } from '../../types';
 import type { Metadata } from '../types';
 import type { QuickFilter } from './QuickFilter';
+import type { SortingState } from './types';
 import type { ViewColumn } from './ViewColumn';
 
 export interface BaseView<S extends SchemaAttributes = SchemaAttributes> {
   filter?: Filter | null;
-  defaultSorting?: Array<{
-    field: keyof S;
-    order: SortOrder;
-  }>;
+  defaultSorting?: SortingState<Extract<keyof S, string>>;
 }
 
 export interface View<

@@ -21,15 +21,15 @@ export interface Schema<
   A extends SchemaAttributes = SchemaAttributes,
 > extends SchemaMetadata {
   /** Key attribute names */
-  idAttribute: keyof A;
+  idAttribute: Extract<keyof A, string>;
   /** Primary attribute name for display */
-  primaryAttribute: keyof A;
+  primaryAttribute: Extract<keyof A, string>;
   /** Attribute name for record creation timestamp */
-  createdAtAttribute?: keyof A;
+  createdAtAttribute?: Extract<keyof A, string>;
   /** Attribute name for record update timestamp */
-  updatedAtAttribute?: keyof A;
+  updatedAtAttribute?: Extract<keyof A, string>;
   /** An attachment attribute for avatar */
-  avatarAttribute?: keyof A;
+  avatarAttribute?: Extract<keyof A, string>;
   // Ownership of the schema
   ownership?:
     | 'scoped' // Records are scoped to user or team, only they can see their records

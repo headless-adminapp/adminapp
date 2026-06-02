@@ -27,13 +27,13 @@ interface UseLookupDataOptions<S extends SchemaAttributes = SchemaAttributes> {
   dataService: IDataService;
   searchText?: string;
   schema: Schema<S>;
-  view: ViewExperience | null | undefined;
+  view: ViewExperience<S> | null | undefined;
   enabled?: boolean;
 }
 
 function extractColumns<S extends SchemaAttributes>(
   schema: Schema<S>,
-  view: ViewExperience | null | undefined,
+  view: ViewExperience<S> | null | undefined,
 ): string[] {
   if (!view?.card) {
     return [schema.primaryAttribute as string];
@@ -50,17 +50,20 @@ function extractColumns<S extends SchemaAttributes>(
   ).filter(Boolean) as string[];
 }
 
-function extractExpand(view: ViewExperience | null | undefined) {
+function extractExpand<S extends SchemaAttributes>(
+  view: ViewExperience<S> | null | undefined,
+) {
   return (view?.card?.secondaryColumns || [])
     .filter((x) => x.expandedKey)
     .reduce(
       (acc, x) => {
-        if (!acc[x.name]) {
-          acc[x.name] = [];
+        const key = x.name as string;
+        if (!acc[key]) {
+          acc[key] = [];
         }
 
-        if (!acc[x.name].includes(x.expandedKey!)) {
-          acc[x.name].push(x.expandedKey!);
+        if (!acc[key].includes(x.expandedKey!)) {
+          acc[key].push(x.expandedKey!);
         }
         return acc;
       },
@@ -76,7 +79,7 @@ function getKey<S extends SchemaAttributes>({
   search,
 }: {
   schema: Schema<S>;
-  view: ViewExperience | null | undefined;
+  view: ViewExperience<S> | null | undefined;
   columns: string[];
   expand: Record<string, string[]>;
   search: string | undefined;
@@ -104,7 +107,7 @@ export function useLookupData<S extends SchemaAttributes = SchemaAttributes>({
   );
 
   const columns = useMemo(() => {
-    return extractColumns(schema, view);
+    return extractColumns<S>(schema, view);
   }, [schema, view]);
 
   const expand = useMemo(() => extractExpand(view), [view]);
@@ -172,7 +175,8 @@ export function useLookupData<S extends SchemaAttributes = SchemaAttributes>({
 
     const items = [];
 
-    const idAttribute = schema.idAttribute as keyof InferredSchemaType<S>;
+    const idAttribute =
+      schema.idAttribute as unknown as keyof InferredSchemaType<S>;
 
     if (recentData?.records) {
       for (const id of recentIds) {

@@ -2,7 +2,13 @@ import type { Filter } from '../Filter';
 import type { SortOrder } from '../SortOrder';
 import type { Data } from './Data';
 
-/*** @todo merge required */
+type SortingItem<K extends string> = {
+  field: K;
+  order: SortOrder;
+};
+
+export type SortingState<K extends string> = SortingItem<K>[];
+
 export interface RetriveRecordsFnOptions<T = unknown> {
   logicalName: string;
   filter?: Filter | null;
@@ -13,14 +19,12 @@ export interface RetriveRecordsFnOptions<T = unknown> {
   search?: string;
   skip?: number;
   limit?: number;
-  sort?: Array<{
-    field: keyof T;
-    order: SortOrder;
-  }>;
+  sort?: SortingState<Extract<keyof T, string>>;
 }
 
-export interface RetriveRecordsParams
-  extends RetriveRecordsFnOptions<Record<string, unknown>> {}
+export interface RetriveRecordsParams extends RetriveRecordsFnOptions<
+  Record<string, unknown>
+> {}
 
 export interface RetriveRecordsResult<T = unknown> {
   logicalName: string;

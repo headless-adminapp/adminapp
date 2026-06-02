@@ -2,6 +2,7 @@ import type {
   EntityMainGridCommandContext,
   EntityMainGridCommandItemExperience,
 } from '@headless-adminapp/core/experience/view';
+import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 import type { Localized } from '@headless-adminapp/core/types';
 import type { Icon } from '@headless-adminapp/icons';
 
@@ -450,7 +451,9 @@ export namespace ViewCommandBuilder {
   }
 }
 
-async function retrieveFilteredRecords(context: EntityMainGridCommandContext) {
+async function retrieveFilteredRecords<
+  S extends SchemaAttributes = SchemaAttributes,
+>(context: EntityMainGridCommandContext<S>) {
   return retriveRecords({
     columnFilters: context.primaryControl.columnFilter,
     dataService: context.dataService,
@@ -466,9 +469,9 @@ async function retrieveFilteredRecords(context: EntityMainGridCommandContext) {
   });
 }
 
-export async function exportRecordsToExcel(
-  context: EntityMainGridCommandContext,
-) {
+export async function exportRecordsToExcel<
+  S extends SchemaAttributes = SchemaAttributes,
+>(context: EntityMainGridCommandContext<S>) {
   context.utility.showProgressIndicator('Exporting to Excel...');
   try {
     const result = await retrieveFilteredRecords(context);

@@ -25,8 +25,8 @@ export { type TransformedViewColumn } from '@headless-adminapp/core/experience/v
 export interface GridContextState<
   S extends SchemaAttributes = SchemaAttributes,
   CommandContext extends
-    | EntityMainGridCommandContext
-    | EntitySubGridCommandContext = EntityMainGridCommandContext,
+    | EntityMainGridCommandContext<S>
+    | EntitySubGridCommandContext = EntityMainGridCommandContext<S>,
 > {
   // from props
   schema: Schema<S>;
@@ -50,7 +50,7 @@ export interface GridContextState<
   columns: TransformedViewColumn<S>[];
   searchText: string;
   columnFilters: Partial<Record<keyof S, ColumnCondition>>;
-  sorting: SortingState<S>;
+  sorting: SortingState<Extract<keyof S, string>>;
   quickFilterValues: Record<string, unknown>;
 
   // internal state (selection)

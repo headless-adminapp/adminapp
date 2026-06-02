@@ -14,8 +14,8 @@ import type { GridContextState } from '../context';
 export function useGridCellRangeResolver<
   S extends SchemaAttributes = SchemaAttributes,
   CommandContext extends
-    | EntityMainGridCommandContext
-    | EntitySubGridCommandContext = EntityMainGridCommandContext,
+    | EntityMainGridCommandContext<S>
+    | EntitySubGridCommandContext = EntityMainGridCommandContext<S>,
 >(context: MutableValue<GridContextState<S, CommandContext>>) {
   const data = useMutableStateSelector(context, (state) => state.data);
 

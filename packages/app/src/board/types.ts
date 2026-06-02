@@ -1,5 +1,8 @@
 import type { CommandContextBase } from '@headless-adminapp/core/experience/command';
-import type { SortingState, View } from '@headless-adminapp/core/experience/view';
+import type {
+  SortingState,
+  View,
+} from '@headless-adminapp/core/experience/view';
 import type { QuickFilter } from '@headless-adminapp/core/experience/view/QuickFilter';
 import type { Schema, SchemaAttributes } from '@headless-adminapp/core/schema';
 import type { Filter } from '@headless-adminapp/core/transport';
@@ -46,7 +49,7 @@ export interface BoardConfig<S extends SchemaAttributes = SchemaAttributes> {
   title: string;
   description: string;
   schema: Schema<S>;
-  sorting: SortingState<S>;
+  sorting: SortingState<Extract<keyof S, string>>;
   projection: {
     columns: Array<keyof S>;
     expand?: Partial<Record<keyof S, string[]>>;

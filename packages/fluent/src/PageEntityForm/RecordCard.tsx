@@ -11,6 +11,7 @@ import { useLocale } from '@headless-adminapp/app/locale';
 import { getAttributeFormattedValue } from '@headless-adminapp/app/utils';
 import type { ChoiceAttribute } from '@headless-adminapp/core/attributes';
 import type { ChoicesAttribute } from '@headless-adminapp/core/attributes/ChoiceAttribute';
+import type { OptionLookup } from '@headless-adminapp/core/attributes/DataLookup';
 import type { Locale } from '@headless-adminapp/core/experience/locale';
 import type { CardView } from '@headless-adminapp/core/experience/view';
 import type { CardViewSecondaryColumn } from '@headless-adminapp/core/experience/view/View';
@@ -254,7 +255,7 @@ function SecondaryColumnContent<S extends SchemaAttributes = SchemaAttributes>({
             <ChoiceTag
               key={choice.value as string}
               attribute={attribute}
-              value={choice.value}
+              value={choice}
             />
           ))}
         </div>
@@ -275,7 +276,7 @@ function SecondaryColumnContent<S extends SchemaAttributes = SchemaAttributes>({
 
 interface ChoiceTagProps<T extends string | number> {
   attribute: ChoiceAttribute<T> | ChoicesAttribute<T>;
-  value: T;
+  value: OptionLookup<T>;
 }
 
 const ChoiceTag: FC<ChoiceTagProps<string | number>> = ({

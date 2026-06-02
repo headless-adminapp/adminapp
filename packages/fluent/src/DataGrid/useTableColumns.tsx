@@ -45,6 +45,7 @@ import type {
   LookupAttribute,
 } from '@headless-adminapp/core/attributes';
 import type { FileObject } from '@headless-adminapp/core/attributes/AttachmentAttribute';
+import type { OptionLookup } from '@headless-adminapp/core/attributes/DataLookup';
 import type { RegardingAttribute } from '@headless-adminapp/core/attributes/LookupAttribute';
 import { PageType } from '@headless-adminapp/core/experience/app';
 import type { Locale } from '@headless-adminapp/core/experience/locale';
@@ -540,9 +541,11 @@ function renderCellContent({
       routeResolver,
       openRecord,
       attributes,
+      attribute,
       idAttributeName,
       avatarAttributeName,
-      value: value as string,
+      formattedValue,
+      value,
       rowIndex,
       columnIndex,
     });
@@ -641,7 +644,7 @@ function renderCellContent({
           columnIndex={columnIndex}
         >
           <TableCellChoiceContent
-            value={value}
+            value={value as OptionLookup}
             attribute={attribute}
             formattedValue={formattedValue}
           />
@@ -706,7 +709,7 @@ function renderPrimaryAttribute({
   attributes,
   routeResolver,
   openRecord,
-  value,
+  formattedValue,
   idAttributeName,
   avatarAttributeName,
   rowIndex,
@@ -715,18 +718,33 @@ function renderPrimaryAttribute({
   info: CellContext<UniqueRecord, unknown>;
   column: TransformedViewColumn<SchemaAttributes>;
   attributes: SchemaAttributes;
+  attribute: Attribute;
   routeResolver: InternalRouteResolver;
   openRecord?: (id: string, logicalName: string) => void;
-  value: string;
+  formattedValue: string;
+  value: unknown;
   idAttributeName: string;
   avatarAttributeName: string | undefined;
   rowIndex: number;
   columnIndex: number;
 }) {
+  const idAttribute = attributes[idAttributeName];
+
+  let idValue: string;
+
+  if (idAttribute.type === 'lookup') {
+    const lookupValue = info.row.original[idAttributeName] as
+      | DataLookup<Id>
+      | undefined;
+    idValue = lookupValue?.id as string;
+  } else {
+    idValue = info.row.original[idAttributeName] as string;
+  }
+
   const path = routeResolver({
     logicalName: info.row.original.$entity,
     type: PageType.EntityForm,
-    id: info.row.original[idAttributeName] as string,
+    id: idValue,
   });
 
   return (
@@ -739,20 +757,17 @@ function renderPrimaryAttribute({
       <TableCellLinkContent
         href={path}
         onClick={() => {
-          openRecord?.(
-            info.row.original[idAttributeName] as string,
-            info.row.original.$entity,
-          );
+          openRecord?.(idValue, info.row.original.$entity);
         }}
       >
         <Fragment>
           {renderPrimaryAttributeAvatar({
             info,
-            value,
+            value: formattedValue,
             avatarAttributeName,
             attributes,
           })}
-          {value}
+          {formattedValue}
         </Fragment>
       </TableCellLinkContent>
     </TableCellWrapper>
