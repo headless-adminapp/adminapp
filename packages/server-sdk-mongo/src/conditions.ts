@@ -76,6 +76,10 @@ function hasTime(dateString: string): boolean {
   return /\d{1,2}:\d{2}(:\d{2})?/.test(dateString);
 }
 
+function escapeRegex(string: string): string {
+  return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createDayjs(timezone: string, value?: any) {
   const d = dayjs(value);
@@ -113,37 +117,37 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
   // text
   like: (condition) => ({
     [condition.field]: {
-      $regex: condition.value,
+      $regex: escapeRegex(condition.value),
       $options: 'i',
     },
   }),
   'not-like': (condition) => ({
     [condition.field]: {
-      $regex: `^((?!${condition.value}).)*$`,
+      $regex: `^((?!${escapeRegex(condition.value)}).)*$`,
       $options: 'i',
     },
   }),
   'begins-with': (condition) => ({
     [condition.field]: {
-      $regex: '^' + condition.value,
+      $regex: '^' + escapeRegex(condition.value),
       $options: 'i',
     },
   }),
   'ends-with': (condition) => ({
     [condition.field]: {
-      $regex: condition.value + '$',
+      $regex: escapeRegex(condition.value) + '$',
       $options: 'i',
     },
   }),
   'not-begin-with': (condition) => ({
     [condition.field]: {
-      $regex: `^((?!^${condition.value}).)*$`,
+      $regex: `^((?!^${escapeRegex(condition.value)}).)*$`,
       $options: 'i',
     },
   }),
   'not-end-with': (condition) => ({
     [condition.field]: {
-      $regex: `^((?!${condition.value}$).)*$`,
+      $regex: `^((?!${escapeRegex(condition.value)}$).)*$`,
       $options: 'i',
     },
   }),
@@ -453,7 +457,7 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
     if (attribute.type === 'string') {
       return {
         [condition.field]: {
-          $regex: '^' + condition.value + '$',
+          $regex: '^' + escapeRegex(condition.value) + '$',
           $options: 'i',
         },
       };
@@ -478,7 +482,7 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
     if (attribute.type === 'string') {
       return {
         [condition.field]: {
-          $regex: `^((?!^${condition.value}$).)*$`,
+          $regex: `^((?!^${escapeRegex(condition.value)}$).)*$`,
           $options: 'i',
         },
       };

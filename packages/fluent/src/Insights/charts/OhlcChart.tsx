@@ -5,19 +5,22 @@ import {
   type OhlcChartInfo,
 } from '@headless-adminapp/core/experience/insights';
 import { useMemo } from 'react';
+import type { ScatterShapeProps } from 'recharts';
 import {
   Rectangle,
   ResponsiveContainer,
   Scatter,
   ScatterChart,
   Tooltip,
+  useXAxisScale,
+  useYAxisScale,
   XAxis as XAxisInternal,
 } from 'recharts';
 
 import { createAxisFormatter, createLongAxisFormatter } from './formatters';
 import { renderGrid, renderYAxis } from './renderers';
 
-export const barSizeInTime = (interval: DateAxisTickInterval) => {
+export const barSizeInTime = (interval: DateAxisTickInterval): number => {
   switch (interval) {
     case DateAxisTickInterval.Minute:
       return 60000 * 0.6;
@@ -94,6 +97,7 @@ export function OhlcChart({
         {renderGrid()}
         {renderYAxis(locale, {
           ...chartInfo.yAxis,
+          dataKey: chartInfo.yAxis.dataKey ?? chartInfo.bars[0].high.dataKey,
           domain,
         })}
 
@@ -124,13 +128,14 @@ export function OhlcChart({
           markerWidth={1}
           width={1}
           strokeWidth={1}
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          shape={(props: any) =>
-            renderShape(props, {
-              bar,
-              chartInfo,
-            })
-          }
+          shape={(props) => (
+            <OhlcShape
+              {...props}
+              chartInfo={chartInfo}
+              bar={bar}
+              xAxis={xAxis}
+            />
+          )}
         />
         <Tooltip
           cursor={{
@@ -230,56 +235,62 @@ function OhclTooltipContent({
   );
 }
 
-function renderShape(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  props: any,
-  {
-    chartInfo,
-    bar,
-  }: {
-    chartInfo: OhlcChartInfo;
-    bar: OhlcChartInfo['bars'][0];
-  },
-) {
-  const { x, width, payload, yAxis, xAxis } = props;
+interface OhlcShapeProps extends ScatterShapeProps {
+  chartInfo: OhlcChartInfo;
+  bar: OhlcChartInfo['bars'][0];
+  xAxis: OhlcChartInfo['xAxis'];
+}
 
-  const xValue = payload[xAxis.dataKey!];
-  const open = payload[bar.open.dataKey];
-  const close = payload[bar.close.dataKey];
-  const high = payload[bar.high.dataKey];
-  const low = payload[bar.low.dataKey];
+function OhlcShape(props: OhlcShapeProps) {
+  const _xScale = useXAxisScale();
+  const _yScale = useYAxisScale('left');
+
+  const xScale = (value: number) => {
+    return _xScale?.(value) ?? 0;
+  };
+
+  const yScale = (value: number) => {
+    return _yScale?.(value) ?? 0;
+  };
+
+  const { x = 0, width, payload, xAxis, bar, chartInfo } = props;
+
+  const xValue: number = payload[xAxis.dataKey!];
+  const open: number = payload[bar.open.dataKey];
+  const close: number = payload[bar.close.dataKey];
+  const high: number = payload[bar.high.dataKey];
+  const low: number = payload[bar.low.dataKey];
 
   const color =
     open < close
       ? (bar.colors?.[0] ?? tokens.colorPaletteGreenForeground1)
       : (bar.colors?.[1] ?? tokens.colorPaletteRedForeground1);
 
-  const xPosition = xAxis.scale(xValue);
+  const xPosition = xScale(xValue) ?? 0;
 
   let xWidth = 30;
 
   if (chartInfo.xAxis.tick.type === 'time' && chartInfo.xAxis.tick.interval) {
     xWidth =
-      xAxis.scale(xValue + barSizeInTime(chartInfo.xAxis.tick.interval)) -
-      xPosition;
+      xScale(xValue + barSizeInTime(chartInfo.xAxis.tick.interval)) - xPosition;
   }
 
   return (
     <g>
       <Rectangle
         x={x + width / 2}
-        y={yAxis.scale(high)} // Adjust the y to position the bar correctly
+        y={yScale(high)} // Adjust the y to position the bar correctly
         width={1}
-        height={yAxis.scale(low) - yAxis.scale(high)}
+        height={yScale(low) - yScale(high)}
         fill={color}
         stroke={color}
         strokeWidth={1}
       />
       <Rectangle
         x={xPosition - xWidth / 2}
-        y={Math.min(yAxis.scale(open), yAxis.scale(close))} // Adjust the y to position the bar correctly
+        y={Math.min(yScale(open), yScale(close))} // Adjust the y to position the bar correctly
         width={xWidth}
-        height={Math.abs(yAxis.scale(close) - yAxis.scale(open))}
+        height={Math.abs(yScale(close) - yScale(open))}
         fill={color}
         stroke={color}
         strokeWidth={1}
