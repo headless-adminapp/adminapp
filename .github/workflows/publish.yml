@@ -64,7 +64,7 @@ jobs:
           NPM_CONFIG_ACCESS: public
           NPM_CONFIG_PROVENANCE: true
         run: |
-          pnpm run publish ${{ github.event.inputs.release_type }} --yes
+          pnpm run publish ${{ github.event.inputs.release_type }} --yes --loglevel verbose
 
       - name: Push release commit and tags
         run: |
