@@ -534,7 +534,11 @@ function renderCellContent({
     );
   }
 
-  if (idAttributeName && primaryAttributeName === column.name) {
+  if (
+    !column.expandedKey &&
+    idAttributeName &&
+    primaryAttributeName === column.name
+  ) {
     return renderPrimaryAttribute({
       info,
       column,
