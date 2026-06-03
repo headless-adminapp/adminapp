@@ -29,6 +29,10 @@ import type {
   IDataService,
   RetriveRecordsResult,
 } from '@headless-adminapp/core/transport';
+import {
+  getRecordId,
+  getRecordPrimaryName,
+} from '@headless-adminapp/core/transport/utils';
 import { IconPlaceholder, Icons } from '@headless-adminapp/icons';
 import { useQuery } from '@tanstack/react-query';
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
@@ -196,8 +200,8 @@ const LookupControlMd: FC<RegardingControlProps> = ({
     } else {
       const schema = schemaStore.getSchema(value.$entity);
       return onChange?.({
-        id: value[schema.idAttribute] as string,
-        name: value[schema.primaryAttribute] as string,
+        id: String(getRecordId(schema, value)),
+        name: getRecordPrimaryName(schema, value),
         logicalName: schema.logicalName,
       });
     }
@@ -253,7 +257,7 @@ const LookupControlMd: FC<RegardingControlProps> = ({
 
               const record = data?.records.find(
                 (x) =>
-                  String(x[schema.idAttribute]) === String(item.optionValue),
+                  String(getRecordId(schema, x)) === String(item.optionValue),
               );
 
               return record;
@@ -284,8 +288,8 @@ const LookupControlMd: FC<RegardingControlProps> = ({
               {data?.records.map((item) => {
                 return (
                   <Option
-                    key={item[schema.idAttribute] as string}
-                    value={item[schema.idAttribute] as string}
+                    key={getRecordId(schema, item)}
+                    value={String(getRecordId(schema, item))}
                     className={mergeClasses(styles.option)}
                     text={item[schema.primaryAttribute] as string}
                   >

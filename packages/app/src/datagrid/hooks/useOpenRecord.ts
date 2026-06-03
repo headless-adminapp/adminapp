@@ -1,5 +1,6 @@
 import { useRouter, useRouteResolver } from '@headless-adminapp/app/route';
 import { PageType } from '@headless-adminapp/core/experience/app';
+import { getRecordId } from '@headless-adminapp/core/transport/utils';
 import { useCallback, useRef } from 'react';
 
 import { useGridData } from './useGridData';
@@ -28,8 +29,8 @@ export function useOpenRecord() {
             logicalName === schema.logicalName
               ? {
                   ids:
-                    dataRef.current?.records.map(
-                      (x) => x[schema.idAttribute] as string,
+                    dataRef.current?.records.map((x) =>
+                      getRecordId(schema, x),
                     ) ?? [],
                   visible: false,
                   logicalName: schema.logicalName,
@@ -38,6 +39,6 @@ export function useOpenRecord() {
         },
       });
     },
-    [routeResolver, router, schema.idAttribute, schema.logicalName],
+    [routeResolver, router, schema],
   );
 }

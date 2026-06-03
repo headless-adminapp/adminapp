@@ -14,6 +14,7 @@ import {
   useRecordSetResult,
   useRecordSetVisibility,
 } from '@headless-adminapp/app/recordset/hooks';
+import { getRecordId } from '@headless-adminapp/core/transport/utils';
 import { type FC, Fragment } from 'react';
 
 import { extendedTokens } from '../components/fluent';
@@ -104,18 +105,18 @@ export const RecordSetNavigatorContainer: FC = () => {
         <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
           <ScrollView autoHide rtl={direction === 'rtl'}>
             {data?.map((record) => (
-              <Fragment key={record[schema.idAttribute] as string}>
+              <Fragment key={getRecordId(schema, record)}>
                 <div
                   role="button"
                   className={mergeClasses(
                     styles.item,
-                    navigatorRecordId === record[schema.idAttribute] &&
+                    navigatorRecordId === getRecordId(schema, record) &&
                       styles.selected,
                   )}
                   onClick={() => {
                     void openForm({
                       logicalName: schema.logicalName,
-                      id: record[schema.idAttribute] as string,
+                      id: getRecordId(schema, record),
                       replace: true,
                     });
                   }}
@@ -125,7 +126,7 @@ export const RecordSetNavigatorContainer: FC = () => {
                       record={record}
                       schema={schema}
                       selected={
-                        navigatorRecordId === record[schema.idAttribute]
+                        navigatorRecordId === getRecordId(schema, record)
                       }
                     />
                   ) : (
@@ -134,7 +135,7 @@ export const RecordSetNavigatorContainer: FC = () => {
                       record={record}
                       schema={schema}
                       selected={
-                        navigatorRecordId === record[schema.idAttribute]
+                        navigatorRecordId === getRecordId(schema, record)
                       }
                     />
                   )}

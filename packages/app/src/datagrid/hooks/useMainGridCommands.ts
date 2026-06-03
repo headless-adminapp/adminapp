@@ -3,6 +3,7 @@ import { useContextSelector } from '@headless-adminapp/app/mutable';
 import type { CommandItemExperience } from '@headless-adminapp/core/experience/command';
 import type { EntityMainGridCommandContext } from '@headless-adminapp/core/experience/view';
 import type { SchemaAttributes } from '@headless-adminapp/core/schema';
+import { getRecordId } from '@headless-adminapp/core/transport/utils';
 import { useMemo } from 'react';
 
 import { useBaseCommandHandlerContext, useCommands } from '../../command';
@@ -79,7 +80,7 @@ export function useGridControlContext<
 
   const selectedRecords = useMemo(() => {
     return (data?.records ?? []).filter(
-      (record) => selectedIdsObj[record[schema.idAttribute] as string],
+      (record) => selectedIdsObj[getRecordId(schema, record)],
     );
   }, [data, schema, selectedIdsObj]);
 

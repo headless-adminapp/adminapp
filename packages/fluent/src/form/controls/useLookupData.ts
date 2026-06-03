@@ -15,6 +15,7 @@ import type {
   IDataService,
   RetriveRecordsResult,
 } from '@headless-adminapp/core/transport';
+import { getRecordId } from '@headless-adminapp/core/transport/utils';
 import {
   keepPreviousData,
   useQueries,
@@ -175,31 +176,30 @@ export function useLookupData<S extends SchemaAttributes = SchemaAttributes>({
 
     const items = [];
 
-    const idAttribute =
-      schema.idAttribute as unknown as keyof InferredSchemaType<S>;
-
     if (recentData?.records) {
       for (const id of recentIds) {
         if (ids.has(id as Id)) {
           continue;
         }
 
-        const item = recentData.records.find((x) => x[idAttribute] === id);
+        const item = recentData.records.find(
+          (x) => getRecordId(schema, x) === id,
+        );
 
         if (item) {
           items.push(item);
-          ids.add(item[idAttribute] as Id);
+          ids.add(getRecordId(schema, item));
         }
       }
     }
 
     if (data?.records) {
       for (const item of data.records) {
-        if (ids.has(item[idAttribute] as Id)) {
+        if (ids.has(getRecordId(schema, item))) {
           continue;
         }
 
-        ids.add(item[idAttribute] as Id);
+        ids.add(getRecordId(schema, item));
         items.push(item);
       }
     }
@@ -211,7 +211,7 @@ export function useLookupData<S extends SchemaAttributes = SchemaAttributes>({
       count: items.length,
       records: items,
     } as RetriveRecordsResult<InferredSchemaType<S>>;
-  }, [data, recentData, recentIds, schema.idAttribute, schema.logicalName]);
+  }, [data, recentData, recentIds, schema]);
 
   return {
     data: mergedData,

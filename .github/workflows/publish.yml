@@ -59,6 +59,15 @@ jobs:
       - name: Build packages
         run: pnpm run build
 
+      - name: Lint check
+        run: pnpm run lint
+
+      - name: Run ts-check
+        run: pnpm run ts-check
+
+      - name: Run tests
+        run: pnpm test
+
       - name: Publish with lerna
         env:
           NPM_CONFIG_ACCESS: public

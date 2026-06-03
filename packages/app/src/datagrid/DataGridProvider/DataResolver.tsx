@@ -1,8 +1,4 @@
-import type {
-  InferredSchemaType,
-  SchemaAttributes,
-} from '@headless-adminapp/core/schema';
-import type { Data } from '@headless-adminapp/core/transport';
+import { getRecordId } from '@headless-adminapp/core/transport/utils';
 import { useEffect, useMemo, useRef } from 'react';
 
 import { useAuthSession } from '../../auth';
@@ -36,7 +32,7 @@ import {
   mergeConditions,
 } from './utils';
 
-export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
+export function DataResolver() {
   const schema = useDataGridSchema();
   const view = useSelectedView();
 
@@ -148,16 +144,14 @@ export function DataResolver<S extends SchemaAttributes = SchemaAttributes>() {
     }
 
     const selectedIds = selectedIdsRef.current.filter((x) =>
-      data.records.some(
-        (y) => y[schema.idAttribute as keyof Data<InferredSchemaType<S>>] === x,
-      ),
+      data.records.some((y) => getRecordId(schema, y) === x),
     );
 
     setState({
       data,
       selectedIds,
     });
-  }, [data, setState, schema.idAttribute]);
+  }, [data, setState, schema]);
 
   useEffect(() => {
     setState({

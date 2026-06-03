@@ -5,7 +5,11 @@ import type {
   AggregateQuery,
   InferredAggregateQueryResult,
 } from './aggregate';
-import type { CreateRecordResult, Data, UpdateRecordResult } from './operations';
+import type {
+  CreateRecordResult,
+  Data,
+  UpdateRecordResult,
+} from './operations';
 import type {
   RetriveRecordsFnOptions,
   RetriveRecordsResult,
@@ -19,22 +23,22 @@ export interface IDataService {
     columns: (keyof T)[],
     expand?: {
       [key in keyof T]?: string[];
-    }
+    },
   ): Promise<Data<T>>;
 
   retriveRecords<T = unknown>(
-    options: RetriveRecordsFnOptions<T>
+    options: RetriveRecordsFnOptions<T>,
   ): Promise<RetriveRecordsResult<T>>;
 
   createRecord<T>(
     logicalName: string,
-    data: Partial<T>
+    data: Partial<T>,
   ): Promise<CreateRecordResult>;
 
   updateRecord<T>(
     logicalName: string,
-    id: string,
-    data: Partial<T>
+    id: Id,
+    data: Partial<T>,
   ): Promise<UpdateRecordResult>;
 
   deleteRecord(logicalName: string, id: Id): Promise<void>;
@@ -44,7 +48,7 @@ export interface IDataService {
       AggregateAttribute
     >,
   >(
-    query: AggregateQuery<Q>
+    query: AggregateQuery<Q>,
   ): Promise<InferredAggregateQueryResult<Q>[]>;
 
   customAction<T = unknown>(actionName: string, payload: unknown): Promise<T>;

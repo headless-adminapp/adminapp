@@ -1,8 +1,8 @@
-import type { Id } from '@headless-adminapp/core';
 import type {
   InferredSchemaType,
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
+import { getRecordId } from '@headless-adminapp/core/transport/utils';
 import { useQuery } from '@tanstack/react-query';
 import { sortBy } from 'lodash';
 import { useMemo } from 'react';
@@ -74,7 +74,7 @@ export function useRecordSetResult() {
       });
 
       const sortedData = sortBy(result.records, (x) =>
-        context.ids.indexOf(x[schema.idAttribute as keyof typeof x] as Id),
+        context.ids.indexOf(getRecordId(schema, x)),
       );
 
       return sortedData;

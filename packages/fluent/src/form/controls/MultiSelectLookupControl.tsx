@@ -27,6 +27,10 @@ import type {
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
 import type { Data, IDataService } from '@headless-adminapp/core/transport';
+import {
+  getRecordId,
+  getRecordPrimaryName,
+} from '@headless-adminapp/core/transport/utils';
 import { Icons } from '@headless-adminapp/icons';
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -48,7 +52,7 @@ export interface LookupOption {
 }
 
 export type DataLookup = {
-  id: string;
+  id: Id;
   name: string;
   logicalName: string;
 };
@@ -125,28 +129,28 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
     if (!value) {
       return onChange?.([
         {
-          id: selectedValue[schema.idAttribute] as string,
-          name: selectedValue[schema.primaryAttribute] as string,
+          id: getRecordId(schema, selectedValue),
+          name: getRecordPrimaryName(schema, selectedValue),
           logicalName: schema.logicalName,
         },
       ]);
     } else {
-      if (value.find((x) => x.id === selectedValue[schema.idAttribute])) {
+      if (value.find((x) => x.id === getRecordId(schema, selectedValue))) {
         return;
       }
 
       return onChange?.([
         ...value,
         {
-          id: selectedValue[schema.idAttribute] as string,
-          name: selectedValue[schema.primaryAttribute] as string,
+          id: getRecordId(schema, selectedValue),
+          name: getRecordPrimaryName(schema, selectedValue),
           logicalName: schema.logicalName,
         },
       ]);
     }
   };
 
-  const handleRemove = (id: string) => {
+  const handleRemove = (id: Id) => {
     const newValue = value?.filter((x) => x.id !== id);
     if (!newValue?.length) {
       onChange?.(null);
@@ -164,18 +168,18 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
   return (
     <TagPicker
       appearance="filled-darker"
-      selectedOptions={value?.map((item) => item.id) ?? []}
+      selectedOptions={value?.map((item) => String(item.id)) ?? []}
       onOptionSelect={(e, item) => {
         const _item = data?.records.find(
-          (x) => String(x[schema.idAttribute]) === String(item.value),
+          (x) => String(getRecordId(schema, x)) === String(item.value),
         );
 
         if (!_item) return;
 
         recentItemStore.addItem(
           createLookupRecentKey(schema.logicalName),
-          _item[schema.idAttribute] as Id,
-          _item[schema.idAttribute] as string,
+          getRecordId(schema, _item) as Id,
+          String(getRecordId(schema, _item)) as string,
         );
 
         handleAdd(_item);
@@ -223,8 +227,8 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
       <TagPickerList>
         {data?.records.map((item) => (
           <TagPickerOption
-            key={item[schema.idAttribute] as string}
-            value={item[schema.idAttribute] as string}
+            key={getRecordId(schema, item)}
+            value={String(getRecordId(schema, item))}
             className={mergeClasses(styles.option)}
             text={item[schema.primaryAttribute] as string}
           >
@@ -274,7 +278,7 @@ function TagItem({
   disabled?: boolean;
   readOnly?: boolean;
   value: DataLookup;
-  onRemove?: (id: string) => void;
+  onRemove?: (id: Id) => void;
   allowNavigation?: boolean;
 }>) {
   const routeResolver = useRouteResolver();
@@ -315,7 +319,7 @@ function TagItem({
       appearance="brand"
       size="small"
       dismissible={!disabled && !readOnly}
-      value={value.id}
+      value={String(value.id)}
       style={{
         paddingRight: !disabled && !readOnly ? 0 : 5,
         pointerEvents: 'auto',

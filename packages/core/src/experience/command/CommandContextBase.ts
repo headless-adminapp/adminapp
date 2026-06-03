@@ -1,3 +1,4 @@
+import type { Id } from '@headless-adminapp/core/attributes';
 import type { RouterInstance } from '@headless-adminapp/core/navigation';
 import type { QueryClient } from '@tanstack/react-query';
 
@@ -17,7 +18,7 @@ export interface OpenFormOptions {
   id?: string | number | null;
   formId?: string;
   parameters?: Record<string, unknown>; // Used while creating a new record
-  recordSetIds?: string[]; // Used to pass record set ids to the form
+  recordSetIds?: Id[]; // Used to pass record set ids to the form
   useQuickCreateForm?: boolean; // Used while creating a new record and create create form should available
   replace?: boolean; // Replace the current form
 }
@@ -39,7 +40,7 @@ interface Utiltity {
     options: Omit<
       ConfirmDialogOptions,
       'type' | 'onConfirm' | 'onDismiss' | 'onCancel'
-    >
+    >,
   ): Promise<ConfirmResult | null>;
   openErrorDialog(options: {
     text: string;

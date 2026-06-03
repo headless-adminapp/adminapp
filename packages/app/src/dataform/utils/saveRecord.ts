@@ -10,6 +10,7 @@ import type {
 } from '@headless-adminapp/core/schema';
 import type { ISchemaStore } from '@headless-adminapp/core/store';
 import type { IDataService } from '@headless-adminapp/core/transport';
+import { getRecordId } from '@headless-adminapp/core/transport/utils';
 import type { Nullable } from '@headless-adminapp/core/types';
 
 import { getControls } from '../DataFormProvider/utils';
@@ -61,7 +62,7 @@ interface Operation {
   logicalName: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any;
-  id?: string;
+  id?: Id;
 }
 
 async function executeOperation(
@@ -111,8 +112,8 @@ function generateSubgridUpdateOperation({
   const newRows = gridRows.filter((x) => !x[gridSchema.idAttribute]);
   const updatedRows = gridRows.filter((x) => x[gridSchema.idAttribute]);
   const deletedIds = initialGridRows
-    ?.map((x) => x[gridSchema.idAttribute])
-    .filter((id) => !gridRows.find((x) => x[gridSchema.idAttribute] === id));
+    ?.map((x) => getRecordId(gridSchema, x))
+    .filter((id) => !gridRows.find((x) => getRecordId(gridSchema, x) === id));
 
   for (const row of newRows) {
     operations.push({
@@ -130,7 +131,7 @@ function generateSubgridUpdateOperation({
 
   for (const row of updatedRows) {
     const initialRow = initialGridRows.find(
-      (x) => x[gridSchema.idAttribute] === row[gridSchema.idAttribute],
+      (x) => getRecordId(gridSchema, x) === getRecordId(gridSchema, row),
     );
 
     if (!initialRow) {
@@ -147,7 +148,7 @@ function generateSubgridUpdateOperation({
       type: 'update',
       logicalName: control.logicalName,
       data: modifiedRow,
-      id: row[gridSchema.idAttribute],
+      id: getRecordId(gridSchema, row),
     });
   }
 
@@ -303,17 +304,8 @@ export async function saveRecord({
   let recordId: Id;
 
   if (record) {
-    const idAttributeValue = record[schema.idAttribute];
+    const recordId = getRecordId(schema, record);
 
-    if (
-      typeof idAttributeValue === 'object' &&
-      idAttributeValue !== null &&
-      'id' in idAttributeValue
-    ) {
-      recordId = idAttributeValue.id as Id;
-    } else {
-      recordId = idAttributeValue as Id;
-    }
     const updateResult = await updateRecord({
       recordId: recordId as string,
       values,

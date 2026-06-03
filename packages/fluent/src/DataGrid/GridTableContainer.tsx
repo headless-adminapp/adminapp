@@ -23,6 +23,8 @@ import {
 import { useLocale } from '@headless-adminapp/app/locale';
 import { useContextSelector } from '@headless-adminapp/app/mutable';
 import { useOpenForm } from '@headless-adminapp/app/navigation';
+import type { Id } from '@headless-adminapp/core';
+import { getRecordId } from '@headless-adminapp/core/transport/utils';
 import { Icons } from '@headless-adminapp/icons';
 import {
   flexRender,
@@ -182,9 +184,9 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
   const openFormInternal = useOpenForm();
 
   const openRecord = useCallback(
-    (id: string) => {
+    (id: Id) => {
       const record = dataRef.current?.records.find(
-        (r) => r[schema.idAttribute] === id,
+        (r) => getRecordId(schema, r) === id,
       );
 
       if (!record) {
@@ -196,12 +198,12 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
       openFormInternal({
         logicalName: logicalName,
         id,
-        recordSetIds: dataRef.current?.records.map(
-          (x) => x[schema.idAttribute] as string,
+        recordSetIds: dataRef.current?.records.map((x) =>
+          getRecordId(schema, x),
         ),
       }).catch(console.error);
     },
-    [openFormInternal, schema.idAttribute, schema.logicalName],
+    [openFormInternal, schema],
   );
 
   const { direction } = useLocale();
@@ -230,12 +232,12 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
     () =>
       uniqueRecords.reduce(
         (acc, record) => {
-          acc[record[schema.idAttribute] as string] = record.__uuid;
+          acc[getRecordId(schema, record)] = record.__uuid;
           return acc;
         },
         {} as Record<string, string>,
       ),
-    [uniqueRecords, schema.idAttribute],
+    [uniqueRecords, schema],
   );
 
   const rowSelection = useMemo(() => {
@@ -429,13 +431,13 @@ export const GridTableContainer: FC<GridTableContainerProps> = ({
                     }}
                     onClick={() => {
                       setSelectedIdsRef.current(() => {
-                        const id = row.original[schema.idAttribute] as string;
+                        const id = getRecordId(schema, row.original);
 
                         return [id];
                       });
                     }}
                     onDoubleClick={() => {
-                      const id = row.original[schema.idAttribute] as string;
+                      const id = getRecordId(schema, row.original);
                       openRecord(id);
                     }}
                   >

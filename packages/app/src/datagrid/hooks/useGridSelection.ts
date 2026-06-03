@@ -1,3 +1,4 @@
+import type { Id } from '@headless-adminapp/core';
 import { useCallback } from 'react';
 
 import { useContextSelector, useContextSetValue } from '../../mutable/context';
@@ -12,7 +13,7 @@ export function useGridSelection() {
   const setValue = useContextSetValue(GridContext);
 
   const setSelectedIds = useCallback(
-    (selectedIds: string[] | ((previousIds: string[]) => string[])) => {
+    (selectedIds: Id[] | ((previousIds: Id[]) => Id[])) => {
       if (typeof selectedIds === 'function') {
         setValue((state) => ({
           selectedIds: selectedIds(state.selectedIds),

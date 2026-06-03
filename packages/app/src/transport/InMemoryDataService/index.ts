@@ -15,6 +15,7 @@ import type {
   RetriveRecordsFnOptions,
   RetriveRecordsResult,
 } from '@headless-adminapp/core/transport/operations';
+import { getRecordId } from '@headless-adminapp/core/transport/utils';
 
 interface Options {
   data: Record<string, unknown[]>;
@@ -53,7 +54,7 @@ export class InMemoryDataService implements IDataService {
       this.getCollection<InferredSchemaType<SchemaAttributes>>(logicalName);
 
     const record = records.find((record) => {
-      return record[schema.idAttribute] === id;
+      return getRecordId(schema, record) === id;
     });
 
     if (!record) {

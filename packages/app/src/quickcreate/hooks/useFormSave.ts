@@ -1,4 +1,8 @@
 import type { DataLookup, Id } from '@headless-adminapp/core/attributes';
+import {
+  getRecordId,
+  getRecordPrimaryName,
+} from '@headless-adminapp/core/transport/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -69,8 +73,8 @@ export function useFormSave() {
       );
 
       saveResult = {
-        id: record[schema.idAttribute] as Id,
-        name: record[schema.primaryAttribute] as string,
+        id: getRecordId(schema, record) as Id,
+        name: getRecordPrimaryName(schema, record),
         avatar: schema.avatarAttribute
           ? (record[schema.avatarAttribute] as string)
           : undefined,

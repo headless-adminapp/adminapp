@@ -28,6 +28,10 @@ import type {
   SchemaAttributes,
 } from '@headless-adminapp/core/schema';
 import type { Data, IDataService } from '@headless-adminapp/core/transport';
+import {
+  getRecordId,
+  getRecordPrimaryName,
+} from '@headless-adminapp/core/transport/utils';
 import { IconPlaceholder, Icons } from '@headless-adminapp/icons';
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -51,7 +55,7 @@ export interface LookupOption {
 }
 
 export type DataLookup = {
-  id: string;
+  id: Id;
   name: string;
   logicalName: string;
   avatar?: string;
@@ -93,10 +97,10 @@ const useStyles = makeStyles({
 const recordToDataLookup = (
   value: Data<InferredSchemaType<SchemaAttributes>>,
   schema: Schema<SchemaAttributes>,
-) => {
+): DataLookup => {
   return {
-    id: value[schema.idAttribute] as string,
-    name: value[schema.primaryAttribute] as string,
+    id: getRecordId(schema, value),
+    name: getRecordPrimaryName(schema, value),
     logicalName: schema.logicalName,
     avatar: schema.avatarAttribute
       ? (value[schema.avatarAttribute] as string)
@@ -243,14 +247,14 @@ const LookupControlMd: FC<LookupControlProps> = ({
         }}
         onOptionSelect={(e, item) => {
           const _item = data?.records.find(
-            (x) => String(x[schema.idAttribute]) === String(item.optionValue),
+            (x) => String(getRecordId(schema, x)) === String(item.optionValue),
           );
 
           if (_item) {
             recentItemStore.addItem(
               createLookupRecentKey(schema.logicalName),
-              _item[schema.idAttribute] as Id,
-              _item[schema.idAttribute] as string,
+              getRecordId(schema, _item) as Id,
+              String(getRecordId(schema, _item)) as string,
             );
           }
 
@@ -267,10 +271,10 @@ const LookupControlMd: FC<LookupControlProps> = ({
       >
         {data?.records.map((item) => (
           <Option
-            key={item[schema.idAttribute] as string}
-            value={item[schema.idAttribute] as string}
+            key={getRecordId(schema, item)}
+            value={String(getRecordId(schema, item))}
             className={mergeClasses(styles.option)}
-            text={item[schema.primaryAttribute] as string}
+            text={getRecordPrimaryName(schema, item)}
           >
             {view?.experience.card ? (
               view.experience.card.Renderer ? (
@@ -354,7 +358,7 @@ const LookupControlMd: FC<LookupControlProps> = ({
               appearance="brand"
               size="small"
               dismissible={!disabled && !readOnly}
-              value={value.id}
+              value={String(value.id)}
               style={{
                 paddingRight: !disabled && !readOnly ? 0 : 5,
                 background: tokens.colorNeutralBackground6,

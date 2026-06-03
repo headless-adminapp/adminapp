@@ -1,4 +1,7 @@
-import type { LocalizedDataLookup } from '@headless-adminapp/core/attributes';
+import type {
+  Id,
+  LocalizedDataLookup,
+} from '@headless-adminapp/core/attributes';
 import type { CommandItemExperience } from '@headless-adminapp/core/experience/command';
 import type {
   ColumnCondition,
@@ -54,7 +57,7 @@ export interface GridContextState<
   quickFilterValues: Record<string, unknown>;
 
   // internal state (selection)
-  selectedIds: string[];
+  selectedIds: Id[];
   cellSelectionRange?: CellSelectionRange | null;
 
   // internal state (data)

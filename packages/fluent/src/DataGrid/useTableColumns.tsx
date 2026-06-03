@@ -53,6 +53,7 @@ import type { ViewColumnProps } from '@headless-adminapp/core/experience/view/Vi
 import type { RouterInstance } from '@headless-adminapp/core/navigation';
 import type { SchemaAttributes } from '@headless-adminapp/core/schema';
 import type { ISchemaStore } from '@headless-adminapp/core/store';
+import { getRecordId } from '@headless-adminapp/core/transport/utils';
 import {
   type CellContext,
   createColumnHelper,
@@ -263,13 +264,13 @@ export function useTableColumns({
       setValue({ cellSelectionRange: null });
     }
 
-    function excludeId(ids: string[], id: string) {
+    function excludeId(ids: Id[], id: Id) {
       return ids.filter((i) => i !== id);
     }
 
     function toggleSelectedId(info: CellContext<UniqueRecord, unknown>) {
       setSelectedIdsRef.current((ids) => {
-        const id = info.row.original[schema.idAttribute] as string;
+        const id = getRecordId(schema, info.row.original);
         if (ids.includes(id)) {
           return excludeId(ids, id);
         }
@@ -338,7 +339,7 @@ export function useTableColumns({
   }, [
     disableSelection,
     headingSelectionState,
-    schema.idAttribute,
+    schema,
     styles.selectionCell,
     setValue,
   ]);

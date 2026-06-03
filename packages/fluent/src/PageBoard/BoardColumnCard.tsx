@@ -1,6 +1,7 @@
 import { tokens } from '@fluentui/react-components';
 import type { BoardColumnCardPreviewFC } from '@headless-adminapp/app/board/types';
 import type { Schema } from '@headless-adminapp/core/schema';
+import { getRecordId } from '@headless-adminapp/core/transport/utils';
 import { useCallback } from 'react';
 
 import { useDndContext } from '../components/DndProvider';
@@ -27,7 +28,7 @@ export function BoardColumnCard({
     type: columnId,
     canDrag,
     item: () => {
-      return { id: record[schema.idAttribute] as string, columnId, record };
+      return { id: getRecordId(schema, record), columnId, record };
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     collect: (monitor: any) => ({
