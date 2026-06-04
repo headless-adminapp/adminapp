@@ -162,11 +162,11 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       [condition.field]: {
         [Op.gte]: createDayjs(timezone)
           .startOf('day')
-          .toAttributeDate(attribute),
+          .toAttributeDate(attribute, timezone),
         [Op.lt]: createDayjs(timezone)
           .add(1, 'day')
           .startOf('day')
-          .toAttributeDate(attribute),
+          .toAttributeDate(attribute, timezone),
       },
     };
   },
@@ -175,32 +175,17 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       [condition.field]: {
         [Op.gte]: createDayjs(timezone, condition.value)
           .startOf('day')
-          .toAttributeDate(attribute),
+          .toAttributeDate(attribute, timezone),
       },
     };
   },
   'on-or-before': (condition, attribute, { timezone }) => {
-    console.log(
-      'on-or-before',
-      createDayjs(timezone, condition.value)
-        .startOf('day')
-        .add(1, 'day')
-        .toAttributeDate(attribute),
-      createDayjs(timezone, condition.value)
-        .startOf('day')
-        .add(1, 'day')
-        .format('YYYY-MM-DD HH'),
-      createDayjs(timezone, condition.value)
-        .startOf('day')
-        .add(1, 'day')
-        .toISOString(),
-    );
     return {
       [condition.field]: {
         [Op.lt]: createDayjs(timezone, condition.value)
           .startOf('day')
           .add(1, 'day')
-          .toAttributeDate(attribute),
+          .toAttributeDate(attribute, timezone),
       },
     };
   },
@@ -209,21 +194,23 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       [condition.field]: {
         [Op.gte]: createDayjs(timezone)
           .startOf('month')
-          .toAttributeDate(attribute),
+          .toAttributeDate(attribute, timezone),
         [Op.lt]: createDayjs(timezone)
           .add(1, 'month')
           .startOf('month')
-          .toAttributeDate(attribute),
+          .toAttributeDate(attribute, timezone),
       },
     };
   },
   today: (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      [Op.gte]: createDayjs(timezone).startOf('day').toAttributeDate(attribute),
+      [Op.gte]: createDayjs(timezone)
+        .startOf('day')
+        .toAttributeDate(attribute, timezone),
       [Op.lt]: createDayjs(timezone)
         .add(1, 'day')
         .startOf('day')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   yesterday: (condition, attribute, { timezone }) => ({
@@ -231,8 +218,10 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       [Op.gte]: createDayjs(timezone)
         .subtract(1, 'day')
         .startOf('day')
-        .toAttributeDate(attribute),
-      [Op.lt]: createDayjs(timezone).startOf('day').toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
+      [Op.lt]: createDayjs(timezone)
+        .startOf('day')
+        .toAttributeDate(attribute, timezone),
     },
   }),
   tomorrow: (condition, attribute, { timezone }) => ({
@@ -240,33 +229,33 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       [Op.gte]: createDayjs(timezone)
         .add(1, 'day')
         .startOf('day')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
       [Op.lt]: createDayjs(timezone)
         .add(2, 'day')
         .startOf('day')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'this-week': (condition, attribute, { timezone }) => ({
     [condition.field]: {
       [Op.gte]: createDayjs(timezone)
         .startOf('isoWeek')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
       [Op.lt]: createDayjs(timezone)
         .add(1, 'week')
         .startOf('isoWeek')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'this-year': (condition, attribute, { timezone }) => ({
     [condition.field]: {
       [Op.gte]: createDayjs(timezone)
         .startOf('year')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
       [Op.lt]: createDayjs(timezone)
         .add(1, 'year')
         .startOf('year')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'this-fiscal-year': (condition, attribute, { timezone }) => {
@@ -293,21 +282,23 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
         .add(1, 'week')
         .tz(timezone)
         .startOf('isoWeek')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
       [Op.lt]: dayjs()
         .add(2, 'week')
         .tz(timezone)
         .startOf('isoWeek')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'next-seven-days': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      [Op.gte]: createDayjs(timezone).startOf('day').toAttributeDate(attribute),
+      [Op.gte]: createDayjs(timezone)
+        .startOf('day')
+        .toAttributeDate(attribute, timezone),
       [Op.lt]: createDayjs(timezone)
         .add(8, 'day')
         .startOf('day')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'next-month': (condition, attribute, { timezone }) => ({
@@ -315,11 +306,11 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       [Op.gte]: createDayjs(timezone)
         .add(1, 'month')
         .startOf('month')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
       [Op.lt]: createDayjs(timezone)
         .add(2, 'month')
         .startOf('month')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'next-year': (condition, attribute, { timezone }) => ({
@@ -327,11 +318,11 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       [Op.gte]: createDayjs(timezone)
         .add(1, 'year')
         .startOf('year')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
       [Op.lt]: createDayjs(timezone)
         .add(2, 'year')
         .startOf('year')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'next-fiscal-year': (condition, attribute, { timezone }) => {
@@ -353,19 +344,21 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
   },
   'next-x-hours': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      [Op.gte]: createDayjs(timezone).toAttributeDate(attribute),
+      [Op.gte]: createDayjs(timezone).toAttributeDate(attribute, timezone),
       [Op.lt]: createDayjs(timezone)
         .add(condition.value, 'hour')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'next-x-days': (condition, attribute, { timezone }) => ({
     [condition.field]: {
-      [Op.gte]: createDayjs(timezone).startOf('day').toAttributeDate(attribute),
+      [Op.gte]: createDayjs(timezone)
+        .startOf('day')
+        .toAttributeDate(attribute, timezone),
       [Op.lt]: createDayjs(timezone)
         .add(condition.value, 'day')
         .startOf('day')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'last-week': (condition, attribute, { timezone }) => ({
@@ -373,10 +366,10 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       [Op.gte]: createDayjs(timezone)
         .subtract(1, 'week')
         .startOf('isoWeek')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
       [Op.lt]: createDayjs(timezone)
         .startOf('isoWeek')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'last-seven-days': (condition, attribute, { timezone }) => ({
@@ -384,11 +377,11 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       [Op.gte]: createDayjs(timezone)
         .subtract(7, 'day')
         .startOf('day')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
       [Op.lt]: createDayjs(timezone)
         .add(1, 'day')
         .startOf('day')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'last-month': (condition, attribute, { timezone }) => ({
@@ -396,10 +389,10 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       [Op.gte]: createDayjs(timezone)
         .subtract(1, 'month')
         .startOf('month')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
       [Op.lt]: createDayjs(timezone)
         .startOf('month')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'last-year': (condition, attribute, { timezone }) => ({
@@ -407,8 +400,10 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       [Op.gte]: createDayjs(timezone)
         .subtract(1, 'year')
         .startOf('year')
-        .toAttributeDate(attribute),
-      [Op.lt]: createDayjs(timezone).startOf('year').toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
+      [Op.lt]: createDayjs(timezone)
+        .startOf('year')
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'last-fiscal-year': (condition, attribute, { timezone }) => {
@@ -442,11 +437,11 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       [Op.gte]: createDayjs(timezone)
         .subtract(condition.value, 'day')
         .startOf('day')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
       [Op.lt]: createDayjs(timezone)
         .add(1, 'day')
         .startOf('day')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'olderthan-x-hours': (condition, attribute, { timezone }) => ({
@@ -461,7 +456,7 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
       [Op.lt]: createDayjs(timezone)
         .subtract(condition.value - 1, 'day')
         .startOf('day')
-        .toAttributeDate(attribute),
+        .toAttributeDate(attribute, timezone),
     },
   }),
   'in-fiscal-year': (condition, attribute, { timezone }) => ({
@@ -516,10 +511,10 @@ const conditionTransformers: Record<OperatorKey, ConditionTransformer> = {
             [Op.between]: [
               createDayjs(timezone, condition.value[0])
                 .startOf('day')
-                .toAttributeDate(attribute),
+                .toAttributeDate(attribute, timezone),
               createDayjs(timezone, condition.value[0])
                 .startOf('day')
-                .toAttributeDate(attribute),
+                .toAttributeDate(attribute, timezone),
             ],
           },
         };
