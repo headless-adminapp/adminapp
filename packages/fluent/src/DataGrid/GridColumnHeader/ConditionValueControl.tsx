@@ -72,6 +72,23 @@ export function ConditionValueControl({
           }}
         />
       );
+    case 'regarding':
+      if (attribute.type !== 'regarding') {
+        return null;
+      }
+
+      return (
+        <FormControl
+          type="regarding"
+          dataService={dataService}
+          entities={attribute.entities}
+          schemaStore={schemaStore}
+          value={value ?? null}
+          onChange={(value) => {
+            onChange?.(value ?? null);
+          }}
+        />
+      );
     case 'date':
       return (
         <FormControl

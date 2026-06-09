@@ -12,6 +12,7 @@ import { LookupControl } from './controls/LookupControl';
 import MultiSelectControl from './controls/MultiSelectControl';
 import { MultiSelectLookupControl } from './controls/MultiSelectLookupControl';
 import { PasswordControl } from './controls/PasswordControl';
+import { RegardingControl } from './controls/RegardingControl';
 import SelectControl from './controls/SelectControl';
 import { SwitchControl } from './controls/SwitchControl';
 import { TelephoneControl } from './controls/TelephoneControl';
@@ -89,6 +90,14 @@ function Control<T>(props: FormControlProps<T>): JSX.Element {
     case 'lookups':
       return (
         <MultiSelectLookupControl
+          value={value}
+          onChange={onChange}
+          {...(rest as any)}
+        />
+      );
+    case 'regarding':
+      return (
+        <RegardingControl
           value={value}
           onChange={onChange}
           {...(rest as any)}

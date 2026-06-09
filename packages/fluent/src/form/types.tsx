@@ -10,6 +10,7 @@ import type { LookupControlProps } from './controls/LookupControl';
 import type { MultiSelectControlProps } from './controls/MultiSelectControl';
 import type { MultiSelectLookupControlProps } from './controls/MultiSelectLookupControl';
 import type { PasswordControlProps } from './controls/PasswordControl';
+import type { RegardingControlProps } from './controls/RegardingControl';
 import type { SelectControlProps } from './controls/SelectControl';
 import type { SwitchControlProps } from './controls/SwitchControl';
 import type { TelephoneControlProps } from './controls/TelephoneControl';
@@ -96,6 +97,11 @@ export type SwitchFormControlProps = BaseFormControlProps &
     type: 'switch';
   };
 
+export type RegardingFormControlProps = BaseFormControlProps &
+  RegardingControlProps & {
+    type: 'regarding';
+  };
+
 // export type AttachmentFormControlProps = BaseFormControlProps &
 //   AttachmentControlProps & {
 //     type: 'attachment';
@@ -140,6 +146,7 @@ export type FormControlProps<T> = {
   | LookupFormControlProps
   | MultiSelectLookupsFormControlProps
   | SwitchFormControlProps
+  | RegardingFormControlProps
 );
 // | AttachmentFormControlProps
 // | DateTimeFormControlProps

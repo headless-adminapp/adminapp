@@ -61,7 +61,7 @@ export async function getDependentRecordsToDelete<
   SA extends MongoRequiredSchemaAttributes = MongoRequiredSchemaAttributes,
 >({
   _id,
-  schema,
+  schema: parentSchema,
   session,
   schemaStore,
 }: {
@@ -70,7 +70,7 @@ export async function getDependentRecordsToDelete<
   session: ClientSession | null;
   schemaStore: MongoSchemaStore<SA>;
 }) {
-  const dependedAttributes = getDependedAttributes(schema, schemaStore);
+  const dependedAttributes = getDependedAttributes(parentSchema, schemaStore);
 
   const dependedRecordsResult: DependentRecord[] = [];
 
@@ -80,9 +80,9 @@ export async function getDependentRecordsToDelete<
     behavior,
     entityTypeAttribute,
   } of dependedAttributes) {
-    const schema = schemaStore.getSchema(schemaLogicalName);
+    const childSchema = schemaStore.getSchema(schemaLogicalName);
 
-    if (schema.virtual) {
+    if (childSchema.virtual) {
       // We only check for direct dependencies
       // so we can skip virtual schemas as they don't have their own collection
       continue;
@@ -96,7 +96,7 @@ export async function getDependentRecordsToDelete<
     };
 
     if (entityTypeAttribute) {
-      filter[entityTypeAttribute] = schema.logicalName;
+      filter[entityTypeAttribute] = parentSchema.logicalName;
     }
 
     const dependedRecords = await dependedModel.find(filter, undefined, {

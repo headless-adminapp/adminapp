@@ -406,12 +406,12 @@ const lookupOperatorOptions: OperatorOptionConfig[] = [
 
 const regardingOperatorOptions: OperatorOptionConfig[] = [
   {
-    value: 'in',
+    value: 'eq',
     labelKey: 'equals',
     controls: ['regarding'],
   },
   {
-    value: 'not-in',
+    value: 'ne',
     labelKey: 'doesNotEqual',
     controls: ['regarding'],
   },
