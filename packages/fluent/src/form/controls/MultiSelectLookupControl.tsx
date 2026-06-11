@@ -221,6 +221,8 @@ const LookupControlMd: FC<MultiSelectLookupControlProps> = ({
             onFocus={onFocus}
             id={id}
             autoFocus={autoFocus}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
           />
         )}
       </TagPickerControl>

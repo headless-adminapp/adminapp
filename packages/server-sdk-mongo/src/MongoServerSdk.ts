@@ -852,6 +852,15 @@ export class MongoServerSdk<
           } else {
             acc[key] = value;
           }
+        } else if (
+          attribute.type === 'string' &&
+          attribute.format === 'password' &&
+          attribute.redact
+        ) {
+          if (value !== '********') {
+            // if value is same as redacted value, it means password is not changed, so we should not update it in db
+            acc[key] = value;
+          }
         } else {
           acc[key] = value;
         }

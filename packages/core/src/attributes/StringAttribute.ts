@@ -48,6 +48,13 @@ export type StringTextUrlAttributeOptions = {
   suggestions?: SuggestionOptions;
 };
 
+export type StringTextPasswordAttributeOptions = {
+  // password format
+  format: 'password';
+  // Redacted from api responses and logs
+  redact?: boolean;
+};
+
 export type StringTextRichTextAttributeOptions = {
   // rich text editor
   format: 'richtext';
@@ -68,6 +75,7 @@ export type StringAttributeOptions = {
   | StringTextEmailAttributeOptions
   | StringTextPhoneAttributeOptions
   | StringTextUrlAttributeOptions
+  | StringTextPasswordAttributeOptions
   | StringTextRichTextAttributeOptions
   | StringTextMarkdownAttributeOptions
 );

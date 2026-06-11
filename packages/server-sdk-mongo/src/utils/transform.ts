@@ -91,6 +91,16 @@ function transformColumns({
       } else {
         transformedRecord[column] = null;
       }
+    } else if (attribute.type === 'string' && attribute.format === 'password') {
+      if (!attribute.redact) {
+        transformedRecord[column] = record[column];
+      } else {
+        if (record[column]) {
+          transformedRecord[column] = '********';
+        } else {
+          transformedRecord[column] = null;
+        }
+      }
     } else {
       transformedRecord[column] = record[column];
     }

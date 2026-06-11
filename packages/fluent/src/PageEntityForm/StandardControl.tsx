@@ -23,6 +23,7 @@ import { LookupControl } from '../form/controls/LookupControl';
 import { MarkdownControl } from '../form/controls/MarkdownControl';
 import MultiSelectControl from '../form/controls/MultiSelectControl';
 import { MultiSelectLookupControl } from '../form/controls/MultiSelectLookupControl';
+import { PasswordControl } from '../form/controls/PasswordControl';
 import { RegardingControl } from '../form/controls/RegardingControl';
 import { RichTextControl } from '../form/controls/RichTextControl';
 import SelectControl from '../form/controls/SelectControl';
@@ -135,6 +136,13 @@ export const StandardControl: FC<StandardControlProps> = (props) => {
           const Control =
             componentStore.getComponent<typeof UrlControl>('Form.UrlControl') ??
             UrlControl;
+          return <Control {...controlProps} />;
+        }
+        case 'password': {
+          const Control =
+            componentStore.getComponent<typeof PasswordControl>(
+              'Form.PasswordControl',
+            ) ?? PasswordControl;
           return <Control {...controlProps} />;
         }
         case 'textarea': {
