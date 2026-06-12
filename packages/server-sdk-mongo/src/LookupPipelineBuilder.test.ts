@@ -118,7 +118,7 @@ describe('LookupPipelineBuilder', () => {
           as: '@expand.lookup.schema2.@expand.nestedLookup.schema3',
           foreignField: '_id',
           from: 'schema3',
-          localField: 'nestedLookup',
+          localField: '@expand.lookup.schema2.nestedLookup',
         },
       },
       {
@@ -163,7 +163,7 @@ describe('LookupPipelineBuilder', () => {
           as: '@expand.lookup.schema2.@expand.nestedLookup.schema3',
           foreignField: '_id',
           from: 'schema3',
-          localField: 'nestedLookup',
+          localField: '@expand.lookup.schema2.nestedLookup',
         },
       },
       {

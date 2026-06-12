@@ -152,5 +152,44 @@ describe('transform', () => {
         },
       });
     });
+
+    it('should transform nested lookup correctly', () => {
+      const transformedRecord = transformRecord({
+        columns: ['_id', 'name', 'lookup'],
+        record,
+        schema: schema1,
+        schemaStore,
+        expand: {
+          lookup: {
+            columns: ['_id', 'name', 'nestedLookup'],
+          },
+        },
+      });
+
+      expect(transformedRecord).toEqual({
+        $entity: 'schema1',
+        _id: '1',
+        name: 'Test',
+        lookup: {
+          id: '2',
+          name: 'Lookup Test',
+          avatar: null,
+          logicalName: 'schema2',
+        },
+        $expand: {
+          lookup: {
+            $entity: 'schema2',
+            _id: '2',
+            name: 'Lookup Test',
+            nestedLookup: {
+              id: '4',
+              name: 'Nested Lookup Test',
+              avatar: null,
+              logicalName: 'schema3',
+            },
+          },
+        },
+      });
+    });
   });
 });

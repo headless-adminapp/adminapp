@@ -163,15 +163,20 @@ const transformExpandedInfo = ({
         }
 
         if (attribute.type === 'lookup') {
-          const nestedExpandedRecord = expandedRecord['@expand']?.[column];
+          const nestedExpandedRecord =
+            expandedRecord['@expand']?.[column]?.[attribute.entity];
+          const nestedSchema = schemaStore.getSchema(attribute.entity);
 
           if (!nestedExpandedRecord) {
             acc[column] = null;
           } else {
             acc[column] = {
-              id: nestedExpandedRecord[expandedSchema.idAttribute],
-              name: nestedExpandedRecord[expandedSchema.primaryAttribute],
+              id: nestedExpandedRecord[nestedSchema.idAttribute],
+              name: nestedExpandedRecord[nestedSchema.primaryAttribute],
               logicalName: attribute.entity,
+              avatar: nestedSchema.avatarAttribute
+                ? nestedExpandedRecord[nestedSchema.avatarAttribute]
+                : null,
             };
           }
         } else if (attribute.type === 'date' && attribute.format === 'date') {

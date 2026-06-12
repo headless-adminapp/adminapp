@@ -93,15 +93,21 @@ export class LookupPipelineBuilder<
     attributeName: string;
     parentAlias?: string;
   }): string[] {
+    let localField = key;
+
+    if (parentAlias) {
+      localField = `${parentAlias}.${key}`;
+    }
+
     if (attribute.type === 'lookup') {
       const alias = this.getExpandAlias(key, attribute.entity, parentAlias);
-      this.addLookupPipeline(attribute.entity, key, alias);
+      this.addLookupPipeline(attribute.entity, localField, alias);
       return [alias];
     } else if (attribute.type === 'regarding') {
       const aliases: string[] = [];
       for (const entity of attribute.entities) {
         const alias = this.getExpandAlias(key, entity, parentAlias);
-        this.addLookupPipeline(entity, key, alias);
+        this.addLookupPipeline(entity, localField, alias);
         aliases.push(alias);
       }
       return aliases;

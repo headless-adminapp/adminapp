@@ -180,54 +180,12 @@ export class MongoServerSdk<
       });
     }
 
-    const lookupPipelines: PipelineStage[] = [];
-
-    Object.entries(schema.attributes).forEach(([key, attribute]) => {
-      if (attribute.type === 'lookup') {
-        if (
-          params?.columns?.includes(key) ||
-          (params?.expand as Record<string, string[]>)?.[key]?.length
-        ) {
-          const lookupSchema = this.options.schemaStore.getSchema(
-            attribute.entity,
-          );
-          lookupPipelines.push({
-            $lookup: {
-              from: lookupSchema.logicalName,
-              localField: key,
-              foreignField: '_id',
-              as: `@expand.${key}`,
-            },
-          });
-          lookupPipelines.push({
-            $unwind: {
-              path: `$@expand.${key}`,
-              preserveNullAndEmptyArrays: true,
-            },
-          });
-        }
-      } else if (attribute.type === 'regarding') {
-        if (params?.columns?.includes(key)) {
-          for (const entity of attribute.entities) {
-            const lookupSchema = this.options.schemaStore.getSchema(entity);
-            lookupPipelines.push({
-              $lookup: {
-                from: lookupSchema.logicalName,
-                localField: key,
-                foreignField: '_id',
-                as: `@expand.${key}.${entity}`,
-              },
-            });
-            lookupPipelines.push({
-              $unwind: {
-                path: `$@expand.${key}.${entity}`,
-                preserveNullAndEmptyArrays: true,
-              },
-            });
-          }
-        }
-      }
-    });
+    const lookupPipelines = new LookupPipelineBuilder({
+      schema,
+      schemaStore: this.options.schemaStore,
+      columns: params.columns,
+      expand: params.expand,
+    }).build();
 
     basePipelines.push(...lookupPipelines);
 
