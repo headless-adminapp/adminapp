@@ -133,7 +133,9 @@ const transformExpandedRecord = ({
   transformedRecord['$expand'] = {};
 
   for (const expandKey of Object.keys(expand)) {
-    const expandedColumns = expand[expandKey]!;
+    const expandedColumns = Array.isArray(expand[expandKey])
+      ? expand[expandKey]
+      : [];
     const expandedAttribute = schema.attributes[expandKey];
 
     if (!expandedAttribute || expandedAttribute.type !== 'lookup') {

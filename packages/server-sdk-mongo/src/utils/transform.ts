@@ -2,10 +2,11 @@
 import type { Schema } from '@headless-adminapp/core/schema';
 import type { ISchemaStore } from '@headless-adminapp/core/store';
 import type { RetriveRecordsParams } from '@headless-adminapp/core/transport';
+import type { ExpandOptions } from '@headless-adminapp/core/transport/operations/RetriveRecords';
 import { urlToFileObject } from '@headless-adminapp/core/utils';
 import dayjs from 'dayjs';
 
-function transformColumns({
+export function transformColumns({
   record,
   transformedRecord,
   schema,
@@ -28,7 +29,7 @@ function transformColumns({
     if (attribute.type === 'lookup') {
       const lookupSchema = schemaStore.getSchema(attribute.entity);
 
-      const expandedValue = record['@expand']?.[column];
+      const expandedValue = record['@expand']?.[column]?.[attribute.entity];
 
       if (!record[column] || !expandedValue) {
         transformedRecord[column] = null;
@@ -107,6 +108,128 @@ function transformColumns({
   }
 }
 
+const transformExpandedInfo = ({
+  record,
+  schema,
+  expandKey,
+  schemaStore,
+  expandInfo,
+}: {
+  record: any;
+  schema: Schema;
+  expandKey: string;
+  schemaStore: ISchemaStore;
+  expandInfo: ExpandOptions<Record<string, unknown>>[string];
+}) => {
+  const expandedAttribute = schema.attributes[expandKey];
+
+  if (!expandedAttribute) return;
+
+  let entity: string | undefined;
+
+  if (expandedAttribute.type === 'lookup') {
+    entity = expandedAttribute.entity;
+  } else if (expandedAttribute.type === 'regarding') {
+    entity = record[expandedAttribute.entityTypeAttribute];
+  }
+
+  if (!entity) {
+    return;
+  }
+
+  const expandedSchema = schemaStore.getSchema(entity);
+
+  const expandedRecord = record['@expand']?.[expandKey]?.[entity];
+
+  if (!expandedRecord) {
+    return;
+  }
+
+  const transformedRecord = {
+    $entity: entity,
+  } as Record<string, any>;
+
+  const expandedColumns = Array.isArray(expandInfo)
+    ? expandInfo
+    : expandInfo?.columns || [];
+
+  Object.assign(
+    transformedRecord,
+    expandedColumns.reduce(
+      (acc, column) => {
+        const attribute = expandedSchema.attributes[column];
+        if (!attribute) {
+          return acc;
+        }
+
+        if (attribute.type === 'lookup') {
+          const nestedExpandedRecord = expandedRecord['@expand']?.[column];
+
+          if (!nestedExpandedRecord) {
+            acc[column] = null;
+          } else {
+            acc[column] = {
+              id: nestedExpandedRecord[expandedSchema.idAttribute],
+              name: nestedExpandedRecord[expandedSchema.primaryAttribute],
+              logicalName: attribute.entity,
+            };
+          }
+        } else if (attribute.type === 'date' && attribute.format === 'date') {
+          if (expandedRecord[column]) {
+            acc[column] = dayjs(expandedRecord[column])
+              .utc()
+              .format('YYYY-MM-DD');
+          } else {
+            acc[column] = null;
+          }
+        } else if (attribute.type === 'attachment') {
+          if (expandedRecord[column]) {
+            acc[column] = urlToFileObject(expandedRecord[column]);
+          } else {
+            acc[column] = null;
+          }
+        } else {
+          acc[column] = expandedRecord[column];
+        }
+
+        return acc;
+      },
+      {} as Record<string, any>,
+    ),
+  );
+
+  if (!Array.isArray(expandInfo) && expandInfo?.expand) {
+    transformedRecord['$expand'] = {};
+    for (const expandKey of Object.keys(expandInfo.expand)) {
+      const nestedExpandInfo = expandInfo.expand[expandKey];
+
+      if (!nestedExpandInfo) {
+        continue;
+      }
+
+      const nestedSchema = schemaStore.getSchema(entity);
+
+      const result = transformExpandedInfo({
+        schema: nestedSchema,
+        expandKey,
+        schemaStore,
+        expandInfo: nestedExpandInfo,
+        record: expandedRecord,
+      });
+
+      if (!result) {
+        continue;
+      }
+
+      transformedRecord['$expand'][expandKey] = result;
+    }
+  }
+
+  return {
+    [entity]: transformedRecord,
+  };
+};
+
 const transformExpandedRecord = ({
   record,
   transformedRecord,
@@ -123,69 +246,25 @@ const transformExpandedRecord = ({
   transformedRecord['$expand'] = {};
 
   for (const expandKey of Object.keys(expand)) {
-    const expandedColumns = expand[expandKey]!;
-    const expandedAttribute = schema.attributes[expandKey];
+    const expandInfo = expand[expandKey];
 
-    if (!expandedAttribute || expandedAttribute.type !== 'lookup') {
+    if (!expandInfo) {
       continue;
     }
 
-    const expandedSchema = schemaStore.getSchema(expandedAttribute.entity);
+    const result = transformExpandedInfo({
+      schema,
+      expandKey,
+      schemaStore,
+      expandInfo,
+      record,
+    });
 
-    const expandedRecord = record['@expand']?.[expandKey];
-
-    if (!expandedRecord) {
+    if (!result) {
       continue;
     }
 
-    transformedRecord['$expand'][expandKey] = {
-      '@data:entity': expandedAttribute.entity,
-    };
-
-    Object.assign(
-      transformedRecord['$expand'][expandKey],
-      expandedColumns.reduce(
-        (acc, column) => {
-          const attribute = expandedSchema.attributes[column];
-          if (!attribute) {
-            return acc;
-          }
-
-          if (attribute.type === 'lookup') {
-            const nestedExpandedRecord = expandedRecord['@expand']?.[column];
-
-            if (!nestedExpandedRecord) {
-              acc[column] = null;
-            } else {
-              acc[column] = {
-                id: nestedExpandedRecord[expandedSchema.idAttribute],
-                name: nestedExpandedRecord[expandedSchema.primaryAttribute],
-                logicalName: attribute.entity,
-              };
-            }
-          } else if (attribute.type === 'date' && attribute.format === 'date') {
-            if (expandedRecord[column]) {
-              acc[column] = dayjs(expandedRecord[column])
-                .utc()
-                .format('YYYY-MM-DD');
-            } else {
-              acc[column] = null;
-            }
-          } else if (attribute.type === 'attachment') {
-            if (expandedRecord[column]) {
-              acc[column] = urlToFileObject(expandedRecord[column]);
-            } else {
-              acc[column] = null;
-            }
-          } else {
-            acc[column] = expandedRecord[column];
-          }
-
-          return acc;
-        },
-        {} as Record<string, any>,
-      ),
-    );
+    transformedRecord['$expand'][expandKey] = result;
   }
 };
 

@@ -38,7 +38,9 @@ import mongoose, {
 
 import { transformFilter } from './conditions';
 import { getDependentRecordsToDelete } from './getDependentRecordsToDelete';
+import { LookupPipelineBuilder } from './LookupPipelineBuilder';
 import type { MongoSchemaStore } from './MongoSchemaStore';
+import { ProjectionPipelineStageBuilder } from './ProjectionBuilder';
 import type { MongoRequiredSchemaAttributes } from './types';
 import { transformRecord } from './utils/transform';
 
@@ -229,16 +231,15 @@ export class MongoServerSdk<
 
     basePipelines.push(...lookupPipelines);
 
-    const projection = this.prepareProjection({
-      schema,
+    const projection = new ProjectionPipelineStageBuilder({
       columns: params.columns,
       expand: params.expand,
-    });
+      schema,
+      schemaStore: this.options.schemaStore,
+    }).build();
 
-    if (projection) {
-      basePipelines.push({
-        $project: projection,
-      });
+    if (Object.keys(projection.$project).length) {
+      basePipelines.push(projection);
     }
 
     const records = await model
@@ -271,124 +272,6 @@ export class MongoServerSdk<
     });
 
     return transformedRecords[0] as RetriveRecordResult<T>;
-  }
-
-  private prepareProjection(params: {
-    columns?: string[];
-    expand?: Record<string, string[] | undefined>;
-    schema: Schema<SA>;
-  }) {
-    if (params.columns?.length) {
-      const projection = params.columns.reduce(
-        (acc, x) => {
-          const [key, subKey] = x.split('.');
-          const attribute = params.schema.attributes[key];
-          if (!attribute) {
-            return acc;
-          }
-
-          if (attribute.type === 'lookup') {
-            const lookupSchema = this.options.schemaStore.getSchema(
-              attribute.entity,
-            );
-            let lookupProjection: Record<string, number | string> = (acc[
-              key
-            ] as Record<string, number | string>) || {
-              _id: 1,
-            };
-
-            if (!subKey) {
-              lookupProjection = {
-                ...lookupProjection,
-                name: `$${key}.${lookupSchema.primaryAttribute as string}`,
-                [`${key}.${lookupSchema.primaryAttribute as string}`]: 1,
-                logicalName: lookupSchema.logicalName,
-              };
-            } else {
-              lookupProjection[subKey] = 1;
-            }
-
-            acc[key] = lookupProjection;
-            return acc;
-          } else if (attribute.type === 'regarding') {
-            acc[attribute.entityTypeAttribute] = 1;
-            acc[key] = 1;
-            return acc;
-          } else {
-            acc[key] = 1;
-            return acc;
-          }
-        },
-        {} as Record<
-          string,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          number | string | any | Record<string, number | string>
-        >,
-      );
-
-      projection._id = 1;
-      projection['@data:entity'] = params.schema.logicalName;
-
-      if (params.expand && Object.keys(params.expand).length) {
-        const expand = Object.keys(params.expand).reduce(
-          (acc, cur) => {
-            const attribute = params.schema.attributes[cur];
-            if (!attribute) {
-              return acc;
-            }
-
-            if (attribute.type !== 'lookup') {
-              return acc;
-            }
-
-            const lookupSchema = this.options.schemaStore.getSchema(
-              attribute.entity,
-            );
-
-            const expandProjection = {
-              '@data:entity': lookupSchema.logicalName,
-              [lookupSchema.idAttribute]: `$${cur}.${
-                lookupSchema.idAttribute as string
-              }`,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } as Record<string, any>;
-
-            const columns = params.expand?.[cur] ?? [];
-
-            columns.forEach((column) => {
-              expandProjection[column] = `$${cur}.${column}`;
-            });
-
-            acc[cur] = {
-              $cond: {
-                if: {
-                  $and: [{ $eq: [{ $type: '$bankAccount' }, 'object'] }],
-                },
-                then: expandProjection,
-                else: null,
-              },
-            };
-
-            return acc;
-          },
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          {} as Record<string, any>,
-        );
-
-        if (Object.keys(expand).length) {
-          projection['@data:expand'] = expand;
-        }
-      }
-
-      return null;
-
-      // return projection;
-    } else {
-      return {
-        _id: 1,
-        [params.schema.primaryAttribute]: 1,
-      };
-    }
   }
 
   protected async retriveRecords<T extends Record<string, unknown>>(
@@ -443,65 +326,22 @@ export class MongoServerSdk<
       });
     }
 
-    const lookupPipelines: PipelineStage[] = [];
-
     const extendedKeys = extractExtendedKeyFromFilters(
       permissionFilter,
       orgFilter,
       params.filter,
     );
 
-    Object.entries(schema.attributes).forEach(([key, attribute]) => {
-      if (attribute.type === 'lookup') {
-        // either column included
-        // either searchable and search text included
-        // either expand included
-        if (
-          params?.columns?.includes(key) ||
-          params?.expand?.[key]?.length ||
-          (!!params?.search && attribute.searchable) ||
-          extendedKeys.includes(key)
-        ) {
-          const lookupSchema = this.options.schemaStore.getSchema(
-            attribute.entity,
-          );
-          lookupPipelines.push({
-            $lookup: {
-              from: lookupSchema.logicalName,
-              localField: key,
-              foreignField: '_id',
-              as: `@expand.${key}`,
-            },
-          });
-          lookupPipelines.push({
-            $unwind: {
-              path: `$@expand.${key}`,
-              preserveNullAndEmptyArrays: true,
-            },
-          });
-        }
-      } else if (attribute.type === 'regarding') {
-        if (params?.columns?.includes(key)) {
-          for (const entity of attribute.entities) {
-            const lookupSchema = this.options.schemaStore.getSchema(entity);
-            lookupPipelines.push({
-              $lookup: {
-                from: lookupSchema.logicalName,
-                localField: key,
-                foreignField: '_id',
-                as: `@expand.${key}.${entity}`,
-              },
-            });
-            lookupPipelines.push({
-              $unwind: {
-                path: `$@expand.${key}.${entity}`,
-                preserveNullAndEmptyArrays: true,
-              },
-            });
-          }
-        }
-      }
+    const lookupPipelineBuilder = new LookupPipelineBuilder({
+      includeSearchable: !!params.search,
+      schema,
+      schemaStore: this.options.schemaStore,
+      columns: params.columns,
+      expand: params.expand,
+      expandedKeys: extendedKeys,
     });
+
+    const lookupPipelines = lookupPipelineBuilder.build();
 
     basePipelines.push(...lookupPipelines);
 
@@ -578,6 +418,9 @@ export class MongoServerSdk<
       }
     }
 
+    const listPipeline = [...basePipelines];
+    const countPipeline = [...basePipelines];
+
     const sort = params?.sort?.reduce(
       (acc, x) => {
         acc[x.field] = x.order === 'asc' ? 1 : -1;
@@ -585,9 +428,6 @@ export class MongoServerSdk<
       },
       {} as Record<string, 1 | -1>,
     );
-
-    const listPipeline = [...basePipelines];
-    const countPipeline = [...basePipelines];
 
     if (sort && Object.keys(sort).length) {
       listPipeline.push({ $sort: sort });
@@ -599,16 +439,15 @@ export class MongoServerSdk<
 
     listPipeline.push({ $limit: params?.limit ?? 100 });
 
-    const projection = this.prepareProjection({
+    const projection = new ProjectionPipelineStageBuilder({
       schema,
       columns: params.columns,
       expand: params.expand,
-    });
+      schemaStore: this.options.schemaStore,
+    }).build();
 
-    if (projection) {
-      listPipeline.push({
-        $project: projection,
-      });
+    if (Object.keys(projection.$project).length) {
+      listPipeline.push(projection);
     }
 
     const records = await model

@@ -68,7 +68,8 @@ export function useDataGridKeyboardEvent(
               .entity;
             const lookupSchema = schemaStore.getSchema(entity);
             attribute = lookupSchema.attributes[field];
-            value = data?.records[rowIndex]?.$expand?.[lookup]?.[field];
+            value =
+              data?.records[rowIndex]?.$expand?.[lookup]?.[field]?.[entity];
           }
 
           const formattedValue = getAttributeFormattedValue(

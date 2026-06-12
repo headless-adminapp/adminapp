@@ -9,13 +9,35 @@ type SortingItem<K extends string> = {
 
 export type SortingState<K extends string> = SortingItem<K>[];
 
+// type ExpandItem =
+//   | string
+//   | {
+//       field: string;
+//       expand?: {
+//         [key: string]: ExpandItem[];
+//       };
+//     }
+//   | {
+//       field?: string;
+//       expand: {
+//         [key: string]: ExpandItem[];
+//       };
+//     };
+
+export type ExpandOptions<T = unknown> = {
+  [key in keyof T]?:
+    | string[]
+    | {
+        columns?: string[];
+        expand?: ExpandOptions<Record<string, unknown>>;
+      };
+};
+
 export interface RetriveRecordsFnOptions<T = unknown> {
   logicalName: string;
   filter?: Filter | null;
   columns?: Array<keyof T>;
-  expand?: {
-    [key in keyof T]?: string[];
-  };
+  expand?: ExpandOptions<T>;
   search?: string;
   skip?: number;
   limit?: number;

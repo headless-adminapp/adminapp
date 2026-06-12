@@ -247,7 +247,8 @@ export class SequelizeServerSdk<
           const nestedIncludes: Includeable[] = [];
 
           if (expand?.[key]) {
-            const expandedAttributes = expand[key]
+            const expandKeys = Array.isArray(expand[key]) ? expand[key] : [];
+            const expandedAttributes = expandKeys
               .map((x) => lookupSchema.attributes[x])
               .filter((x) => !!x && x.type === 'lookup') as LookupAttribute[];
 

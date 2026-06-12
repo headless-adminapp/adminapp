@@ -96,7 +96,8 @@ function extractAttributeData({
   if (column.expandedKey) {
     const lookup = column.name;
     const field = column.expandedKey;
-    value = record.$expand?.[lookup]?.[field];
+    const entity = (attributes[lookup] as LookupAttribute).entity;
+    value = record.$expand?.[lookup]?.[field]?.[entity];
   } else {
     value = record[column.name];
   }
