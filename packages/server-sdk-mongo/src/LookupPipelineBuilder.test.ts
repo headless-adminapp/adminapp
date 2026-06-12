@@ -130,7 +130,7 @@ describe('LookupPipelineBuilder', () => {
     ]);
   });
 
-  it.only('should include lookup from nested expand', () => {
+  it('should include lookup from nested expand', () => {
     const builder = new LookupPipelineBuilder({
       columns: ['_id', 'name', 'lookup'],
       includeSearchable: true,
