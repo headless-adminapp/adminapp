@@ -138,18 +138,14 @@ describe('transform', () => {
         },
         $expand: {
           lookup: {
-            schema2: {
-              $entity: 'schema2',
-              _id: '2',
-              name: 'Lookup Test',
-              $expand: {
-                nestedLookup: {
-                  schema3: {
-                    $entity: 'schema3',
-                    _id: '4',
-                    name: 'Nested Lookup Test',
-                  },
-                },
+            $entity: 'schema2',
+            _id: '2',
+            name: 'Lookup Test',
+            $expand: {
+              nestedLookup: {
+                $entity: 'schema3',
+                _id: '4',
+                name: 'Nested Lookup Test',
               },
             },
           },

@@ -177,6 +177,33 @@ export class LookupPipelineBuilder<
       parentAlias,
     });
 
+    const columns = Array.isArray(expandInfo)
+      ? expandInfo
+      : (expandInfo.columns ?? []);
+
+    const entities: string[] = [];
+
+    if (attribute.type === 'lookup') {
+      entities.push(attribute.entity);
+    } else if (attribute.type === 'regarding') {
+      entities.push(...attribute.entities);
+    }
+
+    for (const entity of entities) {
+      const nestedSchema = this.options.schemaStore.getSchema(entity);
+      columns.forEach((column) => {
+        const nestedAttribute = nestedSchema.attributes[column];
+
+        if (!nestedAttribute) return;
+
+        this.addAttribute({
+          attribute: nestedAttribute,
+          attributeName: column,
+          parentAlias: this.getExpandAlias(attributeName, entity, parentAlias),
+        });
+      });
+    }
+
     if (!Array.isArray(expandInfo) && expandInfo.expand) {
       // nested expand
       if (attribute.type === 'lookup') {

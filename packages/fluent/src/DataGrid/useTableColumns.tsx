@@ -477,7 +477,7 @@ function renderCellContent({
     const entity = (attributes[lookup] as LookupAttribute).entity;
     const lookupSchema = schemaStore.getSchema(entity);
     attribute = lookupSchema.attributes[field];
-    value = info.row.original.$expand?.[lookup]?.[field]?.[entity];
+    value = info.row.original.$expand?.[lookup]?.[field];
   } else {
     attribute = attributes[column.name];
     value = info.getValue();

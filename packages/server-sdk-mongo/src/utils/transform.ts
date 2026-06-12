@@ -225,9 +225,7 @@ const transformExpandedInfo = ({
     }
   }
 
-  return {
-    [entity]: transformedRecord,
-  };
+  return transformedRecord;
 };
 
 const transformExpandedRecord = ({
