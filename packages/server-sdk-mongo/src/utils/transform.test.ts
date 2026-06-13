@@ -35,6 +35,21 @@ describe('transform', () => {
           label: 'Regarding Entity Type',
           format: 'text',
         },
+        choice: {
+          type: 'choice',
+          label: 'Choice',
+          string: true,
+          options: [
+            {
+              label: 'Option 1',
+              value: 'option1',
+            },
+            {
+              label: 'Option 2',
+              value: 'option2',
+            },
+          ],
+        },
       },
     }) as unknown as Schema;
     const schema2 = defineSchema({
@@ -64,6 +79,21 @@ describe('transform', () => {
           label: 'Nested Regarding Entity Type',
           format: 'text',
         },
+        nestedChoice: {
+          type: 'choice',
+          label: 'Choice',
+          string: true,
+          options: [
+            {
+              label: 'N Option 1',
+              value: 'noption1',
+            },
+            {
+              label: 'N Option 2',
+              value: 'noption2',
+            },
+          ],
+        },
       },
     }) as unknown as Schema;
     const schema3 = defineSchema({
@@ -91,11 +121,13 @@ describe('transform', () => {
         name: 'Test',
         lookup: '2',
         regarding: '3',
+        choice: 'option1',
         '@expand': {
           lookup: {
             schema2: {
               _id: '2',
               name: 'Lookup Test',
+              nestedChoice: 'noption2',
               '@expand': {
                 nestedLookup: {
                   schema3: {
@@ -186,6 +218,41 @@ describe('transform', () => {
               name: 'Nested Lookup Test',
               avatar: null,
               logicalName: 'schema3',
+            },
+          },
+        },
+      });
+    });
+
+    it('should transform choice attribute correctly', () => {
+      const transformedRecord = transformRecord({
+        columns: ['_id', 'name', 'choice'],
+        record,
+        schema: schema1,
+        schemaStore,
+        expand: {
+          lookup: {
+            columns: ['_id', 'name', 'nestedChoice'],
+          },
+        },
+      });
+
+      expect(transformedRecord).toEqual({
+        $entity: 'schema1',
+        _id: '1',
+        name: 'Test',
+        choice: {
+          label: 'Option 1',
+          value: 'option1',
+        },
+        $expand: {
+          lookup: {
+            $entity: 'schema2',
+            _id: '2',
+            name: 'Lookup Test',
+            nestedChoice: {
+              label: 'N Option 2',
+              value: 'noption2',
             },
           },
         },

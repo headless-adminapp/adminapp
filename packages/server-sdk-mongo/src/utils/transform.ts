@@ -193,6 +193,18 @@ const transformExpandedInfo = ({
           } else {
             acc[column] = null;
           }
+        } else if (attribute.type === 'choice') {
+          if (expandedRecord[column]) {
+            const value = expandedRecord[column];
+            transformedRecord[column] = {
+              value: value,
+              label:
+                attribute.options?.find((option) => option.value === value)
+                  ?.label || value,
+            };
+          } else {
+            transformedRecord[column] = null;
+          }
         } else {
           acc[column] = expandedRecord[column];
         }
