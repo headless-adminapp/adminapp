@@ -1,10 +1,143 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { RegardingAttribute } from '@headless-adminapp/core/attributes/LookupAttribute';
 import type { Schema } from '@headless-adminapp/core/schema';
 import type { ISchemaStore } from '@headless-adminapp/core/store';
 import type { RetriveRecordsParams } from '@headless-adminapp/core/transport';
 import type { ExpandOptions } from '@headless-adminapp/core/transport/operations/RetriveRecords';
 import { urlToFileObject } from '@headless-adminapp/core/utils';
 import dayjs from 'dayjs';
+
+function transformLookup({
+  record,
+  column,
+  lookupEntity,
+  schemaStore,
+}: {
+  record: Record<string, any>;
+  column: string;
+  lookupEntity: string;
+  schemaStore: ISchemaStore;
+}) {
+  const lookupSchema = schemaStore.getSchema(lookupEntity);
+  const expandedRecord = record['@expand']?.[column]?.[lookupEntity];
+
+  if (!record[column] || !expandedRecord) {
+    return null;
+  } else {
+    return {
+      id: expandedRecord[lookupSchema.idAttribute],
+      name: expandedRecord[lookupSchema.primaryAttribute],
+      avatar: lookupSchema.avatarAttribute
+        ? expandedRecord[lookupSchema.avatarAttribute]
+        : null,
+      logicalName: lookupEntity,
+    };
+  }
+}
+
+function transformRegarding({
+  column,
+  record,
+  attribute,
+  schemaStore,
+}: {
+  column: string;
+  record: Record<string, any>;
+  attribute: RegardingAttribute;
+  schemaStore: ISchemaStore;
+}) {
+  const entity = record[attribute.entityTypeAttribute];
+
+  if (!entity) {
+    return null;
+  }
+
+  const expandedRecord = record['@expand']?.[column]?.[entity];
+  const lookupSchema = schemaStore.getSchema(entity);
+
+  if (!record[column] || !expandedRecord) {
+    return null;
+  } else {
+    return {
+      id: expandedRecord[lookupSchema.idAttribute],
+      name: expandedRecord[lookupSchema.primaryAttribute],
+      avatar: lookupSchema.avatarAttribute
+        ? expandedRecord[lookupSchema.avatarAttribute]
+        : null,
+      logicalName: entity,
+    };
+  }
+}
+
+function transformColumn({
+  column,
+  record,
+  schema,
+  schemaStore,
+}: {
+  column: string;
+  record: Record<string, any>;
+  schema: Schema;
+  schemaStore: ISchemaStore;
+}) {
+  const attribute = schema.attributes[column];
+
+  if (!attribute) {
+    return;
+  }
+
+  if (attribute.type === 'lookup') {
+    return transformLookup({
+      record,
+      column,
+      lookupEntity: attribute.entity,
+      schemaStore,
+    });
+  } else if (attribute.type === 'regarding') {
+    return transformRegarding({
+      column,
+      record,
+      attribute,
+      schemaStore,
+    });
+  } else if (attribute.type === 'date' && attribute.format === 'date') {
+    if (record[column]) {
+      return dayjs(record[column]).utc().format('YYYY-MM-DD');
+    } else {
+      return null;
+    }
+  } else if (attribute.type === 'attachment') {
+    if (record[column]) {
+      return urlToFileObject(record[column]);
+    } else {
+      return null;
+    }
+  } else if (attribute.type === 'choice') {
+    if (record[column]) {
+      const value = record[column];
+      return {
+        value: value,
+        label:
+          attribute.options?.find((option) => option.value === value)?.label ||
+          value,
+      };
+    } else {
+      return null;
+    }
+  } else if (attribute.type === 'string' && attribute.format === 'password') {
+    if (!attribute.redact) {
+      return record[column];
+    } else {
+      if (record[column]) {
+        return '********';
+      } else {
+        return null;
+      }
+    }
+  } else {
+    return record[column];
+  }
+}
 
 export function transformColumns({
   record,
@@ -20,90 +153,14 @@ export function transformColumns({
   schemaStore: ISchemaStore;
 }) {
   for (const column of columns) {
-    const attribute = schema.attributes[column];
-
-    if (!attribute) {
-      continue;
-    }
-
-    if (attribute.type === 'lookup') {
-      const lookupSchema = schemaStore.getSchema(attribute.entity);
-
-      const expandedValue = record['@expand']?.[column]?.[attribute.entity];
-
-      if (!record[column] || !expandedValue) {
-        transformedRecord[column] = null;
-      } else {
-        transformedRecord[column] = {
-          id: expandedValue[lookupSchema.idAttribute],
-          name: expandedValue[lookupSchema.primaryAttribute],
-          avatar: lookupSchema.avatarAttribute
-            ? expandedValue[lookupSchema.avatarAttribute]
-            : null,
-          logicalName: attribute.entity,
-        };
-      }
-    } else if (attribute.type === 'regarding') {
-      const entity = record[attribute.entityTypeAttribute];
-
-      if (!entity) {
-        transformedRecord[column] = null;
-        continue;
-      }
-
-      const expandedValue = record['@expand']?.[column]?.[entity];
-      const lookupSchema = schemaStore.getSchema(entity);
-
-      if (!record[column] || !expandedValue) {
-        transformedRecord[column] = null;
-      } else {
-        transformedRecord[column] = {
-          id: expandedValue[lookupSchema.idAttribute],
-          name: expandedValue[lookupSchema.primaryAttribute],
-          avatar: lookupSchema.avatarAttribute
-            ? expandedValue[lookupSchema.avatarAttribute]
-            : null,
-          logicalName: entity,
-        };
-      }
-    } else if (attribute.type === 'date' && attribute.format === 'date') {
-      if (record[column]) {
-        transformedRecord[column] = dayjs(record[column])
-          .utc()
-          .format('YYYY-MM-DD');
-      } else {
-        transformedRecord[column] = null;
-      }
-    } else if (attribute.type === 'attachment') {
-      if (record[column]) {
-        transformedRecord[column] = urlToFileObject(record[column]);
-      } else {
-        transformedRecord[column] = null;
-      }
-    } else if (attribute.type === 'choice') {
-      if (record[column]) {
-        const value = record[column];
-        transformedRecord[column] = {
-          value: value,
-          label:
-            attribute.options?.find((option) => option.value === value)
-              ?.label || value,
-        };
-      } else {
-        transformedRecord[column] = null;
-      }
-    } else if (attribute.type === 'string' && attribute.format === 'password') {
-      if (!attribute.redact) {
-        transformedRecord[column] = record[column];
-      } else {
-        if (record[column]) {
-          transformedRecord[column] = '********';
-        } else {
-          transformedRecord[column] = null;
-        }
-      }
-    } else {
-      transformedRecord[column] = record[column];
+    const result = transformColumn({
+      column,
+      record,
+      schema,
+      schemaStore,
+    });
+    if (result !== undefined) {
+      transformedRecord[column] = result;
     }
   }
 }
@@ -149,6 +206,13 @@ const transformExpandedInfo = ({
     $entity: entity,
   } as Record<string, any>;
 
+  let id = expandedRecord[expandedSchema.idAttribute];
+
+  if (typeof id === 'object') {
+    id = id.toString();
+  }
+  transformedRecord[expandedSchema.idAttribute] = id;
+
   const expandedColumns = Array.isArray(expandInfo)
     ? expandInfo
     : expandInfo?.columns || [];
@@ -157,58 +221,18 @@ const transformExpandedInfo = ({
     transformedRecord,
     expandedColumns.reduce(
       (acc, column) => {
-        const attribute = expandedSchema.attributes[column];
-        if (!attribute) {
+        const result = transformColumn({
+          column,
+          record: expandedRecord,
+          schema: expandedSchema,
+          schemaStore,
+        });
+
+        if (result === undefined) {
           return acc;
         }
 
-        if (attribute.type === 'lookup') {
-          const nestedExpandedRecord =
-            expandedRecord['@expand']?.[column]?.[attribute.entity];
-          const nestedSchema = schemaStore.getSchema(attribute.entity);
-
-          if (!nestedExpandedRecord) {
-            acc[column] = null;
-          } else {
-            acc[column] = {
-              id: nestedExpandedRecord[nestedSchema.idAttribute],
-              name: nestedExpandedRecord[nestedSchema.primaryAttribute],
-              logicalName: attribute.entity,
-              avatar: nestedSchema.avatarAttribute
-                ? nestedExpandedRecord[nestedSchema.avatarAttribute]
-                : null,
-            };
-          }
-        } else if (attribute.type === 'date' && attribute.format === 'date') {
-          if (expandedRecord[column]) {
-            acc[column] = dayjs(expandedRecord[column])
-              .utc()
-              .format('YYYY-MM-DD');
-          } else {
-            acc[column] = null;
-          }
-        } else if (attribute.type === 'attachment') {
-          if (expandedRecord[column]) {
-            acc[column] = urlToFileObject(expandedRecord[column]);
-          } else {
-            acc[column] = null;
-          }
-        } else if (attribute.type === 'choice') {
-          if (expandedRecord[column]) {
-            const value = expandedRecord[column];
-            transformedRecord[column] = {
-              value: value,
-              label:
-                attribute.options?.find((option) => option.value === value)
-                  ?.label || value,
-            };
-          } else {
-            transformedRecord[column] = null;
-          }
-        } else {
-          acc[column] = expandedRecord[column];
-        }
-
+        acc[column] = result;
         return acc;
       },
       {} as Record<string, any>,

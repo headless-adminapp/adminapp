@@ -121,6 +121,7 @@ describe('transform', () => {
         name: 'Test',
         lookup: '2',
         regarding: '3',
+        regarding_entity_type: 'schema2',
         choice: 'option1',
         '@expand': {
           lookup: {
@@ -128,11 +129,36 @@ describe('transform', () => {
               _id: '2',
               name: 'Lookup Test',
               nestedChoice: 'noption2',
+              nestedLookup: '4',
+              nestedRegarding: '3',
+              nested_regarding_entity_type: 'schema3',
               '@expand': {
                 nestedLookup: {
                   schema3: {
                     _id: '4',
                     name: 'Nested Lookup Test',
+                  },
+                },
+                nestedRegarding: {
+                  schema3: {
+                    _id: '3',
+                    name: 'Regarding Test',
+                  },
+                },
+              },
+            },
+          },
+          regarding: {
+            schema2: {
+              _id: '4',
+              name: 'Regarding Test',
+              nested_regarding_entity_type: 'schema3',
+              nestedRegarding: '3',
+              '@expand': {
+                nestedRegarding: {
+                  schema3: {
+                    _id: '3',
+                    name: 'Regarding Test',
                   },
                 },
               },
@@ -144,7 +170,7 @@ describe('transform', () => {
 
     it('should transform columns correctly', () => {
       const transformedRecord = transformRecord({
-        columns: ['_id', 'name', 'lookup'],
+        columns: ['_id', 'name', 'lookup', 'regarding', 'choice'],
         record,
         schema: schema1,
         schemaStore,
@@ -162,9 +188,19 @@ describe('transform', () => {
         $entity: 'schema1',
         _id: '1',
         name: 'Test',
+        choice: {
+          label: 'Option 1',
+          value: 'option1',
+        },
         lookup: {
           id: '2',
           name: 'Lookup Test',
+          avatar: null,
+          logicalName: 'schema2',
+        },
+        regarding: {
+          id: '4',
+          name: 'Regarding Test',
           avatar: null,
           logicalName: 'schema2',
         },
@@ -216,6 +252,43 @@ describe('transform', () => {
             nestedLookup: {
               id: '4',
               name: 'Nested Lookup Test',
+              avatar: null,
+              logicalName: 'schema3',
+            },
+          },
+        },
+      });
+    });
+
+    it('should transform nested regarding correctly', () => {
+      const transformedRecord = transformRecord({
+        columns: ['regarding'],
+        record,
+        schema: schema1,
+        schemaStore,
+        expand: {
+          regarding: {
+            columns: ['nestedRegarding'],
+          },
+        },
+      });
+
+      expect(transformedRecord).toEqual({
+        $entity: 'schema1',
+        _id: '1',
+        regarding: {
+          id: '4',
+          name: 'Regarding Test',
+          avatar: null,
+          logicalName: 'schema2',
+        },
+        $expand: {
+          regarding: {
+            $entity: 'schema2',
+            _id: '4',
+            nestedRegarding: {
+              id: '3',
+              name: 'Regarding Test',
               avatar: null,
               logicalName: 'schema3',
             },
