@@ -1,7 +1,7 @@
 {
   "name": "@headless-adminapp/next",
   "version": "1.5.11",
-  "description": "",
+  "description": "Next.js integration helpers (routing and response formatting) for Headless AdminApp.",
   "main": "index.js",
   "types": "index.d.ts",
   "publishConfig": {
@@ -25,7 +25,14 @@
     "prepublishOnly": "pnpm run build",
     "test": "echo \"OK\""
   },
-  "keywords": [],
+  "keywords": [
+    "headless",
+    "admin-panel",
+    "nextjs",
+    "integration",
+    "routing",
+    "typescript"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

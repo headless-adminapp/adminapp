@@ -1,7 +1,7 @@
 {
   "name": "@headless-adminapp/fluent",
   "version": "1.5.11",
-  "description": "",
+  "description": "Fluent UI implementation layer providing a ready-to-use component set for Headless AdminApp.",
   "main": "index.js",
   "types": "index.d.ts",
   "publishConfig": {
@@ -26,7 +26,15 @@
     "prepublishOnly": "pnpm run build",
     "test": "echo \"OK\""
   },
-  "keywords": [],
+  "keywords": [
+    "headless",
+    "admin-panel",
+    "model-driven",
+    "fluent-ui",
+    "react",
+    "components",
+    "ui-kit"
+  ],
   "author": "",
   "license": "ISC",
   "peerDependencies": {

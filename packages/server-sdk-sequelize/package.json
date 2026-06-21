@@ -1,7 +1,7 @@
 {
   "name": "@headless-adminapp/server-sdk-sequelize",
   "version": "1.5.11",
-  "description": "",
+  "description": "Sequelize (SQL) storage adapter for the Headless AdminApp server SDK.",
   "main": "index.js",
   "types": "index.d.ts",
   "publishConfig": {
@@ -25,7 +25,15 @@
     "prepublishOnly": "pnpm run build",
     "test": "vitest --config vitest.config.ts"
   },
-  "keywords": [],
+  "keywords": [
+    "headless",
+    "admin-panel",
+    "sequelize",
+    "sql",
+    "server-sdk",
+    "storage-adapter",
+    "backend"
+  ],
   "author": "",
   "license": "ISC",
   "peerDependencies": {

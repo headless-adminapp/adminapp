@@ -1,7 +1,7 @@
 {
   "name": "@headless-adminapp/app",
   "version": "1.5.11",
-  "description": "",
+  "description": "UI-agnostic app-level building blocks and shared features for Headless AdminApp, built on the core runtime.",
   "main": "index.js",
   "types": "index.d.ts",
   "publishConfig": {
@@ -26,7 +26,15 @@
     "prepublishOnly": "pnpm run build",
     "test": "echo \"OK\""
   },
-  "keywords": [],
+  "keywords": [
+    "headless",
+    "admin-panel",
+    "model-driven",
+    "react",
+    "components",
+    "back-office",
+    "typescript"
+  ],
   "author": "",
   "license": "ISC",
   "peerDependencies": {

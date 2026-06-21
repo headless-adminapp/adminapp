@@ -1,7 +1,7 @@
 {
   "name": "@headless-adminapp/icons",
   "version": "1.5.0",
-  "description": "",
+  "description": "Shared icon abstraction and base icon components for Headless AdminApp.",
   "main": "index.js",
   "types": "index.d.ts",
   "publishConfig": {
@@ -25,7 +25,14 @@
     "prepublishOnly": "pnpm run build",
     "test": "echo \"OK\""
   },
-  "keywords": [],
+  "keywords": [
+    "headless",
+    "admin-panel",
+    "icons",
+    "react",
+    "components",
+    "typescript"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

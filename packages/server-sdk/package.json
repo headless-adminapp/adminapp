@@ -1,7 +1,7 @@
 {
   "name": "@headless-adminapp/server-sdk",
   "version": "1.5.11",
-  "description": "",
+  "description": "Server-side helpers for Headless AdminApp, used with a storage adapter such as Mongo or Sequelize.",
   "main": "index.js",
   "types": "index.d.ts",
   "publishConfig": {
@@ -25,7 +25,14 @@
     "prepublishOnly": "pnpm run build",
     "test": "echo \"OK\""
   },
-  "keywords": [],
+  "keywords": [
+    "headless",
+    "admin-panel",
+    "server-sdk",
+    "backend",
+    "data-access",
+    "typescript"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

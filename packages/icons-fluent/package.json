@@ -1,7 +1,7 @@
 {
   "name": "@headless-adminapp/icons-fluent",
   "version": "1.5.1",
-  "description": "",
+  "description": "Fluent UI icon adapters bridging Headless AdminApp icon abstractions to Fluent UI icons.",
   "main": "index.js",
   "types": "index.d.ts",
   "publishConfig": {
@@ -25,7 +25,14 @@
     "prepublishOnly": "pnpm run build",
     "test": "echo \"OK\""
   },
-  "keywords": [],
+  "keywords": [
+    "headless",
+    "admin-panel",
+    "icons",
+    "fluent-ui",
+    "react",
+    "adapter"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

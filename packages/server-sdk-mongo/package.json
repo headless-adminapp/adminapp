@@ -1,7 +1,7 @@
 {
   "name": "@headless-adminapp/server-sdk-mongo",
   "version": "1.5.13",
-  "description": "",
+  "description": "MongoDB/Mongoose storage adapter for the Headless AdminApp server SDK.",
   "main": "index.js",
   "types": "index.d.ts",
   "publishConfig": {
@@ -25,7 +25,15 @@
     "prepublishOnly": "pnpm run build",
     "test": "vitest --config vitest.config.ts"
   },
-  "keywords": [],
+  "keywords": [
+    "headless",
+    "admin-panel",
+    "mongodb",
+    "mongoose",
+    "server-sdk",
+    "storage-adapter",
+    "backend"
+  ],
   "author": "",
   "license": "ISC",
   "peerDependencies": {

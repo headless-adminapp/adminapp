@@ -1,7 +1,7 @@
 {
   "name": "@headless-adminapp/core",
   "version": "1.5.11",
-  "description": "",
+  "description": "Framework-agnostic core runtime, schema/attribute definitions, and transport types for Headless AdminApp.",
   "main": "index.js",
   "types": "index.d.ts",
   "publishConfig": {
@@ -32,7 +32,15 @@
     "@headless-adminapp/icons": "workspace:*",
     "uuid": "11.0.3"
   },
-  "keywords": [],
+  "keywords": [
+    "headless",
+    "admin-panel",
+    "model-driven",
+    "framework-agnostic",
+    "schema",
+    "back-office",
+    "typescript"
+  ],
   "author": "",
   "license": "ISC",
   "gitHead": "a28ee863fccb6157774e75b4cc421c6940cda469"
