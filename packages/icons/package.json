@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/icons",
-  "version": "1.5.0",
+  "version": "1.5.14",
   "description": "Shared icon abstraction and base icon components for Headless AdminApp.",
   "main": "index.js",
   "types": "index.d.ts",

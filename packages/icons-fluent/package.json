@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/icons-fluent",
-  "version": "1.5.1",
+  "version": "1.5.14",
   "description": "Fluent UI icon adapters bridging Headless AdminApp icon abstractions to Fluent UI icons.",
   "main": "index.js",
   "types": "index.d.ts",

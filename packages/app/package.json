@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/app",
-  "version": "1.5.11",
+  "version": "1.5.14",
   "description": "UI-agnostic app-level building blocks and shared features for Headless AdminApp, built on the core runtime.",
   "main": "index.js",
   "types": "index.d.ts",
