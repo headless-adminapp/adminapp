@@ -1,8 +1,12 @@
 import { tokens } from '@fluentui/react-components';
-import type { BoardColumnCardPreviewFC } from '@headless-adminapp/app/board/types';
+import type { ColumnLaneTransition } from '@headless-adminapp/app/board/ColumnLaneTransition';
+import type {
+  BoardColumnCardPreviewFC,
+  DragItem,
+} from '@headless-adminapp/app/board/types';
 import type { Schema } from '@headless-adminapp/core/schema';
 import { getRecordId } from '@headless-adminapp/core/transport/utils';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { useDndContext } from '../components/DndProvider';
 import { extendedTokens } from '../components/fluent';
@@ -10,25 +14,36 @@ import { extendedTokens } from '../components/fluent';
 interface BoardColumnCardProps {
   record: Record<string, unknown>;
   index: number;
-  canDrag: boolean;
   columnId: string;
+  laneId: string;
   PreviewComponent: BoardColumnCardPreviewFC;
   schema: Schema;
+  transition: ColumnLaneTransition;
 }
 
 export function BoardColumnCard({
   record,
-  canDrag,
   columnId,
   PreviewComponent,
   schema,
+  laneId,
+  transition,
 }: Readonly<BoardColumnCardProps>) {
+  const canDrag = useMemo(
+    () => transition.getReceivingLanes(columnId, laneId).length > 0,
+    [columnId, laneId, transition],
+  );
   const { useDrag } = useDndContext();
   const [{ isDragging }, drag] = useDrag({
-    type: columnId,
+    type: `${columnId}::${laneId}`,
     canDrag,
     item: () => {
-      return { id: getRecordId(schema, record), columnId, record };
+      return {
+        id: getRecordId(schema, record),
+        columnId,
+        laneId,
+        record,
+      } as DragItem;
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     collect: (monitor: any) => ({

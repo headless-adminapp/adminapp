@@ -2,6 +2,7 @@ import {
   Body1,
   Body1Strong,
   CounterBadge,
+  makeStyles,
   tokens,
 } from '@fluentui/react-components';
 import { BoardColumnContext } from '@headless-adminapp/app/board/context';
@@ -11,19 +12,38 @@ import {
   useBoardColumnDataState,
   useBoardConfig,
 } from '@headless-adminapp/app/board/hooks';
-import type { DragItem } from '@headless-adminapp/app/board/types';
-import { useBaseCommandHandlerContext } from '@headless-adminapp/app/command/hooks';
 import { ScrollbarWithMoreDataRequest } from '@headless-adminapp/app/components/ScrollbarWithMoreDataRequest';
 import { useContextSelector } from '@headless-adminapp/app/mutable/context';
-import type { Schema } from '@headless-adminapp/core/schema';
 import { Icons } from '@headless-adminapp/icons';
-import type { Identifier } from 'dnd-core';
-import { type FC, useCallback, useMemo } from 'react';
+import { type FC } from 'react';
 
-import { useDndContext } from '../components/DndProvider';
 import { extendedTokens } from '../components/fluent';
 import { BoardColumnCard } from './BoardColumnCard';
 import { BoardingColumnCardLoading } from './BoardingColumnCardLoading';
+import { LaneDropArea } from './LaneDropArea';
+
+const useStyles = makeStyles({
+  lanesContainer: {
+    position: 'absolute',
+    inset: 0,
+    pointerEvents: 'none',
+    display: 'flex',
+    flexDirection: 'column',
+    paddingInline: tokens.spacingHorizontalS,
+    paddingBlock: tokens.spacingVerticalXXS,
+
+    // first child border radius
+    '& > :first-child': {
+      borderTopLeftRadius: extendedTokens.paperBorderRadius,
+      borderTopRightRadius: extendedTokens.paperBorderRadius,
+    },
+    // last child border radius
+    '& > :last-child': {
+      borderBottomLeftRadius: extendedTokens.paperBorderRadius,
+      borderBottomRightRadius: extendedTokens.paperBorderRadius,
+    },
+  },
+});
 
 export const BoardColumnUI: FC = () => {
   const data = useBoardColumnData();
@@ -33,145 +53,117 @@ export const BoardColumnUI: FC = () => {
     (state) => state.fetchNextPage,
   );
 
-  const { columnId, acceptSourceIds, updateFn } = useBoardColumnConfig();
+  const { columnId, lanes, laneResolver } = useBoardColumnConfig();
 
   const {
     PreviewComponent,
     HeaderComponent = ColumnHeaderComponent,
     emptyMessage = 'Nothing to show here. Drag and drop items from other columns.',
     schema,
-    columnConfigs,
     minColumnWidth,
     maxColumnWidth,
+    transition,
   } = useBoardConfig();
-
-  const baseContext = useBaseCommandHandlerContext();
-  const { useDrop } = useDndContext();
-
-  const [{ handlerId, over, canDrop }, drop] = useDrop<
-    DragItem,
-    void,
-    { handlerId: Identifier | null; over: boolean; canDrop: boolean }
-  >({
-    accept: acceptSourceIds,
-    collect(monitor) {
-      return {
-        handlerId: monitor.getHandlerId(),
-        over: monitor.isOver(),
-        canDrop: monitor.canDrop(),
-      };
-    },
-    drop: (item) => {
-      (async () => {
-        await updateFn?.({
-          ...baseContext,
-          primaryControl: {
-            logicalName: schema.logicalName,
-            id: item.id,
-            schema: schema as unknown as Schema,
-          },
-        });
-      })().catch(console.error);
-    },
-  });
-
-  const canDrag = useMemo(() => {
-    return columnConfigs.some((config) => config.acceptSourceIds.length > 0);
-  }, [columnConfigs]);
-
-  const dropRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (node) {
-        drop(node);
-      }
-    },
-    [drop],
-  );
 
   const isEmpty = !data?.records.length && !dataState.isFetching;
 
+  const styles = useStyles();
+
   return (
     <div
-      ref={dropRef}
       style={{
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        borderRadius: extendedTokens.paperBorderRadius,
-        outline: over
-          ? `2px dashed ${tokens.colorBrandBackground}`
-          : canDrop
-            ? `2px dashed ${tokens.colorNeutralStroke1}`
-            : 'none',
-        outlineOffset: -5,
         paddingTop: tokens.spacingVerticalS,
         minWidth: minColumnWidth ?? 240,
         maxWidth: maxColumnWidth ?? 400,
+        position: 'relative',
       }}
-      data-handler-id={handlerId}
     >
       <HeaderComponent />
-      {isEmpty && (
-        <div
-          style={{
-            padding: tokens.spacingHorizontalS,
-            display: 'flex',
-            flex: 1,
-          }}
-        >
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+          position: 'relative',
+        }}
+      >
+        {isEmpty && (
           <div
             style={{
+              padding: tokens.spacingHorizontalS,
               display: 'flex',
               flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'column',
-              gap: tokens.spacingVerticalM,
-              color: tokens.colorNeutralForeground3,
-              padding: tokens.spacingVerticalXXXL,
-              borderRadius: extendedTokens.paperBorderRadius,
-              backgroundColor: tokens.colorNeutralBackground1,
             }}
           >
-            <Icons.Search size={56} opacity={0.8} />
-            <Body1 style={{ textAlign: 'center' }}>{emptyMessage}</Body1>
+            <div
+              style={{
+                display: 'flex',
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+                gap: tokens.spacingVerticalM,
+                color: tokens.colorNeutralForeground3,
+                padding: tokens.spacingVerticalXXXL,
+                borderRadius: extendedTokens.paperBorderRadius,
+                backgroundColor: tokens.colorNeutralBackground1,
+              }}
+            >
+              <Icons.Search size={56} opacity={0.8} />
+              <Body1 style={{ textAlign: 'center' }}>{emptyMessage}</Body1>
+            </div>
           </div>
-        </div>
-      )}
-      {!isEmpty && (
-        <ScrollbarWithMoreDataRequest
-          data={data?.records}
-          hasMore={dataState?.hasNextPage}
-          onRequestMore={() => {
-            fetchNextPage();
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: tokens.spacingHorizontalM,
-              padding: tokens.spacingHorizontalS,
+        )}
+        {!isEmpty && (
+          <ScrollbarWithMoreDataRequest
+            data={data?.records}
+            hasMore={dataState?.hasNextPage}
+            onRequestMore={() => {
+              fetchNextPage();
             }}
           >
-            {data?.records.map((record, index) => (
-              <BoardColumnCard
-                key={index}
-                record={record}
-                index={index}
-                columnId={columnId}
-                canDrag={canDrag}
-                PreviewComponent={PreviewComponent}
-                schema={schema}
-              />
-            ))}
-            {dataState.isFetching &&
-              Array.from({ length: 5 }).map((_, index) => (
-                <BoardingColumnCardLoading key={index} />
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: tokens.spacingHorizontalM,
+                padding: tokens.spacingHorizontalS,
+              }}
+            >
+              {data?.records.map((record, index) => (
+                <BoardColumnCard
+                  key={index}
+                  record={record}
+                  index={index}
+                  columnId={columnId}
+                  PreviewComponent={PreviewComponent}
+                  schema={schema}
+                  laneId={laneResolver(record)}
+                  transition={transition}
+                />
               ))}
-          </div>
-        </ScrollbarWithMoreDataRequest>
-      )}
+              {dataState.isFetching &&
+                Array.from({ length: 5 }).map((_, index) => (
+                  <BoardingColumnCardLoading key={index} />
+                ))}
+            </div>
+          </ScrollbarWithMoreDataRequest>
+        )}
+        <div className={styles.lanesContainer}>
+          {lanes.map((laneConfig) => (
+            <LaneDropArea
+              key={laneConfig.id}
+              columnId={columnId}
+              laneConfig={laneConfig}
+              transition={transition}
+              schema={schema}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

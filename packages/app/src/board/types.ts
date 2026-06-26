@@ -9,31 +9,46 @@ import type { Filter } from '@headless-adminapp/core/transport';
 import type { FC } from 'react';
 
 import type { UtilityContextState } from '../command';
+import type { ColumnLaneTransition } from './ColumnLaneTransition';
+
+type RecordItem = any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export interface ItemUpdateContext extends CommandContextBase {
   primaryControl: {
     logicalName: string;
     id: string;
     schema: Schema;
+    record: RecordItem;
   };
-
+  lane: {
+    columnId: string;
+    laneId: string;
+  };
   utility: UtilityContextState;
 }
+
+export type LaneUpdateFunction = (context: ItemUpdateContext) => Promise<void>;
+export type LaneResolverFunction = (record: RecordItem) => string;
 
 export interface Column {
   view: View<SchemaAttributes>;
   accept: string[];
-  update?: (context: ItemUpdateContext) => Promise<void>;
+  update?: LaneUpdateFunction;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type BoardColumnCardPreviewFC = FC<{ record: any }>;
+export type BoardColumnCardPreviewFC = FC<{ record: RecordItem }>;
 
 export interface DragItem {
   id: string;
   columnId: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  record: any;
+  laneId: string;
+  record: RecordItem;
+}
+
+export interface BoardColumnLaneConfig {
+  id: string;
+  title: string;
+  updateFn: LaneUpdateFunction;
 }
 
 export interface BoardColumnConfig {
@@ -41,8 +56,8 @@ export interface BoardColumnConfig {
   title: string;
   maxRecords?: number;
   filter: Filter;
-  acceptSourceIds: string[]; // column ids that can be dragged from
-  updateFn: (context: ItemUpdateContext) => Promise<void>;
+  laneResolver: LaneResolverFunction;
+  lanes: BoardColumnLaneConfig[];
 }
 
 export interface BoardConfig<S extends SchemaAttributes = SchemaAttributes> {
@@ -61,4 +76,5 @@ export interface BoardConfig<S extends SchemaAttributes = SchemaAttributes> {
   minColumnWidth?: number;
   maxColumnWidth?: number;
   quickFilter?: QuickFilter;
+  transition: ColumnLaneTransition;
 }
