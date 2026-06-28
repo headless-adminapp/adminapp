@@ -56,6 +56,22 @@ export function createRouteResolver(routeInfo: RouteInfo): RouteResolver {
   return routeResolver;
 }
 
+function isPathMatching(
+  path: string,
+  itemPath: string,
+  includeNested: boolean,
+): boolean {
+  if (path === itemPath) {
+    return true;
+  }
+
+  if (includeNested && path.startsWith(`${itemPath}/`)) {
+    return true;
+  }
+
+  return false;
+}
+
 export function createIsRouteActive(routeInfo: RouteInfo): IsRouteActive {
   const isRouteActive: IsRouteActive = (path, item, basePath) => {
     basePath = stringWithDefault(basePath, ''); // Replace with default base path
@@ -69,8 +85,10 @@ export function createIsRouteActive(routeInfo: RouteInfo): IsRouteActive {
           `${basePath}/${routeInfo.entity}/${item.logicalName}/${item.id}`
         );
       case PageType.EntityView:
-        return path.startsWith(
+        return isPathMatching(
+          path,
           `${basePath}/${routeInfo.entity}/${item.logicalName}`,
+          true,
         );
       case PageType.Report:
         return path === `${basePath}/${routeInfo.report}/${item.reportId}`;
