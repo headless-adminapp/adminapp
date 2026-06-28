@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/fluent",
-  "version": "1.5.15",
+  "version": "1.5.16",
   "description": "Fluent UI implementation layer providing a ready-to-use component set for Headless AdminApp.",
   "main": "index.js",
   "types": "index.d.ts",

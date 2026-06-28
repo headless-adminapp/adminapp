@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/core",
-  "version": "1.5.14",
+  "version": "1.5.16",
   "description": "Framework-agnostic core runtime, schema/attribute definitions, and transport types for Headless AdminApp.",
   "main": "index.js",
   "types": "index.d.ts",

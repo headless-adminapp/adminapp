@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/server-sdk",
-  "version": "1.5.14",
+  "version": "1.5.16",
   "description": "Server-side helpers for Headless AdminApp, used with a storage adapter such as Mongo or Sequelize.",
   "main": "index.js",
   "types": "index.d.ts",

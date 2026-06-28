@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/next",
-  "version": "1.5.14",
+  "version": "1.5.16",
   "description": "Next.js integration helpers (routing and response formatting) for Headless AdminApp.",
   "main": "index.js",
   "types": "index.d.ts",

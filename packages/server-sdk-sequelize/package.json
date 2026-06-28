@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/server-sdk-sequelize",
-  "version": "1.5.14",
+  "version": "1.5.16",
   "description": "Sequelize (SQL) storage adapter for the Headless AdminApp server SDK.",
   "main": "index.js",
   "types": "index.d.ts",
