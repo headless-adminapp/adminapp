@@ -1,6 +1,6 @@
 {
   "name": "@headless-adminapp/server-sdk-mongo",
-  "version": "1.5.16",
+  "version": "1.5.17",
   "description": "MongoDB/Mongoose storage adapter for the Headless AdminApp server SDK.",
   "main": "index.js",
   "types": "index.d.ts",
