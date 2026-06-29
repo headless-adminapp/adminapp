@@ -352,9 +352,9 @@ export class MongoServerSdk<
             );
 
             return {
-              [`@expand.${x as string}.${
+              [`@expand.${x}.${
                 lookupSchema.primaryAttribute as string
-              }`]: {
+              }.${attribute.entity}`]: {
                 $regex: search,
                 $options: 'i',
               },
